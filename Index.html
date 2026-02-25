@@ -1,1 +1,1678 @@
 
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escuela Primaria Venustiano Carranza - Plataforma Completa</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+        * { font-family: 'Nunito', sans-serif; }
+        .title-font { font-family: 'Fredoka One', cursive; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.3); } 50% { box-shadow: 0 0 40px rgba(255,255,255,0.6); } }
+        @keyframes bounce-in { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes confetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100px) rotate(720deg); opacity: 0; } }
+        @keyframes star-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes slide-in { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes pulse-badge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        
+        .float { animation: float 3s ease-in-out infinite; }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .bounce-in { animation: bounce-in 0.5s ease-out; }
+        .shake { animation: shake 0.5s ease-in-out; }
+        .slide-in { animation: slide-in 0.5s ease-out; }
+        .pulse-badge { animation: pulse-badge 1s ease-in-out infinite; }
+        
+        .btn-3d { transform: translateY(0); transition: all 0.2s; }
+        .btn-3d:hover { transform: translateY(-4px); }
+        .btn-3d:active { transform: translateY(2px); }
+        
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-8px) scale(1.02); }
+        
+        .gradient-fase3 { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+        .gradient-fase4 { background: linear-gradient(135deg, #4ECDC4, #44A08D); }
+        .gradient-fase5 { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .gradient-english { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .gradient-main { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+        
+        .progress-bar { background: linear-gradient(90deg, #00ff88, #00d4ff); transition: width 0.5s ease; }
+        .heart { display: inline-block; color: #ff4757; font-size: 1.5rem; }
+        .heart.empty { color: #555; }
+        .star { font-size: 2rem; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        
+        .game-option { transition: all 0.2s; cursor: pointer; }
+        .game-option:hover { transform: scale(1.05); }
+        .game-option.correct { background: linear-gradient(135deg, #00ff88, #00d4ff) !important; animation: bounce-in 0.3s; }
+        .game-option.incorrect { background: #ff4757 !important; animation: shake 0.3s; }
+        
+        .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .badge-container { position: relative; }
+        .badge-unlock { animation: pulse-badge 0.6s ease-out; }
+        .badge-locked { opacity: 0.4; grayscale: 100%; }
+    </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full gradient-main text-white overflow-auto scrollbar-hide">
+  <div id="app" class="min-h-full w-full"></div>
+  <script>
+        const defaultConfig = {
+            school_name: "Escuela Primaria Venustiano Carranza",
+            teacher_name: "Maestra María Fernanda Flores Valenzuela",
+            primary_color: "#667eea",
+            secondary_color: "#1a1a2e",
+            text_color: "#ffffff",
+            accent_color: "#ffd700",
+            button_color: "#ff6b6b"
+        };
+
+        let config = { ...defaultConfig };
+        let currentUser = null;
+        let users = [];
+        let currentScreen = 'home';
+        let currentPhase = null;
+        let currentGame = null;
+        let gameState = {};
+        let currentEnglishCategory = null;
+        let currentEnglishStage = 0;
+        let currentDifficulty = 'normal';
+
+        // ===== GAME DATA - FASE 3 COMPLETO =====
+        const fase3Games = [
+            { id: 'vocales', name: '🔤 Las Vocales', description: 'Aprende A, E, I, O, U', subject: 'Español', data: { type: 'match', items: [
+                { letter: 'A', word: 'Abeja', emoji: '🐝' },
+                { letter: 'E', word: 'Elefante', emoji: '🐘' },
+                { letter: 'I', word: 'Iguana', emoji: '🦎' },
+                { letter: 'O', word: 'Oso', emoji: '🐻' },
+                { letter: 'U', word: 'Uvas', emoji: '🍇' }
+            ]}},
+            { id: 'numeros1-10', name: '🔢 Números 1-10', description: 'Cuenta del 1 al 10', subject: 'Matemáticas', data: { type: 'count', items: [
+                { num: 1, emoji: '⭐', name: 'uno' },
+                { num: 2, emoji: '🌟', name: 'dos' },
+                { num: 3, emoji: '🍎', name: 'tres' },
+                { num: 4, emoji: '🎈', name: 'cuatro' },
+                { num: 5, emoji: '🌸', name: 'cinco' },
+                { num: 6, emoji: '🦋', name: 'seis' },
+                { num: 7, emoji: '🌈', name: 'siete' },
+                { num: 8, emoji: '🎀', name: 'ocho' },
+                { num: 9, emoji: '🌺', name: 'nueve' },
+                { num: 10, emoji: '🎯', name: 'diez' }
+            ]}},
+            { id: 'silabas', name: '📝 Sílabas', description: 'Forma palabras con sílabas', subject: 'Español', data: { type: 'syllable', items: [
+                { word: 'MAMA', syllables: ['MA', 'MA'], emoji: '👩' },
+                { word: 'PAPA', syllables: ['PA', 'PA'], emoji: '👨' },
+                { word: 'CASA', syllables: ['CA', 'SA'], emoji: '🏠' },
+                { word: 'MESA', syllables: ['ME', 'SA'], emoji: '🪑' },
+                { word: 'LUNA', syllables: ['LU', 'NA'], emoji: '🌙' }
+            ]}},
+            { id: 'sumas-basicas', name: '➕ Sumas Básicas', description: 'Suma números del 1 al 10', subject: 'Matemáticas', data: { type: 'math', operation: '+', items: [
+                { a: 1, b: 1, result: 2 },
+                { a: 2, b: 2, result: 4 },
+                { a: 3, b: 2, result: 5 },
+                { a: 4, b: 3, result: 7 },
+                { a: 5, b: 5, result: 10 }
+            ]}},
+            { id: 'animales', name: '🦁 Los Animales', description: 'Conoce los animales', subject: 'Ciencias', data: { type: 'quiz', items: [
+                { q: '¿Qué animal hace "miau"?', a: 'Gato', options: ['Perro', 'Gato', 'Vaca'], emoji: '🐱' },
+                { q: '¿Qué animal hace "guau"?', a: 'Perro', options: ['Gato', 'Perro', 'Pato'], emoji: '🐕' },
+                { q: '¿Qué animal hace "muuu"?', a: 'Vaca', options: ['Vaca', 'Cerdo', 'Caballo'], emoji: '🐄' },
+                { q: '¿Qué animal pone huevos?', a: 'Gallina', options: ['Perro', 'Gallina', 'Caballo'], emoji: '🐔' },
+                { q: '¿Qué animal vuela?', a: 'Pájaro', options: ['Pez', 'Pájaro', 'Perro'], emoji: '🐦' }
+            ]}},
+            { id: 'colores', name: '🎨 Los Colores', description: 'Aprende los colores', subject: 'Arte', data: { type: 'color-match', items: [
+                { color: 'Rojo', hex: '#ff0000', emoji: '🍎' },
+                { color: 'Azul', hex: '#0000ff', emoji: '🌊' },
+                { color: 'Amarillo', hex: '#ffff00', emoji: '🌟' },
+                { color: 'Verde', hex: '#00ff00', emoji: '🌿' },
+                { color: 'Naranja', hex: '#ff8800', emoji: '🍊' }
+            ]}},
+            { id: 'restas-basicas', name: '➖ Restas Básicas', description: 'Resta números sencillos', subject: 'Matemáticas', data: { type: 'math', operation: '-', items: [
+                { a: 5, b: 2, result: 3 },
+                { a: 7, b: 3, result: 4 },
+                { a: 10, b: 5, result: 5 },
+                { a: 8, b: 4, result: 4 },
+                { a: 6, b: 1, result: 5 }
+            ]}},
+            { id: 'figuras', name: '🔷 Las Figuras', description: 'Conoce las figuras geométricas', subject: 'Matemáticas', data: { type: 'shape-match', items: [
+                { name: 'Círculo', sides: 0, emoji: '⭕' },
+                { name: 'Triángulo', sides: 3, emoji: '🔺' },
+                { name: 'Cuadrado', sides: 4, emoji: '🟦' },
+                { name: 'Rectángulo', sides: 4, emoji: '📦' },
+                { name: 'Estrella', sides: 5, emoji: '⭐' }
+            ]}},
+            { id: 'cuerpo-humano', name: '🧍 Mi Cuerpo', description: 'Partes del cuerpo humano', subject: 'Ciencias', data: { type: 'quiz', items: [
+                { q: '¿Con qué vemos?', a: 'Ojos', options: ['Ojos', 'Orejas', 'Nariz'], emoji: '👀' },
+                { q: '¿Con qué escuchamos?', a: 'Orejas', options: ['Boca', 'Orejas', 'Manos'], emoji: '👂' },
+                { q: '¿Con qué olemos?', a: 'Nariz', options: ['Ojos', 'Nariz', 'Pies'], emoji: '👃' },
+                { q: '¿Cuántas manos tenemos?', a: 'Dos', options: ['Una', 'Dos', 'Tres'], emoji: '🖐️' },
+                { q: '¿Con qué caminamos?', a: 'Pies', options: ['Manos', 'Pies', 'Cabeza'], emoji: '🦶' }
+            ]}},
+            { id: 'dias-semana', name: '📅 Días de la Semana', description: 'Aprende los días', subject: 'Español', data: { type: 'order', items: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] }},
+            { id: 'diptongos', name: '🎵 Diptongos', description: 'Combos de vocales IE, UE', subject: 'Español', data: { type: 'diphthong', items: [
+                { word: 'TIERRA', diphthong: 'IE', emoji: '🌍' },
+                { word: 'HIELO', diphthong: 'IE', emoji: '🧊' },
+                { word: 'FUEGO', diphthong: 'UE', emoji: '🔥' },
+                { word: 'CUADRO', diphthong: 'UA', emoji: '🖼️' },
+                { word: 'BUEY', diphthong: 'UE', emoji: '🐮' }
+            ]}},
+            { id: 'consonantes', name: '📢 Consonantes', description: 'Letras consonantes', subject: 'Español', data: { type: 'consonant-match', items: [
+                { letter: 'M', word: 'MANZANA', emoji: '🍎' },
+                { letter: 'P', word: 'PATO', emoji: '🦆' },
+                { letter: 'L', word: 'LEÓN', emoji: '🦁' },
+                { letter: 'S', word: 'SOL', emoji: '☀️' },
+                { letter: 'T', word: 'TIGRE', emoji: '🐯' },
+                { letter: 'N', word: 'NUBE', emoji: '☁️' }
+            ]}},
+            { id: 'numeros-20', name: '🔢 Números 11-20', description: 'Cuenta del 11 al 20', subject: 'Matemáticas', data: { type: 'count', items: [
+                { num: 11, emoji: '🕧', name: 'once' },
+                { num: 12, emoji: '🕐', name: 'doce' },
+                { num: 13, emoji: '🕑', name: 'trece' },
+                { num: 14, emoji: '🕒', name: 'catorce' },
+                { num: 15, emoji: '🕓', name: 'quince' },
+                { num: 16, emoji: '🕔', name: 'dieciséis' },
+                { num: 17, emoji: '🕕', name: 'diecisiete' },
+                { num: 18, emoji: '🕖', name: 'dieciocho' },
+                { num: 19, emoji: '🕗', name: 'diecinueve' },
+                { num: 20, emoji: '🕘', name: 'veinte' }
+            ]}},
+            { id: 'frutas-verduras', name: '🥕 Frutas y Verduras', description: 'Alimentos saludables', subject: 'Ciencias', data: { type: 'classify', categories: ['Fruta', 'Verdura'], items: [
+                { word: 'Manzana', category: 'Fruta', emoji: '🍎' },
+                { word: 'Zanahoria', category: 'Verdura', emoji: '🥕' },
+                { word: 'Plátano', category: 'Fruta', emoji: '🍌' },
+                { word: 'Lechuga', category: 'Verdura', emoji: '🥬' },
+                { word: 'Naranja', category: 'Fruta', emoji: '🍊' },
+                { word: 'Tomate', category: 'Verdura', emoji: '🍅' }
+            ]}},
+            { id: 'estaciones', name: '🌞 Las Estaciones', description: 'Primavera, verano, otoño, invierno', subject: 'Ciencias', data: { type: 'season-match', items: [
+                { season: 'Primavera', emoji: '🌸', feature: 'Flores' },
+                { season: 'Verano', emoji: '☀️', feature: 'Calor' },
+                { season: 'Otoño', emoji: '🍂', feature: 'Hojas' },
+                { season: 'Invierno', emoji: '❄️', feature: 'Nieve' }
+            ]}}
+        ];
+
+        // ===== GAME DATA - FASE 4 COMPLETO =====
+        const fase4Games = [
+            { id: 'multiplicacion', name: '✖️ Multiplicación', description: 'Tablas de multiplicar', subject: 'Matemáticas', data: { type: 'math', operation: '×', items: [
+                { a: 2, b: 3, result: 6 },
+                { a: 4, b: 5, result: 20 },
+                { a: 3, b: 6, result: 18 },
+                { a: 7, b: 4, result: 28 },
+                { a: 8, b: 3, result: 24 }
+            ]}},
+            { id: 'division', name: '➗ División', description: 'Divisiones exactas', subject: 'Matemáticas', data: { type: 'math', operation: '÷', items: [
+                { a: 10, b: 2, result: 5 },
+                { a: 15, b: 3, result: 5 },
+                { a: 20, b: 4, result: 5 },
+                { a: 24, b: 6, result: 4 },
+                { a: 36, b: 9, result: 4 }
+            ]}},
+            { id: 'fracciones', name: '🍕 Fracciones', description: 'Aprende las fracciones', subject: 'Matemáticas', data: { type: 'fraction', items: [
+                { num: 1, den: 2, name: 'un medio', emoji: '🍕' },
+                { num: 1, den: 4, name: 'un cuarto', emoji: '🍰' },
+                { num: 3, den: 4, name: 'tres cuartos', emoji: '🥧' },
+                { num: 1, den: 3, name: 'un tercio', emoji: '🎂' },
+                { num: 2, den: 3, name: 'dos tercios', emoji: '🧁' }
+            ]}},
+            { id: 'verbos', name: '🏃 Los Verbos', description: 'Identifica acciones', subject: 'Español', data: { type: 'quiz', items: [
+                { q: '¿Qué verbo indica movimiento?', a: 'Correr', options: ['Comer', 'Correr', 'Leer'], emoji: '🏃' },
+                { q: '¿Qué verbo usamos para alimentos?', a: 'Comer', options: ['Comer', 'Bailar', 'Saltar'], emoji: '🍽️' },
+                { q: '¿Qué verbo usamos con libros?', a: 'Leer', options: ['Nadar', 'Leer', 'Cantar'], emoji: '📚' },
+                { q: '¿Qué verbo usamos con música?', a: 'Cantar', options: ['Cantar', 'Escribir', 'Correr'], emoji: '🎤' },
+                { q: '¿Qué verbo usamos en el agua?', a: 'Nadar', options: ['Volar', 'Nadar', 'Dormir'], emoji: '🏊' }
+            ]}},
+            { id: 'sustantivos', name: '📦 Sustantivos', description: 'Nombres de cosas', subject: 'Español', data: { type: 'classify', categories: ['Persona', 'Animal', 'Cosa'], items: [
+                { word: 'Niño', category: 'Persona', emoji: '👦' },
+                { word: 'Perro', category: 'Animal', emoji: '🐕' },
+                { word: 'Mesa', category: 'Cosa', emoji: '🪑' },
+                { word: 'Maestra', category: 'Persona', emoji: '👩‍🏫' },
+                { word: 'Gato', category: 'Animal', emoji: '🐱' },
+                { word: 'Libro', category: 'Cosa', emoji: '📚' }
+            ]}},
+            { id: 'ecosistemas', name: '🌍 Ecosistemas', description: 'Conoce los ecosistemas', subject: 'Ciencias', data: { type: 'quiz', items: [
+                { q: '¿Dónde viven los peces?', a: 'Agua', options: ['Desierto', 'Agua', 'Bosque'], emoji: '🐟' },
+                { q: '¿Qué ecosistema tiene árboles?', a: 'Bosque', options: ['Desierto', 'Mar', 'Bosque'], emoji: '🌲' },
+                { q: '¿Dónde viven los camellos?', a: 'Desierto', options: ['Desierto', 'Selva', 'Polo'], emoji: '🐪' },
+                { q: '¿Qué ecosistema es frío?', a: 'Polo', options: ['Selva', 'Polo', 'Playa'], emoji: '🐧' },
+                { q: '¿Dónde hay muchos animales?', a: 'Selva', options: ['Desierto', 'Selva', 'Ciudad'], emoji: '🦜' }
+            ]}},
+            { id: 'estados-mexico', name: '🗺️ Estados de México', description: 'Conoce tu país', subject: 'Geografía', data: { type: 'quiz', items: [
+                { q: '¿Cuál es la capital?', a: 'CDMX', options: ['Monterrey', 'CDMX', 'Guadalajara'], emoji: '🏛️' },
+                { q: '¿En qué estado está Cancún?', a: 'Quintana Roo', options: ['Yucatán', 'Quintana Roo', 'Chiapas'], emoji: '🏖️' },
+                { q: '¿Qué estado está en el norte?', a: 'Chihuahua', options: ['Chiapas', 'Oaxaca', 'Chihuahua'], emoji: '🌵' },
+                { q: '¿Dónde se hace el tequila?', a: 'Jalisco', options: ['Jalisco', 'Sonora', 'Puebla'], emoji: '🌿' },
+                { q: '¿Qué estado tiene pirámides mayas?', a: 'Yucatán', options: ['Yucatán', 'Durango', 'Sinaloa'], emoji: '🏛️' }
+            ]}},
+            { id: 'ciclo-agua', name: '💧 Ciclo del Agua', description: 'El viaje del agua', subject: 'Ciencias', data: { type: 'order', items: ['Evaporación', 'Condensación', 'Precipitación', 'Filtración'] }},
+            { id: 'sistema-solar', name: '🪐 Sistema Solar', description: 'Los planetas', subject: 'Ciencias', data: { type: 'quiz', items: [
+                { q: '¿Cuál es el planeta más cercano?', a: 'Mercurio', options: ['Venus', 'Mercurio', 'Marte'], emoji: '☀️' },
+                { q: '¿En qué planeta vivimos?', a: 'Tierra', options: ['Marte', 'Tierra', 'Luna'], emoji: '🌍' },
+                { q: '¿Cuál es el planeta rojo?', a: 'Marte', options: ['Júpiter', 'Marte', 'Saturno'], emoji: '🔴' },
+                { q: '¿Qué planeta tiene anillos?', a: 'Saturno', options: ['Saturno', 'Neptuno', 'Urano'], emoji: '🪐' },
+                { q: '¿Cuál es el planeta más grande?', a: 'Júpiter', options: ['Saturno', 'Júpiter', 'Neptuno'], emoji: '🟠' }
+            ]}},
+            { id: 'adjetivos', name: '✨ Adjetivos', description: 'Palabras que describen', subject: 'Español', data: { type: 'match-adj', items: [
+                { noun: 'Sol', adj: 'brillante', emoji: '☀️' },
+                { noun: 'Hielo', adj: 'frío', emoji: '🧊' },
+                { noun: 'Elefante', adj: 'grande', emoji: '🐘' },
+                { noun: 'Hormiga', adj: 'pequeña', emoji: '🐜' },
+                { noun: 'Limón', adj: 'ácido', emoji: '🍋' }
+            ]}},
+            { id: 'potencias', name: '⚡ Potencias', description: 'Números al cuadrado', subject: 'Matemáticas', data: { type: 'powers', items: [
+                { base: 2, exp: 3, result: 8, display: '2³' },
+                { base: 3, exp: 2, result: 9, display: '3²' },
+                { base: 4, exp: 2, result: 16, display: '4²' },
+                { base: 5, exp: 2, result: 25, display: '5²' },
+                { base: 2, exp: 4, result: 16, display: '2⁴' }
+            ]}},
+            { id: 'romanos', name: '🏛️ Números Romanos', description: 'I, V, X, L, C', subject: 'Historia', data: { type: 'roman-numerals', items: [
+                { num: 4, roman: 'IV' },
+                { num: 9, roman: 'IX' },
+                { num: 15, roman: 'XV' },
+                { num: 50, roman: 'L' },
+                { num: 99, roman: 'XCIX' }
+            ]}},
+            { id: 'cadena-alimenticia', name: '🔗 Cadena Alimenticia', description: 'Productor → Consumidor', subject: 'Ciencias', data: { type: 'order', items: ['Plantas', 'Herbívoro', 'Carnívoro', 'Descompositor'] }},
+            { id: 'conjunciones', name: '🔗 Conjunciones', description: 'Y, O, PERO, AUNQUE', subject: 'Español', data: { type: 'classify', categories: ['Coordinante', 'Subordinante'], items: [
+                { word: 'Y', category: 'Coordinante', emoji: '🤝' },
+                { word: 'PORQUE', category: 'Subordinante', emoji: '❓' },
+                { word: 'O', category: 'Coordinante', emoji: '🤔' },
+                { word: 'AUNQUE', category: 'Subordinante', emoji: '😤' },
+                { word: 'PERO', category: 'Coordinante', emoji: '⚔️' },
+                { word: 'SI', category: 'Subordinante', emoji: '🤷' }
+            ]}}
+        ];
+
+        // ===== GAME DATA - FASE 5 COMPLETO =====
+        const fase5Games = [
+            { id: 'decimales', name: '🔢 Decimales', description: 'Operaciones con decimales', subject: 'Matemáticas', data: { type: 'math-decimal', items: [
+                { a: 1.5, b: 2.5, result: 4, op: '+' },
+                { a: 5.5, b: 2.5, result: 3, op: '-' },
+                { a: 2.5, b: 4, result: 10, op: '×' },
+                { a: 7.5, b: 2.5, result: 3, op: '÷' },
+                { a: 3.25, b: 1.75, result: 5, op: '+' }
+            ]}},
+            { id: 'porcentajes', name: '💯 Porcentajes', description: 'Calcula porcentajes', subject: 'Matemáticas', data: { type: 'percentage', items: [
+                { num: 100, percent: 50, result: 50 },
+                { num: 200, percent: 25, result: 50 },
+                { num: 80, percent: 10, result: 8 },
+                { num: 50, percent: 20, result: 10 },
+                { num: 120, percent: 75, result: 90 }
+            ]}},
+            { id: 'ortografia', name: '📝 Ortografía', description: 'B, V, S, C, Z', subject: 'Español', data: { type: 'spelling', items: [
+                { word: 'HABER', hint: 'Verbo auxiliar', options: ['HABER', 'HAVER', 'ABER'] },
+                { word: 'HIERBA', hint: 'Planta verde', options: ['HIERVA', 'HIERBA', 'YERBA'] },
+                { word: 'CIENCIA', hint: 'Estudio', options: ['SIENCIA', 'CIENCIA', 'SIENSIA'] },
+                { word: 'ZAPATO', hint: 'Calzado', options: ['SAPATO', 'ZAPATO', 'SAPATO'] },
+                { word: 'AVIÓN', hint: 'Transporte', options: ['ABIÓN', 'AVIÓN', 'HABIÓN'] }
+            ]}},
+            { id: 'historia-mexico', name: '📜 Historia de México', description: 'Eventos históricos', subject: 'Historia', data: { type: 'quiz', items: [
+                { q: '¿En qué año fue la Independencia?', a: '1810', options: ['1810', '1910', '1521'], emoji: '🔔' },
+                { q: '¿Quién fue el padre de la patria?', a: 'Miguel Hidalgo', options: ['Benito Juárez', 'Miguel Hidalgo', 'Porfirio Díaz'], emoji: '👨' },
+                { q: '¿En qué año inició la Revolución?', a: '1910', options: ['1810', '1910', '1821'], emoji: '⚔️' },
+                { q: '¿Quién fue Benito Juárez?', a: 'Presidente', options: ['Rey', 'Presidente', 'General'], emoji: '🏛️' },
+                { q: '¿Qué civilización construyó Teotihuacán?', a: 'Teotihuacanos', options: ['Mayas', 'Aztecas', 'Teotihuacanos'], emoji: '🏛️' }
+            ]}},
+            { id: 'aparatos', name: '🫀 Aparatos y Sistemas', description: 'Cuerpo humano avanzado', subject: 'Ciencias', data: { type: 'quiz', items: [
+                { q: '¿Qué órgano bombea sangre?', a: 'Corazón', options: ['Pulmón', 'Corazón', 'Cerebro'], emoji: '❤️' },
+                { q: '¿Dónde se digieren los alimentos?', a: 'Estómago', options: ['Estómago', 'Pulmón', 'Riñón'], emoji: '🍽️' },
+                { q: '¿Qué órgano nos permite pensar?', a: 'Cerebro', options: ['Corazón', 'Hígado', 'Cerebro'], emoji: '🧠' },
+                { q: '¿Qué sistema protege al cuerpo?', a: 'Inmunológico', options: ['Digestivo', 'Inmunológico', 'Óseo'], emoji: '🛡️' },
+                { q: '¿Qué nos permite respirar?', a: 'Pulmones', options: ['Pulmones', 'Riñones', 'Hígado'], emoji: '💨' }
+            ]}},
+            { id: 'energia', name: '⚡ Energía', description: 'Tipos de energía', subject: 'Ciencias', data: { type: 'classify', categories: ['Renovable', 'No Renovable'], items: [
+                { word: 'Solar', category: 'Renovable', emoji: '☀️' },
+                { word: 'Petróleo', category: 'No Renovable', emoji: '🛢️' },
+                { word: 'Eólica', category: 'Renovable', emoji: '💨' },
+                { word: 'Carbón', category: 'No Renovable', emoji: '⚫' },
+                { word: 'Hidroeléctrica', category: 'Renovable', emoji: '💧' },
+                { word: 'Gas Natural', category: 'No Renovable', emoji: '🔥' }
+            ]}},
+            { id: 'geometria', name: '📐 Área y Perímetro', description: 'Calcula áreas', subject: 'Matemáticas', data: { type: 'geometry', items: [
+                { shape: 'Cuadrado', side: 5, area: 25, peri: 20 },
+                { shape: 'Rectángulo', base: 6, height: 4, area: 24, peri: 20 },
+                { shape: 'Triángulo', base: 8, height: 5, area: 20 },
+                { shape: 'Cuadrado', side: 10, area: 100, peri: 40 },
+                { shape: 'Rectángulo', base: 12, height: 5, area: 60, peri: 34 }
+            ]}},
+            { id: 'literatura', name: '📚 Géneros Literarios', description: 'Tipos de textos', subject: 'Español', data: { type: 'classify', categories: ['Narrativo', 'Lírico', 'Dramático'], items: [
+                { word: 'Cuento', category: 'Narrativo', emoji: '📖' },
+                { word: 'Poema', category: 'Lírico', emoji: '🎭' },
+                { word: 'Obra de teatro', category: 'Dramático', emoji: '🎬' },
+                { word: 'Novela', category: 'Narrativo', emoji: '📕' },
+                { word: 'Canción', category: 'Lírico', emoji: '🎵' },
+                { word: 'Guión', category: 'Dramático', emoji: '🎥' }
+            ]}},
+            { id: 'civica', name: '🏛️ Formación Cívica', description: 'Derechos y deberes', subject: 'Cívica', data: { type: 'quiz', items: [
+                { q: '¿Qué documento protege nuestros derechos?', a: 'Constitución', options: ['Biblia', 'Constitución', 'Diccionario'], emoji: '📜' },
+                { q: '¿A qué edad se puede votar?', a: '18 años', options: ['15 años', '18 años', '21 años'], emoji: '🗳️' },
+                { q: '¿Quién gobierna el país?', a: 'Presidente', options: ['Rey', 'Presidente', 'Gobernador'], emoji: '🏛️' },
+                { q: '¿Cuántos años dura el periodo presidencial?', a: '6 años', options: ['4 años', '6 años', '8 años'], emoji: '📅' },
+                { q: '¿Qué día es la Independencia?', a: '16 de septiembre', options: ['5 de mayo', '16 de septiembre', '20 de noviembre'], emoji: '🎉' }
+            ]}},
+            { id: 'probabilidad', name: '🎲 Probabilidad', description: 'Eventos probables', subject: 'Matemáticas', data: { type: 'probability', items: [
+                { q: '¿Probabilidad de sol en moneda?', a: '1/2', options: ['1/2', '1/4', '1/3'] },
+                { q: '¿Probabilidad de 6 en dado?', a: '1/6', options: ['1/2', '1/6', '1/3'] },
+                { q: '¿Más probable en dado?', a: 'Número par', options: ['Solo 1', 'Número par', 'Solo 6'] },
+                { q: '¿Probabilidad con 2 rojas, 2 azules?', a: '1/2', options: ['1/4', '1/2', '1/3'] },
+                { q: '¿Evento imposible?', a: 'Sacar 7 en un dado', options: ['Sacar 7 en un dado', 'Sacar 1', 'Sacar par'] }
+            ]}},
+            { id: 'fases-luna', name: '🌙 Fases de la Luna', description: 'Nueva, Creciente, Llena, Menguante', subject: 'Ciencias', data: { type: 'moon-phases', items: [
+                { phase: 'Luna Nueva', emoji: '🌑', desc: 'No visible' },
+                { phase: 'Cuarto Creciente', emoji: '🌓', desc: 'Media visible' },
+                { phase: 'Luna Llena', emoji: '🌕', desc: 'Completamente visible' },
+                { phase: 'Cuarto Menguante', emoji: '🌗', desc: 'Media visible' }
+            ]}},
+            { id: 'raices', name: '√ Raíces Cuadradas', description: 'Calcula raíces', subject: 'Matemáticas', data: { type: 'square-roots', items: [
+                { num: 4, result: 2 },
+                { num: 9, result: 3 },
+                { num: 16, result: 4 },
+                { num: 25, result: 5 },
+                { num: 36, result: 6 }
+            ]}},
+            { id: 'clima', name: '🌡️ Climas y Geografía', description: 'Tipos de clima', subject: 'Geografía', data: { type: 'climate-match', items: [
+                { climate: 'Tropical', features: ['Muy caliente', 'Lluvia abundante'], emoji: '🌴' },
+                { climate: 'Desértico', features: ['Muy seco', 'Poco agua'], emoji: '🏜️' },
+                { climate: 'Templado', features: ['Moderado', 'Cuatro estaciones'], emoji: '🌤️' },
+                { climate: 'Polar', features: ['Muy frío', 'Nieve'], emoji: '🧊' },
+                { climate: 'Montaña', features: ['Frío', 'Altitud'], emoji: '⛰️' }
+            ]}}
+        ];
+
+        // ===== ACHIEVEMENT BADGES =====
+        const achievementBadges = [
+            { id: 'first-game', name: '🎮 Primer Juego', description: 'Completa tu primer juego', condition: () => (currentUser?.level || 0) >= 1 },
+            { id: 'score-100', name: '⭐ 100 Puntos', description: 'Acumula 100 puntos', condition: () => (currentUser?.points || 0) >= 100 },
+            { id: 'score-500', name: '🌟 500 Puntos', description: 'Acumula 500 puntos', condition: () => (currentUser?.points || 0) >= 500 },
+            { id: 'perfect-game', name: '💯 Juego Perfecto', description: 'Obtén 100 en un juego', condition: () => gameState.score >= 100 },
+            { id: 'level-5', name: '📈 Nivel 5', description: 'Alcanza nivel 5', condition: () => (currentUser?.level || 0) >= 5 },
+            { id: 'all-fases', name: '🎓 Todas las Fases', description: 'Juega en todas las fases', condition: () => true },
+            { id: 'english-star', name: '🇬🇧 Estrella Inglés', description: 'Completa 3 juegos en English', condition: () => true },
+            { id: 'speed-demon', name: '⚡ Speed Demon', description: 'Completa un juego en menos de 1 minuto', condition: () => true }
+        ];
+
+        // ===== ENGLISH DATA - EXPANDIDO =====
+        const englishCategories = [
+            {
+                id: 'numbers',
+                name: '🔢 Numbers',
+                icon: '🔢',
+                items: [
+                    { word: 'One', spanish: 'Uno', image: '1️⃣', sentence: 'I have one apple.' },
+                    { word: 'Two', spanish: 'Dos', image: '2️⃣', sentence: 'I see two birds.' },
+                    { word: 'Three', spanish: 'Tres', image: '3️⃣', sentence: 'There are three cats.' },
+                    { word: 'Four', spanish: 'Cuatro', image: '4️⃣', sentence: 'I have four friends.' },
+                    { word: 'Five', spanish: 'Cinco', image: '5️⃣', sentence: 'Five stars in the sky.' },
+                    { word: 'Six', spanish: 'Seis', image: '6️⃣', sentence: 'I see six flowers.' },
+                    { word: 'Seven', spanish: 'Siete', image: '7️⃣', sentence: 'Seven days a week.' },
+                    { word: 'Eight', spanish: 'Ocho', image: '8️⃣', sentence: 'I eat eight grapes.' },
+                    { word: 'Nine', spanish: 'Nueve', image: '9️⃣', sentence: 'There are nine clouds.' },
+                    { word: 'Ten', spanish: 'Diez', image: '🔟', sentence: 'I count to ten.' }
+                ]
+            },
+            {
+                id: 'colors',
+                name: '🎨 Colors',
+                icon: '🎨',
+                items: [
+                    { word: 'Red', spanish: 'Rojo', image: '🔴', sentence: 'The apple is red.' },
+                    { word: 'Blue', spanish: 'Azul', image: '🔵', sentence: 'The sky is blue.' },
+                    { word: 'Green', spanish: 'Verde', image: '🟢', sentence: 'The grass is green.' },
+                    { word: 'Yellow', spanish: 'Amarillo', image: '🟡', sentence: 'The sun is yellow.' },
+                    { word: 'Orange', spanish: 'Naranja', image: '🟠', sentence: 'The orange is orange.' },
+                    { word: 'Purple', spanish: 'Morado', image: '🟣', sentence: 'I like purple flowers.' },
+                    { word: 'Black', spanish: 'Negro', image: '⚫', sentence: 'The cat is black.' },
+                    { word: 'White', spanish: 'Blanco', image: '⚪', sentence: 'Snow is white.' }
+                ]
+            },
+            {
+                id: 'animals',
+                name: '🐾 Animals',
+                icon: '🐾',
+                items: [
+                    { word: 'Dog', spanish: 'Perro', image: '🐕', sentence: 'The dog is friendly.' },
+                    { word: 'Cat', spanish: 'Gato', image: '🐱', sentence: 'The cat sleeps.' },
+                    { word: 'Bird', spanish: 'Pájaro', image: '🐦', sentence: 'The bird can fly.' },
+                    { word: 'Fish', spanish: 'Pez', image: '🐟', sentence: 'The fish swims.' },
+                    { word: 'Elephant', spanish: 'Elefante', image: '🐘', sentence: 'The elephant is big.' },
+                    { word: 'Lion', spanish: 'León', image: '🦁', sentence: 'The lion is the king.' },
+                    { word: 'Monkey', spanish: 'Mono', image: '🐵', sentence: 'The monkey is funny.' },
+                    { word: 'Butterfly', spanish: 'Mariposa', image: '🦋', sentence: 'The butterfly is colorful.' }
+                ]
+            },
+            {
+                id: 'family',
+                name: '👨‍👩‍👧 Family',
+                icon: '👨‍👩‍👧',
+                items: [
+                    { word: 'Mother', spanish: 'Madre', image: '👩', sentence: 'My mother is kind.' },
+                    { word: 'Father', spanish: 'Padre', image: '👨', sentence: 'My father is tall.' },
+                    { word: 'Sister', spanish: 'Hermana', image: '👧', sentence: 'My sister is young.' },
+                    { word: 'Brother', spanish: 'Hermano', image: '👦', sentence: 'My brother plays.' },
+                    { word: 'Grandmother', spanish: 'Abuela', image: '👵', sentence: 'My grandmother bakes.' },
+                    { word: 'Grandfather', spanish: 'Abuelo', image: '👴', sentence: 'My grandfather reads.' },
+                    { word: 'Baby', spanish: 'Bebé', image: '👶', sentence: 'The baby is cute.' },
+                    { word: 'Girl', spanish: 'Niña', image: '👧', sentence: 'The girl plays.' }
+                ]
+            },
+            {
+                id: 'food',
+                name: '🍎 Food',
+                icon: '🍎',
+                items: [
+                    { word: 'Apple', spanish: 'Manzana', image: '🍎', sentence: 'I eat an apple.' },
+                    { word: 'Bread', spanish: 'Pan', image: '🍞', sentence: 'I like bread.' },
+                    { word: 'Milk', spanish: 'Leche', image: '🥛', sentence: 'I drink milk.' },
+                    { word: 'Egg', spanish: 'Huevo', image: '🥚', sentence: 'I eat eggs.' },
+                    { word: 'Water', spanish: 'Agua', image: '💧', sentence: 'I drink water.' },
+                    { word: 'Pizza', spanish: 'Pizza', image: '🍕', sentence: 'I love pizza.' },
+                    { word: 'Banana', spanish: 'Plátano', image: '🍌', sentence: 'I eat a banana.' },
+                    { word: 'Cheese', spanish: 'Queso', image: '🧀', sentence: 'I like cheese.' }
+                ]
+            },
+            {
+                id: 'body',
+                name: '🧍 Body Parts',
+                icon: '🧍',
+                items: [
+                    { word: 'Head', spanish: 'Cabeza', image: '😊', sentence: 'I use my head to think.' },
+                    { word: 'Hand', spanish: 'Mano', image: '✋', sentence: 'I wave my hand.' },
+                    { word: 'Eye', spanish: 'Ojo', image: '👁️', sentence: 'I see with my eyes.' },
+                    { word: 'Ear', spanish: 'Oreja', image: '👂', sentence: 'I hear with my ears.' },
+                    { word: 'Nose', spanish: 'Nariz', image: '👃', sentence: 'I smell with my nose.' },
+                    { word: 'Mouth', spanish: 'Boca', image: '👄', sentence: 'I eat with my mouth.' },
+                    { word: 'Arm', spanish: 'Brazo', image: '💪', sentence: 'My arm is strong.' },
+                    { word: 'Leg', spanish: 'Pierna', image: '🦵', sentence: 'I walk with my legs.' }
+                ]
+            },
+            {
+                id: 'school',
+                name: '🏫 School',
+                icon: '🏫',
+                items: [
+                    { word: 'Book', spanish: 'Libro', image: '📚', sentence: 'I read a book.' },
+                    { word: 'Pencil', spanish: 'Lápiz', image: '✏️', sentence: 'I write with a pencil.' },
+                    { word: 'Teacher', spanish: 'Maestro', image: '👩‍🏫', sentence: 'The teacher helps me.' },
+                    { word: 'Student', spanish: 'Estudiante', image: '👨‍🎓', sentence: 'I am a student.' },
+                    { word: 'Desk', spanish: 'Escritorio', image: '🪑', sentence: 'I sit at my desk.' },
+                    { word: 'Classroom', spanish: 'Salón', image: '🏫', sentence: 'We learn in the classroom.' },
+                    { word: 'Paper', spanish: 'Papel', image: '📄', sentence: 'I write on paper.' },
+                    { word: 'Blackboard', spanish: 'Pizarrón', image: '🖥️', sentence: 'I look at the blackboard.' }
+                ]
+            },
+            {
+                id: 'clothes',
+                name: '👕 Clothes',
+                icon: '👕',
+                items: [
+                    { word: 'Shirt', spanish: 'Camisa', image: '👕', sentence: 'I wear a blue shirt.' },
+                    { word: 'Pants', spanish: 'Pantalones', image: '👖', sentence: 'I put on my pants.' },
+                    { word: 'Shoes', spanish: 'Zapatos', image: '👟', sentence: 'I tie my shoes.' },
+                    { word: 'Hat', spanish: 'Sombrero', image: '🎩', sentence: 'I wear a hat.' },
+                    { word: 'Dress', spanish: 'Vestido', image: '👗', sentence: 'She wears a dress.' },
+                    { word: 'Jacket', spanish: 'Chaqueta', image: '🧥', sentence: 'I need a jacket.' },
+                    { word: 'Socks', spanish: 'Calcetines', image: '🧦', sentence: 'I wear socks.' },
+                    { word: 'Tie', spanish: 'Corbata', image: '👔', sentence: 'He wears a tie.' }
+                ]
+            },
+            {
+                id: 'actions',
+                name: '🏃 Actions',
+                icon: '🏃',
+                items: [
+                    { word: 'Run', spanish: 'Correr', image: '🏃', sentence: 'I run fast.' },
+                    { word: 'Jump', spanish: 'Saltar', image: '🦘', sentence: 'I jump high.' },
+                    { word: 'Sit', spanish: 'Sentarse', image: '🪑', sentence: 'I sit down.' },
+                    { word: 'Walk', spanish: 'Caminar', image: '🚶', sentence: 'I walk to school.' },
+                    { word: 'Play', spanish: 'Jugar', image: '🎮', sentence: 'I play games.' },
+                    { word: 'Sleep', spanish: 'Dormir', image: '😴', sentence: 'I sleep at night.' },
+                    { word: 'Eat', spanish: 'Comer', image: '🍽️', sentence: 'I eat food.' },
+                    { word: 'Drink', spanish: 'Beber', image: '🥤', sentence: 'I drink water.' }
+                ]
+            },
+            {
+                id: 'weather',
+                name: '🌦️ Weather',
+                icon: '🌦️',
+                items: [
+                    { word: 'Sunny', spanish: 'Soleado', image: '☀️', sentence: 'It is sunny today.' },
+                    { word: 'Rainy', spanish: 'Lluvioso', image: '🌧️', sentence: 'It is rainy.' },
+                    { word: 'Cloudy', spanish: 'Nublado', image: '☁️', sentence: 'The sky is cloudy.' },
+                    { word: 'Snowy', spanish: 'Nevado', image: '❄️', sentence: 'It is snowy.' },
+                    { word: 'Windy', spanish: 'Ventoso', image: '💨', sentence: 'It is very windy.' },
+                    { word: 'Hot', spanish: 'Caliente', image: '🔥', sentence: 'It is hot today.' },
+                    { word: 'Cold', spanish: 'Frío', image: '🥶', sentence: 'It is cold outside.' },
+                    { word: 'Nice', spanish: 'Bonito', image: '🌈', sentence: 'The weather is nice.' }
+                ]
+            }
+        ];
+
+        // ===== RENDER FUNCTIONS =====
+        function renderApp() {
+            const app = document.getElementById('app');
+            
+            switch(currentScreen) {
+                case 'home': app.innerHTML = renderHome(); break;
+                case 'login': app.innerHTML = renderLogin(); break;
+                case 'register': app.innerHTML = renderRegister(); break;
+                case 'fase3':
+                case 'fase4':
+                case 'fase5': app.innerHTML = renderPhaseGames(); break;
+                case 'game': app.innerHTML = renderGame(); break;
+                case 'english': app.innerHTML = renderEnglishMain(); break;
+                case 'english-category': app.innerHTML = renderEnglishCategory(); break;
+                case 'english-game': app.innerHTML = renderEnglishGame(); break;
+                case 'shop': app.innerHTML = renderShop(); break;
+                case 'ranking': app.innerHTML = renderRanking(); break;
+                case 'achievements': app.innerHTML = renderAchievements(); break;
+                case 'profile': app.innerHTML = renderProfile(); break;
+                case 'terms': app.innerHTML = renderTerms(); break;
+                default: app.innerHTML = renderHome();
+            }
+        }
+
+        function renderUserBar() {
+            if (!currentUser) return '';
+            return `
+                <div class="fixed top-0 left-0 right-0 bg-black/50 backdrop-blur-md p-3 z-50 flex justify-between items-center flex-wrap gap-3">
+                    <div class="flex items-center gap-4">
+                        <span class="text-lg font-bold">👤 ${currentUser.username}</span>
+                        <div class="flex items-center gap-1">
+                            ${Array(currentUser.lives).fill('<span class="heart">❤️</span>').join('')}
+                            ${Array(Math.max(0, 5 - currentUser.lives)).fill('<span class="heart empty">🖤</span>').join('')}
+                        </div>
+                        <span class="text-sm bg-purple-500 px-2 py-1 rounded">Lvl ${currentUser.level || 1}</span>
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="text-yellow-400 font-bold">⭐ ${currentUser.points}</span>
+                        <button onclick="goToProfile()" class="bg-blue-500 hover:bg-blue-400 px-3 py-1 rounded-full text-sm font-bold">👤 Perfil</button>
+                        <button onclick="goToAchievements()" class="bg-yellow-500 hover:bg-yellow-400 px-3 py-1 rounded-full text-sm font-bold">🏆 Logros</button>
+                        <button onclick="goToShop()" class="bg-yellow-500 hover:bg-yellow-400 px-3 py-1 rounded-full text-sm font-bold">🛒</button>
+                        <button onclick="goToRanking()" class="bg-purple-500 hover:bg-purple-400 px-3 py-1 rounded-full text-sm font-bold">🏅</button>
+                        <button onclick="logout()" class="bg-red-500 hover:bg-red-400 px-3 py-1 rounded-full text-sm font-bold">Salir</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHome() {
+            return `
+                ${currentUser ? renderUserBar() : ''}
+                <div class="min-h-full w-full flex flex-col items-center justify-center p-8 ${currentUser ? 'pt-20' : ''}">
+                    <div class="text-center mb-8 bounce-in">
+                        <h1 class="title-font text-4xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 mb-4 float">
+                            ${config.school_name}
+                        </h1>
+                        <p class="text-xl text-gray-300">26DPR1320W</p>
+                        <p class="text-lg text-pink-300 mt-2">✨ Material elaborado con ❤️ por la ${config.teacher_name} ✨</p>
+                    </div>
+
+                    ${!currentUser ? `
+                        <div class="flex gap-4 mb-8 flex-wrap justify-center">
+                            <button onclick="goToLogin()" class="bg-gradient-to-r from-green-400 to-green-600 px-6 py-3 rounded-full font-bold btn-3d pulse-glow">
+                                🔑 Iniciar Sesión
+                            </button>
+                            <button onclick="goToRegister()" class="bg-gradient-to-r from-blue-400 to-blue-600 px-6 py-3 rounded-full font-bold btn-3d">
+                                📝 Registrarse
+                            </button>
+                        </div>
+                    ` : ''}
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full mb-8">
+                        <button onclick="goToPhase('fase3')" class="gradient-fase3 p-8 rounded-3xl card-hover btn-3d shadow-2xl">
+                            <div class="text-6xl mb-4">🎈</div>
+                            <h2 class="title-font text-3xl mb-2">FASE 3</h2>
+                            <p class="text-lg opacity-90">1° y 2° Grado</p>
+                            <p class="text-sm mt-2 opacity-75">Vocales, números, colores y más</p>
+                        </button>
+
+                        <button onclick="goToPhase('fase4')" class="gradient-fase4 p-8 rounded-3xl card-hover btn-3d shadow-2xl">
+                            <div class="text-6xl mb-4">🚀</div>
+                            <h2 class="title-font text-3xl mb-2">FASE 4</h2>
+                            <p class="text-lg opacity-90">3° y 4° Grado</p>
+                            <p class="text-sm mt-2 opacity-75">Multiplicación, ecosistemas y más</p>
+                        </button>
+
+                        <button onclick="goToPhase('fase5')" class="gradient-fase5 p-8 rounded-3xl card-hover btn-3d shadow-2xl">
+                            <div class="text-6xl mb-4">🌟</div>
+                            <h2 class="title-font text-3xl mb-2">FASE 5</h2>
+                            <p class="text-lg opacity-90">5° y 6° Grado</p>
+                            <p class="text-sm mt-2 opacity-75">Decimales, historia y más</p>
+                        </button>
+
+                        <button onclick="goToEnglish()" class="gradient-english p-8 rounded-3xl card-hover btn-3d shadow-2xl">
+                            <div class="text-6xl mb-4">🇬🇧</div>
+                            <h2 class="title-font text-3xl mb-2">ENGLISH</h2>
+                            <p class="text-lg opacity-90">Aprende Inglés</p>
+                            <p class="text-sm mt-2 opacity-75">10 categorías de vocabulario</p>
+                        </button>
+                    </div>
+
+                    <button onclick="goToTerms()" class="text-gray-400 hover:text-white underline text-sm">
+                        📜 Términos y Condiciones de Uso
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderLogin() {
+            return `
+                <div class="min-h-full w-full flex items-center justify-center p-8">
+                    <div class="bg-white/10 backdrop-blur-lg p-8 rounded-3xl max-w-md w-full bounce-in">
+                        <button onclick="goHome()" class="text-white/70 hover:text-white mb-4">← Volver</button>
+                        <h2 class="title-font text-3xl text-center mb-6 text-yellow-400">🔑 Iniciar Sesión</h2>
+                        <form onsubmit="handleLogin(event)">
+                            <div class="mb-4">
+                                <label class="block text-sm mb-2">Nombre de Usuario</label>
+                                <input type="text" id="loginUsername" required 
+                                    class="w-full p-3 rounded-xl bg-white/20 border border-white/30 focus:border-yellow-400 outline-none"
+                                    placeholder="Tu nombre de usuario">
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-sm mb-2">Contraseña</label>
+                                <input type="password" id="loginPassword" required 
+                                    class="w-full p-3 rounded-xl bg-white/20 border border-white/30 focus:border-yellow-400 outline-none"
+                                    placeholder="Tu contraseña">
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 p-4 rounded-xl font-bold text-lg btn-3d">
+                                Entrar 🚀
+                            </button>
+                            <p id="loginError" class="text-red-400 text-center mt-4 hidden"></p>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRegister() {
+            return `
+                <div class="min-h-full w-full flex items-center justify-center p-8">
+                    <div class="bg-white/10 backdrop-blur-lg p-8 rounded-3xl max-w-md w-full bounce-in">
+                        <button onclick="goHome()" class="text-white/70 hover:text-white mb-4">← Volver</button>
+                        <h2 class="title-font text-3xl text-center mb-6 text-green-400">📝 Registrarse</h2>
+                        <form onsubmit="handleRegister(event)">
+                            <div class="mb-4">
+                                <label class="block text-sm mb-2">Nombre de Usuario</label>
+                                <input type="text" id="regUsername" required 
+                                    class="w-full p-3 rounded-xl bg-white/20 border border-white/30 focus:border-green-400 outline-none"
+                                    placeholder="Elige un nombre único">
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-sm mb-2">Contraseña</label>
+                                <input type="password" id="regPassword" required minlength="4"
+                                    class="w-full p-3 rounded-xl bg-white/20 border border-white/30 focus:border-green-400 outline-none"
+                                    placeholder="Mínimo 4 caracteres">
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-green-400 to-teal-500 p-4 rounded-xl font-bold text-lg btn-3d">
+                                Crear Cuenta ✨
+                            </button>
+                            <p id="regError" class="text-red-400 text-center mt-4 hidden"></p>
+                            <p id="regSuccess" class="text-green-400 text-center mt-4 hidden"></p>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPhaseGames() {
+            let games, gradient, title, grades;
+            switch(currentScreen) {
+                case 'fase3': games = fase3Games; gradient = 'gradient-fase3'; title = 'FASE 3'; grades = '1° y 2° Grado'; break;
+                case 'fase4': games = fase4Games; gradient = 'gradient-fase4'; title = 'FASE 4'; grades = '3° y 4° Grado'; break;
+                case 'fase5': games = fase5Games; gradient = 'gradient-fase5'; title = 'FASE 5'; grades = '5° y 6° Grado'; break;
+            }
+
+            return `
+                ${currentUser ? renderUserBar() : ''}
+                <div class="min-h-full w-full p-8 ${currentUser ? 'pt-20' : ''}">
+                    <button onclick="goHome()" class="text-white/70 hover:text-white mb-4 flex items-center gap-2">
+                        ← Volver al Inicio
+                    </button>
+                    <div class="text-center mb-8">
+                        <h1 class="title-font text-4xl mb-2">${title}</h1>
+                        <p class="text-xl text-gray-300">${grades}</p>
+                        <p class="text-sm text-gray-400 mt-2">${games.length} juegos disponibles</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                        ${games.map(game => `
+                            <button onclick="startGame('${game.id}')" class="${gradient} p-6 rounded-2xl card-hover btn-3d text-left">
+                                <div class="text-4xl mb-3">${game.name.split(' ')[0]}</div>
+                                <h3 class="font-bold text-xl mb-1">${game.name}</h3>
+                                <p class="text-sm opacity-80">${game.description}</p>
+                                <span class="inline-block mt-3 bg-white/20 px-3 py-1 rounded-full text-xs">${game.subject}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGame() {
+            const game = getCurrentGame();
+            if (!game) return renderHome();
+
+            return `
+                ${currentUser ? renderUserBar() : ''}
+                <div class="min-h-full w-full p-8 ${currentUser ? 'pt-20' : ''}">
+                    <div class="max-w-4xl mx-auto">
+                        <button onclick="goBack()" class="text-white/70 hover:text-white mb-4">← Volver</button>
+                        
+                        <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-6 mb-6">
+                            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                                <h2 class="title-font text-2xl">${game.name}</h2>
+                                <div class="flex items-center gap-4">
+                                    <span class="text-yellow-400 font-bold">⭐ ${gameState.score || 0}</span>
+                                    <span class="text-gray-300">Pregunta ${(gameState.current || 0) + 1}/${gameState.total || 5}</span>
+                                </div>
+                            </div>
+                            <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+                                <div class="progress-bar h-full" style="width: ${((gameState.current || 0) / (gameState.total || 5)) * 100}%"></div>
+                            </div>
+                        </div>
+
+                        <div id="gameContent" class="bg-white/10 backdrop-blur-lg rounded-3xl p-8 min-h-96 flex flex-col items-center justify-center">
+                            ${renderGameContent(game)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGameContent(game) {
+            const data = game.data;
+            const current = gameState.current || 0;
+            
+            if (current >= (gameState.total || data.items.length)) {
+                return renderGameComplete();
+            }
+
+            const item = data.items[current];
+            if (!item) return renderGameComplete();
+
+            switch(data.type) {
+                case 'match': return renderMatchGame(item);
+                case 'count': return renderCountGame(item);
+                case 'quiz': return renderQuizGame(item);
+                case 'math': case 'math-decimal': return renderMathGame(item, data.operation);
+                case 'syllable': return renderSyllableGame(item);
+                case 'color-match': return renderColorMatchGame(item);
+                case 'shape-match': return renderShapeMatchGame(data.items);
+                case 'order': return renderOrderGame(data.items);
+                case 'classify': return renderClassifyGame(data);
+                case 'fraction': return renderFractionGame(item);
+                case 'spelling': return renderSpellingGame(item);
+                case 'percentage': return renderPercentageGame(item);
+                case 'geometry': return renderGeometryGame(item);
+                case 'probability': return renderProbabilityGame(item);
+                case 'match-adj': return renderMatchAdjGame(item);
+                case 'diphthong': return renderDiphthongGame(item);
+                case 'consonant-match': return renderConsonantMatchGame(item);
+                case 'vowel-count': return renderVowelCountGame(item);
+                case 'powers': return renderPowersGame(item);
+                case 'square-roots': return renderSquareRootsGame(item);
+                case 'comparison': return renderComparisonGame(item);
+                case 'roman-numerals': return renderRomanNumeralsGame(item);
+                case 'prepositions': return renderPrepositionsGame(data.items);
+                case 'moon-phases': return renderMoonPhasesGame(data.items);
+                case 'climate-match': return renderClimateMatchGame(data.items);
+                case 'season-match': return renderSeasonMatchGame(data.items);
+                default: return renderQuizGame(item);
+            }
+        }
+
+        function renderGameComplete() {
+            const bonus = gameState.score >= 80 ? 50 : gameState.score >= 60 ? 25 : 0;
+            const total = gameState.score + bonus;
+            
+            return `
+                <div class="text-center bounce-in">
+                    <div class="text-9xl mb-6">🎉</div>
+                    <h2 class="title-font text-4xl mb-4 text-yellow-400">¡Felicidades!</h2>
+                    <p class="text-2xl mb-6">Completaste el juego</p>
+                    <div class="bg-white/10 p-6 rounded-2xl mb-6">
+                        <p class="text-xl">Puntos obtenidos: <span class="text-yellow-400 font-bold">${gameState.score}</span></p>
+                        ${bonus > 0 ? `<p class="text-lg text-green-400">Bonus: +${bonus}</p>` : ''}
+                        <p class="text-2xl font-bold mt-2">Total: <span class="text-yellow-400">${total}</span> ⭐</p>
+                    </div>
+                    <button onclick="finishGame(${total})" class="bg-gradient-to-r from-green-400 to-green-600 px-8 py-4 rounded-xl font-bold text-xl btn-3d">
+                        Continuar →
+                    </button>
+                </div>
+            `;
+        }
+
+        // GAME RENDER HELPERS
+        function renderMatchGame(item) {
+            return `<div class="text-center bounce-in"><div class="text-9xl mb-8">${item.emoji}</div><p class="text-2xl mb-6">¿Con qué vocal empieza <span class="text-yellow-400 font-bold">${item.word}</span>?</p><div class="flex gap-4 flex-wrap justify-center">${['A', 'E', 'I', 'O', 'U'].map(v => `<button onclick="checkAnswer('${v}', '${item.letter}')" class="game-option bg-gradient-to-br from-purple-500 to-pink-500 w-20 h-20 rounded-2xl text-4xl font-bold">${v}</button>`).join('')}</div></div>`;
+        }
+
+        function renderCountGame(item) {
+            const wrongOptions = [item.num - 1, item.num + 1, item.num + 2].filter(n => n > 0);
+            const options = shuffleArray([item.num, ...wrongOptions.slice(0, 2)]);
+            return `<div class="text-center bounce-in"><p class="text-2xl mb-6">¿Cuántos hay?</p><div class="text-6xl mb-8 flex flex-wrap justify-center gap-2">${Array(item.num).fill(item.emoji).join('')}</div><div class="flex gap-4 justify-center">${options.map(n => `<button onclick="checkAnswer(${n}, ${item.num})" class="game-option bg-gradient-to-br from-blue-500 to-cyan-500 w-24 h-24 rounded-2xl text-4xl font-bold">${n}</button>`).join('')}</div></div>`;
+        }
+
+        function renderQuizGame(item) {
+            const options = shuffleArray(item.options);
+            return `<div class="text-center bounce-in"><div class="text-8xl mb-6">${item.emoji}</div><p class="text-2xl mb-8">${item.q}</p><div class="flex flex-col gap-4 w-full max-w-md">${options.map(opt => `<button onclick="checkAnswer('${opt}', '${item.a}')" class="game-option bg-gradient-to-r from-indigo-500 to-purple-500 p-4 rounded-xl text-xl font-bold text-left">${opt}</button>`).join('')}</div></div>`;
+        }
+
+        function renderMathGame(item, op) {
+            const wrongOptions = [item.result - 1, item.result + 1, item.result + 2, item.result - 2].filter(n => n >= 0 && n !== item.result);
+            const options = shuffleArray([item.result, ...wrongOptions.slice(0, 2)]);
+            return `<div class="text-center bounce-in"><p class="text-6xl mb-8 title-font">${item.a} ${op || item.op} ${item.b} = ?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(n => `<button onclick="checkAnswer(${n}, ${item.result})" class="game-option bg-gradient-to-br from-green-500 to-emerald-500 w-24 h-24 rounded-2xl text-3xl font-bold">${n}</button>`).join('')}</div></div>`;
+        }
+
+        function renderSyllableGame(item) {
+            const shuffled = shuffleArray([...item.syllables, 'LO', 'TE', 'PI'].slice(0, 4));
+            return `<div class="text-center bounce-in"><div class="text-8xl mb-4">${item.emoji}</div><p class="text-2xl mb-6">Selecciona las sílabas para formar: <span class="text-yellow-400 font-bold">${item.word}</span></p><div class="flex gap-4 justify-center flex-wrap">${shuffled.map(s => `<button onclick="selectSyllable('${s}')" class="game-option bg-gradient-to-br from-orange-500 to-red-500 px-6 py-4 rounded-xl text-2xl font-bold">${s}</button>`).join('')}</div><div id="selectedSyllables" class="mt-6 text-4xl font-bold text-yellow-400"></div><button onclick="checkSyllableAnswer('${item.word}')" class="mt-4 bg-green-500 hover:bg-green-400 px-6 py-3 rounded-xl font-bold">Verificar ✓</button></div>`;
+        }
+
+        function renderColorMatchGame(item) {
+            const allColors = [{ color: 'Rojo', hex: '#ff0000' }, { color: 'Azul', hex: '#0000ff' }, { color: 'Verde', hex: '#00ff00' }, { color: 'Amarillo', hex: '#ffff00' }];
+            const options = shuffleArray(allColors);
+            return `<div class="text-center bounce-in"><div class="text-8xl mb-4">${item.emoji}</div><p class="text-2xl mb-6">¿De qué color es?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(c => `<button onclick="checkAnswer('${c.color}', '${item.color}')" class="game-option w-24 h-24 rounded-2xl text-lg font-bold border-4 border-white" style="background-color: ${c.hex}">${c.color}</button>`).join('')}</div></div>`;
+        }
+
+        function renderShapeMatchGame(items) {
+            const current = gameState.shapeCurrent || 0;
+            if (current >= items.length) { nextQuestion(); return ''; }
+            const item = items[current];
+            const shuffled = shuffleArray(items.map(i => i.name));
+            return `<div class="text-center bounce-in"><div class="text-9xl mb-6">${item.emoji}</div><p class="text-2xl mb-6">¿Qué figura es esta?</p><div class="flex gap-4 justify-center flex-wrap">${shuffled.slice(0, 4).map(name => `<button onclick="checkShapeAnswer('${name}', '${item.name}')" class="game-option bg-gradient-to-br from-cyan-500 to-blue-500 px-6 py-4 rounded-xl text-xl font-bold">${name}</button>`).join('')}</div></div>`;
+        }
+
+        function renderOrderGame(items) {
+            if (!gameState.orderItems) {
+                gameState.orderItems = shuffleArray([...items]);
+                gameState.correctOrder = [...items];
+                gameState.selectedOrder = [];
+            }
+            return `<div class="text-center bounce-in"><p class="text-2xl mb-6">Ordena correctamente:</p><div class="flex flex-wrap gap-3 justify-center mb-6">${gameState.orderItems.filter(i => !gameState.selectedOrder.includes(i)).map(item => `<button onclick="selectOrderItem('${item}')" class="game-option bg-gradient-to-br from-purple-500 to-pink-500 px-4 py-3 rounded-xl text-lg font-bold">${item}</button>`).join('')}</div><div class="border-2 border-dashed border-white/30 p-4 rounded-xl min-h-16 mb-4"><p class="text-sm text-gray-400 mb-2">Tu orden:</p><div class="flex flex-wrap gap-2 justify-center">${gameState.selectedOrder.map(item => `<span class="bg-yellow-500/80 px-3 py-2 rounded-lg text-black font-bold">${item}</span>`).join('')}</div></div><div class="flex gap-4 justify-center"><button onclick="resetOrder()" class="bg-red-500 hover:bg-red-400 px-4 py-2 rounded-xl">Reiniciar</button><button onclick="checkOrderAnswer()" class="bg-green-500 hover:bg-green-400 px-6 py-3 rounded-xl font-bold">Verificar ✓</button></div></div>`;
+        }
+
+        function renderClassifyGame(data) {
+            if (!gameState.classifyItems) {
+                gameState.classifyItems = shuffleArray([...data.items]);
+                gameState.classifyCurrent = 0;
+            }
+            const item = gameState.classifyItems[gameState.classifyCurrent];
+            if (!item) { nextQuestion(); return ''; }
+            return `<div class="text-center bounce-in"><div class="text-8xl mb-4">${item.emoji}</div><p class="text-3xl font-bold mb-6">${item.word}</p><p class="text-xl mb-6">¿A qué categoría pertenece?</p><div class="flex gap-4 justify-center flex-wrap">${data.categories.map(cat => `<button onclick="checkClassifyAnswer('${cat}', '${item.category}')" class="game-option bg-gradient-to-br from-teal-500 to-green-500 px-6 py-4 rounded-xl text-xl font-bold">${cat}</button>`).join('')}</div></div>`;
+        }
+
+        function renderFractionGame(item) {
+            const options = shuffleArray([item.name, 'un cuarto', 'tres cuartos', 'un tercio'].filter((v, i, a) => a.indexOf(v) === i)).slice(0, 4);
+            return `<div class="text-center bounce-in"><div class="text-8xl mb-4">${item.emoji}</div><p class="text-6xl font-bold mb-6">${item.num}/${item.den}</p><p class="text-2xl mb-6">¿Cómo se lee?</p><div class="flex flex-col gap-4 w-full max-w-md">${options.map(opt => `<button onclick="checkAnswer('${opt}', '${item.name}')" class="game-option bg-gradient-to-r from-amber-500 to-orange-500 p-4 rounded-xl text-xl font-bold">${opt}</button>`).join('')}</div></div>`;
+        }
+
+        function renderSpellingGame(item) {
+            const options = shuffleArray(item.options);
+            return `<div class="text-center bounce-in"><p class="text-xl text-gray-300 mb-4">Pista: ${item.hint}</p><p class="text-2xl mb-8">¿Cuál es la ortografía correcta?</p><div class="flex flex-col gap-4 w-full max-w-md">${options.map(opt => `<button onclick="checkAnswer('${opt}', '${item.word}')" class="game-option bg-gradient-to-r from-violet-500 to-purple-500 p-4 rounded-xl text-2xl font-bold tracking-wider">${opt}</button>`).join('')}</div></div>`;
+        }
+
+        function renderPercentageGame(item) {
+            const wrongOptions = [item.result - 5, item.result + 5, item.result + 10].filter(n => n >= 0 && n !== item.result);
+            const options = shuffleArray([item.result, ...wrongOptions.slice(0, 2)]);
+            return `<div class="text-center bounce-in"><p class="text-4xl mb-8 title-font">${item.percent}% de ${item.num} = ?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(n => `<button onclick="checkAnswer(${n}, ${item.result})" class="game-option bg-gradient-to-br from-rose-500 to-pink-500 w-24 h-24 rounded-2xl text-3xl font-bold">${n}</button>`).join('')}</div></div>`;
+        }
+
+        function renderGeometryGame(item) {
+            const wrongOptions = [item.area - 5, item.area + 5, item.area + 10].filter(n => n > 0 && n !== item.area);
+            const options = shuffleArray([item.area, ...wrongOptions.slice(0, 2)]);
+            let question = '';
+            if (item.side) {
+                question = `${item.shape} con lado = ${item.side}`;
+            } else {
+                question = `${item.shape} con base = ${item.base} y altura = ${item.height}`;
+            }
+            return `<div class="text-center bounce-in"><p class="text-2xl mb-4">Calcula el área:</p><p class="text-3xl mb-8 title-font">${question}</p><div class="flex gap-4 justify-center flex-wrap">${options.map(n => `<button onclick="checkAnswer(${n}, ${item.area})" class="game-option bg-gradient-to-br from-sky-500 to-blue-500 w-28 h-24 rounded-2xl text-2xl font-bold">${n} u²</button>`).join('')}</div></div>`;
+        }
+
+        function renderProbabilityGame(item) {
+            const options = shuffleArray(item.options);
+            return `<div class="text-center bounce-in"><div class="text-8xl mb-6">🎲</div><p class="text-2xl mb-8">${item.q}</p><div class="flex flex-col gap-4 w-full max-w-md">${options.map(opt => `<button onclick="checkAnswer('${opt}', '${item.a}')" class="game-option bg-gradient-to-r from-fuchsia-500 to-pink-500 p-4 rounded-xl text-xl font-bold">${opt}</button>`).join('')}</div></div>`;
+        }
+
+        function renderMatchAdjGame(item) {
+            const allAdj = ['brillante', 'frío', 'grande', 'pequeña', 'ácido', 'dulce'];
+            const options = shuffleArray([item.adj, ...allAdj.filter(a => a !== item.adj).slice(0, 2)]);
+            return `<div class="text-center bounce-in"><div class="text-8xl mb-4">${item.emoji}</div><p class="text-3xl font-bold mb-6">${item.noun}</p><p class="text-2xl mb-6">¿Qué adjetivo lo describe?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(adj => `<button onclick="checkAnswer('${adj}', '${item.adj}')" class="game-option bg-gradient-to-br from-lime-500 to-green-500 px-6 py-4 rounded-xl text-xl font-bold">${adj}</button>`).join('')}</div></div>`;
+        }
+
+        function renderDiphthongGame(item) {
+            const allDiphthongs = ['IE', 'UE', 'UA', 'AU', 'AI'];
+            const options = shuffleArray([item.diphthong, ...allDiphthongs.filter(d => d !== item.diphthong).slice(0, 2)]);
+            return `<div class="text-center bounce-in"><div class="text-8xl mb-4">${item.emoji}</div><p class="text-4xl font-bold mb-6">${item.word}</p><p class="text-2xl mb-6">¿Qué diptongo hay?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(d => `<button onclick="checkAnswer('${d}', '${item.diphthong}')" class="game-option bg-gradient-to-br from-pink-500 to-rose-500 px-8 py-4 rounded-xl text-3xl font-bold">${d}</button>`).join('')}</div></div>`;
+        }
+
+        function renderConsonantMatchGame(item) {
+            const allConsonants = ['M', 'P', 'L', 'S', 'T', 'N', 'R', 'C'];
+            const options = shuffleArray([item.letter, ...allConsonants.filter(c => c !== item.letter).slice(0, 2)]);
+            return `<div class="text-center bounce-in"><div class="text-9xl mb-4">${item.emoji}</div><p class="text-4xl font-bold mb-2">${item.word}</p><p class="text-2xl mb-6">¿Con qué consonante empieza?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(c => `<button onclick="checkAnswer('${c}', '${item.letter}')" class="game-option bg-gradient-to-br from-red-500 to-orange-500 w-20 h-20 rounded-2xl text-4xl font-bold">${c}</button>`).join('')}</div></div>`;
+        }
+
+        function renderVowelCountGame(item) {
+            const options = shuffleArray([item.count, item.count - 1, item.count + 1, item.count + 2].filter(n => n > 0 && n <= 10));
+            return `<div class="text-center bounce-in"><p class="text-4xl font-bold mb-6">${item.word}</p><div class="text-8xl mb-6">${item.emoji}</div><p class="text-2xl mb-6">¿Cuántas vocales tiene?</p><div class="flex gap-4 justify-center flex-wrap">${options.slice(0, 4).map(n => `<button onclick="checkAnswer(${n}, ${item.count})" class="game-option bg-gradient-to-br from-cyan-500 to-blue-500 w-20 h-20 rounded-2xl text-4xl font-bold">${n}</button>`).join('')}</div></div>`;
+        }
+
+        function renderPowersGame(item) {
+            const wrongOptions = [item.result - 2, item.result + 2, item.result + 5].filter(n => n > 0 && n !== item.result);
+            const options = shuffleArray([item.result, ...wrongOptions.slice(0, 2)]);
+            return `<div class="text-center bounce-in"><p class="text-6xl font-bold mb-8 title-font">${item.display} = ?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(n => `<button onclick="checkAnswer(${n}, ${item.result})" class="game-option bg-gradient-to-br from-yellow-500 to-amber-500 w-24 h-24 rounded-2xl text-3xl font-bold">${n}</button>`).join('')}</div></div>`;
+        }
+
+        function renderSquareRootsGame(item) {
+            const wrongOptions = [item.result - 1, item.result + 1, item.result + 2].filter(n => n > 0 && n !== item.result);
+            const options = shuffleArray([item.result, ...wrongOptions.slice(0, 2)]);
+            return `<div class="text-center bounce-in"><p class="text-6xl font-bold mb-8 title-font">√${item.num} = ?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(n => `<button onclick="checkAnswer(${n}, ${item.result})" class="game-option bg-gradient-to-br from-indigo-500 to-purple-500 w-24 h-24 rounded-2xl text-3xl font-bold">${n}</button>`).join('')}</div></div>`;
+        }
+
+        function renderComparisonGame(item) {
+            const options = shuffleArray(['<', '=', '>']);
+            return `<div class="text-center bounce-in"><p class="text-6xl font-bold mb-8">${item.a} ___ ${item.b}</p><p class="text-2xl mb-6">¿Cuál es el signo correcto?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(op => `<button onclick="checkAnswer('${op}', '${item.operator}')" class="game-option bg-gradient-to-br from-teal-500 to-cyan-500 w-20 h-20 rounded-2xl text-4xl font-bold">${op}</button>`).join('')}</div></div>`;
+        }
+
+        function renderRomanNumeralsGame(item) {
+            const allRomans = ['IV', 'IX', 'XV', 'XX', 'XXV', 'L', 'XL', 'XC', 'C', 'XCIX'];
+            const options = shuffleArray([item.roman, ...allRomans.filter(r => r !== item.roman).slice(0, 2)]);
+            return `<div class="text-center bounce-in"><p class="text-6xl font-bold mb-8">${item.num}</p><p class="text-2xl mb-6">¿Cuál es el número romano?</p><div class="flex gap-4 justify-center flex-wrap">${options.map(r => `<button onclick="checkAnswer('${r}', '${item.roman}')" class="game-option bg-gradient-to-br from-amber-500 to-yellow-500 px-8 py-4 rounded-xl text-3xl font-bold">${r}</button>`).join('')}</div></div>`;
+        }
+
+        function renderPrepositionsGame(items) {
+            const current = gameState.current || 0;
+            const item = items[current];
+            const allMeanings = items.map(i => i.meaning);
+            const options = shuffleArray([item.meaning, ...allMeanings.filter(m => m !== item.meaning).slice(0, 2)]);
+            return `<div class="text-center bounce-in"><p class="text-6xl font-bold mb-6">${item.prep}</p><p class="text-2xl mb-6">¿Cuál es su significado?</p><div class="flex flex-col gap-4 w-full max-w-md">${options.map(opt => `<button onclick="checkAnswer('${opt}', '${item.meaning}')" class="game-option bg-gradient-to-r from-green-500 to-emerald-500 p-4 rounded-xl text-xl font-bold">${opt}</button>`).join('')}</div></div>`;
+        }
+
+        function renderMoonPhasesGame(items) {
+            const current = gameState.current || 0;
+            const item = items[current];
+            const options = shuffleArray(items.map(i => i.phase));
+            return `<div class="text-center bounce-in"><p class="text-9xl mb-6">${item.emoji}</p><p class="text-2xl mb-6">${item.desc}</p><p class="text-xl mb-6">¿Cuál es el nombre?</p><div class="flex flex-col gap-4 w-full max-w-md">${options.map(opt => `<button onclick="checkAnswer('${opt}', '${item.phase}')" class="game-option bg-gradient-to-r from-indigo-500 to-purple-500 p-4 rounded-xl text-xl font-bold">${opt}</button>`).join('')}</div></div>`;
+        }
+
+        function renderClimateMatchGame(items) {
+            const current = gameState.current || 0;
+            const item = items[current];
+            const options = shuffleArray(items.map(i => i.climate));
+            return `<div class="text-center bounce-in"><p class="text-8xl mb-4">${item.emoji}</p><p class="text-2xl mb-6">${item.features.join(', ')}</p><p class="text-xl mb-6">¿Qué clima es?</p><div class="flex flex-col gap-4 w-full max-w-md">${options.map(opt => `<button onclick="checkAnswer('${opt}', '${item.climate}')" class="game-option bg-gradient-to-r from-orange-500 to-yellow-500 p-4 rounded-xl text-xl font-bold">${opt}</button>`).join('')}</div></div>`;
+        }
+
+        function renderSeasonMatchGame(items) {
+            const current = gameState.current || 0;
+            const item = items[current];
+            const options = shuffleArray(items.map(i => i.season));
+            return `<div class="text-center bounce-in"><p class="text-9xl mb-6">${item.emoji}</p><p class="text-2xl mb-6">${item.feature}</p><p class="text-xl mb-6">¿Cuál es la estación?</p><div class="flex flex-col gap-4 w-full max-w-md">${options.map(opt => `<button onclick="checkAnswer('${opt}', '${item.season}')" class="game-option bg-gradient-to-r from-pink-500 to-rose-500 p-4 rounded-xl text-xl font-bold">${opt}</button>`).join('')}</div></div>`;
+        }
+
+        function renderEnglishMain() {
+            return `
+                ${currentUser ? renderUserBar() : ''}
+                <div class="min-h-full w-full p-8 ${currentUser ? 'pt-20' : ''}">
+                    <button onclick="goHome()" class="text-white/70 hover:text-white mb-4">← Volver al Inicio</button>
+                    <div class="text-center mb-8">
+                        <h1 class="title-font text-4xl mb-2">🇬🇧 Learn English!</h1>
+                        <p class="text-xl text-gray-300">10 categorías de vocabulario</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 max-w-6xl mx-auto">
+                        ${englishCategories.map(cat => `
+                            <button onclick="selectEnglishCategory('${cat.id}')" class="gradient-english p-6 rounded-2xl card-hover btn-3d text-center">
+                                <div class="text-5xl mb-3">${cat.icon}</div>
+                                <h3 class="font-bold text-lg">${cat.name}</h3>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEnglishCategory() {
+            const cat = englishCategories.find(c => c.id === currentEnglishCategory);
+            if (!cat) return renderEnglishMain();
+
+            return `
+                ${currentUser ? renderUserBar() : ''}
+                <div class="min-h-full w-full p-8 ${currentUser ? 'pt-20' : ''}">
+                    <button onclick="goToEnglish()" class="text-white/70 hover:text-white mb-4">← Volver a Categorías</button>
+                    <div class="text-center mb-8">
+                        <div class="text-6xl mb-4">${cat.icon}</div>
+                        <h1 class="title-font text-4xl mb-2">${cat.name}</h1>
+                        <p class="text-lg text-gray-300">3 fases de aprendizaje</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                        <button onclick="startEnglishStage(1)" class="bg-gradient-to-br from-green-400 to-green-600 p-8 rounded-2xl card-hover btn-3d">
+                            <div class="text-5xl mb-4">🖼️</div>
+                            <h3 class="title-font text-2xl mb-2">Fase 1</h3>
+                            <p class="text-sm opacity-80">Imagen → Palabra</p>
+                        </button>
+                        <button onclick="startEnglishStage(2)" class="bg-gradient-to-br from-blue-400 to-blue-600 p-8 rounded-2xl card-hover btn-3d">
+                            <div class="text-5xl mb-4">📝</div>
+                            <h3 class="title-font text-2xl mb-2">Fase 2</h3>
+                            <p class="text-sm opacity-80">Completa la oración</p>
+                        </button>
+                        <button onclick="startEnglishStage(3)" class="bg-gradient-to-br from-purple-400 to-purple-600 p-8 rounded-2xl card-hover btn-3d">
+                            <div class="text-5xl mb-4">🧠</div>
+                            <h3 class="title-font text-2xl mb-2">Fase 3</h3>
+                            <p class="text-sm opacity-80">Comprensión</p>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEnglishGame() {
+            const cat = englishCategories.find(c => c.id === currentEnglishCategory);
+            if (!cat) return renderEnglishMain();
+
+            const current = gameState.current || 0;
+            if (current >= cat.items.length) {
+                return renderGameComplete();
+            }
+
+            const item = cat.items[current];
+            let content = '';
+
+            switch(currentEnglishStage) {
+                case 1:
+                    const wrongWords = shuffleArray(cat.items.filter(i => i.word !== item.word).map(i => i.word)).slice(0, 2);
+                    const options1 = shuffleArray([item.word, ...wrongWords]);
+                    content = `<div class="text-9xl mb-6">${item.image}</div><p class="text-2xl mb-6">¿Cómo se dice en inglés?</p><div class="flex gap-4 flex-wrap justify-center">${options1.map(opt => `<button onclick="checkEnglishAnswer('${opt}', '${item.word}')" class="game-option bg-gradient-to-br from-green-500 to-emerald-500 px-8 py-4 rounded-xl text-2xl font-bold">${opt}</button>`).join('')}</div>`;
+                    break;
+                case 2:
+                    const wrongWords2 = shuffleArray(cat.items.filter(i => i.word !== item.word).map(i => i.word)).slice(0, 2);
+                    const options2 = shuffleArray([item.word, ...wrongWords2]);
+                    const sentenceWithBlank = item.sentence.replace(item.word.toLowerCase(), '___').replace(item.word, '___');
+                    content = `<div class="text-8xl mb-4">${item.image}</div><p class="text-2xl mb-6">${sentenceWithBlank}</p><p class="text-lg text-gray-300 mb-6">Completa con la palabra correcta</p><div class="flex gap-4 flex-wrap justify-center">${options2.map(opt => `<button onclick="checkEnglishAnswer('${opt}', '${item.word}')" class="game-option bg-gradient-to-br from-blue-500 to-cyan-500 px-8 py-4 rounded-xl text-2xl font-bold">${opt}</button>`).join('')}</div>`;
+                    break;
+                case 3:
+                    const wrongImages = shuffleArray(cat.items.filter(i => i.word !== item.word)).slice(0, 2);
+                    const imageOptions = shuffleArray([item, ...wrongImages]);
+                    content = `<p class="text-3xl mb-6 font-bold">${item.word}</p><p class="text-xl text-gray-300 mb-6">${item.sentence}</p><p class="text-lg mb-4">Selecciona la imagen correcta:</p><div class="flex gap-6 flex-wrap justify-center">${imageOptions.map(opt => `<button onclick="checkEnglishAnswer('${opt.word}', '${item.word}')" class="game-option bg-white/10 p-6 rounded-2xl text-7xl hover:bg-white/20">${opt.image}</button>`).join('')}</div>`;
+                    break;
+            }
+
+            return `
+                ${currentUser ? renderUserBar() : ''}
+                <div class="min-h-full w-full p-8 ${currentUser ? 'pt-20' : ''}">
+                    <div class="max-w-4xl mx-auto">
+                        <button onclick="selectEnglishCategory('${currentEnglishCategory}')" class="text-white/70 hover:text-white mb-4">← Volver</button>
+                        
+                        <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-6 mb-6">
+                            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                                <h2 class="title-font text-xl">${cat.name} - Fase ${currentEnglishStage}</h2>
+                                <div class="flex items-center gap-4">
+                                    <span class="text-yellow-400 font-bold">⭐ ${gameState.score || 0}</span>
+                                    <span class="text-gray-300">${current + 1}/${cat.items.length}</span>
+                                </div>
+                            </div>
+                            <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+                                <div class="progress-bar h-full" style="width: ${(current / cat.items.length) * 100}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-8 min-h-96 flex flex-col items-center justify-center bounce-in">
+                            ${content}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderShop() {
+            if (!currentUser) { goHome(); return ''; }
+            return `
+                ${renderUserBar()}
+                <div class="min-h-full w-full p-8 pt-20">
+                    <button onclick="goHome()" class="text-white/70 hover:text-white mb-4">← Volver al Inicio</button>
+                    <div class="text-center mb-8">
+                        <h1 class="title-font text-4xl mb-2">🛒 Tienda</h1>
+                        <p class="text-xl text-yellow-400">Tienes: ⭐ ${currentUser.points} puntos</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                        <div class="bg-white/10 backdrop-blur-lg p-6 rounded-2xl text-center card-hover">
+                            <div class="text-6xl mb-4">❤️</div>
+                            <h3 class="title-font text-xl mb-2">1 Vida</h3>
+                            <p class="text-yellow-400 mb-4">500 ⭐</p>
+                            <button onclick="buyLife(1, 500)" class="bg-gradient-to-r from-red-400 to-pink-500 px-6 py-3 rounded-xl font-bold btn-3d ${currentUser.points < 500 ? 'opacity-50 cursor-not-allowed' : ''}">Comprar</button>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-lg p-6 rounded-2xl text-center card-hover">
+                            <div class="text-6xl mb-4">❤️❤️</div>
+                            <h3 class="title-font text-xl mb-2">2 Vidas</h3>
+                            <p class="text-yellow-400 mb-4">900 ⭐</p>
+                            <button onclick="buyLife(2, 900)" class="bg-gradient-to-r from-red-400 to-pink-500 px-6 py-3 rounded-xl font-bold btn-3d ${currentUser.points < 900 ? 'opacity-50 cursor-not-allowed' : ''}">Comprar</button>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-lg p-6 rounded-2xl text-center card-hover">
+                            <div class="text-6xl mb-4">❤️❤️❤️</div>
+                            <h3 class="title-font text-xl mb-2">3 Vidas</h3>
+                            <p class="text-yellow-400 mb-4">1200 ⭐</p>
+                            <button onclick="buyLife(3, 1200)" class="bg-gradient-to-r from-red-400 to-pink-500 px-6 py-3 rounded-xl font-bold btn-3d ${currentUser.points < 1200 ? 'opacity-50 cursor-not-allowed' : ''}">Comprar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRanking() {
+            const sortedUsers = [...users].sort((a, b) => b.points - a.points).slice(0, 10);
+            return `
+                ${currentUser ? renderUserBar() : ''}
+                <div class="min-h-full w-full p-8 ${currentUser ? 'pt-20' : ''}">
+                    <button onclick="goHome()" class="text-white/70 hover:text-white mb-4">← Volver al Inicio</button>
+                    <div class="text-center mb-8">
+                        <h1 class="title-font text-4xl mb-2">🏆 Ranking</h1>
+                        <p class="text-xl text-gray-300">Los mejores estudiantes</p>
+                    </div>
+                    <div class="max-w-2xl mx-auto">
+                        ${sortedUsers.length === 0 ? `<div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl text-center"><p class="text-xl">Aún no hay jugadores registrados</p></div>` : sortedUsers.map((user, index) => `
+                            <div class="bg-white/10 backdrop-blur-lg p-4 rounded-xl mb-3 flex items-center justify-between ${user.__backendId === currentUser?.__backendId ? 'border-2 border-yellow-400' : ''}">
+                                <div class="flex items-center gap-4">
+                                    <span class="text-3xl">${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}</span>
+                                    <div>
+                                        <span class="font-bold text-lg">${user.username}</span>
+                                        <p class="text-sm text-gray-400">Nivel ${user.level || 1}</p>
+                                    </div>
+                                </div>
+                                <span class="text-yellow-400 font-bold">⭐ ${user.points}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAchievements() {
+            if (!currentUser) { goHome(); return ''; }
+            return `
+                ${renderUserBar()}
+                <div class="min-h-full w-full p-8 pt-20">
+                    <button onclick="goHome()" class="text-white/70 hover:text-white mb-4">← Volver al Inicio</button>
+                    <div class="text-center mb-8">
+                        <h1 class="title-font text-4xl mb-2">🏅 Logros y Badges</h1>
+                        <p class="text-xl text-gray-300">Desbloquea todos los logros</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                        ${achievementBadges.map(badge => {
+                            const isUnlocked = currentUser.points >= 100 || currentUser.level >= 5;
+                            return `
+                                <div class="bg-white/10 backdrop-blur-lg p-6 rounded-2xl text-center ${isUnlocked ? 'badge-unlock' : 'badge-locked'}">
+                                    <div class="text-6xl mb-3">${badge.name.split(' ')[0]}</div>
+                                    <h3 class="font-bold mb-2">${badge.name}</h3>
+                                    <p class="text-sm text-gray-400">${badge.description}</p>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProfile() {
+            if (!currentUser) { goHome(); return ''; }
+            return `
+                ${renderUserBar()}
+                <div class="min-h-full w-full p-8 pt-20">
+                    <button onclick="goHome()" class="text-white/70 hover:text-white mb-4">← Volver al Inicio</button>
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-8 mb-6">
+                            <div class="text-center mb-6">
+                                <div class="text-8xl mb-4">👤</div>
+                                <h1 class="title-font text-4xl mb-2">${currentUser.username}</h1>
+                                <p class="text-2xl text-purple-400">Nivel ${currentUser.level || 1}</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-6 mb-8">
+                                <div class="bg-gradient-to-br from-yellow-500 to-orange-500 p-6 rounded-2xl text-center">
+                                    <p class="text-sm text-gray-100">Puntos Totales</p>
+                                    <p class="text-5xl font-bold">⭐ ${currentUser.points}</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-red-500 to-pink-500 p-6 rounded-2xl text-center">
+                                    <p class="text-sm text-gray-100">Vidas</p>
+                                    <p class="text-5xl font-bold">❤️ ${currentUser.lives}</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-white/10 p-6 rounded-2xl mb-8">
+                                <h3 class="text-2xl font-bold mb-4">📊 Estadísticas</h3>
+                                <div class="space-y-3">
+                                    <p>👥 Puesto en el Ranking: <span class="text-yellow-400 font-bold">#${([...users].sort((a, b) => b.points - a.points).findIndex(u => u.__backendId === currentUser.__backendId) + 1) || 'N/A'}</span></p>
+                                    <p>📅 Miembro desde: <span class="text-gray-300">${new Date(currentUser.createdAt).toLocaleDateString('es-ES')}</span></p>
+                                    <p>⏱️ Última sesión: <span class="text-gray-300">${new Date(currentUser.lastPlayed || currentUser.createdAt).toLocaleDateString('es-ES')}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTerms() {
+            return `
+                <div class="min-h-full w-full p-8">
+                    <button onclick="goHome()" class="text-white/70 hover:text-white mb-4">← Volver al Inicio</button>
+                    <div class="max-w-4xl mx-auto bg-white/10 backdrop-blur-lg p-8 rounded-3xl">
+                        <h1 class="title-font text-3xl mb-6 text-center">📜 Términos y Condiciones de Uso</h1>
+                        
+                        <div class="space-y-6 text-gray-200">
+                            <section>
+                                <h2 class="text-xl font-bold text-yellow-400 mb-2">1. Propiedad del Material</h2>
+                                <p>Este material educativo digital es propiedad exclusiva de la ${config.teacher_name} y ha sido desarrollado específicamente para la ${config.school_name} (CCT: 26DPR1320W).</p>
+                            </section>
+
+                            <section>
+                                <h2 class="text-xl font-bold text-yellow-400 mb-2">2. Licencia de Uso</h2>
+                                <p>El uso de esta plataforma está limitado a docentes y alumnos inscritos en la institución mencionada.</p>
+                            </section>
+
+                            <section>
+                                <h2 class="text-xl font-bold text-yellow-400 mb-2">3. Restricciones</h2>
+                                <ul class="list-disc list-inside ml-4 space-y-1">
+                                    <li>Copiar, reproducir o duplicar este material</li>
+                                    <li>Distribuir a terceros u otras instituciones</li>
+                                    <li>Revender o comercializar el contenido</li>
+                                    <li>Modificar o crear obras derivadas</li>
+                                </ul>
+                            </section>
+
+                            <section>
+                                <h2 class="text-xl font-bold text-yellow-400 mb-2">4. Derechos de Autor</h2>
+                                <p>Todos los contenidos están protegidos por las leyes de derechos de autor de México.</p>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ===== GAME LOGIC =====
+        function getCurrentGame() {
+            let games;
+            switch(currentPhase) {
+                case 'fase3': games = fase3Games; break;
+                case 'fase4': games = fase4Games; break;
+                case 'fase5': games = fase5Games; break;
+                default: return null;
+            }
+            return games.find(g => g.id === currentGame);
+        }
+
+        function startGame(gameId) {
+            if (!currentUser) {
+                showToast('¡Debes iniciar sesión para jugar!', 'warning');
+                goToLogin();
+                return;
+            }
+            if (currentUser.lives <= 0) {
+                showToast('¡No tienes vidas! Compra más en la tienda.', 'error');
+                return;
+            }
+            currentGame = gameId;
+            currentScreen = 'game';
+            const game = getCurrentGame();
+            gameState = {
+                current: 0,
+                total: Math.min(5, game.data.items?.length || 5),
+                score: 0,
+                selectedSyllables: ''
+            };
+            renderApp();
+        }
+
+        function checkAnswer(answer, correct) {
+            const buttons = document.querySelectorAll('.game-option');
+            buttons.forEach(btn => btn.disabled = true);
+
+            const isCorrect = String(answer) === String(correct);
+            
+            buttons.forEach(btn => {
+                if (btn.textContent.trim() === String(answer)) {
+                    btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                gameState.score += 20;
+                showToast('¡Correcto! +20 puntos', 'success');
+            } else {
+                currentUser.lives = Math.max(0, currentUser.lives - 1);
+                showToast('¡Incorrecto! -1 vida', 'error');
+                updateUserInDB();
+            }
+
+            setTimeout(() => { nextQuestion(); }, 1000);
+        }
+
+        function checkEnglishAnswer(answer, correct) {
+            const isCorrect = answer === correct;
+            
+            if (isCorrect) {
+                gameState.score += 20;
+                showToast('Correct! +20 points', 'success');
+            } else {
+                currentUser.lives = Math.max(0, currentUser.lives - 1);
+                showToast('Incorrect! -1 life', 'error');
+                updateUserInDB();
+            }
+
+            setTimeout(() => {
+                gameState.current = (gameState.current || 0) + 1;
+                renderApp();
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            gameState.current = (gameState.current || 0) + 1;
+            gameState.orderItems = null;
+            gameState.selectedOrder = [];
+            gameState.classifyItems = null;
+            gameState.shapeCurrent = (gameState.shapeCurrent || 0) + 1;
+            renderApp();
+        }
+
+        function selectSyllable(syllable) {
+            gameState.selectedSyllables = (gameState.selectedSyllables || '') + syllable;
+            document.getElementById('selectedSyllables').textContent = gameState.selectedSyllables;
+        }
+
+        function checkSyllableAnswer(correct) {
+            const isCorrect = gameState.selectedSyllables === correct;
+            if (isCorrect) {
+                gameState.score += 20;
+                showToast('¡Correcto! +20 puntos', 'success');
+            } else {
+                currentUser.lives = Math.max(0, currentUser.lives - 1);
+                showToast('¡Incorrecto! -1 vida', 'error');
+                updateUserInDB();
+            }
+            gameState.selectedSyllables = '';
+            setTimeout(nextQuestion, 1000);
+        }
+
+        function checkShapeAnswer(answer, correct) {
+            const isCorrect = answer === correct;
+            if (isCorrect) {
+                gameState.score += 20;
+                showToast('¡Correcto! +20 puntos', 'success');
+            } else {
+                currentUser.lives = Math.max(0, currentUser.lives - 1);
+                showToast('¡Incorrecto! -1 vida', 'error');
+                updateUserInDB();
+            }
+            setTimeout(() => {
+                gameState.shapeCurrent = (gameState.shapeCurrent || 0) + 1;
+                renderApp();
+            }, 1000);
+        }
+
+        function selectOrderItem(item) {
+            gameState.selectedOrder.push(item);
+            renderApp();
+        }
+
+        function resetOrder() {
+            gameState.selectedOrder = [];
+            renderApp();
+        }
+
+        function checkOrderAnswer() {
+            const isCorrect = JSON.stringify(gameState.selectedOrder) === JSON.stringify(gameState.correctOrder);
+            if (isCorrect) {
+                gameState.score += 30;
+                showToast('¡Orden correcto! +30 puntos', 'success');
+            } else {
+                currentUser.lives = Math.max(0, currentUser.lives - 1);
+                showToast('¡Orden incorrecto! -1 vida', 'error');
+                updateUserInDB();
+            }
+            setTimeout(nextQuestion, 1000);
+        }
+
+        function checkClassifyAnswer(answer, correct) {
+            const isCorrect = answer === correct;
+            if (isCorrect) {
+                gameState.score += 20;
+                showToast('¡Correcto! +20 puntos', 'success');
+            } else {
+                currentUser.lives = Math.max(0, currentUser.lives - 1);
+                showToast('¡Incorrecto! -1 vida', 'error');
+                updateUserInDB();
+            }
+            setTimeout(() => {
+                gameState.classifyCurrent = (gameState.classifyCurrent || 0) + 1;
+                if (gameState.classifyCurrent >= (gameState.classifyItems?.length || 0)) {
+                    nextQuestion();
+                } else {
+                    renderApp();
+                }
+            }, 1000);
+        }
+
+        async function finishGame(points) {
+            if (currentUser) {
+                currentUser.points += points;
+                currentUser.level = Math.floor(currentUser.points / 200) + 1;
+                currentUser.lastPlayed = new Date().toISOString();
+                await updateUserInDB();
+            }
+            currentGame = null;
+            gameState = {};
+            currentScreen = currentPhase || 'home';
+            renderApp();
+        }
+
+        // ===== NAVIGATION =====
+        function goHome() { currentScreen = 'home'; currentPhase = null; currentGame = null; gameState = {}; renderApp(); }
+        function goToLogin() { currentScreen = 'login'; renderApp(); }
+        function goToRegister() { currentScreen = 'register'; renderApp(); }
+        function goToPhase(phase) { currentPhase = phase; currentScreen = phase; renderApp(); }
+        function goToEnglish() { currentScreen = 'english'; renderApp(); }
+        function goToShop() { currentScreen = 'shop'; renderApp(); }
+        function goToRanking() { currentScreen = 'ranking'; renderApp(); }
+        function goToAchievements() { currentScreen = 'achievements'; renderApp(); }
+        function goToProfile() { currentScreen = 'profile'; renderApp(); }
+        function goToTerms() { currentScreen = 'terms'; renderApp(); }
+        function goBack() { 
+            if (currentGame) {
+                currentGame = null;
+                gameState = {};
+                currentScreen = currentPhase;
+            } else {
+                goHome();
+            }
+            renderApp();
+        }
+
+        function selectEnglishCategory(catId) {
+            currentEnglishCategory = catId;
+            currentScreen = 'english-category';
+            renderApp();
+        }
+
+        function startEnglishStage(stage) {
+            if (!currentUser) {
+                showToast('¡Debes iniciar sesión para jugar!', 'warning');
+                goToLogin();
+                return;
+            }
+            if (currentUser.lives <= 0) {
+                showToast('¡No tienes vidas! Compra más en la tienda.', 'error');
+                return;
+            }
+            currentEnglishStage = stage;
+            currentScreen = 'english-game';
+            gameState = { current: 0, score: 0 };
+            renderApp();
+        }
+
+        // ===== AUTH =====
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                currentUser = user;
+                showToast(`¡Bienvenido ${username}!`, 'success');
+                goHome();
+            } else {
+                const error = document.getElementById('loginError');
+                error.textContent = 'Usuario o contraseña incorrectos';
+                error.classList.remove('hidden');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            
+            if (users.find(u => u.username === username)) {
+                const error = document.getElementById('regError');
+                error.textContent = 'Este nombre de usuario ya existe';
+                error.classList.remove('hidden');
+                return;
+            }
+
+            if (users.length >= 999) {
+                showToast('Se alcanzó el límite de usuarios', 'error');
+                return;
+            }
+
+            const newUser = {
+                username,
+                password,
+                points: 0,
+                lives: 5,
+                level: 1,
+                badge1: false,
+                badge2: false,
+                badge3: false,
+                achievementsUnlocked: '',
+                lastPlayed: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            };
+
+            const result = await window.dataSdk.create(newUser);
+            if (result.isOk) {
+                const success = document.getElementById('regSuccess');
+                success.textContent = '¡Cuenta creada! Ahora puedes iniciar sesión';
+                success.classList.remove('hidden');
+                document.getElementById('regError').classList.add('hidden');
+                setTimeout(goToLogin, 2000);
+            } else {
+                const error = document.getElementById('regError');
+                error.textContent = 'Error al crear la cuenta';
+                error.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            showToast('Sesión cerrada', 'info');
+            goHome();
+        }
+
+        async function updateUserInDB() {
+            if (currentUser && currentUser.__backendId) {
+                await window.dataSdk.update(currentUser);
+            }
+        }
+
+        async function buyLife(amount, cost) {
+            if (!currentUser || currentUser.points < cost) {
+                showToast('No tienes suficientes puntos', 'error');
+                return;
+            }
+            currentUser.points -= cost;
+            currentUser.lives = Math.min(10, currentUser.lives + amount);
+            await updateUserInDB();
+            showToast(`¡Compraste ${amount} vida(s)!`, 'success');
+            renderApp();
+        }
+
+        // ===== UTILITIES =====
+        function shuffleArray(arr) {
+            const newArr = [...arr];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+
+        function showToast(message, type = 'info') {
+            const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-yellow-500', info: 'bg-blue-500' };
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-xl shadow-2xl z-50 bounce-in font-bold`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // ===== SDK INITIALIZATION =====
+        const dataHandler = {
+            onDataChanged(data) {
+                users = data;
+                if (currentUser && currentUser.__backendId) {
+                    const updated = users.find(u => u.__backendId === currentUser.__backendId);
+                    if (updated) {
+                        currentUser = updated;
+                    }
+                }
+                renderApp();
+            }
+        };
+
+        async function initApp() {
+            await window.dataSdk.init(dataHandler);
+            
+            if (window.elementSdk) {
+                window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange: async (newConfig) => {
+                        config = { ...defaultConfig, ...newConfig };
+                        renderApp();
+                    },
+                    mapToCapabilities: (cfg) => ({
+                        recolorables: [
+                            { get: () => cfg.primary_color || defaultConfig.primary_color, set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); } },
+                            { get: () => cfg.secondary_color || defaultConfig.secondary_color, set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); } },
+                            { get: () => cfg.text_color || defaultConfig.text_color, set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+                            { get: () => cfg.accent_color || defaultConfig.accent_color, set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); } },
+                            { get: () => cfg.button_color || defaultConfig.button_color, set: (v) => { cfg.button_color = v; window.elementSdk.setConfig({ button_color: v }); } }
+                        ],
+                        borderables: [],
+                        fontEditable: undefined,
+                        fontSizeable: undefined
+                    }),
+                    mapToEditPanelValues: (cfg) => new Map([
+                        ['school_name', cfg.school_name || defaultConfig.school_name],
+                        ['teacher_name', cfg.teacher_name || defaultConfig.teacher_name]
+                    ])
+                });
+            }
+            
+            renderApp();
+        }
+
+        initApp();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d33eaaa172d12d0',t:'MTc3MTk4ODA1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
