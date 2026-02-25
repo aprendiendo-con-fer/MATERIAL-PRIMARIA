@@ -1,124 +1,203 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material Interactivo  Primaria| Mtra. María Fernanda</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <style>
-        body { font-family: 'Quicksand', sans-serif; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); min-height: 100vh; overflow-x: hidden; }
-        .font-kids { font-family: 'Fredoka One', cursive; }
-        .btn-bounce { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
-        .btn-bounce:hover { transform: scale(1.05) rotate(1deg); }
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 4px solid #fff; }
-        .input-kids { @apply w-full text-center p-4 rounded-2xl border-4 border-blue-100 focus:border-pink-300 outline-none mb-3 shadow-inner text-lg; }
-        .hidden { display: none; }
-        .floating { animation: float 3s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Material Interactivo Primaria | Mtra. María Fernanda</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<style>
+body{
+    font-family:'Quicksand',sans-serif;
+    background:linear-gradient(135deg,#e0f2fe 0%,#f0f9ff 100%);
+    min-height:100vh;
+}
+.font-kids{font-family:'Fredoka One',cursive;}
+.btn-bounce{transition:all .3s ease;cursor:pointer;}
+.btn-bounce:hover{transform:scale(1.05);}
+.glass{
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(10px);
+    border:4px solid #fff;
+}
+.input-kids{
+    width:100%;
+    text-align:center;
+    padding:16px;
+    border-radius:20px;
+    border:4px solid #dbeafe;
+    margin-bottom:12px;
+    font-size:18px;
+}
+.hidden{display:none;}
+</style>
 </head>
 
 <body class="p-4">
 
-<header id="main-header" class="hidden max-w-6xl mx-auto flex justify-between items-center bg-white p-4 rounded-3xl shadow-xl border-b-8 border-blue-200 mb-8 sticky top-4 z-50 animate__animated animate__fadeInDown">
-    <div class="flex items-center gap-3">
-        <div class="bg-blue-500 p-2 rounded-2xl text-white text-2xl floating">🏫</div>
-        <h1 class="font-kids text-blue-600 text-lg uppercase hidden sm:block"> Material Interactivo Primaria</h1>
-    </div>
-    <div class="flex gap-3 items-center">
-        <div class="flex items-center gap-4 bg-blue-50 p-2 px-4 rounded-2xl border-2 border-blue-100">
-            <div class="text-red-500 font-bold">❤️ <span id="lives">5</span></div>
-            <div class="text-yellow-500 font-bold">⭐ <span id="points">0</span></div>
-            <span id="display-user" class="text-blue-600 font-kids text-[10px] border-l pl-4 hidden md:block uppercase"></span>
-        </div>
-        <button onclick="cerrarSesion()" class="bg-red-100 text-red-500 p-2 px-4 rounded-xl text-xs font-bold hover:bg-red-500 hover:text-white transition-all">SALIR 🚪</button>
-    </div>
+<!-- HEADER -->
+<header id="main-header" class="hidden max-w-6xl mx-auto flex justify-between items-center bg-white p-4 rounded-3xl shadow-xl border-b-8 border-blue-200 mb-8">
+<div class="flex items-center gap-3">
+<div class="text-2xl">🏫</div>
+<h1 class="font-kids text-blue-600 text-lg uppercase">Material Interactivo Primaria</h1>
+</div>
+<div class="flex gap-4 items-center">
+<div class="text-red-500 font-bold">❤️ <span id="lives">5</span></div>
+<div class="text-yellow-500 font-bold">⭐ <span id="points">0</span></div>
+<span id="display-user" class="text-blue-600 font-kids text-xs uppercase"></span>
+<button onclick="cerrarSesion()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-xs">SALIR</button>
+</div>
 </header>
 
-<section id="view-auth" class="text-center py-10 animate__animated animate__fadeIn">
-    <div class="glass p-8 rounded-[3rem] shadow-2xl inline-block w-full max-w-md border-dashed border-pink-300">
-        <div class="text-7xl mb-4 floating">🚀</div>
-        <h2 id="auth-title" class="font-kids text-3xl text-pink-500 mb-2">¡Bienvenidos!</h2>
-        <p class="text-blue-500 font-bold text-sm mb-6">Mtra. María Fernanda Flores V.</p>
-
-        <input type="text" id="auth-user" placeholder="Usuario" class="input-kids">
-        <input type="password" id="auth-pass" placeholder="Contraseña" class="input-kids">
-        
-        <div id="login-controls">
-            <button onclick="intentarLogin()" class="btn-bounce bg-blue-500 text-white font-kids text-xl w-full py-4 rounded-2xl shadow-lg mb-4">ENTRAR 🔑</button>
-            <p class="text-sm">¿Eres nuevo? <a href="#" onclick="switchAuth(true)" class="text-pink-500 font-bold underline">Crea una cuenta</a></p>
-        </div>
-
-        <div id="register-controls" class="hidden">
-            <button onclick="intentarRegistro()" class="btn-bounce bg-pink-500 text-white font-kids text-xl w-full py-4 rounded-2xl shadow-lg mb-4">REGISTRARME ✨</button>
-            <p class="text-sm">¿Ya tienes cuenta? <a href="#" onclick="switchAuth(false)" class="text-blue-500 font-bold underline">Inicia sesión</a></p>
-        </div>
-    </div>
+<!-- LOGIN -->
+<section id="view-auth" class="text-center py-10">
+<div class="glass p-8 rounded-3xl shadow-2xl inline-block w-full max-w-md">
+<h2 class="font-kids text-3xl text-pink-500 mb-4">¡Bienvenidos!</h2>
+<input type="text" id="auth-user" placeholder="Usuario" class="input-kids">
+<input type="password" id="auth-pass" placeholder="Contraseña" class="input-kids">
+<button onclick="intentarLogin()" class="btn-bounce bg-blue-500 text-white font-kids text-xl w-full py-3 rounded-2xl mb-3">ENTRAR 🔑</button>
+<button onclick="intentarRegistro()" class="btn-bounce bg-pink-500 text-white font-kids text-xl w-full py-3 rounded-2xl">REGISTRARME ✨</button>
+</div>
 </section>
 
-<section id="view-phases" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate__animated animate__backInUp">
-    <button onclick="cargarJuegos(3)" class="btn-bounce bg-orange-400 p-8 rounded-[3rem] border-b-8 border-orange-600 text-white shadow-xl">
-        <div class="text-7xl mb-4">🖍️</div>
-        <h3 class="font-kids text-3xl italic">FASE 3</h3>
-    </button>
-    <button onclick="cargarJuegos(4)" class="btn-bounce bg-green-500 p-8 rounded-[3rem] border-b-8 border-green-700 text-white shadow-xl">
-        <div class="text-7xl mb-4">🧪</div>
-        <h3 class="font-kids text-3xl italic">FASE 4</h3>
-    </button>
-    <button onclick="cargarJuegos(5)" class="btn-bounce bg-purple-500 p-8 rounded-[3rem] border-b-8 border-purple-700 text-white shadow-xl">
-        <div class="text-7xl mb-4">🔭</div>
-        <h3 class="font-kids text-3xl italic">FASE 5</h3>
-    </button>
-    <button onclick="mostrarIngles()" class="btn-bounce bg-blue-500 p-8 rounded-[3rem] border-b-8 border-blue-700 text-white shadow-xl">
-        <div class="text-7xl mb-4">🌎</div>
-        <h3 class="font-kids text-3xl italic">ENGLISH</h3>
-    </button>
+<!-- FASES -->
+<section id="view-phases" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+<button onclick="cargarJuegos(3)" class="btn-bounce bg-orange-400 p-8 rounded-3xl text-white">
+<div class="text-5xl mb-3">🖍️</div>
+<h3 class="font-kids text-2xl">FASE 3</h3>
+</button>
+
+<button onclick="cargarJuegos(4)" class="btn-bounce bg-green-500 p-8 rounded-3xl text-white">
+<div class="text-5xl mb-3">🧪</div>
+<h3 class="font-kids text-2xl">FASE 4</h3>
+</button>
+
+<button onclick="cargarJuegos(5)" class="btn-bounce bg-purple-500 p-8 rounded-3xl text-white">
+<div class="text-5xl mb-3">🔭</div>
+<h3 class="font-kids text-2xl">FASE 5</h3>
+</button>
+
+<button onclick="mostrarIngles()" class="btn-bounce bg-blue-500 p-8 rounded-3xl text-white">
+<div class="text-5xl mb-3">🌎</div>
+<h3 class="font-kids text-2xl">ENGLISH</h3>
+</button>
+
+</section>
+
+<!-- LISTA JUEGOS -->
+<section id="view-game-list" class="hidden">
+<button onclick="volverMenu()" class="bg-white px-6 py-2 rounded-full font-bold text-blue-500 shadow-md mb-6">🏠 VOLVER</button>
+<div id="game-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
 </section>
 
 <script>
 
-    // 🔐 AUTO LOGIN SI YA HAY SESIÓN GUARDADA
-    window.addEventListener("DOMContentLoaded", function(){
-        const usuarioActivo = localStorage.getItem("usuarioActivo");
-        if(usuarioActivo){
-            let db = JSON.parse(localStorage.getItem('v_carranza_db') || "{}");
-            if(db[usuarioActivo]){
-                document.getElementById('view-auth').classList.add('hidden');
-                document.getElementById('main-header').classList.remove('hidden');
-                document.getElementById('view-phases').classList.remove('hidden');
-                document.getElementById('display-user').innerText = "HOLA, " + usuarioActivo;
-                document.getElementById('points').innerText = db[usuarioActivo].points;
-                document.getElementById('lives').innerText = db[usuarioActivo].lives;
-            }
-        }
-    });
+/* AUTO LOGIN */
+window.addEventListener("DOMContentLoaded",function(){
+const usuarioActivo=localStorage.getItem("usuarioActivo");
+if(usuarioActivo){iniciarSesion(usuarioActivo);}
+});
 
-    function intentarLogin() {
-        const u = document.getElementById('auth-user').value.trim().toLowerCase();
-        const p = document.getElementById('auth-pass').value.trim();
-        let db = JSON.parse(localStorage.getItem('v_carranza_db') || "{}");
-        
-        if(db[u] && db[u].p === p) {
+function intentarRegistro(){
+const u=document.getElementById('auth-user').value.trim().toLowerCase();
+const p=document.getElementById('auth-pass').value.trim();
+if(!u||!p)return alert("Escribe usuario y contraseña");
+let db=JSON.parse(localStorage.getItem('v_carranza_db')||"{}");
+if(db[u])return alert("Usuario ya existe");
+db[u]={p,points:0,lives:5};
+localStorage.setItem('v_carranza_db',JSON.stringify(db));
+alert("Cuenta creada ✨");
+}
 
-            localStorage.setItem("usuarioActivo", u);
+function intentarLogin(){
+const u=document.getElementById('auth-user').value.trim().toLowerCase();
+const p=document.getElementById('auth-pass').value.trim();
+let db=JSON.parse(localStorage.getItem('v_carranza_db')||"{}");
+if(db[u]&&db[u].p===p){
+localStorage.setItem("usuarioActivo",u);
+iniciarSesion(u);
+}else alert("Usuario incorrecto");
+}
 
-            document.getElementById('view-auth').classList.add('hidden');
-            document.getElementById('main-header').classList.remove('hidden');
-            document.getElementById('view-phases').classList.remove('hidden');
-            document.getElementById('display-user').innerText = "HOLA, " + u;
-            document.getElementById('points').innerText = db[u].points;
-            document.getElementById('lives').innerText = db[u].lives;
-        } else {
-            alert("❌ Usuario o contraseña incorrectos.");
-        }
-    }
+function iniciarSesion(u){
+let db=JSON.parse(localStorage.getItem('v_carranza_db')||"{}");
+document.getElementById('view-auth').classList.add('hidden');
+document.getElementById('main-header').classList.remove('hidden');
+document.getElementById('view-phases').classList.remove('hidden');
+document.getElementById('display-user').innerText="HOLA, "+u;
+document.getElementById('points').innerText=db[u].points;
+document.getElementById('lives').innerText=db[u].lives;
+}
 
-    function cerrarSesion() {
-        localStorage.removeItem("usuarioActivo");
-        location.reload();
-    }
+function cerrarSesion(){
+localStorage.removeItem("usuarioActivo");
+location.reload();
+}
+
+function volverMenu(){
+document.getElementById('view-game-list').classList.add('hidden');
+document.getElementById('view-phases').classList.remove('hidden');
+}
+
+function mostrarIngles(){
+alert("Aquí va el menú de English 🌎");
+}
+
+function cargarJuegos(f){
+document.getElementById('view-phases').classList.add('hidden');
+document.getElementById('view-game-list').classList.remove('hidden');
+const grid=document.getElementById('game-grid');
+grid.innerHTML="";
+
+const misJuegos={
+
+3:[
+{nombre:"Mayúsculas mágicas",link:"mayusculasf3.html"},
+{nombre:"Descubriendo vocales",link:"vocalesf3.html"},
+{nombre:"Orden alfabético",link:"alfabetof3.html"},
+{nombre:"Fracciones",link:"pizzeriaf3.html"},
+{nombre:"Matemáticas montessori",link:"matemontesori.html"},
+{nombre:"La tiendita",link:"tiendita.html"},
+{nombre:"Conteo mágico",link:"sumasf3.html"},
+{nombre:"Sumas divertidas",link:"sumasf3.html"},
+{nombre:"Restas aventura",link:"restasf3.html"},
+{nombre:"Figuras locas",link:"figurasf3.html"},
+{nombre:"Mayor o menor",link:"mayormenorf3.html"},
+{nombre:"Secuencias",link:"secuenciasf3.html"},
+{nombre:"Método global alfabetización",link:"alfabetizacionglobalf3.html"},
+{nombre:"Ciencias naturales",link:"cienciasf3.html"},
+{nombre:"Geografía",link:"geografiaf3.html"},
+{nombre:"Educación Socioemocional",link:"socioemocionalf3.html"},
+{nombre:"Educación Financiera",link:"educacionfinancieraf3.html"}
+],
+
+4:[
+{nombre:"Las Tablas",link:"f4_tablas.html"},
+{nombre:"Fracciones",link:"pizzeriaf4.html"},
+{nombre:"La Tiendita",link:"tiendita.html"},
+{nombre:"Naturaleza",link:"f4_ciencias.html"}
+],
+
+5:[
+{nombre:"Cuerpo Humano",link:"f5_cuerpo.html"},
+{nombre:"Fracciones",link:"pizzeriaf5.html"},
+{nombre:"Universo",link:"f5_planetas.html"}
+]
+
+};
+
+misJuegos[f].forEach(j=>{
+grid.innerHTML+=`
+<div class="glass p-6 rounded-3xl text-center shadow-lg">
+<h4 class="font-kids text-lg uppercase">${j.nombre}</h4>
+<a href="${j.link}" class="bg-pink-500 text-white px-6 py-2 rounded-full mt-3 inline-block">JUGAR</a>
+</div>`;
+});
+}
 
 </script>
 
