@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aprende a Leer - Método Global</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
@@ -18,32 +16,17 @@
     @keyframes sparkle {0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.2);}}
     @keyframes slide-up {from{transform:translateY(30px);opacity:0;} to{transform:translateY(0);opacity:1;}}
     @keyframes pulse-glow {0%,100%{box-shadow:0 0 20px rgba(251,191,36,0.4);}50%{box-shadow:0 0 40px rgba(251,191,36,0.8);}}
-    @keyframes confetti {0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(-100px) rotate(720deg);opacity:0;}}
-    @keyframes shimmer {0%{background-position:-200% 0;}100%{background-position:200% 0;}}
 
     .float-animation{animation:float 3s ease-in-out infinite;}
     .bounce-in{animation:bounce-in 0.5s ease-out forwards;}
-    .wiggle{animation:wiggle 0.5s ease-in-out;}
-    .sparkle{animation:sparkle 1.5s ease-in-out infinite;}
-    .slide-up{animation:slide-up 0.4s ease-out forwards;}
     .pulse-glow{animation:pulse-glow 2s ease-in-out infinite;}
-
-    .card-hover:hover{transform: scale(1.05) rotate(1deg); box-shadow:0 20px 40px rgba(0,0,0,0.2);}
-    .word-card{transition: all 0.3s cubic-bezier(0.4,0,0.2,1);}
-    .word-card:hover{transform:translateY(-8px);}
-    .star-bg{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);}
-    .rainbow-text{background:linear-gradient(90deg,#ff6b6b,#feca57,#48dbfb,#ff9ff3,#54a0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .glass-card{background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);}
-    .progress-bar{background:linear-gradient(90deg,#10b981,#34d399,#6ee7b7);background-size:200% 100%;animation:shimmer 2s linear infinite;}
-    .category-btn{transition:all 0.3s ease;position:relative;overflow:hidden;}
-    .category-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);transition:left 0.5s ease;}
-    .category-btn:hover::before{left:100%;}
+    .rainbow-text{background:linear-gradient(90deg,#ff6b6b,#feca57,#48dbfb,#ff9ff3,#54a0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
   </style>
 </head>
 
 <body class="h-full overflow-auto">
 
-<!-- BOTÓN HOME FIJO -->
 <button onclick="window.location.href='index.html'"
   class="fixed top-4 right-4 bg-white text-purple-600 w-12 h-12 rounded-full shadow-lg text-2xl flex items-center justify-center hover:scale-110 transition z-50">
   🏠
@@ -51,109 +34,63 @@
 
 <div id="app" class="min-h-full w-full" style="background: linear-gradient(180deg, #a855f7 0%, #6366f1 50%, #3b82f6 100%);">
 
-  <!-- PANTALLA DE BIENVENIDA -->
-  <div id="screen-welcome" class="min-h-full w-full flex flex-col items-center justify-center p-6 relative">
-    <div class="absolute top-10 left-10 text-6xl float-animation" style="animation-delay:0s;">⭐</div>
-    <div class="absolute top-20 right-16 text-5xl float-animation" style="animation-delay:0.5s;">🌈</div>
-    <div class="absolute bottom-32 left-16 text-5xl float-animation" style="animation-delay:1s;">📚</div>
-    <div class="absolute bottom-20 right-10 text-6xl float-animation" style="animation-delay:1.5s;">✨</div>
-
-    <div class="glass-card rounded-3xl p-8 md:p-12 shadow-2xl max-w-2xl w-full text-center bounce-in">
-      <div class="text-7xl mb-6">📖</div>
-      <h1 id="main-title" class="text-4xl md:text-5xl font-bold rainbow-text mb-4">¡Aprende a Leer Jugando!</h1>
-      <p class="text-xl text-purple-600 mb-8 font-medium">Método Global de Lectura</p>
-      <div class="mb-8">
-        <label class="block text-lg text-gray-600 mb-3">¿Cómo te llamas, pequeño lector? 📝</label>
-        <input type="text" id="student-name-input" class="w-full px-6 py-4 text-xl rounded-2xl border-3 border-purple-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 outline-none transition-all text-center" placeholder="Escribe tu nombre aquí..." maxlength="20">
-      </div>
-      <button onclick="startGame()" class="w-full bg-gradient-to-r from-amber-400 to-orange-500 text-white text-2xl font-bold py-5 px-8 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all pulse-glow">🚀 ¡Comenzar Aventura!</button>
-      <p id="teacher-credit" class="mt-6 text-sm text-purple-500">Material creado por: Maestra María Fernanda Flores Valenzuela</p>
-    </div>
-  </div>
+  <!-- PANTALLA DE BIENVENIDA (ya no pide nombre) -->
+  <div id="screen-welcome" class="hidden"></div>
 
   <!-- PANTALLA DE CATEGORÍAS -->
-  <div id="screen-categories" class="min-h-full w-full p-6 hidden">
+  <div id="screen-categories" class="min-h-full w-full p-6">
     <div class="max-w-4xl mx-auto">
+
       <div class="glass-card rounded-3xl p-6 mb-6 flex items-center justify-between">
         <div class="flex items-center gap-4">
           <div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-2xl shadow-lg">👤</div>
           <div>
             <p class="text-gray-500 text-sm">Jugador</p>
-            <p id="player-name-display" class="text-xl font-bold text-purple-700">Nombre</p>
+            <p id="player-name-display" class="text-xl font-bold text-purple-700">Jugador</p>
           </div>
         </div>
-        <div class="flex items-center gap-4">
-          <div class="text-center">
-            <p class="text-gray-500 text-sm">Estrellas</p>
-            <p id="total-stars" class="text-2xl font-bold text-amber-500">⭐ 0</p>
-          </div>
-          <button onclick="showTerms()" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all" title="Términos">📋</button>
+        <div>
+          <p id="total-stars" class="text-2xl font-bold text-amber-500">⭐ 0</p>
         </div>
       </div>
-      <h2 class="text-3xl font-bold text-white text-center mb-8 drop-shadow-lg">🎯 Elige una Categoría</h2>
+
+      <h2 class="text-3xl font-bold text-white text-center mb-8 drop-shadow-lg">
+        🎯 Elige una Categoría
+      </h2>
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Aquí van los botones de categoría como Animales, Frutas, Familia, etc. -->
+        <button class="bg-white rounded-2xl p-6 text-xl font-bold shadow-lg hover:scale-105 transition">
+          🐶 Animales
+        </button>
+
+        <button class="bg-white rounded-2xl p-6 text-xl font-bold shadow-lg hover:scale-105 transition">
+          🍎 Frutas
+        </button>
+
+        <button class="bg-white rounded-2xl p-6 text-xl font-bold shadow-lg hover:scale-105 transition">
+          👨‍👩‍👧 Familia
+        </button>
+
+        <button class="bg-white rounded-2xl p-6 text-xl font-bold shadow-lg hover:scale-105 transition">
+          🚗 Objetos
+        </button>
       </div>
-      <div class="mt-8 text-center">
-        <button onclick="showProgress()" class="bg-white/20 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/30 transition-all">📊 Ver Mi Progreso</button>
-      </div>
+
     </div>
   </div>
 
   <!-- PANTALLA DE JUEGO -->
-  <div id="screen-game" class="min-h-full w-full p-4 md:p-6 hidden">
-    <div class="max-w-4xl mx-auto">
-      <!-- Header, barra de progreso y contenido del juego -->
-      <div id="game-content" class="glass-card rounded-3xl p-6 md:p-8 min-h-96"></div>
-    </div>
-  </div>
+  <div id="screen-game" class="hidden"></div>
 
   <!-- PANTALLA DE RESULTADOS -->
-  <div id="screen-results" class="min-h-full w-full flex items-center justify-center p-6 hidden">
-    <div class="glass-card rounded-3xl p-8 md:p-12 max-w-lg w-full text-center bounce-in">
-      <div class="text-8xl mb-6" id="result-emoji">🎉</div>
-      <h2 id="result-title" class="text-3xl md:text-4xl font-bold text-purple-700 mb-4">¡Excelente!</h2>
-      <p id="result-message" class="text-xl text-gray-600 mb-6">Has completado esta categoría</p>
-      <div class="bg-gradient-to-r from-amber-100 to-orange-100 rounded-2xl p-6 mb-8">
-        <p class="text-gray-600 mb-2">Estrellas ganadas</p>
-        <p id="result-stars" class="text-4xl font-bold text-amber-500">⭐⭐⭐</p>
-        <p id="result-score" class="text-lg text-orange-600 mt-2">6 de 6 correctas</p>
-      </div>
-      <div class="flex flex-col gap-4">
-        <button onclick="replayCategory()" class="w-full bg-gradient-to-r from-green-400 to-emerald-500 text-white text-xl font-bold py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all">🔄 Jugar de Nuevo</button>
-        <button onclick="backToCategories()" class="w-full bg-gradient-to-r from-purple-400 to-indigo-500 text-white text-xl font-bold py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all">📚 Otras Categorías</button>
-      </div>
-    </div>
-  </div>
+  <div id="screen-results" class="hidden"></div>
 
 </div>
 
-<!-- ==================== SCRIPT DEL JUEGO ==================== -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // Sesión del jugador
-  if (!localStorage.getItem("sesionActiva")) localStorage.setItem("sesionActiva","true");
-
-  // Activar enter para iniciar
-  const nameInput = document.getElementById('student-name-input');
-  nameInput.addEventListener("keypress", function(e){
-    if(e.key === "Enter") startGame();
-  });
-
-  // Guardar nombre
-  const originalStartGame = window.startGame;
-  window.startGame = function() {
-    if(!nameInput.value.trim()){
-      nameInput.classList.add('wiggle');
-      nameInput.style.borderColor='#ef4444';
-      setTimeout(()=>{nameInput.classList.remove('wiggle'); nameInput.style.borderColor='';},500);
-      return;
-    }
-    localStorage.setItem("playerName", nameInput.value.trim());
-    if(originalStartGame) originalStartGame();
-  };
-
-  initializeSDKs();
+  localStorage.setItem("sesionActiva","true");
+  localStorage.setItem("playerName","Jugador");
 });
 </script>
 
