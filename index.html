@@ -19,187 +19,108 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
+
 <body class="p-4">
 
-    <header id="main-header" class="hidden max-w-6xl mx-auto flex justify-between items-center bg-white p-4 rounded-3xl shadow-xl border-b-8 border-blue-200 mb-8 sticky top-4 z-50 animate__animated animate__fadeInDown">
-        <div class="flex items-center gap-3">
-            <div class="bg-blue-500 p-2 rounded-2xl text-white text-2xl floating">🏫</div>
-            <h1 class="font-kids text-blue-600 text-lg uppercase hidden sm:block"> Material Interactivo Primaria</h1>
+<header id="main-header" class="hidden max-w-6xl mx-auto flex justify-between items-center bg-white p-4 rounded-3xl shadow-xl border-b-8 border-blue-200 mb-8 sticky top-4 z-50 animate__animated animate__fadeInDown">
+    <div class="flex items-center gap-3">
+        <div class="bg-blue-500 p-2 rounded-2xl text-white text-2xl floating">🏫</div>
+        <h1 class="font-kids text-blue-600 text-lg uppercase hidden sm:block"> Material Interactivo Primaria</h1>
+    </div>
+    <div class="flex gap-3 items-center">
+        <div class="flex items-center gap-4 bg-blue-50 p-2 px-4 rounded-2xl border-2 border-blue-100">
+            <div class="text-red-500 font-bold">❤️ <span id="lives">5</span></div>
+            <div class="text-yellow-500 font-bold">⭐ <span id="points">0</span></div>
+            <span id="display-user" class="text-blue-600 font-kids text-[10px] border-l pl-4 hidden md:block uppercase"></span>
         </div>
-        <div class="flex gap-3 items-center">
-            <div class="flex items-center gap-4 bg-blue-50 p-2 px-4 rounded-2xl border-2 border-blue-100">
-                <div class="text-red-500 font-bold">❤️ <span id="lives">5</span></div>
-                <div class="text-yellow-500 font-bold">⭐ <span id="points">0</span></div>
-                <span id="display-user" class="text-blue-600 font-kids text-[10px] border-l pl-4 hidden md:block uppercase"></span>
-            </div>
-            <button onclick="cerrarSesion()" class="bg-red-100 text-red-500 p-2 px-4 rounded-xl text-xs font-bold hover:bg-red-500 hover:text-white transition-all">SALIR 🚪</button>
+        <button onclick="cerrarSesion()" class="bg-red-100 text-red-500 p-2 px-4 rounded-xl text-xs font-bold hover:bg-red-500 hover:text-white transition-all">SALIR 🚪</button>
+    </div>
+</header>
+
+<section id="view-auth" class="text-center py-10 animate__animated animate__fadeIn">
+    <div class="glass p-8 rounded-[3rem] shadow-2xl inline-block w-full max-w-md border-dashed border-pink-300">
+        <div class="text-7xl mb-4 floating">🚀</div>
+        <h2 id="auth-title" class="font-kids text-3xl text-pink-500 mb-2">¡Bienvenidos!</h2>
+        <p class="text-blue-500 font-bold text-sm mb-6">Mtra. María Fernanda Flores V.</p>
+
+        <input type="text" id="auth-user" placeholder="Usuario" class="input-kids">
+        <input type="password" id="auth-pass" placeholder="Contraseña" class="input-kids">
+        
+        <div id="login-controls">
+            <button onclick="intentarLogin()" class="btn-bounce bg-blue-500 text-white font-kids text-xl w-full py-4 rounded-2xl shadow-lg mb-4">ENTRAR 🔑</button>
+            <p class="text-sm">¿Eres nuevo? <a href="#" onclick="switchAuth(true)" class="text-pink-500 font-bold underline">Crea una cuenta</a></p>
         </div>
-    </header>
 
-    <section id="view-auth" class="text-center py-10 animate__animated animate__fadeIn">
-        <div class="glass p-8 rounded-[3rem] shadow-2xl inline-block w-full max-w-md border-dashed border-pink-300">
-            <div class="text-7xl mb-4 floating">🚀</div>
-            <h2 id="auth-title" class="font-kids text-3xl text-pink-500 mb-2">¡Bienvenidos!</h2>
-            <p class="text-blue-500 font-bold text-sm mb-6">Mtra. María Fernanda Flores V.</p>
-
-            <input type="text" id="auth-user" placeholder="Usuario" class="input-kids">
-            <input type="password" id="auth-pass" placeholder="Contraseña" class="input-kids">
-            
-            <div id="login-controls">
-                <button onclick="intentarLogin()" class="btn-bounce bg-blue-500 text-white font-kids text-xl w-full py-4 rounded-2xl shadow-lg mb-4">ENTRAR 🔑</button>
-                <p class="text-sm">¿Eres nuevo? <a href="#" onclick="switchAuth(true)" class="text-pink-500 font-bold underline">Crea una cuenta</a></p>
-            </div>
-
-            <div id="register-controls" class="hidden">
-                <button onclick="intentarRegistro()" class="btn-bounce bg-pink-500 text-white font-kids text-xl w-full py-4 rounded-2xl shadow-lg mb-4">REGISTRARME ✨</button>
-                <p class="text-sm">¿Ya tienes cuenta? <a href="#" onclick="switchAuth(false)" class="text-blue-500 font-bold underline">Inicia sesión</a></p>
-            </div>
+        <div id="register-controls" class="hidden">
+            <button onclick="intentarRegistro()" class="btn-bounce bg-pink-500 text-white font-kids text-xl w-full py-4 rounded-2xl shadow-lg mb-4">REGISTRARME ✨</button>
+            <p class="text-sm">¿Ya tienes cuenta? <a href="#" onclick="switchAuth(false)" class="text-blue-500 font-bold underline">Inicia sesión</a></p>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section id="view-phases" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate__animated animate__backInUp">
-        <button onclick="cargarJuegos(3)" class="btn-bounce bg-orange-400 p-8 rounded-[3rem] border-b-8 border-orange-600 text-white shadow-xl">
-            <div class="text-7xl mb-4">🖍️</div>
-            <h3 class="font-kids text-3xl italic">FASE 3</h3>
-        </button>
-        <button onclick="cargarJuegos(4)" class="btn-bounce bg-green-500 p-8 rounded-[3rem] border-b-8 border-green-700 text-white shadow-xl">
-            <div class="text-7xl mb-4">🧪</div>
-            <h3 class="font-kids text-3xl italic">FASE 4</h3>
-        </button>
-        <button onclick="cargarJuegos(5)" class="btn-bounce bg-purple-500 p-8 rounded-[3rem] border-b-8 border-purple-700 text-white shadow-xl">
-            <div class="text-7xl mb-4">🔭</div>
-            <h3 class="font-kids text-3xl italic">FASE 5</h3>
-        </button>
-        <button onclick="mostrarIngles()" class="btn-bounce bg-blue-500 p-8 rounded-[3rem] border-b-8 border-blue-700 text-white shadow-xl">
-            <div class="text-7xl mb-4">🌎</div>
-            <h3 class="font-kids text-3xl italic">ENGLISH</h3>
-        </button>
-    </section>
+<section id="view-phases" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate__animated animate__backInUp">
+    <button onclick="cargarJuegos(3)" class="btn-bounce bg-orange-400 p-8 rounded-[3rem] border-b-8 border-orange-600 text-white shadow-xl">
+        <div class="text-7xl mb-4">🖍️</div>
+        <h3 class="font-kids text-3xl italic">FASE 3</h3>
+    </button>
+    <button onclick="cargarJuegos(4)" class="btn-bounce bg-green-500 p-8 rounded-[3rem] border-b-8 border-green-700 text-white shadow-xl">
+        <div class="text-7xl mb-4">🧪</div>
+        <h3 class="font-kids text-3xl italic">FASE 4</h3>
+    </button>
+    <button onclick="cargarJuegos(5)" class="btn-bounce bg-purple-500 p-8 rounded-[3rem] border-b-8 border-purple-700 text-white shadow-xl">
+        <div class="text-7xl mb-4">🔭</div>
+        <h3 class="font-kids text-3xl italic">FASE 5</h3>
+    </button>
+    <button onclick="mostrarIngles()" class="btn-bounce bg-blue-500 p-8 rounded-[3rem] border-b-8 border-blue-700 text-white shadow-xl">
+        <div class="text-7xl mb-4">🌎</div>
+        <h3 class="font-kids text-3xl italic">ENGLISH</h3>
+    </button>
+</section>
 
-    <section id="view-game-list" class="hidden animate__animated animate__fadeIn">
-        <button onclick="volverMenu()" class="bg-white px-6 py-2 rounded-full font-bold text-blue-500 shadow-md mb-6 hover:bg-blue-50 transition-all">🏠 VOLVER</button>
-        <div id="game-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
-    </section>
+<script>
 
-    <section id="view-english" class="hidden animate__animated animate__zoomIn text-center">
-        <button onclick="volverMenu()" class="bg-white px-6 py-2 rounded-full font-bold text-blue-500 shadow-md mb-8 hover:bg-blue-50 transition-all">🏠 VOLVER</button>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <a href="animales.html" class="btn-bounce bg-white p-6 rounded-[2rem] border-b-8 border-yellow-400 shadow-lg block"><div class="text-5xl">🦁</div><h4 class="font-kids mt-2 text-yellow-600 uppercase">Animals</h4></a>
-            <a href="colores.html" class="btn-bounce bg-white p-6 rounded-[2rem] border-b-8 border-pink-400 shadow-lg block"><div class="text-5xl">🎨</div><h4 class="font-kids mt-2 text-pink-600 uppercase">Colors</h4></a>
-            <a href="numeros.html" class="btn-bounce bg-white p-6 rounded-[2rem] border-b-8 border-blue-400 shadow-lg block"><div class="text-5xl">🔢</div><h4 class="font-kids mt-2 text-blue-600 uppercase">Numbers</h4></a>
-            <a href="frutas.html" class="btn-bounce bg-white p-6 rounded-[2rem] border-b-8 border-green-400 shadow-lg block"><div class="text-5xl">🍎</div><h4 class="font-kids mt-2 text-green-600 uppercase">Fruits</h4></a>
-        </div>
-    </section>
-
-    <script>
-        function switchAuth(reg) {
-            document.getElementById('login-controls').classList.toggle('hidden', reg);
-            document.getElementById('register-controls').classList.toggle('hidden', !reg);
-            document.getElementById('auth-title').innerText = reg ? "¡Crea tu Cuenta!" : "¡Bienvenidos!";
-        }
-
-        function intentarRegistro() {
-            const u = document.getElementById('auth-user').value.trim().toLowerCase();
-            const p = document.getElementById('auth-pass').value.trim();
-            if(!u || !p) return alert("⚠️ ¡Escribe usuario y contraseña!");
-            
+    // 🔐 AUTO LOGIN SI YA HAY SESIÓN GUARDADA
+    window.addEventListener("DOMContentLoaded", function(){
+        const usuarioActivo = localStorage.getItem("usuarioActivo");
+        if(usuarioActivo){
             let db = JSON.parse(localStorage.getItem('v_carranza_db') || "{}");
-            if(db[u]) return alert("❌ El usuario ya existe.");
-            
-            db[u] = { p, points: 0, lives: 5 };
-            localStorage.setItem('v_carranza_db', JSON.stringify(db));
-            alert("✨ ¡Cuenta creada! Ya puedes entrar."); 
-            switchAuth(false);
-        }
-
-        function intentarLogin() {
-            const u = document.getElementById('auth-user').value.trim().toLowerCase();
-            const p = document.getElementById('auth-pass').value.trim();
-            let db = JSON.parse(localStorage.getItem('v_carranza_db') || "{}");
-            
-            if(db[u] && db[u].p === p) {
+            if(db[usuarioActivo]){
                 document.getElementById('view-auth').classList.add('hidden');
                 document.getElementById('main-header').classList.remove('hidden');
                 document.getElementById('view-phases').classList.remove('hidden');
-                document.getElementById('display-user').innerText = "HOLA, " + u;
-                document.getElementById('points').innerText = db[u].points;
-                document.getElementById('lives').innerText = db[u].lives;
-            } else { 
-                alert("❌ Usuario o contraseña incorrectos."); 
+                document.getElementById('display-user').innerText = "HOLA, " + usuarioActivo;
+                document.getElementById('points').innerText = db[usuarioActivo].points;
+                document.getElementById('lives').innerText = db[usuarioActivo].lives;
             }
         }
-
-        function cerrarSesion() { location.reload(); }
-        
-        function mostrarIngles() { 
-            document.getElementById('view-phases').classList.add('hidden'); 
-            document.getElementById('view-english').classList.remove('hidden'); 
-        }
-
-        function volverMenu() { 
-            document.getElementById('view-game-list').classList.add('hidden'); 
-            document.getElementById('view-english').classList.add('hidden'); 
-            document.getElementById('view-phases').classList.remove('hidden'); 
-        }
-
-function cargarJuegos(f) {
-    document.getElementById('view-phases').classList.add('hidden');
-    document.getElementById('view-game-list').classList.remove('hidden');
-    const grid = document.getElementById('game-grid');
-    grid.innerHTML = "";
-
-    // 1. AQUÍ ESCRIBES TUS JUEGOS
-    const misJuegos = {
-        3: [
-            
-            { nombre: "Mayúsculas mágicas", link: "mayusculasf3.html", icono: "✏️" },
-            { nombre: "Descubriendo vocales", link: "vocalesf3.html", icono: "🍎" },
-            { nombre: "Orden alfabético", link: "alfabetof3.html", icono: "🔠" },
-            { nombre: "Fracciones", link: "pizzeriaf3.html", icono: "➗" },
-            { nombre: "Matemáticas montessori", link: "matemontesori.html", icono: "🧮" },
-            { nombre: "La tiendita", link: "tiendita.html", icono: "🏪" },
-            { nombre: "Conteo mágico", link: "sumasf3.html", icono: "🔢" },
-            { nombre: "Sumas Divertidas", link: "vocalesf3.html", icono: "➕" },
-            { nombre: "Restas Aventura", link: "alfabetof3.html", icono: "➖" },
-            { nombre: "Figuras locas", link: "fraccionesf3.html", icono: "🔷" },
-            { nombre: "Mayor o menor", link: "vocalesf3.html", icono: "⚖️" },
-            { nombre: "Secuencias", link: "alfabetof3.html", icono: "📊" },
-            { nombre: "Matemáticas montessori", link: "matemontesori.html", icono: "🎲" },
-            { nombre: "Método global alfabetización", link: "alfabetizacionglobalf3.html", icono: "📚" },
-            { nombre: "Ciencias naturales", link: "cienciasf3.html", icono: "🦠" },
-            { nombre: "Geografía", link: "geografiaf3.html", icono: "🌎"},
-            { nombre: "Educación Socioemocional", link: "socioemocionalf3.html", icono: "❤️"},
-            { nombre: "Educación Financiera", link: "educacionfinancieraf3.html", icono: "💵"}
-                    ],
-        4: [
-            { nombre: "Las Tablas", link: "f4_tablas.html", icono: "✖️" },
-
-            { nombre: "Fracciones", link: "pizzeriaf4.html", icono: "➗" },
-
-         { nombre: "La Tiendita", link: "tiendita.html", icono: "🛒" },
-            { nombre: "Naturaleza", link: "f4_ciencias.html", icono: "🌿" }
-        ],
-        5: [
-            { nombre: "Cuerpo Humano", link: "f5_cuerpo.html", icono: "🧠" },
-
-{ nombre: "Fracciones", link: "pizzeriaf5.html", icono: "➗" },
-
-            { nombre: "Universo", link: "f5_planetas.html", icono: "🚀" }
-        ]
-    };
-
-    // 2. ESTO CREA LOS BOTONES AUTOMÁTICAMENTE
-    misJuegos[f].forEach(juego => {
-        grid.innerHTML += `
-        <div class="glass p-8 rounded-[3rem] text-center border-b-8 border-gray-200 animate__animated animate__fadeInUp">
-            <div class="text-5xl mb-4">${juego.icono}</div>
-            <h4 class="font-kids text-xl uppercase italic">${juego.nombre}</h4>
-            <p class="text-xs font-bold text-gray-400">FASE ${f}</p>
-            <a href="${juego.link}" class="inline-block bg-pink-500 text-white px-10 py-2 rounded-full font-kids mt-4 shadow-lg hover:bg-pink-600 transition-all">JUGAR</a>
-        </div>`;
     });
+
+    function intentarLogin() {
+        const u = document.getElementById('auth-user').value.trim().toLowerCase();
+        const p = document.getElementById('auth-pass').value.trim();
+        let db = JSON.parse(localStorage.getItem('v_carranza_db') || "{}");
+        
+        if(db[u] && db[u].p === p) {
+
+            localStorage.setItem("usuarioActivo", u);
+
+            document.getElementById('view-auth').classList.add('hidden');
+            document.getElementById('main-header').classList.remove('hidden');
+            document.getElementById('view-phases').classList.remove('hidden');
+            document.getElementById('display-user').innerText = "HOLA, " + u;
+            document.getElementById('points').innerText = db[u].points;
+            document.getElementById('lives').innerText = db[u].lives;
+        } else {
+            alert("❌ Usuario o contraseña incorrectos.");
         }
-    </script>
+    }
+
+    function cerrarSesion() {
+        localStorage.removeItem("usuarioActivo");
+        location.reload();
+    }
+
+</script>
+
 </body>
 </html>
-
