@@ -1,0 +1,1025 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabla Periódica Divertida</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Fredoka', 'Comic Neue', cursive, sans-serif; }
+    
+    .element-cell {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .element-cell:hover {
+      transform: scale(1.15);
+      z-index: 10;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .element-cell.viewed {
+      animation: sparkle 0.5s ease;
+    }
+    @keyframes sparkle {
+      0%, 100% { box-shadow: 0 0 5px gold; }
+      50% { box-shadow: 0 0 20px gold, 0 0 30px yellow; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .floating { animation: float 3s ease-in-out infinite; }
+    .bouncing { animation: bounce 0.5s ease; }
+    
+    .modal-backdrop {
+      backdrop-filter: blur(5px);
+    }
+    
+    .star { 
+      color: #fbbf24;
+      text-shadow: 0 0 10px #fbbf24;
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+      background-size: 200% 100%;
+      animation: shimmer 2s linear infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    .category-alkali { background: linear-gradient(135deg, #fca5a5, #f87171); }
+    .category-alkaline { background: linear-gradient(135deg, #fdba74, #fb923c); }
+    .category-transition { background: linear-gradient(135deg, #fcd34d, #fbbf24); }
+    .category-post-transition { background: linear-gradient(135deg, #86efac, #4ade80); }
+    .category-metalloid { background: linear-gradient(135deg, #67e8f9, #22d3ee); }
+    .category-nonmetal { background: linear-gradient(135deg, #a5b4fc, #818cf8); }
+    .category-halogen { background: linear-gradient(135deg, #c4b5fd, #a78bfa); }
+    .category-noble { background: linear-gradient(135deg, #f9a8d4, #f472b6); }
+    .category-lanthanide { background: linear-gradient(135deg, #99f6e4, #5eead4); }
+    .category-actinide { background: linear-gradient(135deg, #fda4af, #fb7185); }
+    
+    .confetti {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+ <div id="app" class="min-h-full p-4 relative z-10">
+
+    <!-- Botón Casita para volver al menú -->
+    <button onclick="window.location.href='index.html'" 
+            class="absolute top-4 left-4 bg-white/80 hover:bg-white text-purple-700 font-bold px-4 py-2 rounded-xl shadow-lg transition">
+      🏠 Menú
+    </button>
+
+
+
+   
+  <div id="app" class="min-h-full w-full p-4"><!-- Header -->
+   <header class="text-center mb-4">
+    <h1 id="main-title" class="text-3xl md:text-5xl font-bold text-white drop-shadow-lg floating">🧪 Tabla Periódica Divertida 🔬</h1>
+    <p class="text-lg text-pink-200 mt-2">¡Aprende química jugando!</p><!-- Stats Bar -->
+    <div class="flex flex-wrap justify-center gap-4 mt-4">
+     <div class="bg-white/20 backdrop-blur rounded-full px-4 py-2 flex items-center gap-2"><span class="text-2xl">👁️</span> <span class="text-white font-bold">Vistos: <span id="viewed-count">0</span>/10</span>
+     </div>
+     <div class="bg-white/20 backdrop-blur rounded-full px-4 py-2 flex items-center gap-2"><span class="text-2xl">⭐</span> <span class="text-white font-bold">Puntos: <span id="total-points">0</span></span>
+     </div><button id="quiz-btn" class="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold px-6 py-2 rounded-full shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled> 🎯 ¡Hacer Quiz! </button>
+    </div><!-- Progress Bar -->
+    <div class="max-w-md mx-auto mt-4 bg-white/20 rounded-full h-4 overflow-hidden">
+     <div id="progress-bar" class="progress-bar h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+    </div>
+    <p class="text-pink-200 text-sm mt-1">Revisa 10 elementos para desbloquear el quiz</p>
+   </header><!-- Periodic Table -->
+   <div class="overflow-x-auto pb-4">
+    <div id="periodic-table" class="mx-auto" style="min-width: 1100px; max-width: 1200px;"><!-- Table will be generated by JS -->
+    </div>
+   </div><!-- Legend -->
+   <div class="flex flex-wrap justify-center gap-2 mt-4 px-4">
+    <div class="flex items-center gap-1 bg-white/10 rounded-full px-3 py-1">
+     <div class="w-4 h-4 rounded category-alkali"></div><span class="text-white text-xs">Alcalinos</span>
+    </div>
+    <div class="flex items-center gap-1 bg-white/10 rounded-full px-3 py-1">
+     <div class="w-4 h-4 rounded category-alkaline"></div><span class="text-white text-xs">Alcalinotérreos</span>
+    </div>
+    <div class="flex items-center gap-1 bg-white/10 rounded-full px-3 py-1">
+     <div class="w-4 h-4 rounded category-transition"></div><span class="text-white text-xs">Transición</span>
+    </div>
+    <div class="flex items-center gap-1 bg-white/10 rounded-full px-3 py-1">
+     <div class="w-4 h-4 rounded category-nonmetal"></div><span class="text-white text-xs">No metales</span>
+    </div>
+    <div class="flex items-center gap-1 bg-white/10 rounded-full px-3 py-1">
+     <div class="w-4 h-4 rounded category-noble"></div><span class="text-white text-xs">Gases nobles</span>
+    </div>
+   </div><!-- Teacher Credit -->
+   <footer class="text-center mt-6 pb-4">
+    <div class="inline-block bg-white/20 backdrop-blur rounded-2xl px-6 py-3">
+     <p class="text-white text-sm">💖 Material elaborado con amor por</p>
+     <p id="teacher-credit" class="text-pink-200 font-bold text-lg">Mtra. María Fernanda Flores Valenzuela</p>
+    </div>
+   </footer>
+  </div><!-- Element Detail Modal -->
+  <div id="element-modal" class="fixed inset-0 bg-black/50 modal-backdrop hidden items-center justify-center z-50 p-4">
+   <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90%] overflow-y-auto shadow-2xl transform transition-all">
+    <div id="modal-content" class="p-6"><!-- Modal content will be generated by JS -->
+    </div>
+   </div>
+  </div><!-- Quiz Modal -->
+  <div id="quiz-modal" class="fixed inset-0 bg-black/50 modal-backdrop hidden items-center justify-center z-50 p-4">
+   <div class="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl max-w-lg w-full shadow-2xl">
+    <div id="quiz-content" class="p-6"><!-- Quiz content will be generated by JS -->
+    </div>
+   </div>
+  </div><!-- Results Modal -->
+  <div id="results-modal" class="fixed inset-0 bg-black/50 modal-backdrop hidden items-center justify-center z-50 p-4">
+   <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl max-w-lg w-full shadow-2xl">
+    <div id="results-content" class="p-6 text-center"><!-- Results content will be generated by JS -->
+    </div>
+   </div>
+  </div>
+  <script>
+    // Element Data with fun facts for kids
+    const elements = [
+      { number: 1, symbol: 'H', name: 'Hidrógeno', category: 'nonmetal', row: 1, col: 1,
+        emoji: '💧', fact: '¡Es el elemento más ligero del universo! Está en el agua que bebes.',
+        funFact: 'El Sol está hecho principalmente de hidrógeno. ¡Cada vez que ves el sol brillar, es hidrógeno trabajando!',
+        where: 'En el agua, en el Sol y en todas las estrellas' },
+      { number: 2, symbol: 'He', name: 'Helio', category: 'noble', row: 1, col: 18,
+        emoji: '🎈', fact: '¡Es lo que hace que los globos floten! También hace tu voz chistosa.',
+        funFact: 'El helio fue descubierto primero en el Sol antes que en la Tierra. Por eso se llama Helio (Helios = Sol en griego).',
+        where: 'En el Sol y en los globos de feria' },
+      { number: 3, symbol: 'Li', name: 'Litio', category: 'alkali', row: 2, col: 1,
+        emoji: '🔋', fact: 'Está en las baterías de tu tablet y celular.',
+        funFact: 'Es el metal más ligero que existe. ¡Puede flotar en el agua!',
+        where: 'En baterías de teléfonos, tablets y autos eléctricos' },
+      { number: 4, symbol: 'Be', name: 'Berilio', category: 'alkaline', row: 2, col: 2,
+        emoji: '💎', fact: 'Se usa para hacer esmeraldas, esas piedras verdes preciosas.',
+        funFact: 'Es muy ligero pero súper fuerte. Se usa en naves espaciales.',
+        where: 'En esmeraldas y partes de cohetes espaciales' },
+      { number: 5, symbol: 'B', name: 'Boro', category: 'metalloid', row: 2, col: 13,
+        emoji: '🧹', fact: 'Está en productos de limpieza y hace que las plantas crezcan sanas.',
+        funFact: 'El bórax, que contiene boro, se usaba para hacer slime hace mucho tiempo.',
+        where: 'En detergentes y fertilizantes para plantas' },
+      { number: 6, symbol: 'C', name: 'Carbono', category: 'nonmetal', row: 2, col: 14,
+        emoji: '💎✏️', fact: '¡Los diamantes y la punta de tu lápiz están hechos de lo mismo!',
+        funFact: 'Tú estás hecho de carbono. Todos los seres vivos contienen carbono.',
+        where: 'En diamantes, lápices, y en todos los seres vivos' },
+      { number: 7, symbol: 'N', name: 'Nitrógeno', category: 'nonmetal', row: 2, col: 15,
+        emoji: '🌬️', fact: 'El 78% del aire que respiras es nitrógeno.',
+        funFact: 'El nitrógeno líquido está tan frío que puede congelar cosas al instante. ¡Se usa para hacer helado instantáneo!',
+        where: 'En el aire que respiras (¡es casi todo nitrógeno!)' },
+      { number: 8, symbol: 'O', name: 'Oxígeno', category: 'nonmetal', row: 2, col: 16,
+        emoji: '🫁', fact: '¡Es lo que necesitas para respirar y vivir!',
+        funFact: 'Sin oxígeno, el fuego no puede existir. Por eso los bomberos a veces quitan el oxígeno para apagar incendios.',
+        where: 'En el aire, en el agua, y en tus pulmones' },
+      { number: 9, symbol: 'F', name: 'Flúor', category: 'halogen', row: 2, col: 17,
+        emoji: '🦷', fact: 'Está en tu pasta de dientes para proteger tus dientes.',
+        funFact: 'Es el elemento más reactivo que existe. ¡Reacciona con casi todo!',
+        where: 'En pasta de dientes y en sartenes antiadherentes' },
+      { number: 10, symbol: 'Ne', name: 'Neón', category: 'noble', row: 2, col: 18,
+        emoji: '💡', fact: '¡Es lo que hace brillar los letreros de colores en la noche!',
+        funFact: 'Los letreros de neón fueron inventados en París, Francia. El color natural del neón es rojo-naranja.',
+        where: 'En letreros luminosos y luces de colores' },
+      { number: 11, symbol: 'Na', name: 'Sodio', category: 'alkali', row: 3, col: 1,
+        emoji: '🧂', fact: 'Está en la sal de mesa que le pones a tu comida.',
+        funFact: '¡El sodio explota cuando lo pones en agua! Por eso la sal (cloruro de sodio) es segura pero el sodio puro no.',
+        where: 'En la sal de cocina y en el mar' },
+      { number: 12, symbol: 'Mg', name: 'Magnesio', category: 'alkaline', row: 3, col: 2,
+        emoji: '✨', fact: 'Hace las chispas brillantes de los fuegos artificiales.',
+        funFact: 'Los plátanos y el chocolate tienen magnesio. ¡Tu cuerpo lo necesita para estar sano!',
+        where: 'En fuegos artificiales, plátanos y chocolate' },
+      { number: 13, symbol: 'Al', name: 'Aluminio', category: 'post-transition', row: 3, col: 13,
+        emoji: '🥫', fact: 'Las latas de refresco están hechas de aluminio.',
+        funFact: 'Hace 200 años, el aluminio era más valioso que el oro. ¡Ahora lo usamos para envolver comida!',
+        where: 'En latas, papel aluminio y aviones' },
+      { number: 14, symbol: 'Si', name: 'Silicio', category: 'metalloid', row: 3, col: 14,
+        emoji: '💻', fact: 'Está en todos los chips de computadora y celulares.',
+        funFact: 'La arena de la playa tiene mucho silicio. ¡De la arena se hacen los vidrios y las computadoras!',
+        where: 'En computadoras, celulares, arena y vidrio' },
+      { number: 15, symbol: 'P', name: 'Fósforo', category: 'nonmetal', row: 3, col: 15,
+        emoji: '🔥', fact: 'Hace que los cerillos se enciendan al rasparlos.',
+        funFact: 'El fósforo brilla en la oscuridad. ¡Por eso las cosas fosforescentes llevan ese nombre!',
+        where: 'En cerillos, huesos y dientes' },
+      { number: 16, symbol: 'S', name: 'Azufre', category: 'nonmetal', row: 3, col: 16,
+        emoji: '🌋', fact: 'Huele a huevo podrido y sale de los volcanes.',
+        funFact: 'Los volcanes expulsan azufre. En la antigüedad lo llamaban "piedra que arde".',
+        where: 'En volcanes, cerillos y aguas termales' },
+      { number: 17, symbol: 'Cl', name: 'Cloro', category: 'halogen', row: 3, col: 17,
+        emoji: '🏊', fact: 'Es lo que mantiene limpia el agua de las albercas.',
+        funFact: 'El cloro también está en la sal de mesa (cloruro de sodio). ¡Juntos forman algo seguro!',
+        where: 'En albercas, agua potable y sal de cocina' },
+      { number: 18, symbol: 'Ar', name: 'Argón', category: 'noble', row: 3, col: 18,
+        emoji: '💡', fact: 'Está dentro de los focos para que duren más.',
+        funFact: 'El argón es el tercer gas más común en el aire. ¡Cada vez que respiras, entra un poquito de argón!',
+        where: 'En focos y en el aire que respiras' },
+      { number: 19, symbol: 'K', name: 'Potasio', category: 'alkali', row: 4, col: 1,
+        emoji: '🍌', fact: '¡Los plátanos tienen mucho potasio! Es bueno para tus músculos.',
+        funFact: 'El símbolo K viene de "Kalium" en latín. Los plátanos son famosos por tener potasio.',
+        where: 'En plátanos, papas y tus músculos' },
+      { number: 20, symbol: 'Ca', name: 'Calcio', category: 'alkaline', row: 4, col: 2,
+        emoji: '🦴🥛', fact: 'Hace fuertes tus huesos y dientes. ¡La leche tiene mucho!',
+        funFact: 'Las conchas de mar y los huesos de dinosaurio tienen calcio. ¡Es súper importante para los huesos!',
+        where: 'En leche, queso, huesos y conchas de mar' },
+      { number: 21, symbol: 'Sc', name: 'Escandio', category: 'transition', row: 4, col: 3,
+        emoji: '⚾', fact: 'Se usa para hacer bates de béisbol súper ligeros.',
+        funFact: 'Fue descubierto en Escandinavia (Suecia, Noruega). Por eso se llama Escandio.',
+        where: 'En bates de béisbol y cuadros de bicicletas' },
+      { number: 22, symbol: 'Ti', name: 'Titanio', category: 'transition', row: 4, col: 4,
+        emoji: '✈️', fact: 'Es súper fuerte y ligero. Se usa en aviones y cohetes.',
+        funFact: 'Lleva el nombre de los Titanes de la mitología griega porque es muy fuerte.',
+        where: 'En aviones, cohetes y prótesis médicas' },
+      { number: 23, symbol: 'V', name: 'Vanadio', category: 'transition', row: 4, col: 5,
+        emoji: '🔧', fact: 'Hace el acero más fuerte para herramientas.',
+        funFact: 'Lleva el nombre de Vanadis, la diosa nórdica de la belleza.',
+        where: 'En herramientas, resortes y motores' },
+      { number: 24, symbol: 'Cr', name: 'Cromo', category: 'transition', row: 4, col: 6,
+        emoji: '🪞', fact: '¡Es lo que hace brillar las partes cromadas de los autos!',
+        funFact: 'Cromo significa "color" en griego. Sus compuestos tienen muchos colores bonitos.',
+        where: 'En autos brillantes, grifos y monedas' },
+      { number: 25, symbol: 'Mn', name: 'Manganeso', category: 'transition', row: 4, col: 7,
+        emoji: '🔋', fact: 'Está en las pilas que usas para tus juguetes.',
+        funFact: 'Se usa para hacer vidrio transparente. Sin él, el vidrio sería verde.',
+        where: 'En pilas, acero y vidrio' },
+      { number: 26, symbol: 'Fe', name: 'Hierro', category: 'transition', row: 4, col: 8,
+        emoji: '🧲', fact: 'Los imanes se pegan al hierro. ¡Tu sangre tiene hierro!',
+        funFact: 'El centro de la Tierra es principalmente hierro. También es lo que hace tu sangre roja.',
+        where: 'En tu sangre, imanes y el centro de la Tierra' },
+      { number: 27, symbol: 'Co', name: 'Cobalto', category: 'transition', row: 4, col: 9,
+        emoji: '💙', fact: 'Da el color azul intenso a las pinturas y vidrios.',
+        funFact: 'El cobalto viene de "kobold", palabra alemana para duende, porque los mineros creían que los duendes lo escondían.',
+        where: 'En pinturas azules, imanes y baterías' },
+      { number: 28, symbol: 'Ni', name: 'Níquel', category: 'transition', row: 4, col: 10,
+        emoji: '🪙', fact: 'Muchas monedas brillantes tienen níquel.',
+        funFact: 'En Estados Unidos, la moneda de 5 centavos se llama "nickel" por este elemento.',
+        where: 'En monedas, baterías recargables y cubiertos' },
+      { number: 29, symbol: 'Cu', name: 'Cobre', category: 'transition', row: 4, col: 11,
+        emoji: '🔌', fact: 'Los cables eléctricos son de cobre. ¡Conduce muy bien la electricidad!',
+        funFact: 'La Estatua de la Libertad está cubierta de cobre. Por eso es verde (el cobre se pone verde con el tiempo).',
+        where: 'En cables, monedas y la Estatua de la Libertad' },
+      { number: 30, symbol: 'Zn', name: 'Zinc', category: 'transition', row: 4, col: 12,
+        emoji: '🩹', fact: 'Está en las cremas para proteger tu piel del sol.',
+        funFact: 'El zinc ayuda a tu cuerpo a sanar heridas más rápido. ¡Es como un superhéroe para tu piel!',
+        where: 'En bloqueador solar, pilas y monedas' },
+      { number: 31, symbol: 'Ga', name: 'Galio', category: 'post-transition', row: 4, col: 13,
+        emoji: '🫠', fact: '¡Se derrite en tu mano porque funde a 29°C!',
+        funFact: 'Puedes hacer una cuchara de galio que se derrite cuando la metes en té caliente. ¡Es un truco muy divertido!',
+        where: 'En termómetros, LEDs y circuitos' },
+      { number: 32, symbol: 'Ge', name: 'Germanio', category: 'metalloid', row: 4, col: 14,
+        emoji: '📱', fact: 'Se usa en transistores de aparatos electrónicos.',
+        funFact: 'Fue descubierto en Alemania. "Germania" era el nombre antiguo de Alemania.',
+        where: 'En chips de computadora y detectores' },
+      { number: 33, symbol: 'As', name: 'Arsénico', category: 'metalloid', row: 4, col: 15,
+        emoji: '⚠️', fact: 'Es venenoso. En la antigüedad lo usaban en medicinas (¡mala idea!).',
+        funFact: 'El color verde de algunos juguetes antiguos venía del arsénico. ¡Ahora sabemos que no es seguro!',
+        where: 'En algunos minerales (hay que tener cuidado)' },
+      { number: 34, symbol: 'Se', name: 'Selenio', category: 'nonmetal', row: 4, col: 16,
+        emoji: '🌙', fact: 'Su nombre viene de Selene, la diosa de la Luna.',
+        funFact: 'El selenio hace que las fotocopiadoras funcionen. ¡También está en el champú anticaspa!',
+        where: 'En fotocopiadoras, champú y nueces de Brasil' },
+      { number: 35, symbol: 'Br', name: 'Bromo', category: 'halogen', row: 4, col: 17,
+        emoji: '🌊', fact: 'Se encuentra en el agua de mar y huele muy fuerte.',
+        funFact: 'Bromo significa "mal olor" en griego. ¡Y sí, huele muy mal!',
+        where: 'En el océano y algunos medicamentos' },
+      { number: 36, symbol: 'Kr', name: 'Kriptón', category: 'noble', row: 4, col: 18,
+        emoji: '🦸', fact: '¡Sí, como el planeta de Superman! Pero este es un gas real.',
+        funFact: 'Kriptón significa "oculto" en griego. Se usa en luces especiales de fotografía.',
+        where: 'En luces de flash y láseres' },
+      { number: 37, symbol: 'Rb', name: 'Rubidio', category: 'alkali', row: 5, col: 1,
+        emoji: '❤️', fact: 'Da un color rojo brillante a los fuegos artificiales.',
+        funFact: 'Rubidio significa "rojo profundo" porque hace una luz roja cuando se quema.',
+        where: 'En fuegos artificiales y relojes atómicos' },
+      { number: 38, symbol: 'Sr', name: 'Estroncio', category: 'alkaline', row: 5, col: 2,
+        emoji: '🎆', fact: '¡Hace el color rojo de los fuegos artificiales!',
+        funFact: 'Fue descubierto en un pueblo de Escocia llamado Strontian.',
+        where: 'En fuegos artificiales rojos y pastas de dientes' },
+      { number: 39, symbol: 'Y', name: 'Itrio', category: 'transition', row: 5, col: 3,
+        emoji: '📺', fact: 'Se usaba para hacer las pantallas de televisores antiguos.',
+        funFact: 'Fue descubierto en un pueblo de Suecia llamado Ytterby. ¡Muchos elementos fueron descubiertos ahí!',
+        where: 'En LEDs, láseres y televisores' },
+      { number: 40, symbol: 'Zr', name: 'Circonio', category: 'transition', row: 5, col: 4,
+        emoji: '💍', fact: 'Se usa para hacer diamantes falsos muy brillantes.',
+        funFact: 'El circonio es tan resistente al calor que se usa en reactores nucleares.',
+        where: 'En joyería, cerámica y reactores nucleares' },
+      { number: 41, symbol: 'Nb', name: 'Niobio', category: 'transition', row: 5, col: 5,
+        emoji: '🚀', fact: 'Se usa en cohetes espaciales por ser súper resistente.',
+        funFact: 'Niobio lleva el nombre de Níobe, hija de Tántalo en la mitología griega.',
+        where: 'En cohetes, joyería y superconductores' },
+      { number: 42, symbol: 'Mo', name: 'Molibdeno', category: 'transition', row: 5, col: 6,
+        emoji: '⚔️', fact: 'Hace el acero más fuerte para espadas y armaduras.',
+        funFact: 'Tu cuerpo necesita un poquito de molibdeno para estar sano.',
+        where: 'En acero especial, herramientas y tu cuerpo' },
+      { number: 43, symbol: 'Tc', name: 'Tecnecio', category: 'transition', row: 5, col: 7,
+        emoji: '🔬', fact: 'Fue el primer elemento creado artificialmente.',
+        funFact: 'Tecnecio significa "artificial" en griego. No existe naturalmente en la Tierra.',
+        where: 'En hospitales para ver dentro del cuerpo' },
+      { number: 44, symbol: 'Ru', name: 'Rutenio', category: 'transition', row: 5, col: 8,
+        emoji: '✍️', fact: 'Se usa para hacer puntas de plumas muy finas.',
+        funFact: 'Lleva el nombre de Rusia (Ruthenia en latín), donde fue descubierto.',
+        where: 'En plumas de escribir y contactos eléctricos' },
+      { number: 45, symbol: 'Rh', name: 'Rodio', category: 'transition', row: 5, col: 9,
+        emoji: '🏆', fact: 'Es más caro que el oro. Se usa para cubrir joyas.',
+        funFact: 'Rodio significa "rosa" en griego por el color rosa de sus sales.',
+        where: 'En joyería de lujo y catalizadores de autos' },
+      { number: 46, symbol: 'Pd', name: 'Paladio', category: 'transition', row: 5, col: 10,
+        emoji: '🚗', fact: 'Ayuda a limpiar el humo de los autos.',
+        funFact: 'Lleva el nombre del asteroide Palas, descubierto poco antes del elemento.',
+        where: 'En convertidores catalíticos y joyería' },
+      { number: 47, symbol: 'Ag', name: 'Plata', category: 'transition', row: 5, col: 11,
+        emoji: '🥈', fact: 'Las medallas de segundo lugar son de plata. ¡Brilla mucho!',
+        funFact: 'La plata es el mejor conductor de electricidad. También mata bacterias.',
+        where: 'En medallas, joyas, espejos y monedas' },
+      { number: 48, symbol: 'Cd', name: 'Cadmio', category: 'transition', row: 5, col: 12,
+        emoji: '🎨', fact: 'Se usaba para hacer pinturas amarillas brillantes.',
+        funFact: 'Van Gogh usó pinturas con cadmio en sus famosos girasoles.',
+        where: 'En pinturas artísticas y baterías recargables' },
+      { number: 49, symbol: 'In', name: 'Indio', category: 'post-transition', row: 5, col: 13,
+        emoji: '📱', fact: 'Está en las pantallas táctiles de tablets y celulares.',
+        funFact: 'Indio hace una línea de color índigo (azul) cuando se calienta. Por eso su nombre.',
+        where: 'En pantallas táctiles y soldaduras' },
+      { number: 50, symbol: 'Sn', name: 'Estaño', category: 'post-transition', row: 5, col: 14,
+        emoji: '🥫', fact: 'Las latas de comida se cubrían con estaño.',
+        funFact: 'El Hombre de Hojalata del Mago de Oz está hecho de estaño. ¡Por eso es plateado!',
+        where: 'En latas, soldaduras y papel de estaño' },
+      { number: 51, symbol: 'Sb', name: 'Antimonio', category: 'metalloid', row: 5, col: 15,
+        emoji: '👁️', fact: 'En Egipto antiguo lo usaban como maquillaje de ojos.',
+        funFact: 'Cleopatra usaba antimonio para pintarse los ojos de negro.',
+        where: 'En baterías, plásticos y maquillaje antiguo' },
+      { number: 52, symbol: 'Te', name: 'Telurio', category: 'metalloid', row: 5, col: 16,
+        emoji: '🌍', fact: 'Su nombre viene de Tellus, la diosa romana de la Tierra.',
+        funFact: 'Si comes telurio, tu aliento olería a ajo por días. ¡Mejor no probarlo!',
+        where: 'En paneles solares y electrónica' },
+      { number: 53, symbol: 'I', name: 'Yodo', category: 'halogen', row: 5, col: 17,
+        emoji: '🩹', fact: 'Es el líquido café que ponen en heridas para curarlas.',
+        funFact: 'Yodo significa "violeta" en griego por el color de su vapor.',
+        where: 'En medicinas, sal yodada y algas marinas' },
+      { number: 54, symbol: 'Xe', name: 'Xenón', category: 'noble', row: 5, col: 18,
+        emoji: '🚘', fact: 'Las luces muy brillantes de algunos autos usan xenón.',
+        funFact: 'Xenón significa "extraño" en griego. Es un gas muy raro.',
+        where: 'En faros de autos de lujo y lámparas de flash' },
+      { number: 55, symbol: 'Cs', name: 'Cesio', category: 'alkali', row: 6, col: 1,
+        emoji: '⏰', fact: 'Los relojes más precisos del mundo usan cesio.',
+        funFact: 'Los relojes de cesio son tan precisos que solo se atrasan 1 segundo cada 300 millones de años.',
+        where: 'En relojes atómicos y GPS' },
+      { number: 56, symbol: 'Ba', name: 'Bario', category: 'alkaline', row: 6, col: 2,
+        emoji: '🎆', fact: '¡Hace el color verde de los fuegos artificiales!',
+        funFact: 'Bario significa "pesado" en griego. Se usa en rayos X para ver el estómago.',
+        where: 'En fuegos artificiales verdes y hospitales' },
+      { number: 57, symbol: 'La', name: 'Lantano', category: 'lanthanide', row: 6, col: 3,
+        emoji: '🔦', fact: 'Se usa en lentes de cámaras y telescopios.',
+        funFact: 'Lantano significa "escondido" porque fue muy difícil de descubrir.',
+        where: 'En lentes especiales, baterías híbridas y encendedores' },
+      { number: 72, symbol: 'Hf', name: 'Hafnio', category: 'transition', row: 6, col: 4,
+        emoji: '⚡', fact: 'Se usa en procesadores de computadoras.',
+        funFact: 'Hafnio lleva el nombre de Copenhague (Hafnia en latín), donde fue descubierto.',
+        where: 'En chips de computadora y reactores nucleares' },
+      { number: 73, symbol: 'Ta', name: 'Tántalo', category: 'transition', row: 6, col: 5,
+        emoji: '📱', fact: 'Está en los celulares para almacenar electricidad.',
+        funFact: 'Lleva el nombre de Tántalo, un personaje de la mitología griega.',
+        where: 'En celulares, computadoras y equipos médicos' },
+      { number: 74, symbol: 'W', name: 'Tungsteno', category: 'transition', row: 6, col: 6,
+        emoji: '💡', fact: '¡Es el metal con el punto de fusión más alto! Está en los focos.',
+        funFact: 'Tungsteno significa "piedra pesada" en sueco. Su símbolo W viene de Wolframio.',
+        where: 'En focos, herramientas y cohetes' },
+      { number: 75, symbol: 'Re', name: 'Renio', category: 'transition', row: 6, col: 7,
+        emoji: '✈️', fact: 'Se usa en motores de aviones a reacción.',
+        funFact: 'Lleva el nombre del río Rin en Alemania.',
+        where: 'En motores de aviones y catalizadores' },
+      { number: 76, symbol: 'Os', name: 'Osmio', category: 'transition', row: 6, col: 8,
+        emoji: '⚖️', fact: 'Es el elemento natural más denso (pesado) que existe.',
+        funFact: 'Osmio significa "olor" porque sus compuestos huelen muy fuerte.',
+        where: 'En puntas de plumas finas y agujas' },
+      { number: 77, symbol: 'Ir', name: 'Iridio', category: 'transition', row: 6, col: 9,
+        emoji: '🌈', fact: 'Hace colores de arcoíris. Viene de meteoritos.',
+        funFact: 'Iridio viene de Iris, la diosa griega del arcoíris. Los dinosaurios se extinguieron por un asteroide rico en iridio.',
+        where: 'En bujías de aviones y el asteroide que mató a los dinosaurios' },
+      { number: 78, symbol: 'Pt', name: 'Platino', category: 'transition', row: 6, col: 10,
+        emoji: '💍', fact: 'Es más valioso que el oro. Se usa en joyas elegantes.',
+        funFact: 'Los discos de platino se dan a los músicos que venden más de un millón de copias.',
+        where: 'En joyas, catalizadores de autos y discos de música' },
+      { number: 79, symbol: 'Au', name: 'Oro', category: 'transition', row: 6, col: 11,
+        emoji: '🥇', fact: '¡Es el metal precioso más famoso! Las medallas olímpicas son de oro.',
+        funFact: 'Todo el oro extraído en la historia llenaría solo 3 albercas olímpicas.',
+        where: 'En joyas, medallas olímpicas, monedas y dientes' },
+      { number: 80, symbol: 'Hg', name: 'Mercurio', category: 'transition', row: 6, col: 12,
+        emoji: '🌡️', fact: 'Es el único metal líquido a temperatura normal. Estaba en termómetros.',
+        funFact: 'Mercurio lleva el nombre del dios romano del comercio, que era muy rápido.',
+        where: 'En termómetros antiguos y luces fluorescentes' },
+      { number: 81, symbol: 'Tl', name: 'Talio', category: 'post-transition', row: 6, col: 13,
+        emoji: '💚', fact: 'Hace una luz verde brillante cuando se quema.',
+        funFact: 'Talio significa "rama verde" en griego por la línea verde que produce.',
+        where: 'En detectores y vidrios especiales' },
+      { number: 82, symbol: 'Pb', name: 'Plomo', category: 'post-transition', row: 6, col: 14,
+        emoji: '🛡️', fact: 'Protege de los rayos X. Es muy pesado.',
+        funFact: 'Los romanos usaban plomo para hacer tuberías. La palabra "plomería" viene de plomo.',
+        where: 'En baterías de autos y protección contra rayos X' },
+      { number: 83, symbol: 'Bi', name: 'Bismuto', category: 'post-transition', row: 6, col: 15,
+        emoji: '🌈', fact: 'Forma cristales con colores de arcoíris, muy bonitos.',
+        funFact: 'El bismuto se usa en medicinas para el estómago como el Pepto-Bismol.',
+        where: 'En medicinas para el estómago y cosméticos' },
+      { number: 84, symbol: 'Po', name: 'Polonio', category: 'metalloid', row: 6, col: 16,
+        emoji: '☢️', fact: 'Es radiactivo. Fue descubierto por Marie Curie.',
+        funFact: 'Marie Curie le puso este nombre por su país natal, Polonia.',
+        where: 'En eliminadores de estática (en pequeñas cantidades seguras)' },
+      { number: 85, symbol: 'At', name: 'Astato', category: 'halogen', row: 6, col: 17,
+        emoji: '👻', fact: 'Es el elemento más raro. ¡Casi no existe en la Tierra!',
+        funFact: 'Astato significa "inestable" en griego. Solo hay menos de 30 gramos en toda la Tierra.',
+        where: 'Casi no existe - es extremadamente raro' },
+      { number: 86, symbol: 'Rn', name: 'Radón', category: 'noble', row: 6, col: 18,
+        emoji: '🏠', fact: 'Es un gas que puede acumularse en casas. Hay que ventilar bien.',
+        funFact: 'El radón es la segunda causa de cáncer de pulmón después del tabaco.',
+        where: 'Bajo tierra - puede entrar a casas' },
+      { number: 87, symbol: 'Fr', name: 'Francio', category: 'alkali', row: 7, col: 1,
+        emoji: '🇫🇷', fact: 'Nombrado por Francia. Es muy raro y radiactivo.',
+        funFact: 'Es el elemento natural más inestable. Solo existe por menos de 22 minutos.',
+        where: 'Casi no existe - se desintegra muy rápido' },
+      { number: 88, symbol: 'Ra', name: 'Radio', category: 'alkaline', row: 7, col: 2,
+        emoji: '✨', fact: 'Marie Curie lo descubrió. ¡Brilla en la oscuridad!',
+        funFact: 'Antiguamente se usaba para hacer relojes que brillaban en la oscuridad (ya no, es peligroso).',
+        where: 'En tratamientos contra el cáncer' },
+      { number: 89, symbol: 'Ac', name: 'Actinio', category: 'actinide', row: 7, col: 3,
+        emoji: '☢️', fact: 'Brilla de color azul en la oscuridad.',
+        funFact: 'Actinio significa "rayo" en griego porque es muy radiactivo.',
+        where: 'En investigación científica' },
+      { number: 104, symbol: 'Rf', name: 'Rutherfordio', category: 'transition', row: 7, col: 4,
+        emoji: '🔬', fact: 'Nombrado por el científico Ernest Rutherford.',
+        funFact: 'Fue creado en un laboratorio. No existe naturalmente.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 105, symbol: 'Db', name: 'Dubnio', category: 'transition', row: 7, col: 5,
+        emoji: '🇷🇺', fact: 'Nombrado por Dubna, una ciudad en Rusia.',
+        funFact: 'Fue creado tanto en Rusia como en Estados Unidos.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 106, symbol: 'Sg', name: 'Seaborgio', category: 'transition', row: 7, col: 6,
+        emoji: '👨‍🔬', fact: 'Nombrado por el científico Glenn Seaborg.',
+        funFact: 'Seaborg descubrió 10 elementos y ganó el Premio Nobel.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 107, symbol: 'Bh', name: 'Bohrio', category: 'transition', row: 7, col: 7,
+        emoji: '⚛️', fact: 'Nombrado por el físico Niels Bohr.',
+        funFact: 'Bohr creó un modelo del átomo muy importante.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 108, symbol: 'Hs', name: 'Hasio', category: 'transition', row: 7, col: 8,
+        emoji: '🇩🇪', fact: 'Nombrado por Hesse, un estado de Alemania.',
+        funFact: 'Fue descubierto en Darmstadt, Alemania.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 109, symbol: 'Mt', name: 'Meitnerio', category: 'transition', row: 7, col: 9,
+        emoji: '👩‍🔬', fact: 'Nombrado por la científica Lise Meitner.',
+        funFact: 'Meitner ayudó a descubrir la fisión nuclear.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 110, symbol: 'Ds', name: 'Darmstadtio', category: 'transition', row: 7, col: 10,
+        emoji: '🏰', fact: 'Nombrado por Darmstadt, ciudad alemana.',
+        funFact: 'Solo se han creado unos pocos átomos en la historia.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 111, symbol: 'Rg', name: 'Roentgenio', category: 'transition', row: 7, col: 11,
+        emoji: '☢️', fact: 'Nombrado por Wilhelm Röntgen, descubridor de los rayos X.',
+        funFact: 'Röntgen ganó el primer Premio Nobel de Física.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 112, symbol: 'Cn', name: 'Copernicio', category: 'transition', row: 7, col: 12,
+        emoji: '🌍', fact: 'Nombrado por Nicolás Copérnico, el astrónomo.',
+        funFact: 'Copérnico descubrió que la Tierra gira alrededor del Sol.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 113, symbol: 'Nh', name: 'Nihonio', category: 'post-transition', row: 7, col: 13,
+        emoji: '🇯🇵', fact: 'Nombrado por Japón (Nihon en japonés).',
+        funFact: 'Es el primer elemento descubierto en Asia.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 114, symbol: 'Fl', name: 'Flerovio', category: 'post-transition', row: 7, col: 14,
+        emoji: '🔬', fact: 'Nombrado por el Laboratorio Flerov en Rusia.',
+        funFact: 'Fue descubierto en 1998.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 115, symbol: 'Mc', name: 'Moscovio', category: 'post-transition', row: 7, col: 15,
+        emoji: '🇷🇺', fact: 'Nombrado por Moscú, la capital de Rusia.',
+        funFact: 'Fue descubierto en 2003.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 116, symbol: 'Lv', name: 'Livermorio', category: 'post-transition', row: 7, col: 16,
+        emoji: '🇺🇸', fact: 'Nombrado por el Laboratorio Lawrence Livermore en EE.UU.',
+        funFact: 'Fue creado en colaboración entre Rusia y Estados Unidos.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 117, symbol: 'Ts', name: 'Teneso', category: 'halogen', row: 7, col: 17,
+        emoji: '🎸', fact: 'Nombrado por Tennessee, estado de EE.UU.',
+        funFact: 'Es uno de los elementos más nuevos, descubierto en 2010.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 118, symbol: 'Og', name: 'Oganesón', category: 'noble', row: 7, col: 18,
+        emoji: '🏆', fact: 'El último elemento de la tabla. Nombrado por Yuri Oganessian.',
+        funFact: 'Es el elemento más pesado jamás creado.',
+        where: 'Solo en laboratorios científicos' },
+      // Lanthanides (row 8 visually, but period 6)
+      { number: 58, symbol: 'Ce', name: 'Cerio', category: 'lanthanide', row: 8, col: 4,
+        emoji: '🔥', fact: 'Se usa en encendedores para hacer chispas.',
+        funFact: 'Nombrado por el asteroide Ceres, descubierto poco antes.',
+        where: 'En encendedores y vidrios de horno' },
+      { number: 59, symbol: 'Pr', name: 'Praseodimio', category: 'lanthanide', row: 8, col: 5,
+        emoji: '💚', fact: 'Da color verde a los vidrios de joyería.',
+        funFact: 'Praseodimio significa "gemelo verde" en griego.',
+        where: 'En vidrios verdes y motores de aviones' },
+      { number: 60, symbol: 'Nd', name: 'Neodimio', category: 'lanthanide', row: 8, col: 6,
+        emoji: '🧲', fact: 'Hace los imanes más potentes del mundo.',
+        funFact: 'Los imanes de neodimio son tan fuertes que pueden levantar 1000 veces su peso.',
+        where: 'En imanes, audífonos y discos duros' },
+      { number: 61, symbol: 'Pm', name: 'Prometio', category: 'lanthanide', row: 8, col: 7,
+        emoji: '☢️', fact: 'Nombrado por Prometeo, el titán que robó el fuego.',
+        funFact: 'Es el único lantánido radiactivo.',
+        where: 'En baterías nucleares y pintura luminosa' },
+      { number: 62, symbol: 'Sm', name: 'Samario', category: 'lanthanide', row: 8, col: 8,
+        emoji: '🧲', fact: 'Se usa para hacer imanes muy fuertes.',
+        funFact: 'Nombrado por el mineral samarskita.',
+        where: 'En imanes, guitarras eléctricas y tratamiento contra el cáncer' },
+      { number: 63, symbol: 'Eu', name: 'Europio', category: 'lanthanide', row: 8, col: 9,
+        emoji: '📺', fact: 'Da los colores rojo y azul a las pantallas de TV.',
+        funFact: 'Nombrado por Europa. Es muy fosforescente.',
+        where: 'En pantallas de TV y billetes (para evitar falsificaciones)' },
+      { number: 64, symbol: 'Gd', name: 'Gadolinio', category: 'lanthanide', row: 8, col: 10,
+        emoji: '🏥', fact: 'Se usa en resonancias magnéticas en hospitales.',
+        funFact: 'Nombrado por el científico Johan Gadolin.',
+        where: 'En hospitales para ver dentro del cuerpo' },
+      { number: 65, symbol: 'Tb', name: 'Terbio', category: 'lanthanide', row: 8, col: 11,
+        emoji: '💡', fact: 'Se usa en luces fluorescentes verdes.',
+        funFact: 'Nombrado por Ytterby, un pueblo en Suecia.',
+        where: 'En pantallas de celular y luces LED' },
+      { number: 66, symbol: 'Dy', name: 'Disprosio', category: 'lanthanide', row: 8, col: 12,
+        emoji: '🚗', fact: 'Se usa en motores de autos eléctricos.',
+        funFact: 'Disprosio significa "difícil de obtener" en griego.',
+        where: 'En autos eléctricos y discos duros' },
+      { number: 67, symbol: 'Ho', name: 'Holmio', category: 'lanthanide', row: 8, col: 13,
+        emoji: '🧲', fact: 'Es el elemento más magnético que existe.',
+        funFact: 'Nombrado por Estocolmo (Holmia en latín).',
+        where: 'En imanes y láseres médicos' },
+      { number: 68, symbol: 'Er', name: 'Erbio', category: 'lanthanide', row: 8, col: 14,
+        emoji: '🌐', fact: 'Se usa en cables de internet de fibra óptica.',
+        funFact: 'Da el color rosa a algunos vidrios.',
+        where: 'En internet de fibra óptica y vidrios rosas' },
+      { number: 69, symbol: 'Tm', name: 'Tulio', category: 'lanthanide', row: 8, col: 15,
+        emoji: '💰', fact: 'Es el lantánido más raro y caro.',
+        funFact: 'Nombrado por Thule, un nombre antiguo de Escandinavia.',
+        where: 'En láseres médicos y rayos X portátiles' },
+      { number: 70, symbol: 'Yb', name: 'Iterbio', category: 'lanthanide', row: 8, col: 16,
+        emoji: '⏰', fact: 'Se usa en relojes atómicos muy precisos.',
+        funFact: 'Otro elemento nombrado por el pueblo de Ytterby.',
+        where: 'En relojes atómicos y láseres' },
+      { number: 71, symbol: 'Lu', name: 'Lutecio', category: 'lanthanide', row: 8, col: 17,
+        emoji: '🗼', fact: 'Nombrado por París (Lutetia en latín).',
+        funFact: 'Es el último de los lantánidos.',
+        where: 'En detectores y catalizadores' },
+      // Actinides (row 9 visually, but period 7)
+      { number: 90, symbol: 'Th', name: 'Torio', category: 'actinide', row: 9, col: 4,
+        emoji: '⚡', fact: 'Nombrado por Thor, el dios nórdico del trueno.',
+        funFact: 'Podría ser el combustible del futuro para energía nuclear segura.',
+        where: 'En camisas de lámparas de camping' },
+      { number: 91, symbol: 'Pa', name: 'Protactinio', category: 'actinide', row: 9, col: 5,
+        emoji: '☢️', fact: 'Es muy radiactivo y raro.',
+        funFact: 'Su nombre significa "padre del actinio" porque se convierte en actinio.',
+        where: 'En investigación científica' },
+      { number: 92, symbol: 'U', name: 'Uranio', category: 'actinide', row: 9, col: 6,
+        emoji: '☢️⚡', fact: 'Se usa para generar electricidad en plantas nucleares.',
+        funFact: 'Nombrado por el planeta Urano, descubierto poco antes.',
+        where: 'En plantas de energía nuclear' },
+      { number: 93, symbol: 'Np', name: 'Neptunio', category: 'actinide', row: 9, col: 7,
+        emoji: '🔵', fact: 'Nombrado por el planeta Neptuno.',
+        funFact: 'Fue el primer elemento transurámnico descubierto.',
+        where: 'En detectores de neutrones' },
+      { number: 94, symbol: 'Pu', name: 'Plutonio', category: 'actinide', row: 9, col: 8,
+        emoji: '☢️', fact: 'Nombrado por el planeta enano Plutón.',
+        funFact: 'Se usa para dar energía a sondas espaciales.',
+        where: 'En naves espaciales y energía nuclear' },
+      { number: 95, symbol: 'Am', name: 'Americio', category: 'actinide', row: 9, col: 9,
+        emoji: '🚨', fact: 'Está en los detectores de humo de tu casa.',
+        funFact: 'Nombrado por América.',
+        where: 'En detectores de humo que te protegen' },
+      { number: 96, symbol: 'Cm', name: 'Curio', category: 'actinide', row: 9, col: 10,
+        emoji: '👩‍🔬', fact: 'Nombrado por Marie y Pierre Curie.',
+        funFact: 'Brilla en la oscuridad con un color morado.',
+        where: 'En sondas espaciales y marcapasos' },
+      { number: 97, symbol: 'Bk', name: 'Berkelio', category: 'actinide', row: 9, col: 11,
+        emoji: '🇺🇸', fact: 'Nombrado por Berkeley, California.',
+        funFact: 'Solo se han producido unos pocos gramos en la historia.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 98, symbol: 'Cf', name: 'Californio', category: 'actinide', row: 9, col: 12,
+        emoji: '☀️', fact: 'Nombrado por California. Es muy radiactivo.',
+        funFact: 'Es uno de los elementos más caros del mundo.',
+        where: 'En tratamientos contra el cáncer' },
+      { number: 99, symbol: 'Es', name: 'Einstenio', category: 'actinide', row: 9, col: 13,
+        emoji: '🧠', fact: 'Nombrado por Albert Einstein.',
+        funFact: 'Fue descubierto en los restos de la primera bomba de hidrógeno.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 100, symbol: 'Fm', name: 'Fermio', category: 'actinide', row: 9, col: 14,
+        emoji: '⚛️', fact: 'Nombrado por Enrico Fermi, padre de la energía nuclear.',
+        funFact: 'También fue descubierto en restos de explosiones nucleares.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 101, symbol: 'Md', name: 'Mendelevio', category: 'actinide', row: 9, col: 15,
+        emoji: '📊', fact: 'Nombrado por Dmitri Mendeléyev, creador de la tabla periódica.',
+        funFact: 'Solo se han producido unos pocos átomos.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 102, symbol: 'No', name: 'Nobelio', category: 'actinide', row: 9, col: 16,
+        emoji: '🏆', fact: 'Nombrado por Alfred Nobel, creador del Premio Nobel.',
+        funFact: 'Nobel inventó la dinamita y creó los premios más famosos del mundo.',
+        where: 'Solo en laboratorios científicos' },
+      { number: 103, symbol: 'Lr', name: 'Lawrencio', category: 'actinide', row: 9, col: 17,
+        emoji: '🔬', fact: 'Nombrado por Ernest Lawrence, inventor del ciclotrón.',
+        funFact: 'Es el último de los actínidos.',
+        where: 'Solo en laboratorios científicos' }
+    ];
+
+    // State
+    let viewedElements = new Set();
+    let totalPoints = 0;
+    let currentElement = null;
+    let quizQuestions = [];
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+
+    // Initialize app
+    function init() {
+      renderPeriodicTable();
+      updateUI();
+      loadProgress();
+    }
+
+    // Render periodic table
+    function renderPeriodicTable() {
+      const table = document.getElementById('periodic-table');
+      const grid = document.createElement('div');
+      grid.className = 'grid gap-0.5';
+      grid.style.gridTemplateColumns = 'repeat(18, minmax(0, 1fr))';
+      grid.style.gridTemplateRows = 'repeat(10, minmax(0, 1fr))';
+      
+      // Create empty cells for spacing
+      for (let row = 1; row <= 10; row++) {
+        for (let col = 1; col <= 18; col++) {
+          const element = elements.find(e => e.row === row && e.col === col);
+          
+          if (element) {
+            const cell = createElementCell(element);
+            grid.appendChild(cell);
+          } else {
+            // Special labels for lanthanides and actinides
+            if (row === 6 && col === 3) {
+              const label = document.createElement('div');
+              label.className = 'flex items-center justify-center text-white text-xs font-bold';
+              label.textContent = '57-71';
+              label.style.gridColumn = col;
+              label.style.gridRow = row;
+              grid.appendChild(label);
+            } else if (row === 7 && col === 3) {
+              const label = document.createElement('div');
+              label.className = 'flex items-center justify-center text-white text-xs font-bold';
+              label.textContent = '89-103';
+              label.style.gridColumn = col;
+              label.style.gridRow = row;
+              grid.appendChild(label);
+            } else if (row === 8 && col === 3) {
+              const label = document.createElement('div');
+              label.className = 'flex items-center justify-center text-pink-200 text-xs';
+              label.textContent = 'Lantánidos';
+              label.style.gridColumn = col;
+              label.style.gridRow = row;
+              grid.appendChild(label);
+            } else if (row === 9 && col === 3) {
+              const label = document.createElement('div');
+              label.className = 'flex items-center justify-center text-pink-200 text-xs';
+              label.textContent = 'Actínidos';
+              label.style.gridColumn = col;
+              label.style.gridRow = row;
+              grid.appendChild(label);
+            } else {
+              const empty = document.createElement('div');
+              empty.style.gridColumn = col;
+              empty.style.gridRow = row;
+              grid.appendChild(empty);
+            }
+          }
+        }
+      }
+      
+      table.appendChild(grid);
+    }
+
+    function createElementCell(element) {
+      const cell = document.createElement('button');
+      cell.className = `element-cell category-${element.category} rounded-lg p-1 flex flex-col items-center justify-center text-center shadow-md`;
+      cell.style.gridColumn = element.col;
+      cell.style.gridRow = element.row;
+      cell.style.minWidth = '50px';
+      cell.style.minHeight = '50px';
+      cell.dataset.symbol = element.symbol;
+      
+      if (viewedElements.has(element.symbol)) {
+        cell.classList.add('viewed');
+        cell.style.boxShadow = '0 0 10px gold';
+      }
+      
+      cell.innerHTML = `
+        <span class="text-[10px] font-bold text-black/60">${element.number}</span>
+        <span class="text-lg font-bold text-black">${element.symbol}</span>
+        <span class="text-[8px] text-black/80 truncate w-full">${element.name}</span>
+      `;
+      
+      cell.onclick = () => showElementDetail(element);
+      return cell;
+    }
+
+    function showElementDetail(element) {
+      currentElement = element;
+      const modal = document.getElementById('element-modal');
+      const content = document.getElementById('modal-content');
+      
+      content.innerHTML = `
+        <div class="text-center">
+          <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+          
+          <div class="text-6xl mb-4">${element.emoji}</div>
+          
+          <div class="category-${element.category} inline-block rounded-2xl px-6 py-4 mb-4">
+            <span class="text-white/80 text-sm">${element.number}</span>
+            <div class="text-5xl font-bold text-white">${element.symbol}</div>
+            <div class="text-white font-semibold">${element.name}</div>
+          </div>
+          
+          <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-4 mb-4 text-left">
+            <h3 class="font-bold text-purple-800 mb-2">💡 ¿Sabías que...?</h3>
+            <p class="text-gray-700">${element.fact}</p>
+          </div>
+          
+          <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-4 mb-4 text-left">
+            <h3 class="font-bold text-orange-800 mb-2">🌟 Dato curioso:</h3>
+            <p class="text-gray-700">${element.funFact}</p>
+          </div>
+          
+          <div class="bg-gradient-to-r from-green-100 to-teal-100 rounded-2xl p-4 mb-4 text-left">
+            <h3 class="font-bold text-teal-800 mb-2">📍 ¿Dónde lo encuentras?</h3>
+            <p class="text-gray-700">${element.where}</p>
+          </div>
+          
+          <button onclick="markAsViewed('${element.symbol}')" class="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold px-8 py-3 rounded-full shadow-lg transform hover:scale-105 transition-all">
+            ✅ ¡Ya lo aprendí! (+10 puntos)
+          </button>
+        </div>
+      `;
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    async function markAsViewed(symbol) {
+      if (!viewedElements.has(symbol)) {
+        viewedElements.add(symbol);
+        totalPoints += 10;
+        
+        // Save to localStorage
+        saveProgress();
+        
+        // Update the cell visually
+        const cell = document.querySelector(`[data-symbol="${symbol}"]`);
+        if (cell) {
+          cell.classList.add('viewed', 'bouncing');
+          cell.style.boxShadow = '0 0 10px gold';
+          setTimeout(() => cell.classList.remove('bouncing'), 500);
+        }
+        
+        // Create confetti
+        createConfetti();
+        
+        updateUI();
+      }
+      
+      closeModal();
+    }
+
+    function saveProgress() {
+      const progress = {
+        viewed: Array.from(viewedElements),
+        points: totalPoints
+      };
+      localStorage.setItem('periodicTableProgress', JSON.stringify(progress));
+    }
+
+    function loadProgress() {
+      const saved = localStorage.getItem('periodicTableProgress');
+      if (saved) {
+        const progress = JSON.parse(saved);
+        viewedElements = new Set(progress.viewed || []);
+        totalPoints = progress.points || 0;
+        updateUI();
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('element-modal').classList.add('hidden');
+      document.getElementById('element-modal').classList.remove('flex');
+    }
+
+    function updateUI() {
+      document.getElementById('viewed-count').textContent = viewedElements.size;
+      document.getElementById('total-points').textContent = totalPoints;
+      
+      const progress = Math.min((viewedElements.size / 10) * 100, 100);
+      document.getElementById('progress-bar').style.width = `${progress}%`;
+      
+      const quizBtn = document.getElementById('quiz-btn');
+      if (viewedElements.size >= 10) {
+        quizBtn.disabled = false;
+        quizBtn.classList.add('bouncing');
+        setTimeout(() => quizBtn.classList.remove('bouncing'), 500);
+      } else {
+        quizBtn.disabled = true;
+      }
+      
+      // Update viewed elements on the table
+      viewedElements.forEach(symbol => {
+        const cell = document.querySelector(`[data-symbol="${symbol}"]`);
+        if (cell && !cell.classList.contains('viewed')) {
+          cell.classList.add('viewed');
+          cell.style.boxShadow = '0 0 10px gold';
+        }
+      });
+    }
+
+    // Quiz functionality
+    document.getElementById('quiz-btn').addEventListener('click', startQuiz);
+
+    function startQuiz() {
+      const viewedArray = Array.from(viewedElements);
+      const quizElements = viewedArray
+        .map(symbol => elements.find(e => e.symbol === symbol))
+        .filter(e => e)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 5);
+      
+      quizQuestions = quizElements.map(el => {
+        const questionTypes = [
+          {
+            question: `¿Cuál es el símbolo de ${el.name}?`,
+            answer: el.symbol,
+            options: generateOptions(el.symbol, elements.map(e => e.symbol))
+          },
+          {
+            question: `${el.emoji} Este emoji representa al elemento:`,
+            answer: el.name,
+            options: generateOptions(el.name, elements.slice(0, 30).map(e => e.name))
+          },
+          {
+            question: `¿Dónde puedes encontrar ${el.name}?`,
+            answer: el.where,
+            options: generateOptions(el.where, elements.slice(0, 20).map(e => e.where))
+          }
+        ];
+        return questionTypes[Math.floor(Math.random() * questionTypes.length)];
+      });
+      
+      currentQuizIndex = 0;
+      quizScore = 0;
+      showQuizQuestion();
+    }
+
+    function generateOptions(correct, allOptions) {
+      const options = [correct];
+      const filtered = allOptions.filter(o => o !== correct);
+      while (options.length < 4 && filtered.length > 0) {
+        const randomIndex = Math.floor(Math.random() * filtered.length);
+        options.push(filtered.splice(randomIndex, 1)[0]);
+      }
+      return options.sort(() => Math.random() - 0.5);
+    }
+
+    function showQuizQuestion() {
+      const modal = document.getElementById('quiz-modal');
+      const content = document.getElementById('quiz-content');
+      
+      if (currentQuizIndex >= quizQuestions.length) {
+        showQuizResults();
+        return;
+      }
+      
+      const q = quizQuestions[currentQuizIndex];
+      
+      content.innerHTML = `
+        <div class="text-center">
+          <div class="text-white mb-2">Pregunta ${currentQuizIndex + 1} de ${quizQuestions.length}</div>
+          <div class="bg-white/20 rounded-full h-2 mb-4">
+            <div class="bg-white h-2 rounded-full transition-all" style="width: ${((currentQuizIndex) / quizQuestions.length) * 100}%"></div>
+          </div>
+          
+          <h2 class="text-2xl font-bold text-white mb-6">${q.question}</h2>
+          
+          <div class="space-y-3">
+            ${q.options.map((opt, i) => `
+              <button onclick="checkAnswer('${opt.replace(/'/g, "\\'")}', '${q.answer.replace(/'/g, "\\'")}')" 
+                class="w-full bg-white/90 hover:bg-white text-purple-800 font-bold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all">
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function checkAnswer(selected, correct) {
+      if (selected === correct) {
+        quizScore++;
+        createConfetti();
+      }
+      currentQuizIndex++;
+      showQuizQuestion();
+    }
+
+    async function showQuizResults() {
+      document.getElementById('quiz-modal').classList.add('hidden');
+      document.getElementById('quiz-modal').classList.remove('flex');
+      
+      const earnedPoints = quizScore * 20;
+      totalPoints += earnedPoints;
+      
+      // Save quiz results
+      saveProgress();
+      
+      const modal = document.getElementById('results-modal');
+      const content = document.getElementById('results-content');
+      
+      const stars = '⭐'.repeat(quizScore);
+      const emptyStars = '☆'.repeat(5 - quizScore);
+      
+      let message = '';
+      if (quizScore === 5) {
+        message = '🎉 ¡PERFECTO! ¡Eres un genio de la química!';
+      } else if (quizScore >= 3) {
+        message = '👏 ¡Muy bien! ¡Sigue aprendiendo!';
+      } else {
+        message = '💪 ¡Buen intento! Revisa más elementos y vuelve a intentarlo.';
+      }
+      
+      content.innerHTML = `
+        <div class="text-white">
+          <div class="text-6xl mb-4">🏆</div>
+          <h2 class="text-3xl font-bold mb-2">¡Quiz Terminado!</h2>
+          
+          <div class="text-4xl my-4 star">${stars}${emptyStars}</div>
+          
+          <p class="text-2xl mb-2">${quizScore} de 5 correctas</p>
+          <p class="text-xl mb-4">+${earnedPoints} puntos</p>
+          
+          <p class="text-lg mb-6">${message}</p>
+          
+          <button onclick="closeResults()" class="bg-white text-orange-500 font-bold px-8 py-3 rounded-full shadow-lg transform hover:scale-105 transition-all">
+            ¡Seguir aprendiendo!
+          </button>
+        </div>
+      `;
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      createConfetti();
+      createConfetti();
+      
+      updateUI();
+    }
+
+    function closeResults() {
+      document.getElementById('results-modal').classList.add('hidden');
+      document.getElementById('results-modal').classList.remove('flex');
+    }
+
+    function createConfetti() {
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'];
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-10px';
+        confetti.style.width = Math.random() * 10 + 5 + 'px';
+        confetti.style.height = Math.random() * 10 + 5 + 'px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        document.body.appendChild(confetti);
+        
+        const animation = confetti.animate([
+          { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+          { transform: `translateY(100vh) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+        ], {
+          duration: Math.random() * 2000 + 2000,
+          easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        });
+        
+        animation.onfinish = () => confetti.remove();
+      }
+    }
+
+    // Initialize app
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d1be7d465e5a5f0',t:'MTc3MTczNjI3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
