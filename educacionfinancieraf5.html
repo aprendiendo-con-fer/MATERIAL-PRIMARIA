@@ -1,137 +1,1061 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mi Primer Sueldo - Educación Financiera</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-body{font-family:'Montserrat',sans-serif;}
-.fade-in{animation:fade 0.6s ease-in-out;}
-@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-</style>
-</head>
-
-<body class="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 min-h-screen text-white">
-
-<div class="max-w-5xl mx-auto p-6">
-
-<!-- Portada -->
-<div class="text-center fade-in">
-<h1 class="text-5xl font-extrabold mb-4">💼 Mi Primer Sueldo</h1>
-<p class="text-xl mb-6">¿El dinero alcanza para todo?</p>
-<img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f" 
-class="rounded-3xl shadow-2xl mx-auto w-full max-h-72 object-cover">
-</div>
-
-<!-- Información del sueldo -->
-<div class="mt-10 bg-white text-gray-800 p-6 rounded-3xl shadow-2xl fade-in">
-<h2 class="text-3xl font-bold mb-4 text-center">Tu salario mensual</h2>
-<p class="text-center text-lg mb-6">Acabas de conseguir tu primer trabajo 🎉</p>
-<div class="text-center text-4xl font-extrabold text-green-600">$12,000 pesos</div>
-</div>
-
-<!-- Gastos fijos -->
-<div class="mt-10 fade-in">
-<h2 class="text-3xl font-bold mb-6 text-center">Gastos Obligatorios</h2>
-
-<div class="grid md:grid-cols-2 gap-6">
-
-<div class="bg-white text-gray-800 p-5 rounded-3xl shadow-xl">
-<img src="https://images.unsplash.com/photo-1560185007-c5ca9d2c014d" class="rounded-xl mb-3 h-40 w-full object-cover">
-<h3 class="font-bold text-lg">🏠 Renta</h3>
-<p>$4,000</p>
-</div>
-
-<div class="bg-white text-gray-800 p-5 rounded-3xl shadow-xl">
-<img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836" class="rounded-xl mb-3 h-40 w-full object-cover">
-<h3 class="font-bold text-lg">🍎 Comida</h3>
-<p>$2,500</p>
-</div>
-
-<div class="bg-white text-gray-800 p-5 rounded-3xl shadow-xl">
-<img src="https://images.unsplash.com/photo-1502920917128-1aa500764ce7" class="rounded-xl mb-3 h-40 w-full object-cover">
-<h3 class="font-bold text-lg">🚌 Transporte</h3>
-<p>$1,000</p>
-</div>
-
-<div class="bg-white text-gray-800 p-5 rounded-3xl shadow-xl">
-<img src="https://images.unsplash.com/photo-1556742031-c6961e8560b0" class="rounded-xl mb-3 h-40 w-full object-cover">
-<h3 class="font-bold text-lg">💡 Servicios</h3>
-<p>$800</p>
-</div>
-
-</div>
-
-<div class="text-center mt-6 text-2xl font-bold">
-Total gastos: $8,300
-</div>
-</div>
-
-<!-- Decisiones -->
-<div class="mt-12 fade-in">
-<h2 class="text-3xl font-bold mb-6 text-center">Te quedan $3,700</h2>
-<p class="text-center mb-6">¿En qué lo gastarás?</p>
-
-<div class="grid md:grid-cols-2 gap-6">
-
-<button onclick="restar(3500)" class="bg-white text-gray-800 p-5 rounded-3xl shadow-xl hover:scale-105 transition">
-📱 Celular nuevo - $3,500
-</button>
-
-<button onclick="restar(1200)" class="bg-white text-gray-800 p-5 rounded-3xl shadow-xl hover:scale-105 transition">
-👟 Ropa - $1,200
-</button>
-
-<button onclick="restar(1000)" class="bg-white text-gray-800 p-5 rounded-3xl shadow-xl hover:scale-105 transition">
-🎮 Videojuego - $1,000
-</button>
-
-<button onclick="restar(2000)" class="bg-white text-gray-800 p-5 rounded-3xl shadow-xl hover:scale-105 transition">
-📚 Curso - $2,000
-</button>
-
-<button onclick="ahorrar()" class="bg-green-500 text-white p-5 rounded-3xl shadow-xl hover:scale-105 transition col-span-2">
-💰 Ahorrar dinero
-</button>
-
-</div>
-
-<div class="mt-6 text-center text-2xl font-bold">
-Dinero restante: $<span id="dinero">3700</span>
-</div>
-</div>
-
-<!-- Reflexión -->
-<div class="mt-12 bg-white text-gray-800 p-8 rounded-3xl shadow-2xl fade-in">
-<h2 class="text-3xl font-bold mb-4 text-center">Reflexiona 🤔</h2>
-<ul class="list-disc pl-6 text-lg space-y-2">
-<li>¿Te alcanzó el dinero?</li>
-<li>¿Ahorraste algo?</li>
-<li>¿Qué harías si surge una emergencia?</li>
-<li>¿Cambiarías alguna decisión?</li>
-</ul>
-</div>
-
-</div>
-
-<script>
-let dinero = 3700;
-
-function restar(cantidad){
-if(dinero - cantidad >= 0){
-dinero -= cantidad;
-document.getElementById("dinero").textContent = dinero;
-}else{
-alert("⚠️ No tienes suficiente dinero para eso.");
-}
-}
-
-function ahorrar(){
-alert("👏 Excelente decisión. Ahorrar te ayuda a prepararte para emergencias.");
-}
-</script>
-
-</body>
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aventura Financiera Kids 🎮💰</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Baloo+2:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Fredoka', 'Baloo 2', sans-serif; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+    
+    @keyframes bounce-coin {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.5); }
+    }
+    
+    @keyframes slide-in {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes pop-in {
+      0% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes rainbow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px) rotate(-5deg); }
+      75% { transform: translateX(5px) rotate(5deg); }
+    }
+    
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    .bounce-coin { animation: bounce-coin 0.5s ease-in-out; }
+    .sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    .slide-in { animation: slide-in 0.5s ease-out; }
+    .pop-in { animation: pop-in 0.4s ease-out; }
+    .rainbow-bg { animation: rainbow 5s linear infinite; }
+    .shake { animation: shake 0.5s ease-in-out; }
+    
+    .game-card {
+      background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
+      border: 4px solid;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8);
+      transition: all 0.3s ease;
+    }
+    
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+    }
+    
+    .btn-game {
+      border-radius: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    }
+    
+    .btn-game:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+    }
+    
+    .btn-game:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
+      background-size: 200% 100%;
+      animation: shimmer 2s linear infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    .emoji-big { font-size: 3rem; }
+    .emoji-huge { font-size: 5rem; }
+    
+    .bill-card {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 3px dashed #f59e0b;
+      border-radius: 16px;
+    }
+    
+    .investment-card {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      border: 3px solid #3b82f6;
+      border-radius: 16px;
+    }
+    
+    .mission-card {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border: 3px solid #22c55e;
+      border-radius: 16px;
+    }
+    
+    .confetti {
+      position: fixed;
+      pointer-events: none;
+      z-index: 1000;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full overflow-auto">
+  <div id="app" class="min-h-full w-full" style="background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 25%, #e0f2fe 50%, #dcfce7 75%, #fef9c3 100%);"><!-- Pantalla de Inicio -->
+   <div id="start-screen" class="min-h-full flex flex-col items-center justify-center p-6 text-center">
+    <div class="float-animation mb-6"><span class="emoji-huge">🏦</span>
+    </div>
+    <h1 id="main-title" class="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 bg-clip-text text-transparent drop-shadow-lg">¡Aventura Financiera!</h1>
+    <p id="subtitle" class="text-xl md:text-2xl text-purple-700 mb-8 font-medium">🌟 Aprende a manejar tu dinero jugando 🌟</p>
+    <div class="flex flex-wrap justify-center gap-4 mb-8"><span class="text-4xl float-animation" style="animation-delay: 0s;">💰</span> <span class="text-4xl float-animation" style="animation-delay: 0.2s;">🎮</span> <span class="text-4xl float-animation" style="animation-delay: 0.4s;">🏆</span> <span class="text-4xl float-animation" style="animation-delay: 0.6s;">⭐</span> <span class="text-4xl float-animation" style="animation-delay: 0.8s;">🎁</span>
+    </div>
+    <div class="w-full max-w-md mb-6"><label class="block text-lg font-bold text-purple-700 mb-2">👤 ¿Cómo te llamas?</label> <input type="text" id="player-name-input" placeholder="Escribe tu nombre..." class="w-full px-6 py-4 text-xl rounded-2xl border-4 border-purple-300 focus:border-purple-500 focus:outline-none text-center font-bold text-purple-700 bg-white/80">
+    </div><button onclick="startGame()" class="btn-game px-12 py-4 text-xl bg-gradient-to-r from-green-400 to-emerald-500 text-white hover:from-green-500 hover:to-emerald-600"> 🚀 ¡COMENZAR AVENTURA! 🚀 </button>
+    <div id="returning-player" class="hidden mt-6 p-4 bg-yellow-100 rounded-2xl border-4 border-yellow-400">
+     <p class="text-lg font-bold text-yellow-800">🎉 ¡Bienvenido de vuelta!</p>
+     <p id="returning-stats" class="text-yellow-700"></p>
+    </div>
+   </div><!-- Pantalla Principal del Juego -->
+   <div id="game-screen" class="hidden min-h-full flex flex-col"><!-- Header con Stats -->
+    <header class="bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 p-4 shadow-lg">
+     <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3"><span class="text-4xl">👤</span>
+       <div>
+        <p id="player-display" class="text-white font-bold text-lg"></p>
+        <p id="level-display" class="text-white/80 text-sm">Nivel 1 - Aprendiz</p>
+       </div>
+      </div>
+      <div class="flex items-center gap-6">
+       <div class="bg-white/20 rounded-2xl px-4 py-2 flex items-center gap-2"><span class="text-2xl bounce-coin">🪙</span> <span id="coins-display" class="text-white font-bold text-xl">0</span>
+       </div>
+       <div class="bg-white/20 rounded-2xl px-4 py-2 flex items-center gap-2"><span class="text-2xl">🏆</span> <span id="missions-display" class="text-white font-bold text-xl">0</span>
+       </div>
+      </div><button onclick="showHome()" class="btn-game px-4 py-2 bg-white/20 text-white text-sm hover:bg-white/30"> 🏠 Menú </button>
+     </div>
+    </header><!-- Contenido Principal -->
+    <main id="main-content" class="flex-1 p-6 overflow-auto"><!-- Menú de Juegos -->
+     <div id="games-menu" class="max-w-6xl mx-auto">
+      <h2 id="encouragement" class="text-3xl font-bold text-center mb-8 text-purple-700">🎮 ¡Elige tu aventura! 🎮</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Mi Primer Sueldo -->
+       <div class="game-card border-green-400 p-6 cursor-pointer" onclick="startSalaryGame()">
+        <div class="text-center"><span class="emoji-big float-animation">💵</span>
+         <h3 class="text-2xl font-bold text-green-700 mt-4">Mi Primer Sueldo</h3>
+         <p class="text-green-600 mt-2">Administra $5,000 pagando luz, agua y más</p>
+         <div class="mt-4 flex justify-center gap-2"><span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">💡 Fácil</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +100</span>
+         </div>
+        </div>
+       </div><!-- Inversionista Junior -->
+       <div class="game-card border-blue-400 p-6 cursor-pointer" onclick="startInvestmentGame()">
+        <div class="text-center"><span class="emoji-big float-animation" style="animation-delay: 0.3s;">📈</span>
+         <h3 class="text-2xl font-bold text-blue-700 mt-4">Inversionista Junior</h3>
+         <p class="text-blue-600 mt-2">¡Invierte y multiplica tu dinero!</p>
+         <div class="mt-4 flex justify-center gap-2"><span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-bold">🔥 Medio</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +200</span>
+         </div>
+        </div>
+       </div><!-- Misiones Diarias -->
+       <div class="game-card border-purple-400 p-6 cursor-pointer" onclick="startMissionsGame()">
+        <div class="text-center"><span class="emoji-big float-animation" style="animation-delay: 0.6s;">🎯</span>
+         <h3 class="text-2xl font-bold text-purple-700 mt-4">Misiones Especiales</h3>
+         <p class="text-purple-600 mt-2">Completa tareas y gana recompensas</p>
+         <div class="mt-4 flex justify-center gap-2"><span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">⭐ Variado</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +150</span>
+         </div>
+        </div>
+       </div><!-- Tienda de Ahorro -->
+       <div class="game-card border-yellow-400 p-6 cursor-pointer" onclick="startSavingsGame()">
+        <div class="text-center"><span class="emoji-big float-animation" style="animation-delay: 0.9s;">🐷</span>
+         <h3 class="text-2xl font-bold text-yellow-700 mt-4">Alcancía Mágica</h3>
+         <p class="text-yellow-600 mt-2">Ahorra para comprar cosas increíbles</p>
+         <div class="mt-4 flex justify-center gap-2"><span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">💡 Fácil</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +50</span>
+         </div>
+        </div>
+       </div><!-- Quiz Financiero -->
+       <div class="game-card border-pink-400 p-6 cursor-pointer" onclick="startQuizGame()">
+        <div class="text-center"><span class="emoji-big float-animation" style="animation-delay: 1.2s;">🧠</span>
+         <h3 class="text-2xl font-bold text-pink-700 mt-4">Quiz Financiero</h3>
+         <p class="text-pink-600 mt-2">¿Cuánto sabes sobre dinero?</p>
+         <div class="mt-4 flex justify-center gap-2"><span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-bold">🎓 Difícil</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +300</span>
+         </div>
+        </div>
+       </div><!-- Presupuesto Familiar -->
+       <div class="game-card border-teal-400 p-6 cursor-pointer" onclick="startBudgetGame()">
+        <div class="text-center"><span class="emoji-big float-animation" style="animation-delay: 1.5s;">🏠</span>
+         <h3 class="text-2xl font-bold text-teal-700 mt-4">Presupuesto Familiar</h3>
+         <p class="text-teal-600 mt-2">Planifica los gastos del mes</p>
+         <div class="mt-4 flex justify-center gap-2"><span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-bold">🔥 Medio</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +250</span>
+         </div>
+        </div>
+       </div>
+      </div><!-- Insignias -->
+      <div class="mt-10 p-6 bg-white/60 rounded-3xl border-4 border-purple-300">
+       <h3 class="text-2xl font-bold text-purple-700 text-center mb-4">🏅 Tus Insignias 🏅</h3>
+       <div id="badges-container" class="flex flex-wrap justify-center gap-4">
+        <div class="text-center p-4 bg-gray-100 rounded-2xl opacity-50"><span class="text-4xl">🌟</span>
+         <p class="text-sm text-gray-600 mt-1">Primera Victoria</p>
+        </div>
+        <div class="text-center p-4 bg-gray-100 rounded-2xl opacity-50"><span class="text-4xl">💎</span>
+         <p class="text-sm text-gray-600 mt-1">Ahorrador Pro</p>
+        </div>
+        <div class="text-center p-4 bg-gray-100 rounded-2xl opacity-50"><span class="text-4xl">🚀</span>
+         <p class="text-sm text-gray-600 mt-1">Inversionista</p>
+        </div>
+        <div class="text-center p-4 bg-gray-100 rounded-2xl opacity-50"><span class="text-4xl">👑</span>
+         <p class="text-sm text-gray-600 mt-1">Rey del Dinero</p>
+        </div>
+       </div>
+      </div>
+     </div><!-- Juego: Mi Primer Sueldo -->
+     <div id="salary-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-green-400">
+       <div class="flex items-center justify-between mb-6"><button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm"> ← Volver </button>
+        <h2 class="text-2xl font-bold text-green-700">💵 Mi Primer Sueldo 💵</h2>
+        <div class="text-right">
+         <p class="text-sm text-gray-600">Mes actual</p>
+         <p id="salary-month" class="text-lg font-bold text-green-700">Enero</p>
+        </div>
+       </div>
+       <div class="bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl p-6 mb-6">
+        <div class="flex items-center justify-between">
+         <div>
+          <p class="text-lg text-green-700">Tu sueldo mensual:</p>
+          <p class="text-4xl font-bold text-green-800">$<span id="salary-total">5,000</span></p>
+         </div>
+         <div class="text-right">
+          <p class="text-lg text-green-700">Te queda:</p>
+          <p id="salary-remaining" class="text-4xl font-bold text-emerald-600">$5,000</p>
+         </div>
+        </div>
+       </div>
+       <h3 class="text-xl font-bold text-gray-700 mb-4">📋 Gastos del Mes:</h3>
+       <div id="bills-container" class="space-y-4 mb-6"><!-- Se llena dinámicamente -->
+       </div>
+       <div id="salary-result" class="hidden">
+        <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-6 mb-6">
+         <h3 class="text-xl font-bold text-orange-700 mb-4">🎉 ¡Mes completado!</h3>
+         <p class="text-lg text-orange-600">Después de pagar todos tus gastos:</p>
+         <p id="salary-final" class="text-3xl font-bold text-orange-800 my-4">$0</p>
+         <p id="salary-message" class="text-lg text-orange-700"></p>
+        </div><button onclick="resetSalaryGame()" class="btn-game w-full py-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-lg"> 🔄 Jugar Otro Mes </button>
+       </div>
+      </div>
+     </div><!-- Juego: Inversionista -->
+     <div id="investment-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-blue-400">
+       <div class="flex items-center justify-between mb-6"><button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm"> ← Volver </button>
+        <h2 class="text-2xl font-bold text-blue-700">📈 Inversionista Junior 📈</h2>
+        <div class="bg-blue-100 px-4 py-2 rounded-xl"><span class="text-2xl">💰</span> <span id="invest-wallet" class="font-bold text-blue-700">$1,000</span>
+        </div>
+       </div>
+       <p class="text-center text-gray-600 mb-6">Elige una inversión. ¡Puede subir o bajar!</p>
+       <div id="investment-options" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="investment-card p-4 cursor-pointer hover:scale-105 transition-transform" onclick="invest('low')">
+         <div class="text-center"><span class="text-4xl">🏦</span>
+          <h4 class="font-bold text-blue-700 mt-2">Cuenta de Ahorro</h4>
+          <p class="text-sm text-blue-600">Riesgo: Bajo</p>
+          <p class="text-lg font-bold text-green-600 mt-2">+5% a +15%</p>
+         </div>
+        </div>
+        <div class="investment-card p-4 cursor-pointer hover:scale-105 transition-transform" onclick="invest('medium')">
+         <div class="text-center"><span class="text-4xl">📊</span>
+          <h4 class="font-bold text-blue-700 mt-2">Acciones</h4>
+          <p class="text-sm text-blue-600">Riesgo: Medio</p>
+          <p class="text-lg font-bold text-yellow-600 mt-2">-20% a +40%</p>
+         </div>
+        </div>
+        <div class="investment-card p-4 cursor-pointer hover:scale-105 transition-transform" onclick="invest('high')">
+         <div class="text-center"><span class="text-4xl">🎰</span>
+          <h4 class="font-bold text-blue-700 mt-2">Criptomonedas</h4>
+          <p class="text-sm text-blue-600">Riesgo: Alto</p>
+          <p class="text-lg font-bold text-red-600 mt-2">-50% a +100%</p>
+         </div>
+        </div>
+       </div>
+       <div id="investment-result" class="hidden">
+        <div id="invest-result-card" class="rounded-2xl p-6 text-center mb-6"><span id="invest-emoji" class="emoji-huge"></span>
+         <p id="invest-change" class="text-3xl font-bold mt-4"></p>
+         <p id="invest-new-total" class="text-xl mt-2"></p>
+         <p id="invest-lesson" class="text-lg mt-4"></p>
+        </div><button onclick="resetInvestmentGame()" class="btn-game w-full py-4 bg-gradient-to-r from-blue-400 to-indigo-500 text-white text-lg"> 🔄 Invertir de Nuevo </button>
+       </div>
+      </div>
+     </div><!-- Juego: Misiones -->
+     <div id="missions-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-purple-400">
+       <div class="flex items-center justify-between mb-6"><button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm"> ← Volver </button>
+        <h2 class="text-2xl font-bold text-purple-700">🎯 Misiones Especiales 🎯</h2>
+        <div class="bg-purple-100 px-4 py-2 rounded-xl"><span class="text-sm text-purple-600">Completadas:</span> <span id="missions-count" class="font-bold text-purple-700">0/5</span>
+        </div>
+       </div>
+       <div id="missions-list" class="space-y-4"><!-- Se llena dinámicamente -->
+       </div>
+      </div>
+     </div><!-- Juego: Alcancía -->
+     <div id="savings-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-yellow-400">
+       <div class="flex items-center justify-between mb-6"><button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm"> ← Volver </button>
+        <h2 class="text-2xl font-bold text-yellow-700">🐷 Alcancía Mágica 🐷</h2>
+       </div>
+       <div class="text-center mb-8">
+        <div class="inline-block p-8 bg-gradient-to-br from-pink-200 to-pink-300 rounded-full shadow-lg"><span class="emoji-huge">🐷</span>
+        </div>
+        <p class="text-2xl font-bold text-yellow-700 mt-4">En tu alcancía:</p>
+        <p id="piggy-amount" class="text-5xl font-bold text-yellow-600">$0</p>
+       </div>
+       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"><button onclick="addToPiggy(10)" class="btn-game py-4 bg-green-400 text-white hover:bg-green-500"> +$10 🪙 </button> <button onclick="addToPiggy(50)" class="btn-game py-4 bg-green-500 text-white hover:bg-green-600"> +$50 💵 </button> <button onclick="addToPiggy(100)" class="btn-game py-4 bg-green-600 text-white hover:bg-green-700"> +$100 💰 </button> <button onclick="addToPiggy(500)" class="btn-game py-4 bg-green-700 text-white hover:bg-green-800"> +$500 🤑 </button>
+       </div>
+       <h3 class="text-xl font-bold text-yellow-700 mb-4">🎁 ¿Qué quieres comprar?</h3>
+       <div id="shop-items" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="bg-yellow-50 p-4 rounded-2xl border-2 border-yellow-300 text-center"><span class="text-4xl">🍦</span>
+         <p class="font-bold text-yellow-700">Helado</p>
+         <p class="text-yellow-600">$50</p><button onclick="buyItem(50, '🍦')" class="btn-game mt-2 px-4 py-2 bg-yellow-400 text-white text-sm">Comprar</button>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-2xl border-2 border-yellow-300 text-center"><span class="text-4xl">🎮</span>
+         <p class="font-bold text-yellow-700">Videojuego</p>
+         <p class="text-yellow-600">$500</p><button onclick="buyItem(500, '🎮')" class="btn-game mt-2 px-4 py-2 bg-yellow-400 text-white text-sm">Comprar</button>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-2xl border-2 border-yellow-300 text-center"><span class="text-4xl">📱</span>
+         <p class="font-bold text-yellow-700">Celular</p>
+         <p class="text-yellow-600">$2,000</p><button onclick="buyItem(2000, '📱')" class="btn-game mt-2 px-4 py-2 bg-yellow-400 text-white text-sm">Comprar</button>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-2xl border-2 border-yellow-300 text-center"><span class="text-4xl">🎸</span>
+         <p class="font-bold text-yellow-700">Guitarra</p>
+         <p class="text-yellow-600">$1,500</p><button onclick="buyItem(1500, '🎸')" class="btn-game mt-2 px-4 py-2 bg-yellow-400 text-white text-sm">Comprar</button>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-2xl border-2 border-yellow-300 text-center"><span class="text-4xl">🚲</span>
+         <p class="font-bold text-yellow-700">Bicicleta</p>
+         <p class="text-yellow-600">$3,000</p><button onclick="buyItem(3000, '🚲')" class="btn-game mt-2 px-4 py-2 bg-yellow-400 text-white text-sm">Comprar</button>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-2xl border-2 border-yellow-300 text-center"><span class="text-4xl">🎧</span>
+         <p class="font-bold text-yellow-700">Audífonos</p>
+         <p class="text-yellow-600">$800</p><button onclick="buyItem(800, '🎧')" class="btn-game mt-2 px-4 py-2 bg-yellow-400 text-white text-sm">Comprar</button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Juego: Quiz -->
+     <div id="quiz-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-pink-400">
+       <div class="flex items-center justify-between mb-6"><button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm"> ← Volver </button>
+        <h2 class="text-2xl font-bold text-pink-700">🧠 Quiz Financiero 🧠</h2>
+        <div class="bg-pink-100 px-4 py-2 rounded-xl"><span class="text-sm text-pink-600">Pregunta:</span> <span id="quiz-progress" class="font-bold text-pink-700">1/5</span>
+        </div>
+       </div>
+       <div id="quiz-question-container" class="mb-6">
+        <div class="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6 mb-6">
+         <p id="quiz-question" class="text-xl font-bold text-purple-800 text-center"></p>
+        </div>
+        <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 gap-4"><!-- Se llena dinámicamente -->
+        </div>
+       </div>
+       <div id="quiz-result" class="hidden text-center"><span id="quiz-emoji" class="emoji-huge"></span>
+        <p id="quiz-score" class="text-3xl font-bold text-purple-700 mt-4"></p>
+        <p id="quiz-message" class="text-lg text-purple-600 mt-2"></p><button onclick="resetQuizGame()" class="btn-game mt-6 px-8 py-4 bg-gradient-to-r from-pink-400 to-purple-500 text-white text-lg"> 🔄 Jugar de Nuevo </button>
+       </div>
+      </div>
+     </div><!-- Juego: Presupuesto -->
+     <div id="budget-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-teal-400">
+       <div class="flex items-center justify-between mb-6"><button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm"> ← Volver </button>
+        <h2 class="text-2xl font-bold text-teal-700">🏠 Presupuesto Familiar 🏠</h2>
+       </div>
+       <div class="bg-gradient-to-r from-teal-100 to-cyan-100 rounded-2xl p-6 mb-6">
+        <p class="text-lg text-teal-700">Ingreso familiar del mes:</p>
+        <p class="text-4xl font-bold text-teal-800">$15,000</p>
+        <div class="mt-4">
+         <p class="text-sm text-teal-600">Presupuesto asignado:</p>
+         <div class="w-full bg-teal-200 rounded-full h-4 mt-2">
+          <div id="budget-bar" class="progress-bar h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+         </div>
+         <p id="budget-assigned" class="text-right text-teal-700 font-bold mt-1">$0 / $15,000</p>
+        </div>
+       </div>
+       <h3 class="text-xl font-bold text-teal-700 mb-4">📊 Asigna dinero a cada categoría:</h3>
+       <div id="budget-categories" class="space-y-4 mb-6"><!-- Se llena dinámicamente -->
+       </div><button id="budget-submit" onclick="submitBudget()" class="btn-game w-full py-4 bg-gradient-to-r from-teal-400 to-cyan-500 text-white text-lg"> ✅ Aprobar Presupuesto </button>
+       <div id="budget-result" class="hidden mt-6">
+        <div class="bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl p-6 text-center"><span class="emoji-huge">🎉</span>
+         <p id="budget-message" class="text-xl font-bold text-green-700 mt-4"></p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </main>
+   </div><!-- Toast de Notificación -->
+   <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-500 text-white px-8 py-4 rounded-2xl shadow-2xl hidden z-50 pop-in">
+    <div class="flex items-center gap-3"><span id="toast-icon" class="text-2xl">🎉</span> <span id="toast-message" class="font-bold"></span>
+    </div>
+   </div>
+  </div>
+  <script>
+    // ==================== CONFIGURACIÓN INICIAL ====================
+    const defaultConfig = {
+      welcome_title: '¡Aventura Financiera!',
+      encouragement_text: '🎮 ¡Elige tu aventura! 🎮',
+      primary_color: '#9333ea',
+      secondary_color: '#ec4899',
+      background_color: '#fdf4ff',
+      text_color: '#581c87',
+      accent_color: '#22c55e'
+    };
+    
+    let gameState = {
+      playerName: '',
+      totalCoins: 500,
+      level: 1,
+      missionsCompleted: 0,
+      badges: '',
+      currentPlayerRecord: null
+    };
+    
+    let piggyBank = 0;
+    let investWallet = 1000;
+    let salaryRemaining = 5000;
+    let quizScore = 0;
+    let quizIndex = 0;
+    let completedMissions = new Set();
+    let budgetAllocations = {};
+    
+    // ==================== DATOS DE JUEGOS ====================
+    const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    const bills = [
+      { name: 'Luz', emoji: '💡', min: 300, max: 800 },
+      { name: 'Agua', emoji: '💧', min: 150, max: 400 },
+      { name: 'Internet', emoji: '📶', min: 400, max: 600 },
+      { name: 'Gas', emoji: '🔥', min: 200, max: 500 },
+      { name: 'Teléfono', emoji: '📱', min: 200, max: 400 },
+      { name: 'Transporte', emoji: '🚌', min: 300, max: 700 },
+      { name: 'Comida', emoji: '🍕', min: 800, max: 1500 },
+      { name: 'Entretenimiento', emoji: '🎬', min: 100, max: 400 }
+    ];
+    
+    const missions = [
+      { id: 1, title: 'Primer Ahorro', desc: 'Ahorra $100 en tu alcancía', reward: 50, emoji: '🐷', check: () => piggyBank >= 100 },
+      { id: 2, title: 'Inversionista Novato', desc: 'Haz tu primera inversión', reward: 75, emoji: '📈', completed: false },
+      { id: 3, title: 'Administrador', desc: 'Completa un mes pagando gastos', reward: 100, emoji: '💵', completed: false },
+      { id: 4, title: 'Cerebrito', desc: 'Responde 3 preguntas del quiz', reward: 150, emoji: '🧠', completed: false },
+      { id: 5, title: 'Super Ahorrador', desc: 'Ahorra $500 en tu alcancía', reward: 200, emoji: '💎', check: () => piggyBank >= 500 }
+    ];
+    
+    const quizQuestions = [
+      { q: '¿Qué es el ahorro?', options: ['Guardar dinero para el futuro', 'Gastar todo el dinero', 'Pedir prestado', 'Regalar dinero'], correct: 0 },
+      { q: '¿Qué es un presupuesto?', options: ['Una lista de deseos', 'Un plan para organizar el dinero', 'Un tipo de inversión', 'Una cuenta bancaria'], correct: 1 },
+      { q: '¿Por qué es importante ahorrar?', options: ['No es importante', 'Para comprar cosas caras rápido', 'Para tener dinero en emergencias', 'Para presumir'], correct: 2 },
+      { q: '¿Qué es una inversión?', options: ['Gastar dinero', 'Poner dinero para que crezca', 'Perder dinero', 'Robar dinero'], correct: 1 },
+      { q: '¿Qué es un gasto necesario?', options: ['Videojuegos', 'Dulces', 'Comida y agua', 'Juguetes'], correct: 2 },
+      { q: '¿Qué haces si te sobra dinero del mes?', options: ['Lo ahorras', 'Lo gastas todo en dulces', 'Lo tiras', 'Lo escondes'], correct: 0 },
+      { q: '¿Qué significa "vivir dentro de tus posibilidades"?', options: ['Gastar más de lo que ganas', 'Pedir prestado siempre', 'No gastar más de lo que tienes', 'No trabajar'], correct: 2 }
+    ];
+    
+    const budgetCategories = [
+      { name: 'Comida', emoji: '🍎', recommended: 4500 },
+      { name: 'Vivienda', emoji: '🏠', recommended: 4000 },
+      { name: 'Transporte', emoji: '🚗', recommended: 2000 },
+      { name: 'Servicios', emoji: '💡', recommended: 1500 },
+      { name: 'Ahorro', emoji: '🐷', recommended: 2000 },
+      { name: 'Diversión', emoji: '🎮', recommended: 1000 }
+    ];
+    
+    // ==================== INICIALIZACIÓN SDK ====================
+    const dataHandler = {
+      onDataChanged(data) {
+        if (data && data.length > 0) {
+          const playerRecord = data.find(d => d.player_name === gameState.playerName);
+          if (playerRecord) {
+            gameState.currentPlayerRecord = playerRecord;
+            gameState.totalCoins = playerRecord.total_coins || 500;
+            gameState.level = playerRecord.level || 1;
+            gameState.missionsCompleted = playerRecord.missions_completed || 0;
+            gameState.badges = playerRecord.badges || '';
+            updateStatsDisplay();
+          }
+          
+          // Mostrar info de jugador que regresa
+          const lastPlayer = data[data.length - 1];
+          if (lastPlayer && document.getElementById('start-screen').classList.contains('hidden') === false) {
+            document.getElementById('returning-player').classList.remove('hidden');
+            document.getElementById('returning-stats').textContent = 
+              `${lastPlayer.player_name}: ${lastPlayer.total_coins} monedas, Nivel ${lastPlayer.level}`;
+            document.getElementById('player-name-input').value = lastPlayer.player_name;
+          }
+        }
+      }
+    };
+    
+    // Inicializar Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          document.getElementById('main-title').textContent = config.welcome_title || defaultConfig.welcome_title;
+          document.getElementById('encouragement').textContent = config.encouragement_text || defaultConfig.encouragement_text;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            { get: () => config.background_color || defaultConfig.background_color, set: (v) => window.elementSdk.setConfig({ background_color: v }) },
+            { get: () => config.primary_color || defaultConfig.primary_color, set: (v) => window.elementSdk.setConfig({ primary_color: v }) },
+            { get: () => config.secondary_color || defaultConfig.secondary_color, set: (v) => window.elementSdk.setConfig({ secondary_color: v }) },
+            { get: () => config.text_color || defaultConfig.text_color, set: (v) => window.elementSdk.setConfig({ text_color: v }) },
+            { get: () => config.accent_color || defaultConfig.accent_color, set: (v) => window.elementSdk.setConfig({ accent_color: v }) }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['welcome_title', config.welcome_title || defaultConfig.welcome_title],
+          ['encouragement_text', config.encouragement_text || defaultConfig.encouragement_text]
+        ])
+      });
+    }
+    
+    // Inicializar Data SDK
+    if (window.dataSdk) {
+      window.dataSdk.init(dataHandler);
+    }
+    
+    // ==================== FUNCIONES DEL JUEGO ====================
+    async function startGame() {
+      const nameInput = document.getElementById('player-name-input');
+      const name = nameInput.value.trim();
+      
+      if (!name) {
+        nameInput.classList.add('shake');
+        setTimeout(() => nameInput.classList.remove('shake'), 500);
+        showToast('😅', '¡Escribe tu nombre primero!');
+        return;
+      }
+      
+      gameState.playerName = name;
+      
+      // Guardar en Data SDK
+      if (window.dataSdk && !gameState.currentPlayerRecord) {
+        await window.dataSdk.create({
+          player_name: name,
+          total_coins: 500,
+          level: 1,
+          missions_completed: 0,
+          badges: '',
+          created_at: new Date().toISOString()
+        });
+      }
+      
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      document.getElementById('player-display').textContent = name;
+      
+      updateStatsDisplay();
+      showToast('🎉', `¡Bienvenido ${name}!`);
+    }
+    
+    function updateStatsDisplay() {
+      document.getElementById('coins-display').textContent = gameState.totalCoins.toLocaleString();
+      document.getElementById('missions-display').textContent = gameState.missionsCompleted;
+      
+      const levelNames = ['Aprendiz', 'Estudiante', 'Experto', 'Maestro', 'Leyenda'];
+      const levelIndex = Math.min(gameState.level - 1, levelNames.length - 1);
+      document.getElementById('level-display').textContent = `Nivel ${gameState.level} - ${levelNames[levelIndex]}`;
+    }
+    
+    async function addCoins(amount) {
+      gameState.totalCoins += amount;
+      
+      // Actualizar nivel
+      if (gameState.totalCoins >= 2000) gameState.level = Math.max(gameState.level, 5);
+      else if (gameState.totalCoins >= 1500) gameState.level = Math.max(gameState.level, 4);
+      else if (gameState.totalCoins >= 1000) gameState.level = Math.max(gameState.level, 3);
+      else if (gameState.totalCoins >= 500) gameState.level = Math.max(gameState.level, 2);
+      
+      updateStatsDisplay();
+      
+      // Guardar en Data SDK
+      if (window.dataSdk && gameState.currentPlayerRecord) {
+        await window.dataSdk.update({
+          ...gameState.currentPlayerRecord,
+          total_coins: gameState.totalCoins,
+          level: gameState.level,
+          missions_completed: gameState.missionsCompleted
+        });
+      }
+    }
+    
+    function showToast(icon, message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-icon').textContent = icon;
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.remove('hidden');
+      
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+    
+    function showHome() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('games-menu').classList.remove('hidden');
+    }
+    
+    // ==================== MI PRIMER SUELDO ====================
+    function startSalaryGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('salary-game').classList.remove('hidden');
+      
+      salaryRemaining = 5000;
+      document.getElementById('salary-remaining').textContent = '$5,000';
+      document.getElementById('salary-result').classList.add('hidden');
+      document.getElementById('salary-month').textContent = months[Math.floor(Math.random() * months.length)];
+      
+      // Generar facturas aleatorias
+      const selectedBills = bills.sort(() => Math.random() - 0.5).slice(0, 5);
+      const container = document.getElementById('bills-container');
+      container.innerHTML = '';
+      
+      selectedBills.forEach((bill, index) => {
+        const amount = Math.floor(Math.random() * (bill.max - bill.min) + bill.min);
+        const div = document.createElement('div');
+        div.className = 'bill-card p-4 slide-in flex items-center justify-between';
+        div.style.animationDelay = `${index * 0.1}s`;
+        div.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">${bill.emoji}</span>
+            <div>
+              <p class="font-bold text-yellow-800">${bill.name}</p>
+              <p class="text-yellow-600">$${amount.toLocaleString()}</p>
+            </div>
+          </div>
+          <button onclick="payBill(this, ${amount})" class="btn-game px-6 py-2 bg-gradient-to-r from-green-400 to-emerald-500 text-white">
+            Pagar 💳
+          </button>
+        `;
+        container.appendChild(div);
+      });
+    }
+    
+    function payBill(btn, amount) {
+      if (salaryRemaining < amount) {
+        showToast('😰', '¡No tienes suficiente dinero!');
+        btn.parentElement.classList.add('shake');
+        setTimeout(() => btn.parentElement.classList.remove('shake'), 500);
+        return;
+      }
+      
+      salaryRemaining -= amount;
+      document.getElementById('salary-remaining').textContent = `$${salaryRemaining.toLocaleString()}`;
+      
+      btn.textContent = '✅ Pagado';
+      btn.disabled = true;
+      btn.classList.remove('from-green-400', 'to-emerald-500');
+      btn.classList.add('bg-gray-400');
+      
+      showToast('✅', `¡Pagaste $${amount.toLocaleString()}!`);
+      
+      // Verificar si todas las facturas están pagadas
+      const allPaid = [...document.querySelectorAll('#bills-container button')].every(b => b.disabled);
+      if (allPaid) {
+        setTimeout(() => showSalaryResult(), 500);
+      }
+    }
+    
+    function showSalaryResult() {
+      document.getElementById('salary-result').classList.remove('hidden');
+      document.getElementById('salary-final').textContent = `$${salaryRemaining.toLocaleString()}`;
+      
+      let message = '';
+      if (salaryRemaining >= 1500) {
+        message = '🌟 ¡INCREÍBLE! Ahorraste mucho dinero. ¡Eres un experto administrador!';
+        addCoins(150);
+      } else if (salaryRemaining >= 800) {
+        message = '😊 ¡Muy bien! Te quedó dinero para algunos gustos. ¡Sigue así!';
+        addCoins(100);
+      } else if (salaryRemaining >= 300) {
+        message = '👍 Buen trabajo pagando todo. Te queda poco para antojos.';
+        addCoins(75);
+      } else {
+        message = '😅 ¡Uff! Casi no te queda nada. El próximo mes intenta gastar menos.';
+        addCoins(50);
+      }
+      
+      document.getElementById('salary-message').textContent = message;
+      completeMission(3);
+    }
+    
+    function resetSalaryGame() {
+      startSalaryGame();
+    }
+    
+    // ==================== INVERSIONISTA ====================
+    function startInvestmentGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('investment-game').classList.remove('hidden');
+      
+      investWallet = 1000;
+      document.getElementById('invest-wallet').textContent = `$${investWallet.toLocaleString()}`;
+      document.getElementById('investment-options').classList.remove('hidden');
+      document.getElementById('investment-result').classList.add('hidden');
+    }
+    
+    function invest(risk) {
+      let change = 0;
+      let lesson = '';
+      
+      switch(risk) {
+        case 'low':
+          change = Math.floor(Math.random() * 11 + 5); // +5% a +15%
+          lesson = '💡 Las cuentas de ahorro son seguras pero crecen lentito.';
+          break;
+        case 'medium':
+          change = Math.floor(Math.random() * 61 - 20); // -20% a +40%
+          lesson = '📊 Las acciones pueden subir o bajar. ¡Hay que investigar!';
+          break;
+        case 'high':
+          change = Math.floor(Math.random() * 151 - 50); // -50% a +100%
+          lesson = '⚠️ Las criptos son muy arriesgadas. ¡Solo invierte lo que puedas perder!';
+          break;
+      }
+      
+      const changeAmount = Math.floor(investWallet * change / 100);
+      investWallet += changeAmount;
+      
+      document.getElementById('investment-options').classList.add('hidden');
+      document.getElementById('investment-result').classList.remove('hidden');
+      
+      const resultCard = document.getElementById('invest-result-card');
+      const emoji = document.getElementById('invest-emoji');
+      const changeText = document.getElementById('invest-change');
+      const totalText = document.getElementById('invest-new-total');
+      
+      if (change >= 0) {
+        resultCard.className = 'rounded-2xl p-6 text-center mb-6 bg-gradient-to-r from-green-100 to-emerald-100';
+        emoji.textContent = change >= 30 ? '🚀' : '📈';
+        changeText.className = 'text-3xl font-bold mt-4 text-green-600';
+        changeText.textContent = `+${change}% (+$${changeAmount.toLocaleString()})`;
+        addCoins(Math.floor(change / 10) * 20 + 50);
+      } else {
+        resultCard.className = 'rounded-2xl p-6 text-center mb-6 bg-gradient-to-r from-red-100 to-orange-100';
+        emoji.textContent = change <= -30 ? '📉' : '😅';
+        changeText.className = 'text-3xl font-bold mt-4 text-red-600';
+        changeText.textContent = `${change}% ($${changeAmount.toLocaleString()})`;
+        addCoins(25);
+      }
+      
+      totalText.textContent = `Tu cartera ahora: $${investWallet.toLocaleString()}`;
+      document.getElementById('invest-lesson').textContent = lesson;
+      document.getElementById('invest-wallet').textContent = `$${investWallet.toLocaleString()}`;
+      
+      completeMission(2);
+    }
+    
+    function resetInvestmentGame() {
+      document.getElementById('investment-options').classList.remove('hidden');
+      document.getElementById('investment-result').classList.add('hidden');
+    }
+    
+    // ==================== MISIONES ====================
+    function startMissionsGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('missions-game').classList.remove('hidden');
+      
+      renderMissions();
+    }
+    
+    function renderMissions() {
+      const container = document.getElementById('missions-list');
+      container.innerHTML = '';
+      
+      let completed = 0;
+      
+      missions.forEach((mission, index) => {
+        const isCompleted = completedMissions.has(mission.id);
+        if (isCompleted) completed++;
+        
+        const div = document.createElement('div');
+        div.className = `mission-card p-4 slide-in ${isCompleted ? 'opacity-60' : ''}`;
+        div.style.animationDelay = `${index * 0.1}s`;
+        div.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <span class="text-4xl ${isCompleted ? '' : 'float-animation'}">${mission.emoji}</span>
+              <div>
+                <p class="font-bold text-green-800 text-lg">${mission.title}</p>
+                <p class="text-green-600">${mission.desc}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-yellow-600 font-bold">🪙 +${mission.reward}</p>
+              ${isCompleted ? 
+                '<span class="inline-block px-4 py-2 bg-green-500 text-white rounded-full font-bold">✅ Completada</span>' : 
+                '<span class="inline-block px-4 py-2 bg-yellow-400 text-yellow-800 rounded-full font-bold">⏳ Pendiente</span>'}
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      
+      document.getElementById('missions-count').textContent = `${completed}/${missions.length}`;
+    }
+    
+    function completeMission(id) {
+      if (completedMissions.has(id)) return;
+      
+      completedMissions.add(id);
+      const mission = missions.find(m => m.id === id);
+      if (mission) {
+        addCoins(mission.reward);
+        gameState.missionsCompleted++;
+        showToast('🎯', `¡Misión "${mission.title}" completada! +${mission.reward} monedas`);
+      }
+    }
+    
+    // ==================== ALCANCÍA ====================
+    function startSavingsGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('savings-game').classList.remove('hidden');
+      
+      updatePiggyDisplay();
+    }
+    
+    function updatePiggyDisplay() {
+      document.getElementById('piggy-amount').textContent = `$${piggyBank.toLocaleString()}`;
+    }
+    
+    function addToPiggy(amount) {
+      piggyBank += amount;
+      updatePiggyDisplay();
+      showToast('🐷', `¡Ahorraste $${amount}!`);
+      
+      // Verificar misiones de ahorro
+      if (piggyBank >= 100) completeMission(1);
+      if (piggyBank >= 500) completeMission(5);
+    }
+    
+    function buyItem(price, emoji) {
+      if (piggyBank < price) {
+        showToast('😅', '¡No tienes suficiente dinero! Sigue ahorrando.');
+        return;
+      }
+      
+      piggyBank -= price;
+      updatePiggyDisplay();
+      addCoins(25);
+      showToast(emoji, `¡Compraste ${emoji} por $${price}!`);
+    }
+    
+    // ==================== QUIZ ====================
+    function startQuizGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('quiz-game').classList.remove('hidden');
+      
+      quizScore = 0;
+      quizIndex = 0;
+      document.getElementById('quiz-question-container').classList.remove('hidden');
+      document.getElementById('quiz-result').classList.add('hidden');
+      
+      showQuizQuestion();
+    }
+    
+    function showQuizQuestion() {
+      if (quizIndex >= 5) {
+        showQuizResult();
+        return;
+      }
+      
+      const shuffled = [...quizQuestions].sort(() => Math.random() - 0.5);
+      const q = shuffled[quizIndex];
+      
+      document.getElementById('quiz-progress').textContent = `${quizIndex + 1}/5`;
+      document.getElementById('quiz-question').textContent = q.q;
+      
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+      
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-game p-4 bg-gradient-to-r from-pink-100 to-purple-100 text-purple-800 hover:from-pink-200 hover:to-purple-200 text-left';
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(i, q.correct, btn, optionsContainer);
+        optionsContainer.appendChild(btn);
+      });
+    }
+    
+    function checkAnswer(selected, correct, btn, container) {
+      const buttons = container.querySelectorAll('button');
+      buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === correct) {
+          b.classList.remove('from-pink-100', 'to-purple-100');
+          b.classList.add('from-green-400', 'to-emerald-500', 'text-white');
+        } else if (i === selected && selected !== correct) {
+          b.classList.remove('from-pink-100', 'to-purple-100');
+          b.classList.add('from-red-400', 'to-red-500', 'text-white');
+        }
+      });
+      
+      if (selected === correct) {
+        quizScore++;
+        showToast('✅', '¡Correcto!');
+      } else {
+        showToast('❌', 'Incorrecto, ¡sigue intentando!');
+      }
+      
+      quizIndex++;
+      setTimeout(() => showQuizQuestion(), 1500);
+    }
+    
+    function showQuizResult() {
+      document.getElementById('quiz-question-container').classList.add('hidden');
+      document.getElementById('quiz-result').classList.remove('hidden');
+      
+      const emoji = document.getElementById('quiz-emoji');
+      const score = document.getElementById('quiz-score');
+      const message = document.getElementById('quiz-message');
+      
+      score.textContent = `${quizScore}/5 correctas`;
+      
+      if (quizScore === 5) {
+        emoji.textContent = '🏆';
+        message.textContent = '¡PERFECTO! ¡Eres un genio financiero!';
+        addCoins(300);
+      } else if (quizScore >= 4) {
+        emoji.textContent = '🌟';
+        message.textContent = '¡Excelente! Sabes mucho sobre dinero.';
+        addCoins(200);
+      } else if (quizScore >= 3) {
+        emoji.textContent = '😊';
+        message.textContent = '¡Bien! Vas por buen camino.';
+        addCoins(100);
+        completeMission(4);
+      } else {
+        emoji.textContent = '📚';
+        message.textContent = '¡Sigue aprendiendo! Tú puedes mejorar.';
+        addCoins(50);
+      }
+    }
+    
+    function resetQuizGame() {
+      startQuizGame();
+    }
+    
+    // ==================== PRESUPUESTO ====================
+    function startBudgetGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('budget-game').classList.remove('hidden');
+      
+      budgetAllocations = {};
+      document.getElementById('budget-result').classList.add('hidden');
+      document.getElementById('budget-submit').classList.remove('hidden');
+      
+      renderBudgetCategories();
+      updateBudgetBar();
+    }
+    
+    function renderBudgetCategories() {
+      const container = document.getElementById('budget-categories');
+      container.innerHTML = '';
+      
+      budgetCategories.forEach(cat => {
+        budgetAllocations[cat.name] = 0;
+        
+        const div = document.createElement('div');
+        div.className = 'bg-teal-50 p-4 rounded-2xl border-2 border-teal-200';
+        div.innerHTML = `
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">${cat.emoji}</span>
+              <div>
+                <p class="font-bold text-teal-800">${cat.name}</p>
+                <p class="text-sm text-teal-600">Sugerido: $${cat.recommended.toLocaleString()}</p>
+              </div>
+            </div>
+            <p class="text-xl font-bold text-teal-700">$<span id="budget-${cat.name}">${budgetAllocations[cat.name].toLocaleString()}</span></p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="adjustBudget('${cat.name}', -500)" class="flex-1 btn-game py-2 bg-red-400 text-white text-sm">-$500</button>
+            <button onclick="adjustBudget('${cat.name}', -100)" class="flex-1 btn-game py-2 bg-red-300 text-white text-sm">-$100</button>
+            <button onclick="adjustBudget('${cat.name}', 100)" class="flex-1 btn-game py-2 bg-green-300 text-white text-sm">+$100</button>
+            <button onclick="adjustBudget('${cat.name}', 500)" class="flex-1 btn-game py-2 bg-green-400 text-white text-sm">+$500</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+    
+    function adjustBudget(category, amount) {
+      const newAmount = budgetAllocations[category] + amount;
+      if (newAmount < 0) return;
+      
+      const total = Object.values(budgetAllocations).reduce((a, b) => a + b, 0) - budgetAllocations[category] + newAmount;
+      if (total > 15000) {
+        showToast('😅', '¡No puedes asignar más de $15,000!');
+        return;
+      }
+      
+      budgetAllocations[category] = newAmount;
+      document.getElementById(`budget-${category}`).textContent = newAmount.toLocaleString();
+      updateBudgetBar();
+    }
+    
+    function updateBudgetBar() {
+      const total = Object.values(budgetAllocations).reduce((a, b) => a + b, 0);
+      const percentage = (total / 15000) * 100;
+      
+      document.getElementById('budget-bar').style.width = `${percentage}%`;
+      document.getElementById('budget-assigned').textContent = `$${total.toLocaleString()} / $15,000`;
+    }
+    
+    function submitBudget() {
+      const total = Object.values(budgetAllocations).reduce((a, b) => a + b, 0);
+      
+      if (total < 10000) {
+        showToast('😅', '¡Asigna al menos $10,000!');
+        return;
+      }
+      
+      document.getElementById('budget-submit').classList.add('hidden');
+      document.getElementById('budget-result').classList.remove('hidden');
+      
+      let message = '';
+      const savings = budgetAllocations['Ahorro'] || 0;
+      
+      if (savings >= 2000 && total === 15000) {
+        message = '🌟 ¡PERFECTO! Asignaste todo el dinero e incluiste buen ahorro. ¡Eres un experto!';
+        addCoins(250);
+      } else if (savings >= 1500) {
+        message = '😊 ¡Muy bien! Tienes un buen balance con ahorro incluido.';
+        addCoins(175);
+      } else if (savings >= 500) {
+        message = '👍 Buen trabajo, pero podrías ahorrar un poco más.';
+        addCoins(125);
+      } else {
+        message = '💡 Recuerda: ¡siempre es importante ahorrar algo cada mes!';
+        addCoins(75);
+      }
+      
+      document.getElementById('budget-message').textContent = message;
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d3b7d6ad6af3c4e',t:'MTc3MjA2NzQ2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
