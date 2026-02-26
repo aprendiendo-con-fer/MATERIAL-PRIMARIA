@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aventura Financiera Mini 🎮💰</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Baloo+2:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Fredoka', 'Baloo 2', sans-serif; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.5); }
+    }
+    
+    @keyframes slide-in {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes pop-in {
+      0% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px) rotate(-5deg); }
+      75% { transform: translateX(5px) rotate(5deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    .bounce { animation: bounce 0.5s ease-in-out; }
+    .sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    .slide-in { animation: slide-in 0.5s ease-out; }
+    .pop-in { animation: pop-in 0.4s ease-out; }
+    .shake { animation: shake 0.5s ease-in-out; }
+    .pulse { animation: pulse 2s ease-in-out infinite; }
+    
+    .game-card {
+      background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
+      border: 4px solid;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8);
+      transition: all 0.3s ease;
+    }
+    
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+    }
+    
+    .btn-game {
+      border-radius: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    }
+    
+    .btn-game:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+    }
+    
+    .btn-game:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+    }
+    
+    .emoji-big { font-size: 3rem; }
+    .emoji-huge { font-size: 5rem; }
+    
+    .bill-card {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 3px dashed #f59e0b;
+      border-radius: 16px;
+    }
+    
+    .investment-card {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      border: 3px solid #3b82f6;
+      border-radius: 16px;
+    }
+    
+    .mission-card {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border: 3px solid #22c55e;
+      border-radius: 16px;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full overflow-auto">
+  <div id="app" class="min-h-full w-full" style="background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 25%, #e0f2fe 50%, #dcfce7 75%, #fef9c3 100%);">
+   <!-- Pantalla de Inicio - Solo Splash -->
+   <div id="start-screen" class="min-h-full flex flex-col items-center justify-center p-6 text-center">
+    <div class="float-animation mb-6"><span class="emoji-huge">🏦</span>
+    </div>
+    <h1 id="main-title" class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 bg-clip-text text-transparent drop-shadow-lg">¡Aprende con Dinero!</h1>
+    <p id="welcome-msg" class="text-xl md:text-2xl text-purple-700 mb-8 font-medium">¡Aprende sobre dinero jugando!</p>
+    <div class="flex flex-wrap justify-center gap-4 mb-12">
+     <span class="text-4xl float-animation" style="animation-delay: 0s;">💰</span> <span class="text-4xl float-animation" style="animation-delay: 0.2s;">🎮</span> <span class="text-4xl float-animation" style="animation-delay: 0.4s;">🏆</span> <span class="text-4xl float-animation" style="animation-delay: 0.6s;">⭐</span> <span class="text-4xl float-animation" style="animation-delay: 0.8s;">🎁</span>
+    </div><button onclick="startGame()" class="btn-game px-12 py-4 text-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white hover:from-green-500 hover:to-emerald-600">🚀 ¡JUGAR AHORA! 🚀</button>
+   </div><!-- Pantalla Principal del Juego -->
+   <div id="game-screen" class="hidden min-h-full flex flex-col">
+    <!-- Header con Stats -->
+    <header class="bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 p-4 shadow-lg">
+     <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+       <span class="text-4xl float-animation">⭐</span>
+       <div>
+        <p id="level-display" class="text-white font-bold text-lg">Nivel 1</p>
+        <p class="text-white/80 text-sm">Aprendiz Financiero</p>
+       </div>
+      </div>
+      <div class="flex items-center gap-6">
+       <div class="bg-white/20 rounded-2xl px-4 py-2 flex items-center gap-2">
+        <span class="text-2xl bounce">🪙</span> <span id="coins-display" class="text-white font-bold text-xl">0</span>
+       </div>
+       <div class="bg-white/20 rounded-2xl px-4 py-2 flex items-center gap-2">
+        <span class="text-2xl">🏆</span> <span id="missions-display" class="text-white font-bold text-xl">0</span>
+       </div>
+      </div><button onclick="showHome()" class="btn-game px-4 py-2 bg-white/20 text-white text-sm hover:bg-white/30">🏠 Menú</button>
+     </div>
+    </header><!-- Contenido Principal -->
+    <main id="main-content" class="flex-1 p-6 overflow-auto">
+     <!-- Menú de Juegos -->
+     <div id="games-menu" class="max-w-6xl mx-auto">
+      <h2 id="encouragement" class="text-3xl font-bold text-center mb-8 text-purple-700">🎮 ¡Elige tu juego! 🎮</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+       <!-- Mi Mesada -->
+       <div class="game-card border-green-400 p-6 cursor-pointer" onclick="startAllowanceGame()">
+        <div class="text-center">
+         <span class="emoji-big float-animation">💵</span>
+         <h3 class="text-2xl font-bold text-green-700 mt-4">Mi Mesada</h3>
+         <p class="text-green-600 mt-2">Aprende a gastar tu dinero sabiamente</p>
+         <div class="mt-4 flex justify-center gap-2">
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">💡 Fácil</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +75</span>
+         </div>
+        </div>
+       </div><!-- Ahorrador -->
+       <div class="game-card border-yellow-400 p-6 cursor-pointer" onclick="startSavingsGame()">
+        <div class="text-center">
+         <span class="emoji-big float-animation" style="animation-delay: 0.3s;">🐷</span>
+         <h3 class="text-2xl font-bold text-yellow-700 mt-4">Ahorrador</h3>
+         <p class="text-yellow-600 mt-2">Ahorra para comprar lo que quieres</p>
+         <div class="mt-4 flex justify-center gap-2">
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">💡 Fácil</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +50</span>
+         </div>
+        </div>
+       </div><!-- Inversión Fácil -->
+       <div class="game-card border-blue-400 p-6 cursor-pointer" onclick="startSimpleInvestmentGame()">
+        <div class="text-center">
+         <span class="emoji-big float-animation" style="animation-delay: 0.6s;">📈</span>
+         <h3 class="text-2xl font-bold text-blue-700 mt-4">Inversión Fácil</h3>
+         <p class="text-blue-600 mt-2">¡Multiplica tu dinero!</p>
+         <div class="mt-4 flex justify-center gap-2">
+          <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-bold">🔥 Medio</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +100</span>
+         </div>
+        </div>
+       </div><!-- Misiones -->
+       <div class="game-card border-purple-400 p-6 cursor-pointer" onclick="startMissionsGame()">
+        <div class="text-center">
+         <span class="emoji-big float-animation" style="animation-delay: 0.9s;">🎯</span>
+         <h3 class="text-2xl font-bold text-purple-700 mt-4">Misiones</h3>
+         <p class="text-purple-600 mt-2">Completa tareas y gana premios</p>
+         <div class="mt-4 flex justify-center gap-2">
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">⭐ Variado</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +100</span>
+         </div>
+        </div>
+       </div><!-- Quiz -->
+       <div class="game-card border-pink-400 p-6 cursor-pointer" onclick="startQuizGame()">
+        <div class="text-center">
+         <span class="emoji-big float-animation" style="animation-delay: 1.2s;">🧠</span>
+         <h3 class="text-2xl font-bold text-pink-700 mt-4">Quiz Financiero</h3>
+         <p class="text-pink-600 mt-2">¿Cuánto sabes sobre dinero?</p>
+         <div class="mt-4 flex justify-center gap-2">
+          <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-bold">🎓 Medio</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +150</span>
+         </div>
+        </div>
+       </div><!-- Tienda de Deseos -->
+       <div class="game-card border-teal-400 p-6 cursor-pointer" onclick="startShopGame()">
+        <div class="text-center">
+         <span class="emoji-big float-animation" style="animation-delay: 1.5s;">🛍️</span>
+         <h3 class="text-2xl font-bold text-teal-700 mt-4">Tienda de Deseos</h3>
+         <p class="text-teal-600 mt-2">Compra lo que siempre quisiste</p>
+         <div class="mt-4 flex justify-center gap-2">
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">💡 Fácil</span> <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-bold">🪙 +60</span>
+         </div>
+        </div>
+       </div>
+      </div><!-- Insignias -->
+      <div class="mt-10 p-6 bg-white/60 rounded-3xl border-4 border-purple-300">
+       <h3 class="text-2xl font-bold text-purple-700 text-center mb-4">🏅 Tus Logros 🏅</h3>
+       <div id="badges-container" class="flex flex-wrap justify-center gap-4">
+        <div class="text-center p-4 bg-gray-100 rounded-2xl opacity-50"><span class="text-4xl">🌟</span>
+         <p class="text-sm text-gray-600 mt-1">Primer Paso</p>
+        </div>
+        <div class="text-center p-4 bg-gray-100 rounded-2xl opacity-50"><span class="text-4xl">💎</span>
+         <p class="text-sm text-gray-600 mt-1">Gran Ahorrador</p>
+        </div>
+        <div class="text-center p-4 bg-gray-100 rounded-2xl opacity-50"><span class="text-4xl">🚀</span>
+         <p class="text-sm text-gray-600 mt-1">Inversor</p>
+        </div>
+        <div class="text-center p-4 bg-gray-100 rounded-2xl opacity-50"><span class="text-4xl">👑</span>
+         <p class="text-sm text-gray-600 mt-1">Experto</p>
+        </div>
+       </div>
+      </div>
+     </div><!-- Juego: Mi Mesada -->
+     <div id="allowance-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-green-400">
+       <div class="flex items-center justify-between mb-6">
+        <button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm">← Volver</button>
+        <h2 class="text-2xl font-bold text-green-700">💵 Mi Mesada 💵</h2>
+        <div></div>
+       </div>
+       <div class="bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl p-6 mb-6">
+        <div class="text-center">
+         <p class="text-lg text-green-700">Tu mesada semanal:</p>
+         <p class="text-4xl font-bold text-green-800">$<span id="allowance-total">1,000</span></p>
+        </div>
+       </div>
+       <h3 class="text-xl font-bold text-gray-700 mb-4">¿En qué quieres gastar tu dinero?</h3>
+       <div id="allowance-items" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <!-- Se llena dinámicamente -->
+       </div>
+       <div id="allowance-result" class="hidden">
+        <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-6 mb-6 text-center">
+         <span class="text-5xl">🎉</span>
+         <p id="allowance-message" class="text-xl font-bold text-orange-700 mt-4"></p>
+        </div><button onclick="resetAllowanceGame()" class="btn-game w-full py-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-lg">🔄 Jugar Otra Vez</button>
+       </div>
+      </div>
+     </div><!-- Juego: Ahorrador -->
+     <div id="savings-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-yellow-400">
+       <div class="flex items-center justify-between mb-6">
+        <button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm">← Volver</button>
+        <h2 class="text-2xl font-bold text-yellow-700">🐷 Ahorrador 🐷</h2>
+        <div></div>
+       </div>
+       <div class="text-center mb-8">
+        <div class="inline-block p-8 bg-gradient-to-br from-pink-200 to-pink-300 rounded-full shadow-lg"><span class="emoji-huge">🐷</span>
+        </div>
+        <p class="text-2xl font-bold text-yellow-700 mt-4">En tu alcancía:</p>
+        <p id="piggy-amount" class="text-5xl font-bold text-yellow-600">$0</p>
+       </div>
+       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <button onclick="addToPiggy(50)" class="btn-game py-4 bg-green-400 text-white hover:bg-green-500">+$50 🪙</button> <button onclick="addToPiggy(100)" class="btn-game py-4 bg-green-500 text-white hover:bg-green-600">+$100 💵</button> <button onclick="addToPiggy(200)" class="btn-game py-4 bg-green-600 text-white hover:bg-green-700">+$200 💰</button> <button onclick="addToPiggy(500)" class="btn-game py-4 bg-green-700 text-white hover:bg-green-800">+$500 🤑</button>
+       </div>
+       <h3 class="text-xl font-bold text-yellow-700 mb-4">🎁 ¿Qué quieres comprar?</h3>
+       <div id="shop-items" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Se llena dinámicamente -->
+       </div>
+      </div>
+     </div><!-- Juego: Inversión Fácil -->
+     <div id="investment-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-blue-400">
+       <div class="flex items-center justify-between mb-6">
+        <button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm">← Volver</button>
+        <h2 class="text-2xl font-bold text-blue-700">📈 Inversión Fácil 📈</h2>
+        <div class="bg-blue-100 px-4 py-2 rounded-xl"><span class="text-2xl">💰</span> <span id="invest-wallet" class="font-bold text-blue-700">$500</span>
+        </div>
+       </div>
+       <p class="text-center text-gray-600 mb-6 text-lg">¡Invierte tu dinero! Puede subir 📈 o bajar 📉</p>
+       <div id="investment-options" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="investment-card p-4 cursor-pointer hover:scale-105 transition-transform" onclick="invest('safe')">
+         <div class="text-center">
+          <span class="text-4xl">🏦</span>
+          <h4 class="font-bold text-blue-700 mt-2">Segura</h4>
+          <p class="text-sm text-blue-600">Suben 📈</p>
+          <p class="text-lg font-bold text-green-600 mt-2">+10% a +30%</p>
+         </div>
+        </div>
+        <div class="investment-card p-4 cursor-pointer hover:scale-105 transition-transform" onclick="invest('risky')">
+         <div class="text-center">
+          <span class="text-4xl">🎰</span>
+          <h4 class="font-bold text-blue-700 mt-2">Arriesgada</h4>
+          <p class="text-sm text-blue-600">Suben o bajan</p>
+          <p class="text-lg font-bold text-red-600 mt-2">-30% a +70%</p>
+         </div>
+        </div>
+       </div>
+       <div id="investment-result" class="hidden">
+        <div id="invest-result-card" class="rounded-2xl p-6 text-center mb-6">
+         <span id="invest-emoji" class="emoji-huge"></span>
+         <p id="invest-change" class="text-3xl font-bold mt-4"></p>
+         <p id="invest-new-total" class="text-xl mt-2"></p>
+         <p id="invest-lesson" class="text-lg mt-4"></p>
+        </div><button onclick="resetInvestmentGame()" class="btn-game w-full py-4 bg-gradient-to-r from-blue-400 to-indigo-500 text-white text-lg">🔄 Invertir Otra Vez</button>
+       </div>
+      </div>
+     </div><!-- Juego: Misiones -->
+     <div id="missions-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-purple-400">
+       <div class="flex items-center justify-between mb-6">
+        <button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm">← Volver</button>
+        <h2 class="text-2xl font-bold text-purple-700">🎯 Misiones 🎯</h2>
+        <div class="bg-purple-100 px-4 py-2 rounded-xl"><span class="text-sm text-purple-600">Completadas:</span> <span id="missions-count" class="font-bold text-purple-700">0/4</span>
+        </div>
+       </div>
+       <div id="missions-list" class="space-y-4">
+        <!-- Se llena dinámicamente -->
+       </div>
+      </div>
+     </div><!-- Juego: Quiz -->
+     <div id="quiz-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-pink-400">
+       <div class="flex items-center justify-between mb-6">
+        <button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm">← Volver</button>
+        <h2 class="text-2xl font-bold text-pink-700">🧠 Quiz Financiero 🧠</h2>
+        <div class="bg-pink-100 px-4 py-2 rounded-xl"><span class="text-sm text-pink-600">Pregunta:</span> <span id="quiz-progress" class="font-bold text-pink-700">1/4</span>
+        </div>
+       </div>
+       <div id="quiz-question-container" class="mb-6">
+        <div class="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-6 mb-6">
+         <p id="quiz-question" class="text-xl font-bold text-purple-800 text-center"></p>
+        </div>
+        <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <!-- Se llena dinámicamente -->
+        </div>
+       </div>
+       <div id="quiz-result" class="hidden text-center">
+        <span id="quiz-emoji" class="emoji-huge"></span>
+        <p id="quiz-score" class="text-3xl font-bold text-purple-700 mt-4"></p>
+        <p id="quiz-message" class="text-lg text-purple-600 mt-2"></p><button onclick="resetQuizGame()" class="btn-game mt-6 px-8 py-4 bg-gradient-to-r from-pink-400 to-purple-500 text-white text-lg">🔄 Jugar de Nuevo</button>
+       </div>
+      </div>
+     </div><!-- Juego: Tienda de Deseos -->
+     <div id="shop-game" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-teal-400">
+       <div class="flex items-center justify-between mb-6">
+        <button onclick="showHome()" class="btn-game px-4 py-2 bg-gray-200 text-gray-700 text-sm">← Volver</button>
+        <h2 class="text-2xl font-bold text-teal-700">🛍️ Tienda de Deseos 🛍️</h2>
+        <div class="bg-teal-100 px-4 py-2 rounded-xl"><span class="text-2xl">💰</span> <span id="shop-wallet" class="font-bold text-teal-700">$300</span>
+        </div>
+       </div>
+       <p class="text-center text-gray-600 mb-6 text-lg">¡Mira todos los artículos fantásticos que puedes comprar!</p>
+       <div id="shop-display" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Se llena dinámicamente -->
+       </div>
+       <div id="shop-result" class="hidden mt-6">
+        <div class="bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl p-6 text-center">
+         <span class="emoji-huge">🎉</span>
+         <p id="shop-message" class="text-xl font-bold text-green-700 mt-4"></p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </main>
+   </div><!-- Toast de Notificación -->
+   <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-500 text-white px-8 py-4 rounded-2xl shadow-2xl hidden z-50 pop-in">
+    <div class="flex items-center gap-3">
+     <span id="toast-icon" class="text-2xl">🎉</span> <span id="toast-message" class="font-bold"></span>
+    </div>
+   </div>
+  </div>
+  <script>
+    // ==================== CONFIGURACIÓN INICIAL ====================
+    const defaultConfig = {
+      welcome_message: '¡Aprende sobre dinero jugando!',
+      encouragement_text: '🎮 ¡Elige tu juego! 🎮',
+      primary_color: '#9333ea',
+      secondary_color: '#ec4899',
+      background_color: '#fdf4ff',
+      text_color: '#581c87',
+      accent_color: '#22c55e'
+    };
+    
+    let gameState = {
+      sessionId: 'session_' + Date.now(),
+      totalCoins: 300,
+      level: 1,
+      missionsCompleted: 0,
+      badges: '',
+      currentRecord: null
+    };
+    
+    let piggyBank = 0;
+    let investWallet = 500;
+    let shopWallet = 300;
+    let quizScore = 0;
+    let quizIndex = 0;
+    let completedMissions = new Set();
+    
+    // ==================== DATOS DE JUEGOS ====================
+    const allowanceItems = [
+      { name: 'Dulces', emoji: '🍬', price: 50, like: true },
+      { name: 'Helado', emoji: '🍦', price: 100, like: true },
+      { name: 'Juguete', emoji: '🧸', price: 200, like: true },
+      { name: 'Cómic', emoji: '📚', price: 75, like: true }
+    ];
+    
+    const shopItems = [
+      { name: 'Chicles', emoji: '🍬', price: 50 },
+      { name: 'Helado', emoji: '🍦', price: 100 },
+      { name: 'Juguete', emoji: '🧸', price: 200 },
+      { name: 'Videojuego', emoji: '🎮', price: 500 },
+      { name: 'Patineta', emoji: '🛹', price: 1000 },
+      { name: 'Bicicleta', emoji: '🚲', price: 1500 }
+    ];
+    
+    const simpleMissions = [
+      { id: 1, title: 'Primer Paso', desc: 'Juega tu primer juego', reward: 50, emoji: '🌟', completed: false },
+      { id: 2, title: 'Ahorrador', desc: 'Ahorra $200 en tu alcancía', reward: 75, emoji: '🐷', check: () => piggyBank >= 200 },
+      { id: 3, title: 'Inversionista', desc: 'Haz tu primera inversión', reward: 100, emoji: '📈', completed: false },
+      { id: 4, title: 'Cerebrito', desc: 'Responde 3 preguntas correctas', reward: 150, emoji: '🧠', completed: false }
+    ];
+    
+    const quizQuestions = [
+      { q: '¿Qué es el dinero?', options: ['Papeles y monedas', 'Una forma de comprar cosas', 'Ambas', 'Ninguna'], correct: 2 },
+      { q: '¿Por qué es bueno ahorrar?', options: ['Es aburrido', 'Para tener dinero cuando lo necesites', 'No sirve', 'Para gastarlo después'], correct: 1 },
+      { q: '¿Cuál es un gasto necesario?', options: ['Videojuegos', 'Comida', 'Ropa de marca', 'Chicles'], correct: 1 },
+      { q: '¿Qué significa "presupuesto"?', options: ['Dinero de los papás', 'Plan para organizar el dinero', 'Un juego', 'Un banco'], correct: 1 }
+    ];
+    
+    // ==================== INICIALIZACIÓN SDK ====================
+    const dataHandler = {
+      onDataChanged(data) {
+        if (data && data.length > 0) {
+          const currentRecord = data[data.length - 1];
+          if (currentRecord) {
+            gameState.currentRecord = currentRecord;
+            gameState.totalCoins = currentRecord.total_coins || 300;
+            gameState.level = currentRecord.level || 1;
+            gameState.missionsCompleted = currentRecord.missions_completed || 0;
+            updateStatsDisplay();
+          }
+        }
+      }
+    };
+    
+    // Inicializar Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          document.getElementById('main-title').textContent = config.welcome_message || defaultConfig.welcome_message;
+          document.getElementById('encouragement').textContent = config.encouragement_text || defaultConfig.encouragement_text;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            { get: () => config.primary_color || defaultConfig.primary_color, set: (v) => window.elementSdk.setConfig({ primary_color: v }) },
+            { get: () => config.secondary_color || defaultConfig.secondary_color, set: (v) => window.elementSdk.setConfig({ secondary_color: v }) },
+            { get: () => config.accent_color || defaultConfig.accent_color, set: (v) => window.elementSdk.setConfig({ accent_color: v }) }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['welcome_message', config.welcome_message || defaultConfig.welcome_message],
+          ['encouragement_text', config.encouragement_text || defaultConfig.encouragement_text]
+        ])
+      });
+    }
+    
+    // Inicializar Data SDK
+    if (window.dataSdk) {
+      window.dataSdk.init(dataHandler);
+    }
+    
+    // ==================== FUNCIONES GENERALES ====================
+    async function startGame() {
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      updateStatsDisplay();
+      showToast('🎉', '¡Bienvenido a la aventura!');
+    }
+    
+    function updateStatsDisplay() {
+      document.getElementById('coins-display').textContent = gameState.totalCoins.toLocaleString();
+      document.getElementById('missions-display').textContent = gameState.missionsCompleted;
+      
+      const levelNames = ['Aprendiz', 'Estudiante', 'Experto', 'Maestro', 'Campeón'];
+      const levelIndex = Math.min(gameState.level - 1, levelNames.length - 1);
+      document.getElementById('level-display').textContent = `Nivel ${gameState.level} - ${levelNames[levelIndex]}`;
+    }
+    
+    async function addCoins(amount) {
+      gameState.totalCoins += amount;
+      
+      if (gameState.totalCoins >= 1000) gameState.level = Math.max(gameState.level, 5);
+      else if (gameState.totalCoins >= 700) gameState.level = Math.max(gameState.level, 4);
+      else if (gameState.totalCoins >= 500) gameState.level = Math.max(gameState.level, 3);
+      else if (gameState.totalCoins >= 300) gameState.level = Math.max(gameState.level, 2);
+      
+      updateStatsDisplay();
+      
+      if (window.dataSdk && gameState.currentRecord) {
+        await window.dataSdk.update({
+          ...gameState.currentRecord,
+          total_coins: gameState.totalCoins,
+          level: gameState.level,
+          missions_completed: gameState.missionsCompleted
+        });
+      }
+    }
+    
+    function showToast(icon, message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-icon').textContent = icon;
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.remove('hidden');
+      
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+    
+    function showHome() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('games-menu').classList.remove('hidden');
+    }
+    
+    // ==================== JUEGO: MI MESADA ====================
+    function startAllowanceGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('allowance-game').classList.remove('hidden');
+      document.getElementById('allowance-result').classList.add('hidden');
+      
+      const container = document.getElementById('allowance-items');
+      container.innerHTML = '';
+      
+      allowanceItems.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'bg-white p-4 rounded-2xl border-4 border-green-300 text-center cursor-pointer hover:scale-110 transition-transform';
+        div.style.animationDelay = `${i * 0.1}s`;
+        div.innerHTML = `
+          <span class="text-5xl">${item.emoji}</span>
+          <p class="font-bold text-green-700 mt-2">${item.name}</p>
+          <p class="text-green-600">$${item.price}</p>
+          <button onclick="buyAllowance(this, ${item.price})" class="btn-game mt-3 px-4 py-2 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-sm">Comprar</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+    
+    function buyAllowance(btn, price) {
+      const remaining = 1000 - [...document.querySelectorAll('#allowance-items button')].filter(b => b.textContent.includes('✅')).length * 250;
+      
+      if (remaining < price) {
+        showToast('😅', '¡No te queda dinero!');
+        return;
+      }
+      
+      btn.textContent = '✅ Comprado';
+      btn.disabled = true;
+      btn.classList.remove('from-green-400', 'to-emerald-500');
+      btn.classList.add('bg-gray-400');
+      
+      showToast('🛍️', `¡Compraste! Costo: $${price}`);
+      
+      const allBought = [...document.querySelectorAll('#allowance-items button')].every(b => b.disabled);
+      if (allBought) {
+        setTimeout(() => showAllowanceResult(), 500);
+      }
+    }
+    
+    function showAllowanceResult() {
+      document.getElementById('allowance-result').classList.remove('hidden');
+      addCoins(75);
+      document.getElementById('allowance-message').textContent = '¡Felicidades! Aprendiste a gastar con cuidado 🌟';
+      completeMission(1);
+    }
+    
+    function resetAllowanceGame() {
+      startAllowanceGame();
+    }
+    
+    // ==================== JUEGO: AHORRADOR ====================
+    function startSavingsGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('savings-game').classList.remove('hidden');
+      piggyBank = 0;
+      updatePiggyDisplay();
+      generateShopItems();
+    }
+    
+    function updatePiggyDisplay() {
+      document.getElementById('piggy-amount').textContent = `$${piggyBank.toLocaleString()}`;
+    }
+    
+    function addToPiggy(amount) {
+      piggyBank += amount;
+      updatePiggyDisplay();
+      showToast('🐷', `¡Ahorraste $${amount}!`);
+      
+      if (piggyBank >= 200) completeMission(2);
+    }
+    
+    // Generar tienda dinámicamente
+    function generateShopItems() {
+      const container = document.getElementById('shop-items');
+      container.innerHTML = '';
+      
+      shopItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'bg-yellow-50 p-4 rounded-2xl border-2 border-yellow-300 text-center';
+        div.innerHTML = `
+          <span class="text-4xl">${item.emoji}</span>
+          <p class="font-bold text-yellow-700 mt-2">${item.name}</p>
+          <p class="text-yellow-600">$${item.price}</p>
+          <button onclick="buyFromSavings(${item.price}, '${item.emoji}')" class="btn-game mt-3 px-4 py-2 bg-yellow-400 text-white text-sm">Comprar</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+    
+    function buyFromSavings(price, emoji) {
+      if (piggyBank < price) {
+        showToast('😅', '¡Necesitas ahorrar más!');
+        return;
+      }
+      
+      piggyBank -= price;
+      updatePiggyDisplay();
+      addCoins(25);
+      showToast(emoji, `¡Compraste ${emoji}!`);
+    }
+    
+    // ==================== JUEGO: INVERSIÓN ====================
+    function startSimpleInvestmentGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('investment-game').classList.remove('hidden');
+      
+      investWallet = 500;
+      document.getElementById('invest-wallet').textContent = `$${investWallet.toLocaleString()}`;
+      document.getElementById('investment-options').classList.remove('hidden');
+      document.getElementById('investment-result').classList.add('hidden');
+    }
+    
+    function invest(risk) {
+      let change = 0;
+      let lesson = '';
+      
+      if (risk === 'safe') {
+        change = Math.floor(Math.random() * 21 + 10);
+        lesson = '✅ ¡Muy bien! Las inversiones seguras siempre suben un poquito 📈';
+      } else {
+        change = Math.floor(Math.random() * 101 - 30);
+        lesson = change >= 0 ? '🎉 ¡Suerte! Ganaste dinero. Pero recuerda, no siempre ocurre.' : '😅 Perdiste dinero. Las arriesgadas pueden bajar 📉';
+      }
+      
+      const changeAmount = Math.floor(investWallet * change / 100);
+      investWallet += changeAmount;
+      
+      document.getElementById('investment-options').classList.add('hidden');
+      document.getElementById('investment-result').classList.remove('hidden');
+      
+      const resultCard = document.getElementById('invest-result-card');
+      const emoji = document.getElementById('invest-emoji');
+      
+      if (change >= 0) {
+        resultCard.className = 'rounded-2xl p-6 text-center mb-6 bg-gradient-to-r from-green-100 to-emerald-100';
+        emoji.textContent = '📈';
+        document.getElementById('invest-change').className = 'text-3xl font-bold mt-4 text-green-600';
+        document.getElementById('invest-change').textContent = `+${change}% (+$${changeAmount.toLocaleString()})`;
+        addCoins(100);
+      } else {
+        resultCard.className = 'rounded-2xl p-6 text-center mb-6 bg-gradient-to-r from-red-100 to-orange-100';
+        emoji.textContent = '📉';
+        document.getElementById('invest-change').className = 'text-3xl font-bold mt-4 text-red-600';
+        document.getElementById('invest-change').textContent = `${change}% ($${changeAmount.toLocaleString()})`;
+        addCoins(50);
+      }
+      
+      document.getElementById('invest-new-total').textContent = `Tu cartera: $${investWallet.toLocaleString()}`;
+      document.getElementById('invest-lesson').textContent = lesson;
+      document.getElementById('invest-wallet').textContent = `$${investWallet.toLocaleString()}`;
+      
+      completeMission(3);
+    }
+    
+    function resetInvestmentGame() {
+      document.getElementById('investment-options').classList.remove('hidden');
+      document.getElementById('investment-result').classList.add('hidden');
+    }
+    
+    // ==================== JUEGO: MISIONES ====================
+    function startMissionsGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('missions-game').classList.remove('hidden');
+      renderMissions();
+    }
+    
+    function renderMissions() {
+      const container = document.getElementById('missions-list');
+      container.innerHTML = '';
+      
+      let completed = 0;
+      
+      simpleMissions.forEach((mission, index) => {
+        const isCompleted = completedMissions.has(mission.id);
+        if (isCompleted) completed++;
+        
+        const div = document.createElement('div');
+        div.className = `mission-card p-4 ${isCompleted ? 'opacity-60' : ''}`;
+        div.style.animationDelay = `${index * 0.1}s`;
+        div.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <span class="text-4xl">${mission.emoji}</span>
+              <div>
+                <p class="font-bold text-green-800 text-lg">${mission.title}</p>
+                <p class="text-green-600">${mission.desc}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-yellow-600 font-bold">🪙 +${mission.reward}</p>
+              ${isCompleted ? '<span class="inline-block px-4 py-2 bg-green-500 text-white rounded-full font-bold">✅</span>' : '<span class="inline-block px-4 py-2 bg-yellow-400 text-yellow-800 rounded-full font-bold">⏳</span>'}
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      
+      document.getElementById('missions-count').textContent = `${completed}/${simpleMissions.length}`;
+    }
+    
+    function completeMission(id) {
+      if (completedMissions.has(id)) return;
+      
+      completedMissions.add(id);
+      const mission = simpleMissions.find(m => m.id === id);
+      if (mission) {
+        addCoins(mission.reward);
+        gameState.missionsCompleted++;
+        showToast('🎯', `¡Misión completada! +${mission.reward}`);
+      }
+    }
+    
+    // ==================== JUEGO: QUIZ ====================
+    function startQuizGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('quiz-game').classList.remove('hidden');
+      
+      quizScore = 0;
+      quizIndex = 0;
+      document.getElementById('quiz-question-container').classList.remove('hidden');
+      document.getElementById('quiz-result').classList.add('hidden');
+      
+      showQuizQuestion();
+    }
+    
+    function showQuizQuestion() {
+      if (quizIndex >= 4) {
+        showQuizResult();
+        return;
+      }
+      
+      const q = quizQuestions[quizIndex];
+      
+      document.getElementById('quiz-progress').textContent = `${quizIndex + 1}/4`;
+      document.getElementById('quiz-question').textContent = q.q;
+      
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+      
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-game p-4 bg-gradient-to-r from-pink-100 to-purple-100 text-purple-800 hover:from-pink-200 hover:to-purple-200 text-left';
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(i, q.correct, btn, optionsContainer);
+        optionsContainer.appendChild(btn);
+      });
+    }
+    
+    function checkAnswer(selected, correct, btn, container) {
+      const buttons = container.querySelectorAll('button');
+      buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === correct) {
+          b.classList.remove('from-pink-100', 'to-purple-100');
+          b.classList.add('from-green-400', 'to-emerald-500', 'text-white');
+        } else if (i === selected && selected !== correct) {
+          b.classList.remove('from-pink-100', 'to-purple-100');
+          b.classList.add('from-red-400', 'to-red-500', 'text-white');
+        }
+      });
+      
+      if (selected === correct) {
+        quizScore++;
+        showToast('✅', '¡Correcto!');
+      } else {
+        showToast('❌', 'Oops, ¡sigue intentando!');
+      }
+      
+      quizIndex++;
+      setTimeout(() => showQuizQuestion(), 1500);
+    }
+    
+    function showQuizResult() {
+      document.getElementById('quiz-question-container').classList.add('hidden');
+      document.getElementById('quiz-result').classList.remove('hidden');
+      
+      const emoji = document.getElementById('quiz-emoji');
+      const score = document.getElementById('quiz-score');
+      const message = document.getElementById('quiz-message');
+      
+      score.textContent = `${quizScore}/4 correctas`;
+      
+      if (quizScore === 4) {
+        emoji.textContent = '🏆';
+        message.textContent = '¡PERFECTO! ¡Eres un genio!';
+        addCoins(150);
+      } else if (quizScore >= 3) {
+        emoji.textContent = '🌟';
+        message.textContent = '¡Excelente! Sabes mucho.';
+        addCoins(100);
+        completeMission(4);
+      } else if (quizScore >= 2) {
+        emoji.textContent = '😊';
+        message.textContent = '¡Bien! Vas mejorando.';
+        addCoins(75);
+      } else {
+        emoji.textContent = '📚';
+        message.textContent = '¡Sigue aprendiendo!';
+        addCoins(50);
+      }
+    }
+    
+    function resetQuizGame() {
+      startQuizGame();
+    }
+    
+    // ==================== JUEGO: TIENDA ====================
+    function startShopGame() {
+      document.querySelectorAll('#main-content > div').forEach(el => el.classList.add('hidden'));
+      document.getElementById('shop-game').classList.remove('hidden');
+      document.getElementById('shop-result').classList.add('hidden');
+      
+      shopWallet = 300;
+      document.getElementById('shop-wallet').textContent = `$${shopWallet.toLocaleString()}`;
+      
+      const container = document.getElementById('shop-display');
+      container.innerHTML = '';
+      
+      shopItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'bg-teal-50 p-4 rounded-2xl border-2 border-teal-300 text-center cursor-pointer hover:scale-110 transition-transform';
+        div.innerHTML = `
+          <span class="text-4xl">${item.emoji}</span>
+          <p class="font-bold text-teal-700 mt-2">${item.name}</p>
+          <p class="text-teal-600">$${item.price}</p>
+          <button onclick="buyFromShop(${item.price}, '${item.emoji}')" class="btn-game mt-3 px-3 py-2 bg-gradient-to-r from-teal-400 to-cyan-500 text-white text-sm">Comprar</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+    
+    function buyFromShop(price, emoji) {
+      if (shopWallet < price) {
+        showToast('😅', '¡No tienes dinero!');
+        return;
+      }
+      
+      shopWallet -= price;
+      document.getElementById('shop-wallet').textContent = `$${shopWallet.toLocaleString()}`;
+      addCoins(25);
+      showToast(emoji, `¡Compraste ${emoji}!`);
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d3b8febf28b3c4e',t:'MTc3MjA2ODIyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
