@@ -91,116 +91,160 @@
         </div>
     </section>
 
-    <script>
-        function switchAuth(reg) {
-            document.getElementById('login-controls').classList.toggle('hidden', reg);
-            document.getElementById('register-controls').classList.toggle('hidden', !reg);
-            document.getElementById('auth-title').innerText = reg ? "¡Crea tu Cuenta!" : "¡Bienvenidos!";
-        }
+<script>
 
-        function intentarRegistro() {
-            const u = document.getElementById('auth-user').value.trim().toLowerCase();
-            const p = document.getElementById('auth-pass').value.trim();
-            if(!u || !p) return alert("⚠️ ¡Escribe usuario y contraseña!");
-            
-            let db = JSON.parse(localStorage.getItem('v_carranza_db') || "{}");
-            if(db[u]) return alert("❌ El usuario ya existe.");
-            
-            db[u] = { p, points: 0, lives: 5 };
-            localStorage.setItem('v_carranza_db', JSON.stringify(db));
-            alert("✨ ¡Cuenta creada! Ya puedes entrar."); 
-            switchAuth(false);
-        }
+/* ===========================
+   CONFIGURACIÓN MAESTRA
+=========================== */
 
-        function intentarLogin() {
-            const u = document.getElementById('auth-user').value.trim().toLowerCase();
-            const p = document.getElementById('auth-pass').value.trim();
-            let db = JSON.parse(localStorage.getItem('v_carranza_db') || "{}");
-            
-            if(db[u] && db[u].p === p) {
-                document.getElementById('view-auth').classList.add('hidden');
-                document.getElementById('main-header').classList.remove('hidden');
-                document.getElementById('view-phases').classList.remove('hidden');
-                document.getElementById('display-user').innerText = "HOLA, " + u;
-                document.getElementById('points').innerText = db[u].points;
-                document.getElementById('lives').innerText = db[u].lives;
-            } else { 
-                alert("❌ Usuario o contraseña incorrectos."); 
-            }
-        }
+let PASSWORD_MENSUAL = localStorage.getItem("password_mensual") || "marzo2026";
 
-        function cerrarSesion() { location.reload(); }
-        
-        function mostrarIngles() { 
-            document.getElementById('view-phases').classList.add('hidden'); 
-            document.getElementById('view-english').classList.remove('hidden'); 
-        }
+const USUARIO_GENERAL = "alumno";
 
-        function volverMenu() { 
-            document.getElementById('view-game-list').classList.add('hidden'); 
-            document.getElementById('view-english').classList.add('hidden'); 
-            document.getElementById('view-phases').classList.remove('hidden'); 
-        }
+const ADMIN_USER = "mtrafer";
+const ADMIN_PASS = "admin123";
 
-function cargarJuegos(f) {
-    document.getElementById('view-phases').classList.add('hidden');
-    document.getElementById('view-game-list').classList.remove('hidden');
-    const grid = document.getElementById('game-grid');
-    grid.innerHTML = "";
+/* ===========================
+   LOGIN
+=========================== */
 
-    // 1. AQUÍ ESCRIBES TUS JUEGOS
-    const misJuegos = {
-        3: [
-            
-            { nombre: "Mayúsculas mágicas", link: "mayusculasf3.html", icono: "✏️" },
-            { nombre: "Descubriendo vocales", link: "vocalesf3.html", icono: "🍎" },
-            { nombre: "Orden alfabético", link: "alfabetof3.html", icono: "🔠" },
-            { nombre: "Fracciones", link: "pizzeriaf3.html", icono: "➗" },
-            { nombre: "Matemáticas montessori", link: "matemontesori.html", icono: "🧮" },
-            { nombre: "La tiendita", link: "tiendita.html", icono: "🏪" },
-            { nombre: "Conteo mágico", link: "sumasf3.html", icono: "🔢" },
-            { nombre: "Sumas Divertidas", link: "vocalesf3.html", icono: "➕" },
-            { nombre: "Restas Aventura", link: "alfabetof3.html", icono: "➖" },
-            { nombre: "Figuras locas", link: "fraccionesf3.html", icono: "🔷" },
-            { nombre: "Mayor o menor", link: "vocalesf3.html", icono: "⚖️" },
-            { nombre: "Secuencias", link: "alfabetof3.html", icono: "📊" },
-            { nombre: "Matemáticas montessori", link: "matemontesori.html", icono: "🎲" },
-            { nombre: "Método global alfabetización", link: "alfabetizacionglobalf3.html", icono: "📚" },
-            { nombre: "Ciencias naturales", link: "cienciasf3.html", icono: "🦠" },
-            { nombre: "Geografía", link: "geografiaf3.html", icono: "🌎"},
-            { nombre: "Educación Socioemocional", link: "socioemocionalf3.html", icono: "❤️"},
-            { nombre: "Educación Financiera", link: "educacionfinancieraf3.html", icono: "💵"}
-                    ],
-        4: [
-            { nombre: "Las Tablas", link: "f4_tablas.html", icono: "✖️" },
+function intentarLogin() {
+    const u = document.getElementById('auth-user').value.trim();
+    const p = document.getElementById('auth-pass').value.trim();
 
-            { nombre: "Fracciones", link: "pizzeriaf4.html", icono: "➗" },
+    // ADMIN
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+        mostrarPanelAdmin();
+        return;
+    }
 
-{ nombre: "Educación Financiera", link: "educacionfinancieraf4.html", icono: "➗" },
+    // ACCESO GENERAL MENSUAL
+    if (u === USUARIO_GENERAL && p === PASSWORD_MENSUAL) {
+        document.getElementById('view-auth').classList.add('hidden');
+        document.getElementById('main-header').classList.remove('hidden');
+        document.getElementById('view-phases').classList.remove('hidden');
+        document.getElementById('display-user').innerText = "BIENVENIDO";
+    } else {
+        alert("❌ Usuario o contraseña incorrectos.");
+    }
+}
 
-         { nombre: "La Tiendita", link: "tiendita.html", icono: "🛒" },
-            { nombre: "Naturaleza", link: "f4_ciencias.html", icono: "🌿" }
-        ],
-        5: [
-            { nombre: "Cuerpo Humano", link: "f5_cuerpo.html", icono: "🧠" },
-             { nombre: "Fracciones", link: "pizzeriaf5.html", icono: "➗" },
-             { nombre: "Educación Financiera", link: "educacionfinancieraf5.html", icono: "💵" },
-              { nombre: "Tabla Periódica", link: "quimicaf5.html", icono: "🧪" },
-            { nombre: "Universo", link: "f5_planetas.html", icono: "🚀" }
-        ]
-    };
+/* ===========================
+   PANEL ADMIN
+=========================== */
 
-    // 2. ESTO CREA LOS BOTONES AUTOMÁTICAMENTE
-    misJuegos[f].forEach(juego => {
-        grid.innerHTML += `
-        <div class="glass p-8 rounded-[3rem] text-center border-b-8 border-gray-200 animate__animated animate__fadeInUp">
-            <div class="text-5xl mb-4">${juego.icono}</div>
-            <h4 class="font-kids text-xl uppercase italic">${juego.nombre}</h4>
-            <p class="text-xs font-bold text-gray-400">FASE ${f}</p>
-            <a href="${juego.link}" class="inline-block bg-pink-500 text-white px-10 py-2 rounded-full font-kids mt-4 shadow-lg hover:bg-pink-600 transition-all">JUGAR</a>
-        </div>`;
-    });
-        }
-    </script>
+function mostrarPanelAdmin() {
+    document.getElementById('view-auth').innerHTML = `
+        <div class="glass p-8 rounded-[3rem] shadow-2xl inline-block w-full max-w-md border-dashed border-purple-300 text-center">
+            <div class="text-6xl mb-4">👩‍🏫</div>
+            <h2 class="font-kids text-2xl text-purple-600 mb-4">Panel de Maestra</h2>
+
+            <p class="mb-2 font-bold text-sm">Contraseña mensual actual:</p>
+            <div class="bg-gray-100 p-3 rounded-xl mb-4 font-bold text-purple-700">
+                ${PASSWORD_MENSUAL}
+            </div>
+
+            <input type="text" id="nuevaPass" placeholder="Nueva contraseña mensual"
+            class="w-full text-center p-3 rounded-xl border-2 border-purple-200 mb-4">
+
+            <button onclick="cambiarPassword()" 
+            class="bg-purple-500 text-white px-6 py-3 rounded-2xl font-bold shadow-lg w-full">
+            Cambiar contraseña
+            </button>
+
+            <button onclick="cerrarSesion()" 
+            class="mt-4 text-sm text-gray-500 underline">
+            Cerrar sesión
+            </button>
+        </div>
+    `;
+}
+
+function cambiarPassword() {
+    const nueva = document.getElementById("nuevaPass").value.trim();
+    if (!nueva) return alert("Escribe una contraseña válida");
+
+    PASSWORD_MENSUAL = nueva;
+    localStorage.setItem("password_mensual", nueva);
+    alert("✅ Contraseña mensual actualizada");
+    location.reload();
+}
+
+/* ===========================
+   NAVEGACIÓN (NO TOCADA)
+=========================== */
+
+function cerrarSesion() { location.reload(); }
+
+function mostrarIngles() {   
+    document.getElementById('view-phases').classList.add('hidden');   
+    document.getElementById('view-english').classList.remove('hidden');   
+}
+
+function volverMenu() {   
+    document.getElementById('view-game-list').classList.add('hidden');   
+    document.getElementById('view-english').classList.add('hidden');   
+    document.getElementById('view-phases').classList.remove('hidden');   
+}
+
+/* ===========================
+   TUS JUEGOS EXACTOS (SIN CAMBIOS)
+=========================== */
+
+function cargarJuegos(f) {  
+    document.getElementById('view-phases').classList.add('hidden');  
+    document.getElementById('view-game-list').classList.remove('hidden');  
+    const grid = document.getElementById('game-grid');  
+    grid.innerHTML = "";  
+
+    const misJuegos = {  
+        3: [  
+            { nombre: "Mayúsculas mágicas", link: "mayusculasf3.html", icono: "✏️" },  
+            { nombre: "Descubriendo vocales", link: "vocalesf3.html", icono: "🍎" },  
+            { nombre: "Orden alfabético", link: "alfabetof3.html", icono: "🔠" },  
+            { nombre: "Fracciones", link: "pizzeriaf3.html", icono: "➗" },  
+            { nombre: "Matemáticas montessori", link: "matemontesori.html", icono: "🧮" },  
+            { nombre: "La tiendita", link: "tiendita.html", icono: "🏪" },  
+            { nombre: "Conteo mágico", link: "sumasf3.html", icono: "🔢" },  
+            { nombre: "Sumas Divertidas", link: "vocalesf3.html", icono: "➕" },  
+            { nombre: "Restas Aventura", link: "alfabetof3.html", icono: "➖" },  
+            { nombre: "Figuras locas", link: "fraccionesf3.html", icono: "🔷" },  
+            { nombre: "Mayor o menor", link: "vocalesf3.html", icono: "⚖️" },  
+            { nombre: "Secuencias", link: "alfabetof3.html", icono: "📊" },  
+            { nombre: "Matemáticas montessori", link: "matemontesori.html", icono: "🎲" },  
+            { nombre: "Método global alfabetización", link: "alfabetizacionglobalf3.html", icono: "📚" },  
+            { nombre: "Ciencias naturales", link: "cienciasf3.html", icono: "🦠" },  
+            { nombre: "Geografía", link: "geografiaf3.html", icono: "🌎"},  
+            { nombre: "Educación Socioemocional", link: "socioemocionalf3.html", icono: "❤️"},  
+            { nombre: "Educación Financiera", link: "educacionfinancieraf3.html", icono: "💵"}  
+        ],  
+        4: [  
+            { nombre: "Las Tablas", link: "f4_tablas.html", icono: "✖️" },  
+            { nombre: "Fracciones", link: "pizzeriaf4.html", icono: "➗" },  
+            { nombre: "Educación Financiera", link: "educacionfinancieraf4.html", icono: "➗" },  
+            { nombre: "La Tiendita", link: "tiendita.html", icono: "🛒" },  
+            { nombre: "Naturaleza", link: "f4_ciencias.html", icono: "🌿" }  
+        ],  
+        5: [  
+            { nombre: "Cuerpo Humano", link: "f5_cuerpo.html", icono: "🧠" },  
+            { nombre: "Fracciones", link: "pizzeriaf5.html", icono: "➗" },  
+            { nombre: "Educación Financiera", link: "educacionfinancieraf5.html", icono: "💵" },  
+            { nombre: "Tabla Periódica", link: "quimicaf5.html", icono: "🧪" },  
+            { nombre: "Universo", link: "f5_planetas.html", icono: "🚀" }  
+        ]  
+    };  
+
+    misJuegos[f].forEach(juego => {  
+        grid.innerHTML += `  
+        <div class="glass p-8 rounded-[3rem] text-center border-b-8 border-gray-200 animate__animated animate__fadeInUp">  
+            <div class="text-5xl mb-4">${juego.icono}</div>  
+            <h4 class="font-kids text-xl uppercase italic">${juego.nombre}</h4>  
+            <p class="text-xs font-bold text-gray-400">FASE ${f}</p>  
+            <a href="${juego.link}" class="inline-block bg-pink-500 text-white px-10 py-2 rounded-full font-kids mt-4 shadow-lg hover:bg-pink-600 transition-all">JUGAR</a>  
+        </div>`;  
+    });  
+}
+
+</script>
 </body>
 </html>
