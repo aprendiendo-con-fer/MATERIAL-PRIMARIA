@@ -1,103 +1,129 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>English Vocabulary Games</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Vocabulary Games</title>
 
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    * { font-family: 'Nunito', sans-serif; }
-    body { box-sizing: border-box; }
+<style>
+* { font-family: 'Nunito', sans-serif; }
+.title-font { font-family: 'Fredoka One', cursive; }
 
-    .title-font { font-family: 'Fredoka One', cursive; }
+.btn-3d{
+  transition:all .2s ease;
+  box-shadow:0 6px 0 rgba(0,0,0,.2),0 8px 15px rgba(0,0,0,.1);
+}
+.btn-3d:hover{ transform:translateY(-3px); }
+.btn-3d:active{
+  transform:translateY(4px);
+  box-shadow:0 2px 0 rgba(0,0,0,.2);
+}
 
-    .btn-3d {
-      transition: all 0.15s ease;
-      box-shadow: 0 6px 0 rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.1);
-    }
+.balloon-title{
+  font-size:3rem;
+  font-weight:900;
+  color:white;
+  text-shadow:-3px -3px 0 #1a1a1a,
+               3px -3px 0 #1a1a1a,
+              -3px 3px 0 #1a1a1a,
+               3px 3px 0 #1a1a1a;
+}
 
-    .btn-3d:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 12px 20px rgba(0,0,0,0.15);
-    }
-
-    .btn-3d:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 rgba(0,0,0,0.2);
-    }
-
-    .category-card {
-      transition: transform 0.3s ease;
-    }
-
-    .category-card:hover {
-      transform: scale(1.05);
-    }
-
-    .home-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 50;
-    }
-
-    .balloon-title {
-      font-size: 3rem;
-      font-weight: 900;
-      color: white;
-      text-shadow: 3px 3px 0 #1a1a1a;
-    }
-  </style>
+.category-card{
+  transition:all .3s ease;
+}
+.category-card:hover{
+  transform:scale(1.05) rotate(-1deg);
+}
+</style>
 </head>
 
-<body class="bg-gradient-to-b from-sky-100 via-sky-50 to-white min-h-screen">
+<body class="h-full bg-gradient-to-b from-sky-100 via-sky-50 to-white">
 
-  <!-- Botón Inicio -->
-  <button onclick="location.href='index.html'"
-    class="home-btn btn-3d bg-gradient-to-r from-sky-400 to-blue-500 text-white px-6 py-3 rounded-full font-bold flex items-center gap-2">
-    🏠 <span class="hidden sm:inline">Inicio</span>
-  </button>
+<div class="min-h-screen p-6">
+<div class="max-w-6xl mx-auto text-center">
 
-  <!-- MENÚ PRINCIPAL -->
-  <div class="p-6 max-w-6xl mx-auto text-center">
-    <h1 class="balloon-title mb-4">🎮 English Vocabulary Games 🎮</h1>
-    <p class="text-gray-600 font-semibold mb-8">
-      ¡Aprende inglés jugando! Selecciona una categoría
-    </p>
+<h1 class="balloon-title mb-4">🎮 English Vocabulary Games 🎮</h1>
+<p class="text-lg text-gray-600 mb-10 font-semibold">
+Selecciona una categoría para jugar
+</p>
 
-    <div id="categories-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-      <!-- Categorías dinámicas -->
-    </div>
-  </div>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
 
-  <script>
-    // Base simple de ejemplo
-    const categories = [
-      { name: "Números", emoji: "🔢" },
-      { name: "Frutas", emoji: "🍎" },
-      { name: "Animales", emoji: "🐾" },
-      { name: "Colores", emoji: "🎨" }
-    ];
+<button onclick="startGame('numbers')" class="category-card btn-3d bg-gradient-to-br from-red-400 to-red-600 text-white p-6 rounded-2xl">
+🔢 Números
+</button>
 
-    const grid = document.getElementById("categories-grid");
+<button onclick="startGame('days')" class="category-card btn-3d bg-gradient-to-br from-orange-400 to-orange-600 text-white p-6 rounded-2xl">
+📅 Días
+</button>
 
-    categories.forEach(cat => {
-      const card = document.createElement("div");
-      card.className =
-        "category-card btn-3d bg-white rounded-2xl p-6 shadow-lg cursor-pointer";
-      card.innerHTML = `
-        <div class="text-4xl mb-3">${cat.emoji}</div>
-        <h3 class="font-bold text-lg">${cat.name}</h3>
-      `;
-      grid.appendChild(card);
-    });
-  </script>
+<button onclick="startGame('fruits')" class="category-card btn-3d bg-gradient-to-br from-green-400 to-green-600 text-white p-6 rounded-2xl">
+🍎 Frutas
+</button>
+
+<button onclick="startGame('vegetables')" class="category-card btn-3d bg-gradient-to-br from-emerald-400 to-emerald-600 text-white p-6 rounded-2xl">
+🥬 Verduras
+</button>
+
+<button onclick="startGame('colors')" class="category-card btn-3d bg-gradient-to-br from-pink-400 to-pink-600 text-white p-6 rounded-2xl">
+🎨 Colores
+</button>
+
+<button onclick="startGame('animals')" class="category-card btn-3d bg-gradient-to-br from-amber-400 to-amber-600 text-white p-6 rounded-2xl">
+🐾 Animales
+</button>
+
+<button onclick="startGame('shapes')" class="category-card btn-3d bg-gradient-to-br from-cyan-400 to-cyan-600 text-white p-6 rounded-2xl">
+🔷 Figuras
+</button>
+
+<button onclick="startGame('family')" class="category-card btn-3d bg-gradient-to-br from-rose-400 to-rose-600 text-white p-6 rounded-2xl">
+👨‍👩‍👧‍👦 Familia
+</button>
+
+<button onclick="startGame('school')" class="category-card btn-3d bg-gradient-to-br from-indigo-400 to-indigo-600 text-white p-6 rounded-2xl">
+🏫 Escuela
+</button>
+
+<button onclick="startGame('body')" class="category-card btn-3d bg-gradient-to-br from-purple-400 to-purple-600 text-white p-6 rounded-2xl">
+🧍 Cuerpo
+</button>
+
+<button onclick="startGame('clothes')" class="category-card btn-3d bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 text-white p-6 rounded-2xl">
+👕 Ropa
+</button>
+
+<button onclick="startGame('food')" class="category-card btn-3d bg-gradient-to-br from-yellow-400 to-yellow-600 text-white p-6 rounded-2xl">
+🍔 Comida
+</button>
+
+<button onclick="startGame('weather')" class="category-card btn-3d bg-gradient-to-br from-sky-400 to-sky-600 text-white p-6 rounded-2xl">
+🌦 Clima
+</button>
+
+<button onclick="startGame('transport')" class="category-card btn-3d bg-gradient-to-br from-gray-400 to-gray-600 text-white p-6 rounded-2xl">
+🚗 Transporte
+</button>
+
+<button onclick="startGame('jobs')" class="category-card btn-3d bg-gradient-to-br from-teal-400 to-teal-600 text-white p-6 rounded-2xl">
+👩‍⚕️ Profesiones
+</button>
+
+</div>
+
+</div>
+</div>
+
+<script>
+function startGame(category){
+  alert("Iniciando juego de: " + category);
+}
+</script>
 
 </body>
 </html>
