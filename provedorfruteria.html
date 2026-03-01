@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proveedor de Frutería</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    .title-font { font-family: 'Fredoka One', cursive; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes slide-in {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes truck-drive {
+      0% { transform: translateX(-150%); }
+      100% { transform: translateX(0); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    @keyframes celebrate {
+      0%, 100% { transform: rotate(-5deg) scale(1); }
+      25% { transform: rotate(5deg) scale(1.1); }
+      50% { transform: rotate(-5deg) scale(1); }
+      75% { transform: rotate(5deg) scale(1.1); }
+    }
+    
+    .float { animation: float 3s ease-in-out infinite; }
+    .bounce-in { animation: bounce-in 0.5s ease-out forwards; }
+    .slide-in { animation: slide-in 0.5s ease-out forwards; }
+    .truck-drive { animation: truck-drive 1.5s ease-out forwards; }
+    .sparkle { animation: sparkle 1s ease-in-out infinite; }
+    .celebrate { animation: celebrate 0.5s ease-in-out; }
+    
+    .basket {
+      background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
+      border: 3px solid #654321;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+    }
+    
+    .basket::before {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 15px;
+      background: linear-gradient(90deg, #8B4513, #A0522D, #8B4513);
+      border-radius: 10px 10px 0 0;
+      border: 2px solid #654321;
+    }
+    
+    .money-bill {
+      background: linear-gradient(135deg, #228B22 0%, #32CD32 30%, #228B22 70%, #006400 100%);
+      border: 2px solid #006400;
+      border-radius: 8px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .money-bill:hover {
+      transform: scale(1.1) rotate(2deg);
+      box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+    }
+    
+    .money-bill.selected {
+      transform: scale(1.15);
+      box-shadow: 0 0 20px #FFD700;
+    }
+    
+    .coin {
+      background: radial-gradient(circle at 30% 30%, #FFD700, #DAA520, #B8860B);
+      border: 3px solid #B8860B;
+      border-radius: 50%;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3), inset -2px -2px 5px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .coin:hover {
+      transform: scale(1.1);
+      box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+    }
+    
+    .coin.selected {
+      transform: scale(1.15);
+      box-shadow: 0 0 15px #FFD700;
+    }
+    
+    .store-front {
+      background: linear-gradient(180deg, #87CEEB 0%, #E0F4FF 50%, #F5F5DC 100%);
+    }
+    
+    .awning {
+      background: repeating-linear-gradient(
+        90deg,
+        #FF6B6B,
+        #FF6B6B 30px,
+        #FFF 30px,
+        #FFF 60px
+      );
+      border-radius: 10px 10px 0 0;
+    }
+    
+    .shelf {
+      background: linear-gradient(180deg, #DEB887 0%, #D2691E 100%);
+      border: 3px solid #8B4513;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .veggie-slot {
+      background: rgba(255,255,255,0.3);
+      border: 2px dashed #8B4513;
+      border-radius: 10px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .veggie-slot.empty {
+      background: rgba(255,0,0,0.1);
+    }
+    
+    .veggie-slot.filled {
+      background: rgba(0,255,0,0.2);
+      border: 2px solid #228B22;
+    }
+    
+    .truck {
+      filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
+    }
+    
+    .btn-game {
+      transition: all 0.2s;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    .btn-game:hover {
+      transform: scale(1.05);
+    }
+    
+    .btn-game:active {
+      transform: scale(0.95);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #E0F7FF 0%, #F0FAFF 100%);">
+  <!-- Pantalla de Inicio -->
+  <div id="start-screen" class="min-h-full flex flex-col items-center justify-center p-4">
+   <div class="text-center bounce-in">
+    <!-- Camión de entrega -->
+    <div class="mb-6">
+     <svg class="w-48 h-32 mx-auto float" viewbox="0 0 200 100">
+      <rect x="10" y="30" width="80" height="50" rx="5" fill="#4CAF50" /> <rect x="90" y="45" width="100" height="35" rx="3" fill="#FF9800" /> <rect x="95" y="50" width="30" height="25" fill="#FFF" opacity="0.3" /> <circle cx="40" cy="85" r="12" fill="#333" /> <circle cx="40" cy="85" r="6" fill="#666" /> <circle cx="150" cy="85" r="12" fill="#333" /> <circle cx="150" cy="85" r="6" fill="#666" /> <text x="120" y="70" fill="#FFF" font-size="12" font-weight="bold">
+       FRUTAS
+      </text>
+     </svg>
+    </div>
+    <h1 id="game-title" class="title-font text-5xl md:text-6xl text-green-600 mb-4 drop-shadow-lg">🍎 Proveedor de Frutería 🥕</h1>
+    <p class="text-xl text-gray-700 mb-8">¡Entrega verduras y aprende matemáticas!</p><!-- Selección de Nivel -->
+    <div class="bg-white/80 rounded-3xl p-6 shadow-xl max-w-lg mx-auto mb-6">
+     <h2 class="title-font text-2xl text-orange-500 mb-4">Selecciona tu nivel:</h2><button onclick="startGame('easy')" class="btn-game w-full mb-3 bg-gradient-to-r from-green-400 to-green-500 text-white py-4 px-6 rounded-2xl text-lg font-bold shadow-lg"> 🌱 FÁCIL (1° y 2° Primaria) <span class="block text-sm font-normal">Sumas simples hasta $50</span> </button> <button onclick="startGame('medium')" class="btn-game w-full mb-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-white py-4 px-6 rounded-2xl text-lg font-bold shadow-lg"> 🌿 MEDIO (3° y 4° Primaria) <span class="block text-sm font-normal">Sumas y cambio hasta $100</span> </button> <button onclick="startGame('hard')" class="btn-game w-full bg-gradient-to-r from-red-400 to-pink-500 text-white py-4 px-6 rounded-2xl text-lg font-bold shadow-lg"> 🌳 DIFÍCIL (5° y 6° Primaria) <span class="block text-sm font-normal">Multiplicación y cambio hasta $200</span> </button>
+    </div><!-- Decoración de verduras -->
+    <div class="flex justify-center gap-4 text-4xl">
+     <span class="float" style="animation-delay: 0s;">🥬</span> <span class="float" style="animation-delay: 0.2s;">🥕</span> <span class="float" style="animation-delay: 0.4s;">🍅</span> <span class="float" style="animation-delay: 0.6s;">🥒</span> <span class="float" style="animation-delay: 0.8s;">🌽</span> <span class="float" style="animation-delay: 1s;">🍆</span>
+    </div>
+   </div>
+  </div><!-- Pantalla del Juego -->
+  <div id="game-screen" class="hidden min-h-full flex flex-col">
+   <!-- Header del juego -->
+   <div class="bg-gradient-to-r from-green-500 to-green-600 p-3 shadow-lg">
+    <div class="max-w-6xl mx-auto flex justify-between items-center flex-wrap gap-2">
+     <div class="flex items-center gap-4">
+      <span id="level-badge" class="bg-white/20 px-3 py-1 rounded-full text-white font-bold text-sm"></span> <span class="text-white font-bold">Frutería: <span id="store-number">1</span>/5</span>
+     </div>
+     <div class="flex items-center gap-4">
+      <span class="text-white font-bold">💰 Ganancia: $<span id="total-earnings">0</span></span> <span class="text-white font-bold">⭐ Puntos: <span id="score">0</span></span>
+     </div><button onclick="showStartScreen()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-bold transition"> 🏠 Menú </button>
+    </div>
+   </div><!-- Área principal del juego -->
+   <div class="flex-1 p-4 overflow-auto">
+    <div class="max-w-6xl mx-auto">
+     <!-- Camión llegando -->
+     <div id="truck-container" class="mb-4">
+      <div class="truck-drive">
+       <svg class="w-32 h-20 truck" viewbox="0 0 200 100">
+        <rect x="10" y="30" width="80" height="50" rx="5" fill="#4CAF50" /> <rect x="20" y="40" width="25" height="20" fill="#87CEEB" rx="2" /> <rect x="90" y="45" width="100" height="35" rx="3" fill="#FF9800" /> <circle cx="40" cy="85" r="10" fill="#333" /> <circle cx="150" cy="85" r="10" fill="#333" />
+       </svg>
+      </div>
+     </div><!-- Nombre de la frutería -->
+     <div class="text-center mb-4">
+      <div class="inline-block bg-gradient-to-r from-red-400 to-pink-400 px-8 py-2 rounded-t-2xl">
+       <h2 id="store-name" class="title-font text-2xl text-white">Frutería "El Fresquito"</h2>
+      </div>
+     </div><!-- Tienda/Frutería -->
+     <div class="store-front rounded-3xl p-6 shadow-2xl border-4 border-amber-600 mb-6">
+      <!-- Toldo -->
+      <div class="awning h-8 -mx-6 -mt-6 mb-4 rounded-t-2xl"></div><!-- Estantes con productos -->
+      <div id="shelves-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+       <!-- Se llenan dinámicamente -->
+      </div><!-- Mensaje de lo que falta -->
+      <div id="order-message" class="bg-white/90 rounded-2xl p-4 text-center shadow-lg">
+       <p class="text-lg text-gray-700 mb-2">El dueño dice:</p>
+       <p id="owner-speech" class="title-font text-xl text-green-600"></p>
+      </div>
+     </div><!-- Panel de entrega y cobro -->
+     <div class="grid md:grid-cols-2 gap-6">
+      <!-- Tu carga (lo que vas a entregar) -->
+      <div class="bg-white/90 rounded-3xl p-4 shadow-xl">
+       <h3 class="title-font text-xl text-orange-500 mb-3 text-center">🚚 Tu Carga</h3><!-- Selector de cantidad para cada producto -->
+       <div id="quantity-selector" class="space-y-3 mb-4 max-h-64 overflow-auto"><!-- Se llena dinámicamente -->
+       </div><!-- Calculadora visual (solo nivel fácil) -->
+       <div id="calc-helper" class="hidden bg-yellow-100 rounded-xl p-3 mb-4">
+        <p class="text-sm font-bold text-gray-700 mb-2">📐 Calculadora Visual:</p>
+        <div id="calc-display" class="bg-white rounded-lg p-2 text-center font-bold text-lg text-green-600"><!-- Se actualiza dinámicamente -->
+        </div>
+       </div><!-- Total a entregar -->
+       <div class="bg-blue-100 rounded-xl p-3 mb-4 text-center">
+        <p class="text-sm text-gray-600">Total a cobrar:</p>
+        <p class="title-font text-2xl text-green-600">$<span id="delivery-total">0</span></p>
+       </div><button id="deliver-btn" onclick="deliverItems()" class="btn-game w-full bg-gradient-to-r from-green-400 to-green-500 text-white py-3 px-6 rounded-xl font-bold text-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled> 📦 Entregar Productos </button>
+      </div><!-- Cobro -->
+      <div id="payment-section" class="bg-white/90 rounded-3xl p-4 shadow-xl hidden">
+       <h3 class="title-font text-xl text-green-600 mb-3 text-center">💵 Cobrar al Cliente</h3>
+       <div class="bg-yellow-100 rounded-xl p-3 mb-4 text-center">
+        <p class="text-lg">Total a cobrar:</p>
+        <p id="total-to-charge" class="title-font text-3xl text-green-600">$0</p>
+       </div><!-- Entrada del dinero del cliente -->
+       <div class="bg-blue-50 rounded-xl p-3 mb-4">
+        <p class="text-center font-bold text-gray-700 mb-2">¿Cuánto dinero te da el cliente?</p>
+        <div class="flex gap-2 mb-3"><input type="number" id="client-payment-input" placeholder="Ingresa cantidad" class="flex-1 px-4 py-2 border-2 border-gray-300 rounded-lg text-lg font-bold" min="0" step="10"> <button onclick="setClientPayment()" class="btn-game bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-lg font-bold"> Listo </button>
+        </div>
+        <p class="text-sm text-gray-600">El cliente te da: $<span id="payment-display">0</span></p>
+       </div><!-- Mostrar billetes/monedas del cliente (visual) -->
+       <div id="client-payment-visual" class="flex flex-wrap justify-center gap-2 mb-4 min-h-[60px] p-2 bg-gray-50 rounded-lg"><!-- Se genera dinámicamente -->
+       </div><!-- Sección de cambio -->
+       <div id="change-section" class="hidden">
+        <div class="bg-red-50 rounded-xl p-3 mb-4 text-center border-2 border-red-200">
+         <p class="font-bold text-red-600 mb-1">⚠️ Necesitas dar cambio:</p>
+         <p class="title-font text-2xl text-red-600">$<span id="change-amount">0</span></p>
+        </div>
+        <p class="text-center text-gray-600 mb-2 font-bold">Selecciona los billetes y monedas para el cambio:</p><!-- Billetes disponibles -->
+        <div class="mb-3">
+         <p class="text-sm font-bold text-gray-600 mb-2">💵 Billetes:</p>
+         <div id="bills-container" class="flex flex-wrap gap-2 justify-center">
+          <!-- Billetes -->
+         </div>
+        </div><!-- Monedas disponibles -->
+        <div class="mb-4">
+         <p class="text-sm font-bold text-gray-600 mb-2">🪙 Monedas:</p>
+         <div id="coins-container" class="flex flex-wrap gap-2 justify-center">
+          <!-- Monedas -->
+         </div>
+        </div><!-- Tu cambio seleccionado -->
+        <div class="bg-blue-50 rounded-xl p-3 mb-3">
+         <p class="text-sm text-gray-600 mb-2">Tu cambio: $<span id="selected-change">0</span></p>
+         <div id="selected-money" class="flex flex-wrap gap-1 justify-center min-h-[40px]">
+          <!-- Dinero seleccionado -->
+         </div>
+        </div><button id="give-change-btn" onclick="giveChange()" class="btn-game w-full bg-gradient-to-r from-blue-400 to-blue-500 text-white py-3 px-6 rounded-xl font-bold text-lg shadow-lg disabled:opacity-50" disabled> 🤝 Dar Cambio </button>
+       </div>
+       <div id="no-change-section" class="hidden">
+        <button onclick="completeTransaction()" class="btn-game w-full bg-gradient-to-r from-green-400 to-green-500 text-white py-3 px-6 rounded-xl font-bold text-lg shadow-lg"> ✅ ¡Pago Exacto! Continuar </button>
+       </div>
+      </div>
+     </div><!-- Mensaje de retroalimentación -->
+     <div id="feedback-message" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-3xl p-8 shadow-2xl z-50 text-center">
+      <div id="feedback-content"></div>
+     </div><!-- Overlay -->
+     <div id="overlay" class="hidden fixed inset-0 bg-black/50 z-40"></div>
+    </div>
+   </div><!-- Footer con créditos -->
+   <div class="bg-gradient-to-r from-green-600 to-green-700 p-3 text-center">
+    <p id="credits-text" class="text-white text-sm">📚 Material creado por Maestra María Fernanda Flores Valenzuela 📚</p>
+   </div>
+  </div><!-- Pantalla de Victoria -->
+  <div id="win-screen" class="hidden min-h-full flex flex-col items-center justify-center p-4 bg-gradient-to-b from-yellow-200 to-orange-200">
+   <div class="text-center bounce-in">
+    <div class="text-8xl mb-4">
+     🏆
+    </div>
+    <h1 class="title-font text-5xl text-green-600 mb-4">¡FELICIDADES!</h1>
+    <p class="text-2xl text-gray-700 mb-2">Completaste todas las entregas</p>
+    <p class="text-xl text-gray-600 mb-4">Puntos totales: <span id="final-score" class="font-bold text-green-600">0</span></p>
+    <p class="text-xl text-gray-600 mb-6">Ganancia total: $<span id="final-earnings" class="font-bold text-green-600">0</span></p>
+    <div class="flex flex-wrap justify-center gap-4 text-4xl mb-6">
+     <span class="sparkle">⭐</span> <span class="sparkle" style="animation-delay: 0.2s;">🌟</span> <span class="sparkle" style="animation-delay: 0.4s;">✨</span> <span class="sparkle" style="animation-delay: 0.6s;">🌟</span> <span class="sparkle" style="animation-delay: 0.8s;">⭐</span>
+    </div><button onclick="showStartScreen()" class="btn-game bg-gradient-to-r from-green-400 to-green-500 text-white py-4 px-8 rounded-2xl text-xl font-bold shadow-lg"> 🔄 Jugar de Nuevo </button>
+    <p class="mt-6 text-gray-600">📚 Material creado por Maestra María Fernanda Flores Valenzuela 📚</p>
+   </div>
+  </div>
+  <script>
+    // Configuración del juego
+    const defaultConfig = {
+      game_title: '🍎 Proveedor de Frutería 🥕',
+      credits_text: '📚 Material creado por Maestra María Fernanda Flores Valenzuela 📚'
+    };
+    
+    // Verduras y frutas disponibles
+    const products = [
+      { name: 'Lechuga', emoji: '🥬', basePrice: 10 },
+      { name: 'Zanahoria', emoji: '🥕', basePrice: 5 },
+      { name: 'Tomate', emoji: '🍅', basePrice: 8 },
+      { name: 'Pepino', emoji: '🥒', basePrice: 6 },
+      { name: 'Maíz', emoji: '🌽', basePrice: 7 },
+      { name: 'Berenjena', emoji: '🍆', basePrice: 12 },
+      { name: 'Brócoli', emoji: '🥦', basePrice: 15 },
+      { name: 'Papa', emoji: '🥔', basePrice: 4 },
+      { name: 'Cebolla', emoji: '🧅', basePrice: 5 },
+      { name: 'Ajo', emoji: '🧄', basePrice: 3 },
+      { name: 'Pimiento', emoji: '🫑', basePrice: 9 },
+      { name: 'Chile', emoji: '🌶️', basePrice: 6 }
+    ];
+    
+    const storeNames = [
+      'Frutería "El Fresquito"',
+      'Verduras "La Huerta"',
+      'Frutería "Don Pepino"',
+      'Mercado "La Abundancia"',
+      'Verduras "El Jardín"'
+    ];
+    
+    // Estado del juego
+    let gameState = {
+      level: 'easy',
+      currentStore: 0,
+      totalStores: 5,
+      score: 0,
+      earnings: 0,
+      currentOrder: [],
+      selectedQuantities: {}, // Cantidades seleccionadas por producto
+      totalToCharge: 0,
+      clientPayment: 0,
+      changeNeeded: 0,
+      selectedChange: 0,
+      selectedMoney: []
+    };
+    
+    // Configuración por nivel
+    const levelConfig = {
+      easy: {
+        name: '🌱 Fácil',
+        maxItems: 2,
+        maxQuantity: 3,
+        maxPrice: 15,
+        changeRequired: false,
+        exactPayment: true
+      },
+      medium: {
+        name: '🌿 Medio',
+        maxItems: 3,
+        maxQuantity: 5,
+        maxPrice: 20,
+        changeRequired: true,
+        maxChange: 30
+      },
+      hard: {
+        name: '🌳 Difícil',
+        maxItems: 4,
+        maxQuantity: 8,
+        maxPrice: 25,
+        changeRequired: true,
+        maxChange: 50
+      }
+    };
+    
+    // Billetes y monedas disponibles
+    const bills = [200, 100, 50, 20];
+    const coins = [10, 5, 2, 1];
+    
+    // Inicializar SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          document.getElementById('game-title').textContent = config.game_title || defaultConfig.game_title;
+          document.getElementById('credits-text').textContent = config.credits_text || defaultConfig.credits_text;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['game_title', config.game_title || defaultConfig.game_title],
+          ['credits_text', config.credits_text || defaultConfig.credits_text]
+        ])
+      });
+    }
+    
+    function showStartScreen() {
+      document.getElementById('start-screen').classList.remove('hidden');
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('win-screen').classList.add('hidden');
+    }
+    
+    function startGame(level) {
+      gameState = {
+        level: level,
+        currentStore: 0,
+        totalStores: 5,
+        score: 0,
+        earnings: 0,
+        currentOrder: [],
+        totalToCharge: 0,
+        clientPayment: 0,
+        changeNeeded: 0,
+        selectedChange: 0,
+        selectedMoney: []
+      };
+      
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      document.getElementById('win-screen').classList.add('hidden');
+      
+      document.getElementById('level-badge').textContent = levelConfig[level].name;
+      updateStats();
+      loadNewStore();
+    }
+    
+    function updateStats() {
+      document.getElementById('store-number').textContent = gameState.currentStore + 1;
+      document.getElementById('total-earnings').textContent = gameState.earnings;
+      document.getElementById('score').textContent = gameState.score;
+    }
+    
+    function loadNewStore() {
+      const config = levelConfig[gameState.level];
+      
+      // Nombre de la tienda
+      document.getElementById('store-name').textContent = storeNames[gameState.currentStore % storeNames.length];
+      
+      // Generar productos en los estantes (algunos vacíos)
+      const numProducts = 4 + Math.floor(Math.random() * 3);
+      const storeProducts = [];
+      const usedProducts = new Set();
+      
+      for (let i = 0; i < numProducts; i++) {
+        let product;
+        do {
+          product = products[Math.floor(Math.random() * products.length)];
+        } while (usedProducts.has(product.name));
+        usedProducts.add(product.name);
+        
+        const isFilled = Math.random() > 0.4; // 40% probabilidad de estar vacío
+        const quantity = isFilled ? Math.floor(Math.random() * 5) + 3 : 0;
+        
+        storeProducts.push({
+          ...product,
+          quantity: quantity,
+          needed: isFilled ? 0 : Math.floor(Math.random() * config.maxQuantity) + 1
+        });
+      }
+      
+      // Asegurar que al menos 2 productos necesiten reabastecimiento
+      const emptySlots = storeProducts.filter(p => p.needed > 0);
+      if (emptySlots.length < 2) {
+        const filledSlots = storeProducts.filter(p => p.needed === 0);
+        for (let i = 0; i < 2 - emptySlots.length && i < filledSlots.length; i++) {
+          filledSlots[i].quantity = 0;
+          filledSlots[i].needed = Math.floor(Math.random() * config.maxQuantity) + 1;
+        }
+      }
+      
+      // Renderizar estantes
+      const shelvesContainer = document.getElementById('shelves-container');
+      shelvesContainer.innerHTML = '';
+      
+      storeProducts.forEach((product, index) => {
+        const isEmpty = product.needed > 0;
+        const slotClass = isEmpty ? 'empty' : 'filled';
+        
+        const shelf = document.createElement('div');
+        shelf.className = 'shelf rounded-xl p-3';
+        shelf.innerHTML = `
+          <div class="veggie-slot ${slotClass} p-2 flex flex-col items-center">
+            <span class="text-3xl ${isEmpty ? 'opacity-30' : ''}">${product.emoji}</span>
+            <span class="font-bold text-sm mt-1">${product.name}</span>
+            ${isEmpty 
+              ? `<span class="text-red-500 text-xs font-bold">¡Faltan ${product.needed}!</span>`
+              : `<span class="text-green-600 text-xs">✓ ${product.quantity} disponibles</span>`
+            }
+            <span class="text-gray-600 text-xs">$${product.basePrice} c/u</span>
+          </div>
+        `;
+        shelvesContainer.appendChild(shelf);
+      });
+      
+      // Generar pedido actual
+      const neededProducts = storeProducts.filter(p => p.needed > 0);
+      gameState.currentOrder = neededProducts.map(p => ({
+        ...p,
+        price: p.basePrice * p.needed
+      }));
+      
+      // Inicializar cantidades seleccionadas a 0
+      gameState.selectedQuantities = {};
+      gameState.currentOrder.forEach(item => {
+        gameState.selectedQuantities[item.name] = 0;
+      });
+      
+      // Mostrar mensaje del dueño
+      let orderText = '¡Necesito que me traigas ';
+      orderText += gameState.currentOrder.map(item => 
+        `${item.needed} ${item.name}${item.needed > 1 ? 's' : ''} ($${item.basePrice} c/u)`
+      ).join(' y ');
+      orderText += '!';
+      
+      document.getElementById('owner-speech').textContent = orderText;
+      
+      // Mostrar selector de cantidades
+      renderQuantitySelector();
+      
+      // Mostrar calculadora visual si es nivel fácil
+      if (gameState.level === 'easy') {
+        document.getElementById('calc-helper').classList.remove('hidden');
+        updateCalcDisplay();
+      } else {
+        document.getElementById('calc-helper').classList.add('hidden');
+      }
+      
+      // Habilitar botón de entrega solo si hay cantidades seleccionadas
+      checkDeliveryButton();
+      
+      // Ocultar sección de pago
+      document.getElementById('payment-section').classList.add('hidden');
+      
+      // Resetear estado de cambio
+      gameState.selectedChange = 0;
+      gameState.selectedMoney = [];
+    }
+    
+    function renderQuantitySelector() {
+      const container = document.getElementById('quantity-selector');
+      container.innerHTML = '';
+      
+      gameState.currentOrder.forEach(item => {
+        const selectedQty = gameState.selectedQuantities[item.name] || 0;
+        
+        const itemEl = document.createElement('div');
+        itemEl.className = 'bg-gradient-to-r from-orange-100 to-yellow-100 rounded-lg p-3 flex items-center justify-between';
+        itemEl.innerHTML = `
+          <div class="flex items-center gap-3 flex-1">
+            <span class="text-2xl">${item.emoji}</span>
+            <div>
+              <p class="font-bold text-gray-700">${item.name}</p>
+              <p class="text-xs text-gray-600">$${item.basePrice} c/u (necesita ${item.needed})</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn-game bg-red-400 hover:bg-red-500 text-white px-2 py-1 rounded font-bold text-lg" onclick="changeQuantity('${item.name}', -1)">➖</button>
+            <div class="w-12 text-center bg-white rounded border-2 border-gray-300 py-1 font-bold text-lg">${selectedQty}</div>
+            <button class="btn-game bg-green-400 hover:bg-green-500 text-white px-2 py-1 rounded font-bold text-lg" onclick="changeQuantity('${item.name}', 1)">➕</button>
+          </div>
+        `;
+        container.appendChild(itemEl);
+      });
+    }
+    
+    function changeQuantity(productName, delta) {
+      const currentQty = gameState.selectedQuantities[productName] || 0;
+      const item = gameState.currentOrder.find(p => p.name === productName);
+      
+      if (!item) return;
+      
+      const newQty = Math.max(0, Math.min(item.needed, currentQty + delta));
+      gameState.selectedQuantities[productName] = newQty;
+      
+      renderQuantitySelector();
+      updateCalcDisplay();
+      checkDeliveryButton();
+    }
+    
+    function updateCalcDisplay() {
+      const calcDisplay = document.getElementById('calc-display');
+      let calcText = '';
+      
+      gameState.currentOrder.forEach((item, index) => {
+        const qty = gameState.selectedQuantities[item.name] || 0;
+        if (qty > 0) {
+          const subtotal = qty * item.basePrice;
+          calcText += `${qty}×$${item.basePrice}=${subtotal}`;
+          if (index < gameState.currentOrder.length - 1) {
+            calcText += ' + ';
+          }
+        }
+      });
+      
+      const total = calculateCurrentTotal();
+      calcText += ` = <span style="color: #dc2626; font-size: 1.25em;">$${total}</span>`;
+      
+      calcDisplay.innerHTML = calcText || 'Selecciona cantidades...';
+    }
+    
+    function calculateCurrentTotal() {
+      let total = 0;
+      gameState.currentOrder.forEach(item => {
+        const qty = gameState.selectedQuantities[item.name] || 0;
+        total += qty * item.basePrice;
+      });
+      return total;
+    }
+    
+    function checkDeliveryButton() {
+      const total = calculateCurrentTotal();
+      const btn = document.getElementById('deliver-btn');
+      
+      // Verificar si se entregó la cantidad correcta de algo
+      let allCorrect = true;
+      let hasSelection = false;
+      
+      gameState.currentOrder.forEach(item => {
+        const qty = gameState.selectedQuantities[item.name] || 0;
+        if (qty > 0) hasSelection = true;
+        // Permitir entregar menos de lo necesario, pero marcará error después
+      });
+      
+      btn.disabled = !hasSelection;
+      document.getElementById('delivery-total').textContent = calculateCurrentTotal();
+    }
+    
+    function deliverItems() {
+      document.getElementById('deliver-btn').disabled = true;
+      
+      // Verificar que se entregó la cantidad correcta
+      let allCorrect = true;
+      gameState.currentOrder.forEach(item => {
+        const qty = gameState.selectedQuantities[item.name] || 0;
+        if (qty !== item.needed) {
+          allCorrect = false;
+        }
+      });
+      
+      if (!allCorrect) {
+        showFeedback(false, 'Verifica que entregaste la cantidad correcta de cada producto');
+        return;
+      }
+      
+      // Calcular el total a cobrar
+      gameState.totalToCharge = calculateCurrentTotal();
+      
+      // Mostrar animación de entrega
+      const container = document.getElementById('quantity-selector');
+      container.innerHTML = '<p class="text-green-600 font-bold text-lg">✅ ¡Productos entregados correctamente!</p>';
+      
+      // Actualizar estantes para mostrar productos llenos
+      const slots = document.querySelectorAll('.veggie-slot.empty');
+      slots.forEach(slot => {
+        slot.classList.remove('empty');
+        slot.classList.add('filled');
+        const faltanText = slot.querySelector('.text-red-500');
+        if (faltanText) {
+          faltanText.textContent = '✓ Abastecido';
+          faltanText.classList.remove('text-red-500');
+          faltanText.classList.add('text-green-600');
+        }
+        slot.querySelector('.text-3xl').classList.remove('opacity-30');
+      });
+      
+      // Mostrar sección de cobro
+      setTimeout(() => {
+        showPaymentSection();
+      }, 500);
+    }
+    
+    function showFeedback(success, message) {
+      const overlay = document.getElementById('overlay');
+      const feedback = document.getElementById('feedback-message');
+      const content = document.getElementById('feedback-content');
+      
+      overlay.classList.remove('hidden');
+      feedback.classList.remove('hidden');
+      
+      if (!success) {
+        content.innerHTML = `
+          <div class="text-6xl mb-4">❌</div>
+          <h2 class="title-font text-2xl text-red-600 mb-2">Oops, algo no está bien</h2>
+          <p class="text-lg text-gray-700">${message}</p>
+          <button onclick="closeAndRetry()" class="mt-4 btn-game bg-gradient-to-r from-blue-400 to-blue-500 text-white px-6 py-2 rounded-lg font-bold">
+            Intentar de Nuevo
+          </button>
+        `;
+      }
+    }
+    
+    function closeAndRetry() {
+      document.getElementById('overlay').classList.add('hidden');
+      document.getElementById('feedback-message').classList.add('hidden');
+      document.getElementById('deliver-btn').disabled = false;
+    }
+    
+    function showPaymentSection() {
+      const config = levelConfig[gameState.level];
+      const paymentSection = document.getElementById('payment-section');
+      paymentSection.classList.remove('hidden');
+      
+      document.getElementById('total-to-charge').textContent = '$' + gameState.totalToCharge;
+      
+      // Limpiar input
+      document.getElementById('client-payment-input').value = '';
+      document.getElementById('payment-display').textContent = '0';
+      
+      // Ocultar secciones de cambio
+      document.getElementById('change-section').classList.add('hidden');
+      document.getElementById('no-change-section').classList.add('hidden');
+    }
+    
+    function setClientPayment() {
+      const input = document.getElementById('client-payment-input');
+      const amount = parseInt(input.value) || 0;
+      
+      if (amount === 0) {
+        alert('Por favor ingresa una cantidad válida');
+        return;
+      }
+      
+      gameState.clientPayment = amount;
+      gameState.changeNeeded = amount - gameState.totalToCharge;
+      
+      // Mostrar dinero del cliente visualmente
+      renderClientPaymentVisual();
+      
+      // Mostrar sección de cambio si es necesario
+      if (gameState.changeNeeded > 0) {
+        document.getElementById('change-section').classList.remove('hidden');
+        document.getElementById('no-change-section').classList.add('hidden');
+        document.getElementById('change-amount').textContent = gameState.changeNeeded;
+        
+        // Resetear selección de cambio
+        gameState.selectedChange = 0;
+        gameState.selectedMoney = [];
+        
+        renderMoneyOptions();
+      } else if (gameState.changeNeeded === 0) {
+        // Pago exacto
+        document.getElementById('change-section').classList.add('hidden');
+        document.getElementById('no-change-section').classList.remove('hidden');
+      } else {
+        // Dinero insuficiente
+        showFeedback(false, `Dinero insuficiente. Necesitas al menos $${gameState.totalToCharge}`);
+        input.value = '';
+        document.getElementById('payment-display').textContent = '0';
+      }
+      
+      document.getElementById('payment-display').textContent = amount;
+    }
+    
+    function renderClientPaymentVisual() {
+      const container = document.getElementById('client-payment-visual');
+      container.innerHTML = '';
+      
+      let remaining = gameState.clientPayment;
+      const moneyGiven = [];
+      
+      // Calcular billetes y monedas
+      [...bills, ...coins].forEach(value => {
+        while (remaining >= value) {
+          moneyGiven.push(value);
+          remaining -= value;
+        }
+      });
+      
+      moneyGiven.forEach((value, index) => {
+        const isBill = value >= 20;
+        const el = document.createElement('div');
+        el.className = `${isBill ? 'money-bill' : 'coin'} flex items-center justify-center bounce-in`;
+        el.style.animationDelay = `${index * 0.1}s`;
+        
+        if (isBill) {
+          el.className += ' w-16 h-8';
+          el.innerHTML = `<span class="text-white font-bold text-sm">$${value}</span>`;
+        } else {
+          el.className += ' w-10 h-10';
+          el.innerHTML = `<span class="text-amber-900 font-bold text-xs">$${value}</span>`;
+        }
+        
+        container.appendChild(el);
+      });
+    }
+    
+    function renderMoneyOptions() {
+      const billsContainer = document.getElementById('bills-container');
+      const coinsContainer = document.getElementById('coins-container');
+      
+      billsContainer.innerHTML = '';
+      coinsContainer.innerHTML = '';
+      
+      // Filtrar según el nivel
+      const config = levelConfig[gameState.level];
+      const availableBills = gameState.level === 'easy' ? [50, 20] : bills;
+      const availableCoins = gameState.level === 'easy' ? [10, 5, 1] : coins;
+      
+      availableBills.forEach(value => {
+        const el = document.createElement('button');
+        el.className = 'money-bill w-16 h-10 flex items-center justify-center';
+        el.innerHTML = `<span class="text-white font-bold">$${value}</span>`;
+        el.onclick = () => selectMoney(value, true);
+        billsContainer.appendChild(el);
+      });
+      
+      availableCoins.forEach(value => {
+        const el = document.createElement('button');
+        el.className = 'coin w-12 h-12 flex items-center justify-center';
+        el.innerHTML = `<span class="text-amber-900 font-bold">$${value}</span>`;
+        el.onclick = () => selectMoney(value, false);
+        coinsContainer.appendChild(el);
+      });
+      
+      updateSelectedChange();
+    }
+    
+    function selectMoney(value, isBill) {
+      gameState.selectedMoney.push({ value, isBill });
+      gameState.selectedChange += value;
+      updateSelectedChange();
+    }
+    
+    function updateSelectedChange() {
+      document.getElementById('selected-change').textContent = gameState.selectedChange;
+      
+      const container = document.getElementById('selected-money');
+      container.innerHTML = '';
+      
+      if (gameState.selectedMoney.length === 0) {
+        container.innerHTML = '<span class="text-gray-400 text-sm">Selecciona billetes y monedas</span>';
+      } else {
+        gameState.selectedMoney.forEach((item, index) => {
+          const el = document.createElement('div');
+          el.className = `${item.isBill ? 'money-bill' : 'coin'} flex items-center justify-center cursor-pointer`;
+          
+          if (item.isBill) {
+            el.className += ' w-12 h-6';
+            el.innerHTML = `<span class="text-white font-bold text-xs">$${item.value}</span>`;
+          } else {
+            el.className += ' w-8 h-8';
+            el.innerHTML = `<span class="text-amber-900 font-bold text-xs">$${item.value}</span>`;
+          }
+          
+          el.onclick = () => removeMoney(index);
+          container.appendChild(el);
+        });
+      }
+      
+      // Habilitar/deshabilitar botón
+      const btn = document.getElementById('give-change-btn');
+      btn.disabled = gameState.selectedChange !== gameState.changeNeeded;
+      
+      if (gameState.selectedChange === gameState.changeNeeded) {
+        btn.classList.remove('from-blue-400', 'to-blue-500');
+        btn.classList.add('from-green-400', 'to-green-500');
+      } else {
+        btn.classList.remove('from-green-400', 'to-green-500');
+        btn.classList.add('from-blue-400', 'to-blue-500');
+      }
+    }
+    
+    function removeMoney(index) {
+      const item = gameState.selectedMoney.splice(index, 1)[0];
+      gameState.selectedChange -= item.value;
+      updateSelectedChange();
+    }
+    
+    function giveChange() {
+      if (gameState.selectedChange === gameState.changeNeeded) {
+        completeTransaction();
+      }
+    }
+    
+    function completeTransaction() {
+      // Calcular puntos
+      const basePoints = 100;
+      const bonusPoints = gameState.changeNeeded > 0 ? 50 : 0;
+      const totalPoints = basePoints + bonusPoints;
+      
+      gameState.score += totalPoints;
+      gameState.earnings += gameState.totalToCharge;
+      
+      // Mostrar feedback
+      showFeedback(true, totalPoints);
+    }
+    
+    function showFeedback(success, points) {
+      const overlay = document.getElementById('overlay');
+      const feedback = document.getElementById('feedback-message');
+      const content = document.getElementById('feedback-content');
+      
+      overlay.classList.remove('hidden');
+      feedback.classList.remove('hidden');
+      
+      if (success) {
+        content.innerHTML = `
+          <div class="text-6xl mb-4 celebrate">🎉</div>
+          <h2 class="title-font text-3xl text-green-600 mb-2">¡Excelente!</h2>
+          <p class="text-xl text-gray-700 mb-2">+${points} puntos</p>
+          <p class="text-gray-600">Ganaste $${gameState.totalToCharge}</p>
+          <div class="flex justify-center gap-2 mt-4 text-2xl">
+            <span class="sparkle">⭐</span>
+            <span class="sparkle" style="animation-delay: 0.2s;">🌟</span>
+            <span class="sparkle" style="animation-delay: 0.4s;">⭐</span>
+          </div>
+        `;
+      }
+      
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        feedback.classList.add('hidden');
+        nextStore();
+      }, 2000);
+    }
+    
+    function nextStore() {
+      gameState.currentStore++;
+      updateStats();
+      
+      if (gameState.currentStore >= gameState.totalStores) {
+        showWinScreen();
+      } else {
+        loadNewStore();
+      }
+    }
+    
+    function showWinScreen() {
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('win-screen').classList.remove('hidden');
+      document.getElementById('final-score').textContent = gameState.score;
+      document.getElementById('final-earnings').textContent = gameState.earnings;
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d561a12e3bc28d2',t:'MTc3MjM0NjUwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
