@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casino Matemático de Fichas</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Bubblegum+Sans&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Fredoka', sans-serif; }
+    .title-font { font-family: 'Bubblegum Sans', cursive; }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes celebrate {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.1) rotate(-5deg); }
+      50% { transform: scale(1.2) rotate(5deg); }
+      75% { transform: scale(1.1) rotate(-5deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100%) rotate(720deg); opacity: 0; }
+    }
+    
+    .bounce-in { animation: bounce-in 0.5s ease-out forwards; }
+    .wiggle { animation: wiggle 0.5s ease-in-out; }
+    .sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    .float { animation: float 3s ease-in-out infinite; }
+    .celebrate { animation: celebrate 0.6s ease-in-out; }
+    
+    .chip {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.3);
+      border: 3px dashed rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    
+    .chip:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.3);
+    }
+    
+    .chip-blue {
+      background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+    }
+    
+    .chip-red {
+      background: linear-gradient(145deg, #ef4444, #b91c1c);
+    }
+    
+    .chip-yellow {
+      background: linear-gradient(145deg, #fbbf24, #d97706);
+    }
+    
+    .chip-small {
+      width: 40px;
+      height: 40px;
+      font-size: 12px;
+    }
+    
+    .chip-mini {
+      width: 30px;
+      height: 30px;
+      font-size: 10px;
+    }
+    
+    .casino-table {
+      background: linear-gradient(180deg, #065f46 0%, #047857 50%, #059669 100%);
+      border: 8px solid #92400e;
+      border-radius: 20px;
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .golden-border {
+      border: 4px solid #fbbf24;
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+    }
+    
+    .btn-casino {
+      background: linear-gradient(145deg, #fbbf24, #d97706);
+      color: #78350f;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 3px solid #92400e;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .btn-casino:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    }
+    
+    .btn-casino:active {
+      transform: translateY(0);
+    }
+    
+    .star {
+      position: absolute;
+      font-size: 20px;
+      animation: sparkle 2s ease-in-out infinite;
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      animation: confetti-fall 3s linear forwards;
+      pointer-events: none;
+      z-index: 1000;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);">
+  <div id="app" class="min-h-full flex flex-col"><!-- Header -->
+   <header class="text-center py-4 px-4">
+    <div class="relative inline-block">
+     <h1 id="main-title" class="title-font text-4xl md:text-5xl text-amber-600 drop-shadow-lg float">🎰 Casino Matemático 🎰</h1>
+     <div class="flex justify-center gap-2 mt-2"><span class="text-2xl sparkle">⭐</span> <span class="text-2xl sparkle" style="animation-delay: 0.5s;">✨</span> <span class="text-2xl sparkle" style="animation-delay: 1s;">⭐</span>
+     </div>
+    </div>
+    <p class="text-lg text-sky-700 mt-2 font-medium">¡Aprende jugando con las fichas mágicas!</p>
+   </header><!-- Main Content -->
+   <main class="flex-1 px-4 pb-4"><!-- Screen: Menu Principal -->
+    <div id="screen-menu" class="max-w-2xl mx-auto">
+     <div class="casino-table p-6 md:p-8">
+      <h2 class="title-font text-3xl text-amber-300 text-center mb-6">¡Elige tu Nivel!</h2><!-- Mascota -->
+      <div class="text-center mb-6">
+       <div class="text-6xl float">
+        🦊
+       </div>
+       <p class="text-white font-medium mt-2">¡Hola! Soy Ficho, tu amigo matemático</p>
+      </div><!-- Niveles -->
+      <div class="space-y-4"><button onclick="selectGrade(1)" class="w-full btn-casino text-lg flex items-center justify-center gap-3"> <span class="text-2xl">🌟</span> <span>1° Primaria</span> <span class="text-sm">(Unidades y Decenas)</span> </button> <button onclick="selectGrade(2)" class="w-full btn-casino text-lg flex items-center justify-center gap-3"> <span class="text-2xl">🏆</span> <span>2° Primaria</span> <span class="text-sm">(+ Centenas)</span> </button>
+      </div><!-- Preview de fichas -->
+      <div class="mt-8 text-center">
+       <p class="text-amber-200 mb-3 font-medium">Tus fichas mágicas:</p>
+       <div class="flex justify-center gap-4">
+        <div class="chip chip-blue bounce-in" style="animation-delay: 0.1s;">
+         1
+        </div>
+        <div class="chip chip-red bounce-in" style="animation-delay: 0.3s;">
+         10
+        </div>
+        <div class="chip chip-yellow bounce-in" style="animation-delay: 0.5s;">
+         100
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Screen: Selección de Modo -->
+    <div id="screen-mode" class="max-w-2xl mx-auto hidden">
+     <div class="casino-table p-6 md:p-8"><button onclick="goToMenu()" class="text-amber-300 hover:text-amber-100 mb-4 flex items-center gap-2"> <span>←</span> Volver </button>
+      <h2 class="title-font text-3xl text-amber-300 text-center mb-2"><span id="grade-title">1° Primaria</span></h2>
+      <p class="text-emerald-200 text-center mb-6">¿Qué quieres hacer?</p>
+      <div class="space-y-4"><button onclick="startTutorial()" class="w-full btn-casino text-lg flex items-center justify-center gap-3"> <span class="text-2xl">📚</span> <span>Aprender</span> <span class="text-sm">(Tutorial)</span> </button> <button onclick="startGame()" class="w-full btn-casino text-lg flex items-center justify-center gap-3"> <span class="text-2xl">🎮</span> <span>¡A Jugar!</span> <span class="text-sm">(Forma números)</span> </button>
+      </div>
+     </div>
+    </div><!-- Screen: Tutorial -->
+    <div id="screen-tutorial" class="max-w-3xl mx-auto hidden">
+     <div class="casino-table p-6 md:p-8"><button onclick="goToMode()" class="text-amber-300 hover:text-amber-100 mb-4 flex items-center gap-2"> <span>←</span> Volver </button>
+      <h2 class="title-font text-3xl text-amber-300 text-center mb-6">📚 ¡Aprende las Fichas!</h2>
+      <div id="tutorial-content" class="space-y-6"><!-- Unidades -->
+       <div class="bg-blue-900/50 rounded-xl p-4 border-2 border-blue-400">
+        <div class="flex items-center gap-4">
+         <div class="chip chip-blue text-xl">
+          1
+         </div>
+         <div class="flex-1">
+          <h3 class="text-xl font-bold text-blue-300">UNIDAD</h3>
+          <p class="text-white">La ficha <span class="text-blue-300 font-bold">AZUL</span> vale <span class="text-2xl font-bold">1</span></p>
+          <p class="text-emerald-200 text-sm">Es la más pequeña, ¡pero muy importante!</p>
+         </div>
+         <div class="text-4xl">
+          ☝️
+         </div>
+        </div>
+        <div class="mt-3 flex gap-2 justify-center">
+         <div class="chip chip-small chip-blue">
+          1
+         </div><span class="text-white text-2xl">=</span> <span class="text-white text-2xl font-bold">1</span>
+        </div>
+       </div><!-- Decenas -->
+       <div class="bg-red-900/50 rounded-xl p-4 border-2 border-red-400">
+        <div class="flex items-center gap-4">
+         <div class="chip chip-red text-xl">
+          10
+         </div>
+         <div class="flex-1">
+          <h3 class="text-xl font-bold text-red-300">DECENA</h3>
+          <p class="text-white">La ficha <span class="text-red-300 font-bold">ROJA</span> vale <span class="text-2xl font-bold">10</span></p>
+          <p class="text-emerald-200 text-sm">¡Es como tener 10 fichas azules juntas!</p>
+         </div>
+         <div class="text-4xl">
+          🔟
+         </div>
+        </div>
+        <div class="mt-3 flex gap-2 justify-center items-center flex-wrap">
+         <div class="chip chip-small chip-red">
+          10
+         </div><span class="text-white text-2xl">=</span>
+         <div class="flex gap-1 flex-wrap justify-center">
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+          <div class="chip chip-mini chip-blue">
+           1
+          </div>
+         </div>
+        </div>
+       </div><!-- Centenas (solo grado 2) -->
+       <div id="tutorial-centenas" class="bg-yellow-900/50 rounded-xl p-4 border-2 border-yellow-400 hidden">
+        <div class="flex items-center gap-4">
+         <div class="chip chip-yellow text-xl">
+          100
+         </div>
+         <div class="flex-1">
+          <h3 class="text-xl font-bold text-yellow-300">CENTENA</h3>
+          <p class="text-white">La ficha <span class="text-yellow-300 font-bold">AMARILLA</span> vale <span class="text-2xl font-bold">100</span></p>
+          <p class="text-emerald-200 text-sm">¡Es como tener 10 fichas rojas o 100 azules!</p>
+         </div>
+         <div class="text-4xl">
+          💯
+         </div>
+        </div>
+        <div class="mt-3 flex gap-2 justify-center items-center flex-wrap">
+         <div class="chip chip-small chip-yellow">
+          100
+         </div><span class="text-white text-2xl">=</span>
+         <div class="flex gap-1">
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+         </div><span class="text-white">+</span>
+         <div class="flex gap-1">
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+          <div class="chip chip-mini chip-red">
+           10
+          </div>
+         </div>
+        </div>
+       </div><!-- Ejemplo -->
+       <div class="bg-emerald-800/50 rounded-xl p-4 border-2 border-emerald-400">
+        <h3 class="text-xl font-bold text-emerald-300 text-center mb-3">🎯 Ejemplo</h3>
+        <div id="tutorial-example" class="text-center">
+         <p class="text-white text-lg mb-2">Para formar el número <span class="text-3xl font-bold text-amber-300">23</span></p>
+         <div class="flex justify-center items-center gap-3 flex-wrap">
+          <div class="flex gap-1">
+           <div class="chip chip-small chip-red">
+            10
+           </div>
+           <div class="chip chip-small chip-red">
+            10
+           </div>
+          </div><span class="text-white text-2xl">+</span>
+          <div class="flex gap-1">
+           <div class="chip chip-small chip-blue">
+            1
+           </div>
+           <div class="chip chip-small chip-blue">
+            1
+           </div>
+           <div class="chip chip-small chip-blue">
+            1
+           </div>
+          </div>
+         </div>
+         <p class="text-emerald-200 mt-2">2 decenas (20) + 3 unidades (3) = <span class="font-bold">23</span></p>
+        </div>
+       </div>
+      </div><button onclick="startGame()" class="w-full btn-casino text-lg mt-6 flex items-center justify-center gap-3"> <span class="text-2xl">🎮</span> <span>¡Ahora a Jugar!</span> </button>
+     </div>
+    </div><!-- Screen: Juego -->
+    <div id="screen-game" class="max-w-4xl mx-auto hidden">
+     <div class="casino-table p-4 md:p-6">
+      <div class="flex justify-between items-center mb-4"><button onclick="goToMode()" class="text-amber-300 hover:text-amber-100 flex items-center gap-2"> <span>←</span> Volver </button>
+       <div class="flex items-center gap-4">
+        <div class="bg-amber-900/50 px-3 py-1 rounded-full"><span class="text-amber-300">⭐</span> <span id="score" class="text-white font-bold">0</span>
+        </div>
+        <div class="bg-emerald-900/50 px-3 py-1 rounded-full"><span class="text-emerald-300">🎯</span> <span id="level" class="text-white font-bold">1</span>
+        </div>
+       </div>
+      </div><!-- Número a formar -->
+      <div class="text-center mb-6">
+       <p class="text-emerald-200 text-lg mb-2">¡Forma este número con tus fichas!</p>
+       <div id="target-number" class="text-6xl md:text-7xl font-bold text-amber-300 title-font float">
+        0
+       </div>
+      </div><!-- Mesa de fichas seleccionadas -->
+      <div class="bg-emerald-900/50 rounded-xl p-4 mb-4 min-h-24 border-2 border-dashed border-emerald-400">
+       <p class="text-emerald-300 text-sm mb-2 text-center">Tus fichas seleccionadas:</p>
+       <div id="selected-chips" class="flex flex-wrap gap-2 justify-center min-h-12"><!-- Fichas seleccionadas aparecen aquí -->
+       </div>
+       <div class="text-center mt-3"><span class="text-emerald-200">Total: </span> <span id="current-total" class="text-2xl font-bold text-white">0</span>
+       </div>
+      </div><!-- Fichas disponibles -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4"><!-- Unidades -->
+       <div class="bg-blue-900/30 rounded-xl p-3 text-center">
+        <p class="text-blue-300 font-bold mb-2">UNIDADES (1)</p><button onclick="addChip('unit')" class="chip chip-blue mx-auto hover:scale-110 transition-transform"> +1 </button>
+        <p class="text-white mt-2">Tienes: <span id="unit-count" class="font-bold">0</span></p>
+       </div><!-- Decenas -->
+       <div class="bg-red-900/30 rounded-xl p-3 text-center">
+        <p class="text-red-300 font-bold mb-2">DECENAS (10)</p><button onclick="addChip('ten')" class="chip chip-red mx-auto hover:scale-110 transition-transform"> +10 </button>
+        <p class="text-white mt-2">Tienes: <span id="ten-count" class="font-bold">0</span></p>
+       </div><!-- Centenas -->
+       <div id="hundred-section" class="bg-yellow-900/30 rounded-xl p-3 text-center hidden">
+        <p class="text-yellow-300 font-bold mb-2">CENTENAS (100)</p><button onclick="addChip('hundred')" class="chip chip-yellow mx-auto hover:scale-110 transition-transform"> +100 </button>
+        <p class="text-white mt-2">Tienes: <span id="hundred-count" class="font-bold">0</span></p>
+       </div>
+      </div><!-- Botones de acción -->
+      <div class="flex gap-3 justify-center flex-wrap"><button onclick="clearChips()" class="btn-casino bg-gradient-to-r from-gray-500 to-gray-600 border-gray-700"> 🗑️ Borrar </button> <button onclick="checkAnswer()" class="btn-casino text-lg"> ✅ ¡Comprobar! </button>
+      </div><!-- Mensaje de feedback -->
+      <div id="feedback" class="mt-4 text-center text-xl font-bold hidden">
+      </div>
+     </div>
+    </div><!-- Screen: Victoria -->
+    <div id="screen-victory" class="max-w-2xl mx-auto hidden">
+     <div class="casino-table p-6 md:p-8 text-center">
+      <div class="text-6xl mb-4 celebrate">
+       🏆
+      </div>
+      <h2 class="title-font text-4xl text-amber-300 mb-4">¡GANASTE!</h2>
+      <p class="text-white text-xl mb-2">¡Eres un campeón de las matemáticas!</p>
+      <p class="text-emerald-200 mb-6">Puntuación final: <span id="final-score" class="text-3xl font-bold text-amber-300">0</span> ⭐</p>
+      <div class="flex gap-3 justify-center flex-wrap"><button onclick="startGame()" class="btn-casino"> 🔄 Jugar de Nuevo </button> <button onclick="goToMenu()" class="btn-casino"> 🏠 Menú Principal </button>
+      </div>
+     </div>
+    </div>
+   </main><!-- Footer -->
+   <footer class="text-center py-4 px-4 bg-sky-200/50">
+    <p id="teacher-credit" class="text-sky-700 font-medium text-sm">📚 Material creado por Maestra María Fernanda Flores Valenzuela 📚</p>
+    <p class="text-sky-600 text-xs mt-1">¡Aprender matemáticas es divertido! 🌟</p>
+   </footer>
+  </div>
+  <script>
+    // Configuration
+    const defaultConfig = {
+      game_title: '🎰 Casino Matemático 🎰',
+      teacher_credit: '📚 Material creado por Maestra María Fernanda Flores Valenzuela 📚',
+      primary_color: '#0284c7',
+      secondary_color: '#065f46',
+      accent_color: '#d97706',
+      text_color: '#0c4a6e',
+      background_color: '#e0f2fe',
+      font_family: 'Fredoka',
+      font_size: 16
+    };
+
+    let config = { ...defaultConfig };
+
+    // Game State
+    let currentGrade = 1;
+    let targetNumber = 0;
+    let units = 0;
+    let tens = 0;
+    let hundreds = 0;
+    let score = 0;
+    let level = 1;
+    const maxLevel = 10;
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = { ...defaultConfig, ...newConfig };
+          applyConfig();
+        },
+        mapToCapabilities: (cfg) => ({
+          recolorables: [
+            {
+              get: () => cfg.background_color || defaultConfig.background_color,
+              set: (value) => window.elementSdk.setConfig({ background_color: value })
+            },
+            {
+              get: () => cfg.secondary_color || defaultConfig.secondary_color,
+              set: (value) => window.elementSdk.setConfig({ secondary_color: value })
+            },
+            {
+              get: () => cfg.text_color || defaultConfig.text_color,
+              set: (value) => window.elementSdk.setConfig({ text_color: value })
+            },
+            {
+              get: () => cfg.accent_color || defaultConfig.accent_color,
+              set: (value) => window.elementSdk.setConfig({ accent_color: value })
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => cfg.font_family || defaultConfig.font_family,
+            set: (value) => window.elementSdk.setConfig({ font_family: value })
+          },
+          fontSizeable: {
+            get: () => cfg.font_size || defaultConfig.font_size,
+            set: (value) => window.elementSdk.setConfig({ font_size: value })
+          }
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['game_title', cfg.game_title || defaultConfig.game_title],
+          ['teacher_credit', cfg.teacher_credit || defaultConfig.teacher_credit]
+        ])
+      });
+    }
+
+    function applyConfig() {
+      const title = document.getElementById('main-title');
+      const credit = document.getElementById('teacher-credit');
+      
+      if (title) title.textContent = config.game_title || defaultConfig.game_title;
+      if (credit) credit.textContent = config.teacher_credit || defaultConfig.teacher_credit;
+      
+      // Apply font
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      document.body.style.fontFamily = `${fontFamily}, sans-serif`;
+      
+      // Apply font size scaling
+      const baseSize = config.font_size || defaultConfig.font_size;
+      document.documentElement.style.fontSize = `${baseSize}px`;
+    }
+
+    // Screen Navigation
+    function showScreen(screenId) {
+      const screens = ['screen-menu', 'screen-mode', 'screen-tutorial', 'screen-game', 'screen-victory'];
+      screens.forEach(id => {
+        const screen = document.getElementById(id);
+        if (screen) {
+          screen.classList.toggle('hidden', id !== screenId);
+        }
+      });
+    }
+
+    function goToMenu() {
+      showScreen('screen-menu');
+      resetGame();
+    }
+
+    function goToMode() {
+      showScreen('screen-mode');
+    }
+
+    function selectGrade(grade) {
+      currentGrade = grade;
+      const gradeTitle = document.getElementById('grade-title');
+      if (gradeTitle) {
+        gradeTitle.textContent = grade === 1 ? '1° Primaria' : '2° Primaria';
+      }
+      showScreen('screen-mode');
+    }
+
+    function startTutorial() {
+      const centenasSection = document.getElementById('tutorial-centenas');
+      const example = document.getElementById('tutorial-example');
+      
+      if (currentGrade === 2) {
+        centenasSection.classList.remove('hidden');
+        example.innerHTML = `
+          <p class="text-white text-lg mb-2">Para formar el número <span class="text-3xl font-bold text-amber-300">125</span></p>
+          <div class="flex justify-center items-center gap-3 flex-wrap">
+            <div class="chip chip-small chip-yellow">100</div>
+            <span class="text-white text-2xl">+</span>
+            <div class="flex gap-1">
+              <div class="chip chip-small chip-red">10</div>
+              <div class="chip chip-small chip-red">10</div>
+            </div>
+            <span class="text-white text-2xl">+</span>
+            <div class="flex gap-1">
+              <div class="chip chip-small chip-blue">1</div>
+              <div class="chip chip-small chip-blue">1</div>
+              <div class="chip chip-small chip-blue">1</div>
+              <div class="chip chip-small chip-blue">1</div>
+              <div class="chip chip-small chip-blue">1</div>
+            </div>
+          </div>
+          <p class="text-emerald-200 mt-2">1 centena (100) + 2 decenas (20) + 5 unidades (5) = <span class="font-bold">125</span></p>
+        `;
+      } else {
+        centenasSection.classList.add('hidden');
+        example.innerHTML = `
+          <p class="text-white text-lg mb-2">Para formar el número <span class="text-3xl font-bold text-amber-300">23</span></p>
+          <div class="flex justify-center items-center gap-3 flex-wrap">
+            <div class="flex gap-1">
+              <div class="chip chip-small chip-red">10</div>
+              <div class="chip chip-small chip-red">10</div>
+            </div>
+            <span class="text-white text-2xl">+</span>
+            <div class="flex gap-1">
+              <div class="chip chip-small chip-blue">1</div>
+              <div class="chip chip-small chip-blue">1</div>
+              <div class="chip chip-small chip-blue">1</div>
+            </div>
+          </div>
+          <p class="text-emerald-200 mt-2">2 decenas (20) + 3 unidades (3) = <span class="font-bold">23</span></p>
+        `;
+      }
+      
+      showScreen('screen-tutorial');
+    }
+
+    function startGame() {
+      resetGame();
+      
+      // Show/hide hundreds section based on grade
+      const hundredSection = document.getElementById('hundred-section');
+      if (currentGrade === 2) {
+        hundredSection.classList.remove('hidden');
+      } else {
+        hundredSection.classList.add('hidden');
+      }
+      
+      generateNewNumber();
+      showScreen('screen-game');
+    }
+
+    function resetGame() {
+      units = 0;
+      tens = 0;
+      hundreds = 0;
+      score = 0;
+      level = 1;
+      updateDisplay();
+    }
+
+    function generateNewNumber() {
+      let maxNumber;
+      if (currentGrade === 1) {
+        // Nivel de dificultad progresivo para 1° grado
+        maxNumber = Math.min(10 + (level * 8), 99);
+      } else {
+        // Nivel de dificultad progresivo para 2° grado
+        maxNumber = Math.min(50 + (level * 50), 999);
+      }
+      
+      const minNumber = currentGrade === 1 ? Math.max(1, level * 5) : Math.max(10, level * 20);
+      targetNumber = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+      
+      const targetEl = document.getElementById('target-number');
+      targetEl.textContent = targetNumber;
+      targetEl.classList.add('bounce-in');
+      setTimeout(() => targetEl.classList.remove('bounce-in'), 500);
+      
+      clearChips();
+    }
+
+    function addChip(type) {
+      if (type === 'unit') {
+        units++;
+        animateChipAdd('blue', '1');
+      } else if (type === 'ten') {
+        tens++;
+        animateChipAdd('red', '10');
+      } else if (type === 'hundred') {
+        hundreds++;
+        animateChipAdd('yellow', '100');
+      }
+      updateDisplay();
+    }
+
+    function animateChipAdd(color, value) {
+      const container = document.getElementById('selected-chips');
+      const chip = document.createElement('div');
+      chip.className = `chip chip-small chip-${color} bounce-in`;
+      chip.textContent = value;
+      chip.onclick = () => removeChip(color, chip);
+      container.appendChild(chip);
+    }
+
+    function removeChip(color, element) {
+      if (color === 'blue' && units > 0) {
+        units--;
+      } else if (color === 'red' && tens > 0) {
+        tens--;
+      } else if (color === 'yellow' && hundreds > 0) {
+        hundreds--;
+      }
+      element.remove();
+      updateDisplay();
+    }
+
+    function clearChips() {
+      units = 0;
+      tens = 0;
+      hundreds = 0;
+      document.getElementById('selected-chips').innerHTML = '';
+      updateDisplay();
+      hideFeedback();
+    }
+
+    function updateDisplay() {
+      document.getElementById('unit-count').textContent = units;
+      document.getElementById('ten-count').textContent = tens;
+      
+      const hundredCount = document.getElementById('hundred-count');
+      if (hundredCount) {
+        hundredCount.textContent = hundreds;
+      }
+      
+      const total = units + (tens * 10) + (hundreds * 100);
+      document.getElementById('current-total').textContent = total;
+      document.getElementById('score').textContent = score;
+      document.getElementById('level').textContent = level;
+    }
+
+    function checkAnswer() {
+      const total = units + (tens * 10) + (hundreds * 100);
+      const feedback = document.getElementById('feedback');
+      
+      if (total === targetNumber) {
+        // Correct!
+        score += level * 10;
+        showFeedback('¡CORRECTO! 🎉', 'text-green-300');
+        createConfetti();
+        
+        setTimeout(() => {
+          if (level >= maxLevel) {
+            // Victory!
+            document.getElementById('final-score').textContent = score;
+            showScreen('screen-victory');
+            createConfetti();
+          } else {
+            level++;
+            generateNewNumber();
+          }
+        }, 1500);
+      } else if (total < targetNumber) {
+        showFeedback('¡Necesitas más fichas! ⬆️', 'text-yellow-300');
+        shakeElement('selected-chips');
+      } else {
+        showFeedback('¡Tienes muchas fichas! ⬇️', 'text-red-300');
+        shakeElement('selected-chips');
+      }
+    }
+
+    function showFeedback(message, colorClass) {
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = message;
+      feedback.className = `mt-4 text-center text-xl font-bold ${colorClass}`;
+      feedback.classList.remove('hidden');
+    }
+
+    function hideFeedback() {
+      document.getElementById('feedback').classList.add('hidden');
+    }
+
+    function shakeElement(elementId) {
+      const element = document.getElementById(elementId);
+      element.classList.add('wiggle');
+      setTimeout(() => element.classList.remove('wiggle'), 500);
+    }
+
+    function createConfetti() {
+      const colors = ['#3b82f6', '#ef4444', '#fbbf24', '#22c55e', '#a855f7'];
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 3000);
+        }, i * 30);
+      }
+    }
+
+    // Initial setup
+    applyConfig();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6c15efb340e873',t:'MTc3MjU3NzAyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
