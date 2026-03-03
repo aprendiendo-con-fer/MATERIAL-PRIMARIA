@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descubriendo Vocales</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    .btn-vowel {
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+    }
+    .btn-vowel:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+    }
+    .btn-vowel:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+    }
+    .card-vocab {
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .bounce { animation: bounce 0.5s ease; }
+    @keyframes celebrate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .celebrate { animation: celebrate 0.5s ease; }
+    .star {
+      animation: twinkle 1s ease infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto" style="background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fc 100%);">
+   <!-- Pantalla de Inicio -->
+   <div id="screen-home" class="min-h-full flex flex-col items-center justify-center p-4">
+    <div class="text-center max-w-lg">
+     <div class="text-8xl mb-4">
+      🎨
+     </div>
+     <h1 id="main-title" class="text-4xl md:text-5xl font-extrabold text-blue-600 mb-4">Descubriendo Vocales</h1>
+     <p class="text-lg text-gray-600 mb-8">¡Aprende las vocales de forma divertida!</p>
+     <div class="grid grid-cols-5 gap-2 mb-8">
+      <span class="text-3xl font-bold text-red-500 bounce" style="animation-delay: 0s;">A</span> <span class="text-3xl font-bold text-orange-500 bounce" style="animation-delay: 0.1s;">E</span> <span class="text-3xl font-bold text-yellow-500 bounce" style="animation-delay: 0.2s;">I</span> <span class="text-3xl font-bold text-green-500 bounce" style="animation-delay: 0.3s;">O</span> <span class="text-3xl font-bold text-blue-500 bounce" style="animation-delay: 0.4s;">U</span>
+     </div><button onclick="showScreen('menu')" class="btn-vowel bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-full text-xl"> ¡Comenzar! 🚀 </button>
+    </div>
+   </div><!-- Menú Principal -->
+   <div id="screen-menu" class="min-h-full flex flex-col items-center justify-center p-4 hidden">
+    <div class="text-center max-w-md w-full">
+     <h2 class="text-3xl font-bold text-blue-600 mb-8">¿Qué quieres aprender?</h2>
+     <div class="space-y-4">
+      <button onclick="startVocab('a')" class="btn-vowel w-full bg-red-400 hover:bg-red-500 text-white font-bold py-4 px-6 rounded-2xl text-xl flex items-center justify-center gap-3"> <span class="text-3xl">🍎</span> Vocal A </button> <button onclick="startVocab('e')" class="btn-vowel w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-4 px-6 rounded-2xl text-xl flex items-center justify-center gap-3"> <span class="text-3xl">⭐</span> Vocal E </button> <button onclick="startVocab('i')" class="btn-vowel w-full bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-4 px-6 rounded-2xl text-xl flex items-center justify-center gap-3"> <span class="text-3xl">🏝️</span> Vocal I </button> <button onclick="startVocab('o')" class="btn-vowel w-full bg-green-400 hover:bg-green-500 text-white font-bold py-4 px-6 rounded-2xl text-xl flex items-center justify-center gap-3"> <span class="text-3xl">🐻</span> Vocal O </button> <button onclick="startVocab('u')" class="btn-vowel w-full bg-blue-400 hover:bg-blue-500 text-white font-bold py-4 px-6 rounded-2xl text-xl flex items-center justify-center gap-3"> <span class="text-3xl">🍇</span> Vocal U </button> <button onclick="startQuiz()" class="btn-vowel w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-6 rounded-2xl text-xl flex items-center justify-center gap-3 mt-6"> <span class="text-3xl">🎯</span> Quiz de Reforzamiento </button>
+     </div><button onclick="showScreen('home')" class="mt-6 text-gray-500 hover:text-gray-700 font-semibold"> ← Volver al inicio </button>
+    </div>
+   </div><!-- Pantalla de Vocabulario -->
+   <div id="screen-vocab" class="min-h-full flex flex-col p-4 hidden">
+    <div class="flex items-center justify-between mb-4">
+     <button onclick="showScreen('menu')" class="text-gray-500 hover:text-gray-700 font-semibold flex items-center gap-2"> ← Menú </button>
+     <div id="vocab-progress" class="text-gray-500 font-semibold"></div>
+    </div>
+    <div class="flex-1 flex flex-col items-center justify-center">
+     <div id="vocab-letter" class="text-9xl font-extrabold mb-4"></div>
+     <div id="vocab-card" class="card-vocab bg-white rounded-3xl shadow-xl p-8 max-w-sm w-full text-center">
+      <div id="vocab-emoji" class="text-8xl mb-4"></div>
+      <p id="vocab-word" class="text-3xl font-bold text-gray-700 mb-2"></p>
+      <p id="vocab-highlight" class="text-xl text-gray-500"></p>
+     </div>
+     <div class="flex gap-4 mt-8">
+      <button id="btn-prev" onclick="prevVocab()" class="btn-vowel bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-3 px-6 rounded-full"> ← Anterior </button> <button id="btn-next" onclick="nextVocab()" class="btn-vowel bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full"> Siguiente → </button>
+     </div>
+    </div>
+   </div><!-- Pantalla de Quiz -->
+   <div id="screen-quiz" class="min-h-full flex flex-col p-4 hidden">
+    <div class="flex items-center justify-between mb-4">
+     <button onclick="showScreen('menu')" class="text-gray-500 hover:text-gray-700 font-semibold flex items-center gap-2"> ← Menú </button>
+     <div class="flex items-center gap-2">
+      <span id="quiz-score" class="bg-yellow-400 text-yellow-800 font-bold py-1 px-3 rounded-full">⭐ 0</span> <span id="quiz-progress" class="text-gray-500 font-semibold"></span>
+     </div>
+    </div>
+    <div class="flex-1 flex flex-col items-center justify-center">
+     <h3 class="text-2xl font-bold text-gray-700 mb-4">¿Con qué vocal empieza?</h3>
+     <div id="quiz-card" class="card-vocab bg-white rounded-3xl shadow-xl p-8 max-w-sm w-full text-center mb-6">
+      <div id="quiz-emoji" class="text-8xl mb-4"></div>
+      <p id="quiz-word" class="text-3xl font-bold text-gray-700"></p>
+     </div>
+     <div id="quiz-feedback" class="text-2xl font-bold mb-4 h-8"></div>
+     <div id="quiz-options" class="grid grid-cols-5 gap-3 max-w-md w-full">
+      <!-- Opciones se generan dinámicamente -->
+     </div>
+    </div>
+   </div><!-- Pantalla de Resultados -->
+   <div id="screen-results" class="min-h-full flex flex-col items-center justify-center p-4 hidden">
+    <div class="text-center max-w-md">
+     <div id="results-stars" class="text-6xl mb-4"></div>
+     <h2 id="results-title" class="text-3xl font-bold text-blue-600 mb-4"></h2>
+     <p id="results-score" class="text-xl text-gray-600 mb-6"></p>
+     <div id="results-message" class="text-lg text-gray-500 mb-8"></div>
+     <div class="space-y-4">
+      <button onclick="startQuiz()" class="btn-vowel w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-6 rounded-2xl text-xl"> 🔄 Intentar de nuevo </button> <button onclick="showScreen('menu')" class="btn-vowel w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-2xl text-xl"> 📚 Volver al menú </button>
+     </div>
+    </div>
+   </div><!-- Footer -->
+   <div class="fixed bottom-0 left-0 right-0 bg-white bg-opacity-90 py-2 px-4 text-center border-t border-gray-200">
+    <p id="author-text" class="text-sm text-gray-500 font-medium">Material creado por maestra María Fernanda Flores Valenzuela</p>
+   </div>
+  </div>
+  <script>
+    // Configuración por defecto
+    const defaultConfig = {
+      game_title: 'Descubriendo Vocales',
+      author_text: 'Material creado por maestra María Fernanda Flores Valenzuela',
+      background_color: '#f0f7ff',
+      primary_color: '#3b82f6',
+      text_color: '#1f2937',
+      accent_color: '#8b5cf6',
+      button_color: '#3b82f6',
+      font_family: 'Nunito',
+      font_size: 16
+    };
+
+    // Vocabulario por vocal
+    const vocabulary = {
+      a: [
+        { word: 'avión', emoji: '✈️', highlight: '<span class="text-red-500 font-extrabold">A</span>vión - <span class="text-red-500 font-extrabold">a</span> de avión' },
+        { word: 'araña', emoji: '🕷️', highlight: '<span class="text-red-500 font-extrabold">A</span>raña - <span class="text-red-500 font-extrabold">a</span> de araña' },
+        { word: 'árbol', emoji: '🌳', highlight: '<span class="text-red-500 font-extrabold">Á</span>rbol - <span class="text-red-500 font-extrabold">a</span> de árbol' },
+        { word: 'abeja', emoji: '🐝', highlight: '<span class="text-red-500 font-extrabold">A</span>beja - <span class="text-red-500 font-extrabold">a</span> de abeja' },
+        { word: 'agua', emoji: '💧', highlight: '<span class="text-red-500 font-extrabold">A</span>gua - <span class="text-red-500 font-extrabold">a</span> de agua' },
+        { word: 'Andrés', emoji: '👦', highlight: '<span class="text-red-500 font-extrabold">A</span>ndrés - <span class="text-red-500 font-extrabold">A</span> de Andrés' },
+        { word: 'Ana', emoji: '👧', highlight: '<span class="text-red-500 font-extrabold">A</span>na - <span class="text-red-500 font-extrabold">A</span> de Ana' },
+        { word: 'anillo', emoji: '💍', highlight: '<span class="text-red-500 font-extrabold">A</span>nillo - <span class="text-red-500 font-extrabold">a</span> de anillo' }
+      ],
+      e: [
+        { word: 'estrella', emoji: '⭐', highlight: '<span class="text-orange-500 font-extrabold">E</span>strella - <span class="text-orange-500 font-extrabold">e</span> de estrella' },
+        { word: 'elefante', emoji: '🐘', highlight: '<span class="text-orange-500 font-extrabold">E</span>lefante - <span class="text-orange-500 font-extrabold">e</span> de elefante' },
+        { word: 'escuela', emoji: '🏫', highlight: '<span class="text-orange-500 font-extrabold">E</span>scuela - <span class="text-orange-500 font-extrabold">e</span> de escuela' },
+        { word: 'espejo', emoji: '🪞', highlight: '<span class="text-orange-500 font-extrabold">E</span>spejo - <span class="text-orange-500 font-extrabold">e</span> de espejo' },
+        { word: 'Eduardo', emoji: '👨', highlight: '<span class="text-orange-500 font-extrabold">E</span>duardo - <span class="text-orange-500 font-extrabold">E</span> de Eduardo' },
+        { word: 'Elena', emoji: '👩', highlight: '<span class="text-orange-500 font-extrabold">E</span>lena - <span class="text-orange-500 font-extrabold">E</span> de Elena' },
+        { word: 'erizo', emoji: '🦔', highlight: '<span class="text-orange-500 font-extrabold">E</span>rizo - <span class="text-orange-500 font-extrabold">e</span> de erizo' },
+        { word: 'escalera', emoji: '🪜', highlight: '<span class="text-orange-500 font-extrabold">E</span>scalera - <span class="text-orange-500 font-extrabold">e</span> de escalera' }
+      ],
+      i: [
+        { word: 'isla', emoji: '🏝️', highlight: '<span class="text-yellow-500 font-extrabold">I</span>sla - <span class="text-yellow-500 font-extrabold">i</span> de isla' },
+        { word: 'iglú', emoji: '🏠', highlight: '<span class="text-yellow-500 font-extrabold">I</span>glú - <span class="text-yellow-500 font-extrabold">i</span> de iglú' },
+        { word: 'imán', emoji: '🧲', highlight: '<span class="text-yellow-500 font-extrabold">I</span>mán - <span class="text-yellow-500 font-extrabold">i</span> de imán' },
+        { word: 'Irma', emoji: '👩', highlight: '<span class="text-yellow-500 font-extrabold">I</span>rma - <span class="text-yellow-500 font-extrabold">I</span> de Irma' },
+        { word: 'Iván', emoji: '👦', highlight: '<span class="text-yellow-500 font-extrabold">I</span>ván - <span class="text-yellow-500 font-extrabold">I</span> de Iván' },
+        { word: 'iguana', emoji: '🦎', highlight: '<span class="text-yellow-500 font-extrabold">I</span>guana - <span class="text-yellow-500 font-extrabold">i</span> de iguana' },
+        { word: 'insecto', emoji: '🐛', highlight: '<span class="text-yellow-500 font-extrabold">I</span>nsecto - <span class="text-yellow-500 font-extrabold">i</span> de insecto' },
+        { word: 'indio', emoji: '🪶', highlight: '<span class="text-yellow-500 font-extrabold">I</span>ndio - <span class="text-yellow-500 font-extrabold">i</span> de indio' }
+      ],
+      o: [
+        { word: 'oso', emoji: '🐻', highlight: '<span class="text-green-500 font-extrabold">O</span>so - <span class="text-green-500 font-extrabold">o</span> de oso' },
+        { word: 'ojo', emoji: '👁️', highlight: '<span class="text-green-500 font-extrabold">O</span>jo - <span class="text-green-500 font-extrabold">o</span> de ojo' },
+        { word: 'oveja', emoji: '🐑', highlight: '<span class="text-green-500 font-extrabold">O</span>veja - <span class="text-green-500 font-extrabold">o</span> de oveja' },
+        { word: 'oreja', emoji: '👂', highlight: '<span class="text-green-500 font-extrabold">O</span>reja - <span class="text-green-500 font-extrabold">o</span> de oreja' },
+        { word: 'Omar', emoji: '👨', highlight: '<span class="text-green-500 font-extrabold">O</span>mar - <span class="text-green-500 font-extrabold">O</span> de Omar' },
+        { word: 'Olivia', emoji: '👩', highlight: '<span class="text-green-500 font-extrabold">O</span>livia - <span class="text-green-500 font-extrabold">O</span> de Olivia' },
+        { word: 'olla', emoji: '🍲', highlight: '<span class="text-green-500 font-extrabold">O</span>lla - <span class="text-green-500 font-extrabold">o</span> de olla' },
+        { word: 'oro', emoji: '🥇', highlight: '<span class="text-green-500 font-extrabold">O</span>ro - <span class="text-green-500 font-extrabold">o</span> de oro' }
+      ],
+      u: [
+        { word: 'uva', emoji: '🍇', highlight: '<span class="text-blue-500 font-extrabold">U</span>va - <span class="text-blue-500 font-extrabold">u</span> de uva' },
+        { word: 'unicornio', emoji: '🦄', highlight: '<span class="text-blue-500 font-extrabold">U</span>nicornio - <span class="text-blue-500 font-extrabold">u</span> de unicornio' },
+        { word: 'uno', emoji: '1️⃣', highlight: '<span class="text-blue-500 font-extrabold">U</span>no - <span class="text-blue-500 font-extrabold">u</span> de uno' },
+        { word: 'uña', emoji: '💅', highlight: '<span class="text-blue-500 font-extrabold">U</span>ña - <span class="text-blue-500 font-extrabold">u</span> de uña' },
+        { word: 'Ulises', emoji: '👦', highlight: '<span class="text-blue-500 font-extrabold">U</span>lises - <span class="text-blue-500 font-extrabold">U</span> de Ulises' },
+        { word: 'Úrsula', emoji: '👩', highlight: '<span class="text-blue-500 font-extrabold">Ú</span>rsula - <span class="text-blue-500 font-extrabold">U</span> de Úrsula' },
+        { word: 'útil', emoji: '📐', highlight: '<span class="text-blue-500 font-extrabold">Ú</span>til - <span class="text-blue-500 font-extrabold">u</span> de útil' },
+        { word: 'universo', emoji: '🌌', highlight: '<span class="text-blue-500 font-extrabold">U</span>niverso - <span class="text-blue-500 font-extrabold">u</span> de universo' }
+      ]
+    };
+
+    const vowelColors = {
+      a: { bg: 'bg-red-400', text: 'text-red-500', border: 'border-red-400' },
+      e: { bg: 'bg-orange-400', text: 'text-orange-500', border: 'border-orange-400' },
+      i: { bg: 'bg-yellow-400', text: 'text-yellow-500', border: 'border-yellow-400' },
+      o: { bg: 'bg-green-400', text: 'text-green-500', border: 'border-green-400' },
+      u: { bg: 'bg-blue-400', text: 'text-blue-500', border: 'border-blue-400' }
+    };
+
+    // Estado del juego
+    let currentVowel = 'a';
+    let currentVocabIndex = 0;
+    let quizQuestions = [];
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+    let canAnswer = true;
+
+    // Funciones de navegación
+    function showScreen(screenId) {
+      document.querySelectorAll('[id^="screen-"]').forEach(screen => {
+        screen.classList.add('hidden');
+      });
+      document.getElementById('screen-' + screenId).classList.remove('hidden');
+    }
+
+    // Funciones de vocabulario
+    function startVocab(vowel) {
+      currentVowel = vowel;
+      currentVocabIndex = 0;
+      showScreen('vocab');
+      renderVocab();
+    }
+
+    function renderVocab() {
+      const vocab = vocabulary[currentVowel];
+      const item = vocab[currentVocabIndex];
+      const colors = vowelColors[currentVowel];
+      
+      document.getElementById('vocab-letter').textContent = currentVowel.toUpperCase();
+      document.getElementById('vocab-letter').className = `text-9xl font-extrabold mb-4 ${colors.text}`;
+      document.getElementById('vocab-emoji').textContent = item.emoji;
+      document.getElementById('vocab-word').textContent = item.word;
+      document.getElementById('vocab-highlight').innerHTML = item.highlight;
+      document.getElementById('vocab-progress').textContent = `${currentVocabIndex + 1} / ${vocab.length}`;
+      
+      document.getElementById('btn-prev').disabled = currentVocabIndex === 0;
+      document.getElementById('btn-prev').className = currentVocabIndex === 0 
+        ? 'btn-vowel bg-gray-200 text-gray-400 font-bold py-3 px-6 rounded-full cursor-not-allowed'
+        : 'btn-vowel bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-3 px-6 rounded-full';
+      
+      const card = document.getElementById('vocab-card');
+      card.classList.remove('card-vocab');
+      void card.offsetWidth;
+      card.classList.add('card-vocab');
+    }
+
+    function nextVocab() {
+      const vocab = vocabulary[currentVowel];
+      if (currentVocabIndex < vocab.length - 1) {
+        currentVocabIndex++;
+        renderVocab();
+      } else {
+        showScreen('menu');
+      }
+    }
+
+    function prevVocab() {
+      if (currentVocabIndex > 0) {
+        currentVocabIndex--;
+        renderVocab();
+      }
+    }
+
+    // Funciones del Quiz
+    function startQuiz() {
+      quizQuestions = generateQuizQuestions();
+      currentQuizIndex = 0;
+      quizScore = 0;
+      canAnswer = true;
+      showScreen('quiz');
+      renderQuiz();
+    }
+
+    function generateQuizQuestions() {
+      const questions = [];
+      const vowels = ['a', 'e', 'i', 'o', 'u'];
+      
+      vowels.forEach(vowel => {
+        const vocabList = vocabulary[vowel];
+        const shuffled = [...vocabList].sort(() => Math.random() - 0.5);
+        const selected = shuffled.slice(0, 2);
+        selected.forEach(item => {
+          questions.push({
+            ...item,
+            correctVowel: vowel
+          });
+        });
+      });
+      
+      return questions.sort(() => Math.random() - 0.5);
+    }
+
+    function renderQuiz() {
+      const question = quizQuestions[currentQuizIndex];
+      
+      document.getElementById('quiz-emoji').textContent = question.emoji;
+      document.getElementById('quiz-word').textContent = question.word;
+      document.getElementById('quiz-progress').textContent = `${currentQuizIndex + 1} / ${quizQuestions.length}`;
+      document.getElementById('quiz-score').textContent = `⭐ ${quizScore}`;
+      document.getElementById('quiz-feedback').textContent = '';
+      
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+      
+      const vowels = ['a', 'e', 'i', 'o', 'u'];
+      const colors = ['red', 'orange', 'yellow', 'green', 'blue'];
+      
+      vowels.forEach((vowel, index) => {
+        const btn = document.createElement('button');
+        btn.className = `btn-vowel bg-${colors[index]}-400 hover:bg-${colors[index]}-500 text-white font-bold py-4 px-2 rounded-2xl text-2xl`;
+        btn.textContent = vowel.toUpperCase();
+        btn.onclick = () => checkAnswer(vowel);
+        optionsContainer.appendChild(btn);
+      });
+      
+      const card = document.getElementById('quiz-card');
+      card.classList.remove('card-vocab');
+      void card.offsetWidth;
+      card.classList.add('card-vocab');
+    }
+
+    function checkAnswer(selectedVowel) {
+      if (!canAnswer) return;
+      
+      const question = quizQuestions[currentQuizIndex];
+      const feedback = document.getElementById('quiz-feedback');
+      const card = document.getElementById('quiz-card');
+      
+      canAnswer = false;
+      
+      if (selectedVowel === question.correctVowel) {
+        quizScore++;
+        document.getElementById('quiz-score').textContent = `⭐ ${quizScore}`;
+        feedback.textContent = '¡Correcto! 🎉';
+        feedback.className = 'text-2xl font-bold mb-4 h-8 text-green-500';
+        card.classList.add('celebrate');
+      } else {
+        feedback.innerHTML = `Era la <span class="font-extrabold">${question.correctVowel.toUpperCase()}</span> 😊`;
+        feedback.className = 'text-2xl font-bold mb-4 h-8 text-orange-500';
+      }
+      
+      setTimeout(() => {
+        card.classList.remove('celebrate');
+        canAnswer = true;
+        
+        if (currentQuizIndex < quizQuestions.length - 1) {
+          currentQuizIndex++;
+          renderQuiz();
+        } else {
+          showResults();
+        }
+      }, 1500);
+    }
+
+    function showResults() {
+      const total = quizQuestions.length;
+      const percentage = Math.round((quizScore / total) * 100);
+      
+      let stars, title, message;
+      
+      if (percentage >= 90) {
+        stars = '⭐⭐⭐';
+        title = '¡Excelente!';
+        message = '¡Eres un experto en vocales! 🏆';
+      } else if (percentage >= 70) {
+        stars = '⭐⭐';
+        title = '¡Muy bien!';
+        message = '¡Sigue practicando, vas muy bien! 💪';
+      } else if (percentage >= 50) {
+        stars = '⭐';
+        title = '¡Buen intento!';
+        message = 'Repasa las vocales y vuelve a intentarlo 📚';
+      } else {
+        stars = '🌟';
+        title = '¡Sigue practicando!';
+        message = 'Aprende el vocabulario y vuelve a intentarlo 💪';
+      }
+      
+      document.getElementById('results-stars').textContent = stars;
+      document.getElementById('results-title').textContent = title;
+      document.getElementById('results-score').textContent = `Obtuviste ${quizScore} de ${total} respuestas correctas`;
+      document.getElementById('results-message').textContent = message;
+      
+      showScreen('results');
+    }
+
+    // Inicialización del SDK
+    async function onConfigChange(config) {
+      const title = config.game_title || defaultConfig.game_title;
+      const author = config.author_text || defaultConfig.author_text;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const fontSize = config.font_size || defaultConfig.font_size;
+      
+      document.getElementById('main-title').textContent = title;
+      document.getElementById('author-text').textContent = author;
+      
+      document.body.style.fontFamily = `${fontFamily}, Nunito, sans-serif`;
+      document.getElementById('main-title').style.fontSize = `${fontSize * 2.5}px`;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+            },
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+            },
+            {
+              get: () => config.accent_color || defaultConfig.accent_color,
+              set: (value) => { config.accent_color = value; window.elementSdk.setConfig({ accent_color: value }); }
+            },
+            {
+              get: () => config.button_color || defaultConfig.button_color,
+              set: (value) => { config.button_color = value; window.elementSdk.setConfig({ button_color: value }); }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => { config.font_family = value; window.elementSdk.setConfig({ font_family: value }); }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => { config.font_size = value; window.elementSdk.setConfig({ font_size: value }); }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['game_title', config.game_title || defaultConfig.game_title],
+          ['author_text', config.author_text || defaultConfig.author_text]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d64f8dbb4c27a65',t:'MTc3MjUwMjQzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
