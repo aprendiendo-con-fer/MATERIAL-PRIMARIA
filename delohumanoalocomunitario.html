@@ -1,0 +1,1835 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juegos de lo Humano y lo Comunitario</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&amp;family=Fredoka+One&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Quicksand', sans-serif; }
+    .title-font { font-family: 'Fredoka One', cursive; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.8); }
+    }
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce-in {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes confetti {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100px) rotate(720deg); opacity: 0; }
+    }
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .slide-in { animation: slide-in 0.5s ease-out forwards; }
+    .bounce-in { animation: bounce-in 0.5s ease-out; }
+    .confetti { animation: confetti 1s ease-out forwards; }
+    
+    .game-card:hover { transform: translateY(-8px) scale(1.02); }
+    .game-card { transition: all 0.3s ease; }
+    
+    .draggable { cursor: grab; user-select: none; }
+    .draggable:active { cursor: grabbing; }
+    .drop-zone { transition: all 0.3s ease; }
+    .drop-zone.drag-over { background: rgba(34, 197, 94, 0.3); border-color: #22c55e; }
+    
+    .leaf { transition: all 0.3s ease; cursor: pointer; }
+    .leaf:hover { transform: scale(1.1); }
+    
+    .balance-beam { transition: transform 0.5s ease; }
+    
+    .ingredient { cursor: pointer; transition: all 0.2s ease; }
+    .ingredient:hover { transform: scale(1.15); }
+    
+    .progress-fill { transition: width 0.5s ease; }
+    
+    .rhythm-key { transition: all 0.1s ease; }
+    .rhythm-key.active { transform: scale(0.9); background: #fbbf24 !important; }
+    
+    .avatar-option { cursor: pointer; transition: all 0.2s ease; border: 3px solid transparent; }
+    .avatar-option:hover { transform: scale(1.1); }
+    .avatar-option.selected { border-color: #8b5cf6; background: rgba(139, 92, 246, 0.2); }
+    
+    .timeline-item { cursor: pointer; transition: all 0.3s ease; }
+    .timeline-item:hover { transform: scale(1.05); }
+    .timeline-item.achieved { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+    
+    .scroll-container { scrollbar-width: thin; scrollbar-color: #8b5cf6 #e5e7eb; }
+    .scroll-container::-webkit-scrollbar { width: 8px; }
+    .scroll-container::-webkit-scrollbar-track { background: #e5e7eb; border-radius: 4px; }
+    .scroll-container::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-gradient-to-br from-purple-100 via-pink-50 to-amber-50">
+  <div id="app" class="h-full overflow-auto scroll-container"><!-- Pantalla Principal -->
+   <div id="main-menu" class="min-h-full p-4 md:p-6"><!-- Header -->
+    <header class="text-center mb-6">
+     <h1 id="main-title" class="title-font text-3xl md:text-4xl text-purple-700 mb-2 float-animation">🎮 Juegos de lo Humano y lo Comunitario</h1>
+     <p id="welcome-msg" class="text-purple-600 text-lg">¡Aprende sobre tu comunidad, familia y bienestar jugando!</p>
+     <div class="mt-3 flex justify-center gap-2 flex-wrap"><span class="bg-amber-400 text-amber-900 px-3 py-1 rounded-full text-sm font-semibold"> 🏆 Puntaje Total: <span id="total-score">0</span> </span> <span class="bg-green-400 text-green-900 px-3 py-1 rounded-full text-sm font-semibold"> ✅ Completados: <span id="games-completed">0</span>/10 </span>
+     </div>
+    </header><!-- Info Box -->
+    <div class="bg-white/80 backdrop-blur rounded-2xl p-4 mb-6 max-w-4xl mx-auto shadow-lg border-2 border-purple-200">
+     <h2 class="title-font text-xl text-purple-700 mb-2">📚 Campo Formativo: De lo Humano y lo Comunitario</h2>
+     <p class="text-gray-700 text-sm">Tercer Grado de Primaria - Estos juegos te ayudarán a aprender sobre tu comunidad, familia, salud y cómo convivir mejor con los demás.</p>
+    </div><!-- Grid de Juegos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto"><!-- Juego 1: Barrio Vivo -->
+     <div class="game-card bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(1)">
+      <div class="text-4xl mb-2">
+       🏘️
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Barrio Vivo</h3>
+      <p class="text-emerald-100 text-xs mb-2">Construye tu comunidad arrastrando edificios</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> La comunidad como espacio de vida<br><strong>PDA:</strong> Indaga sobre ideas, saberes y prácticas culturales de tu comunidad
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-1">⭐ 0</span>
+      </div>
+     </div><!-- Juego 2: Árbol de Colaboración -->
+     <div class="game-card bg-gradient-to-br from-green-400 to-lime-500 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(2)">
+      <div class="text-4xl mb-2">
+       🌳
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Árbol de Colaboración</h3>
+      <p class="text-green-100 text-xs mb-2">Asigna tareas familiares con hojas de colores</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> Las familias como espacio de protección<br><strong>PDA:</strong> Identifica formas de convivencia y colaboración familiar
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-2">⭐ 0</span>
+      </div>
+     </div><!-- Juego 3: Asamblea Escolar -->
+     <div class="game-card bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(3)">
+      <div class="text-4xl mb-2">
+       🏛️
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Asamblea Escolar</h3>
+      <p class="text-blue-100 text-xs mb-2">Vota por reglas y observa las consecuencias</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> Entendimiento mutuo en la escuela<br><strong>PDA:</strong> Participa para acordar reglas en familia, escuela y comunidad
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-3">⭐ 0</span>
+      </div>
+     </div><!-- Juego 4: Orden en el Aula -->
+     <div class="game-card bg-gradient-to-br from-orange-400 to-amber-500 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(4)">
+      <div class="text-4xl mb-2">
+       📚
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Orden en el Aula</h3>
+      <p class="text-orange-100 text-xs mb-2">Organiza materiales antes de que acabe el tiempo</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> La escuela como espacio de convivencia<br><strong>PDA:</strong> Participa en la organización del aula y normas de materiales
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-4">⭐ 0</span>
+      </div>
+     </div><!-- Juego 5: Avatar de Identidad -->
+     <div class="game-card bg-gradient-to-br from-violet-400 to-purple-500 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(5)">
+      <div class="text-4xl mb-2">
+       🎭
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Avatar de Identidad</h3>
+      <p class="text-violet-100 text-xs mb-2">Crea tu avatar con tus características únicas</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> Formas de ser, pensar, actuar y relacionarse<br><strong>PDA:</strong> Reconoce características que te hacen único
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-5">⭐ 0</span>
+      </div>
+     </div><!-- Juego 6: Línea del Tiempo de Logros -->
+     <div class="game-card bg-gradient-to-br from-yellow-400 to-orange-400 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(6)">
+      <div class="text-4xl mb-2">
+       🏅
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Línea de Logros</h3>
+      <p class="text-yellow-100 text-xs mb-2">Coloca medallas sobre tus logros alcanzados</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> Construcción del proyecto de vida<br><strong>PDA:</strong> Reflexiona sobre logros para valorar tu independencia
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-6">⭐ 0</span>
+      </div>
+     </div><!-- Juego 7: Balanza de Equidad -->
+     <div class="game-card bg-gradient-to-br from-pink-400 to-rose-500 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(7)">
+      <div class="text-4xl mb-2">
+       ⚖️
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Balanza de Equidad</h3>
+      <p class="text-pink-100 text-xs mb-2">Equilibra las tareas del hogar entre todos</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> Equidad de género<br><strong>PDA:</strong> Analiza prácticas equitativas en tareas y responsabilidades
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-7">⭐ 0</span>
+      </div>
+     </div><!-- Juego 8: Ritmo en Movimiento -->
+     <div class="game-card bg-gradient-to-br from-cyan-400 to-sky-500 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(8)">
+      <div class="text-4xl mb-2">
+       🎵
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Ritmo en Movimiento</h3>
+      <p class="text-cyan-100 text-xs mb-2">Sigue secuencias de movimientos al ritmo</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> Capacidades y habilidades motrices<br><strong>PDA:</strong> Adapta tus movimientos según los elementos del juego
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-8">⭐ 0</span>
+      </div>
+     </div><!-- Juego 9: Contador de Energía -->
+     <div class="game-card bg-gradient-to-br from-red-400 to-orange-500 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(9)">
+      <div class="text-4xl mb-2">
+       ⚡
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Contador de Energía</h3>
+      <p class="text-red-100 text-xs mb-2">Elige actividades para llenar tu barra de salud</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> Estilos de vida activos y saludables<br><strong>PDA:</strong> Socializa actividades físicas para valorar tu bienestar
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-9">⭐ 0</span>
+      </div>
+     </div><!-- Juego 10: Chef del Bienestar -->
+     <div class="game-card bg-gradient-to-br from-lime-400 to-green-500 rounded-2xl p-4 shadow-xl cursor-pointer" onclick="startGame(10)">
+      <div class="text-4xl mb-2">
+       👨‍🍳
+      </div>
+      <h3 class="title-font text-white text-lg mb-1">Chef del Bienestar</h3>
+      <p class="text-lime-100 text-xs mb-2">Arma un menú nutritivo con ingredientes saludables</p>
+      <div class="bg-white/20 rounded-lg p-2 text-xs text-white"><strong>Contenido:</strong> Hábitos saludables y bienestar<br><strong>PDA:</strong> Distingue alimentos saludables para promover buena alimentación
+      </div>
+      <div class="mt-2 text-right"><span class="bg-white/30 px-2 py-1 rounded-full text-xs text-white" id="score-10">⭐ 0</span>
+      </div>
+     </div>
+    </div>
+    <footer class="text-center mt-6 text-purple-600 text-sm">
+     <p>🎓 Tercer Grado de Primaria - Campo Formativo: De lo Humano y lo Comunitario</p>
+    </footer>
+   </div><!-- Contenedor de Juegos -->
+   <div id="game-container" class="hidden min-h-full p-4"><!-- El contenido del juego se carga dinámicamente -->
+   </div>
+  </div>
+  <script>
+    // Configuración por defecto
+    const defaultConfig = {
+      main_title: '🎮 Juegos de lo Humano y lo Comunitario',
+      welcome_message: '¡Aprende sobre tu comunidad, familia y bienestar jugando!',
+      background_color: '#faf5ff',
+      primary_color: '#7c3aed',
+      text_color: '#4c1d95',
+      accent_color: '#fbbf24',
+      secondary_color: '#22c55e'
+    };
+
+    let config = { ...defaultConfig };
+    let gameScores = {};
+    let currentGame = null;
+
+    // Inicializar SDKs
+    async function initApp() {
+      // Inicializar Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (newConfig) => {
+            config = { ...defaultConfig, ...newConfig };
+            applyConfig();
+          },
+          mapToCapabilities: (cfg) => ({
+            recolorables: [
+              {
+                get: () => cfg.background_color || defaultConfig.background_color,
+                set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+              },
+              {
+                get: () => cfg.primary_color || defaultConfig.primary_color,
+                set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+              },
+              {
+                get: () => cfg.text_color || defaultConfig.text_color,
+                set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => cfg.accent_color || defaultConfig.accent_color,
+                set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
+              },
+              {
+                get: () => cfg.secondary_color || defaultConfig.secondary_color,
+                set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (cfg) => new Map([
+            ['main_title', cfg.main_title || defaultConfig.main_title],
+            ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message]
+          ])
+        });
+      }
+
+      // Inicializar Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init({
+          onDataChanged: (data) => {
+            data.forEach(record => {
+              if (record.game_id) {
+                gameScores[record.game_id] = {
+                  score: record.score || 0,
+                  completed: record.completed || false,
+                  backendId: record.__backendId
+                };
+              }
+            });
+            updateScoreDisplay();
+          }
+        });
+        if (!result.isOk) {
+          console.error('Error inicializando Data SDK');
+        }
+      }
+
+      applyConfig();
+    }
+
+    function applyConfig() {
+      const title = document.getElementById('main-title');
+      const welcome = document.getElementById('welcome-msg');
+      
+      if (title) title.textContent = config.main_title || defaultConfig.main_title;
+      if (welcome) welcome.textContent = config.welcome_message || defaultConfig.welcome_message;
+      
+      document.body.style.background = `linear-gradient(135deg, ${config.background_color || defaultConfig.background_color}, #fdf2f8, #fffbeb)`;
+    }
+
+    function updateScoreDisplay() {
+      let totalScore = 0;
+      let completed = 0;
+      
+      for (let i = 1; i <= 10; i++) {
+        const scoreData = gameScores[`game_${i}`];
+        const scoreEl = document.getElementById(`score-${i}`);
+        if (scoreData) {
+          if (scoreEl) scoreEl.textContent = `⭐ ${scoreData.score}`;
+          totalScore += scoreData.score;
+          if (scoreData.completed) completed++;
+        }
+      }
+      
+      const totalEl = document.getElementById('total-score');
+      const completedEl = document.getElementById('games-completed');
+      if (totalEl) totalEl.textContent = totalScore;
+      if (completedEl) completedEl.textContent = completed;
+    }
+
+    async function saveGameScore(gameId, score, completed = false) {
+      if (!window.dataSdk) return;
+      
+      const existing = gameScores[gameId];
+      const gameNames = {
+        'game_1': 'Barrio Vivo',
+        'game_2': 'Árbol de Colaboración',
+        'game_3': 'Asamblea Escolar',
+        'game_4': 'Orden en el Aula',
+        'game_5': 'Avatar de Identidad',
+        'game_6': 'Línea de Logros',
+        'game_7': 'Balanza de Equidad',
+        'game_8': 'Ritmo en Movimiento',
+        'game_9': 'Contador de Energía',
+        'game_10': 'Chef del Bienestar'
+      };
+      
+      if (existing && existing.backendId) {
+        const newScore = Math.max(existing.score, score);
+        await window.dataSdk.update({
+          __backendId: existing.backendId,
+          game_id: gameId,
+          game_name: gameNames[gameId],
+          score: newScore,
+          completed: completed || existing.completed,
+          played_at: new Date().toISOString()
+        });
+      } else {
+        const records = Object.keys(gameScores).length;
+        if (records >= 999) return;
+        
+        await window.dataSdk.create({
+          game_id: gameId,
+          game_name: gameNames[gameId],
+          score: score,
+          completed: completed,
+          played_at: new Date().toISOString()
+        });
+      }
+    }
+
+    function startGame(gameNum) {
+      currentGame = gameNum;
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('game-container').classList.remove('hidden');
+      
+      const games = {
+        1: renderGame1,
+        2: renderGame2,
+        3: renderGame3,
+        4: renderGame4,
+        5: renderGame5,
+        6: renderGame6,
+        7: renderGame7,
+        8: renderGame8,
+        9: renderGame9,
+        10: renderGame10
+      };
+      
+      games[gameNum]();
+    }
+
+    function backToMenu() {
+      document.getElementById('main-menu').classList.remove('hidden');
+      document.getElementById('game-container').classList.add('hidden');
+      document.getElementById('game-container').innerHTML = '';
+      currentGame = null;
+    }
+
+    function showConfetti(container) {
+      const colors = ['🎉', '⭐', '🌟', '✨', '🎊'];
+      for (let i = 0; i < 20; i++) {
+        const confetti = document.createElement('div');
+        confetti.textContent = colors[Math.floor(Math.random() * colors.length)];
+        confetti.className = 'absolute text-2xl confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.top = '20%';
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        container.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 1500);
+      }
+    }
+
+    // ============ JUEGO 1: BARRIO VIVO ============
+    function renderGame1() {
+      const container = document.getElementById('game-container');
+      container.innerHTML = `
+        <div class="max-w-4xl mx-auto">
+          <div class="flex items-center justify-between mb-4">
+            <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+              ← Volver
+            </button>
+            <div class="bg-emerald-500 text-white px-4 py-2 rounded-full font-semibold">
+              Puntos: <span id="game1-score">0</span>/100
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+            <h2 class="title-font text-2xl text-emerald-600 mb-2">🏘️ Barrio Vivo</h2>
+            <p class="text-gray-600 mb-2">Arrastra los edificios y lugares a tu mapa del barrio. Cada lugar tiene una historia sobre la comunidad.</p>
+            <div class="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-3 text-sm">
+              <strong>📚 Contenido:</strong> La comunidad como espacio de vida<br>
+              <strong>🎯 PDA:</strong> Indaga sobre ideas, saberes, prácticas culturales y formas de organización en su familia y comunidad para compartir su importancia en la socialización.
+            </div>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-4">
+            <!-- Edificios para arrastrar -->
+            <div class="bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl p-4">
+              <h3 class="font-bold text-emerald-700 mb-3">🏗️ Lugares del Barrio</h3>
+              <div id="buildings-source" class="flex flex-wrap gap-2">
+                <div class="draggable bg-white p-3 rounded-xl shadow-md text-center cursor-grab hover:scale-105 transition-all" draggable="true" data-building="escuela" data-story="La escuela es donde aprendemos y hacemos amigos. Aquí compartimos conocimientos.">
+                  <span class="text-3xl">🏫</span>
+                  <p class="text-xs font-semibold">Escuela</p>
+                </div>
+                <div class="draggable bg-white p-3 rounded-xl shadow-md text-center cursor-grab hover:scale-105 transition-all" draggable="true" data-building="mercado" data-story="En el mercado las familias compran alimentos frescos y conversan con los vecinos.">
+                  <span class="text-3xl">🏪</span>
+                  <p class="text-xs font-semibold">Mercado</p>
+                </div>
+                <div class="draggable bg-white p-3 rounded-xl shadow-md text-center cursor-grab hover:scale-105 transition-all" draggable="true" data-building="parque" data-story="El parque es donde jugamos, corremos y pasamos tiempo en familia al aire libre.">
+                  <span class="text-3xl">🌳</span>
+                  <p class="text-xs font-semibold">Parque</p>
+                </div>
+                <div class="draggable bg-white p-3 rounded-xl shadow-md text-center cursor-grab hover:scale-105 transition-all" draggable="true" data-building="iglesia" data-story="Lugar donde algunas familias se reúnen para celebrar sus tradiciones y fiestas.">
+                  <span class="text-3xl">⛪</span>
+                  <p class="text-xs font-semibold">Iglesia</p>
+                </div>
+                <div class="draggable bg-white p-3 rounded-xl shadow-md text-center cursor-grab hover:scale-105 transition-all" draggable="true" data-building="biblioteca" data-story="La biblioteca guarda libros y conocimientos. Aquí podemos leer historias increíbles.">
+                  <span class="text-3xl">📚</span>
+                  <p class="text-xs font-semibold">Biblioteca</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Mapa del barrio -->
+            <div class="bg-gradient-to-br from-amber-100 to-yellow-100 rounded-2xl p-4">
+              <h3 class="font-bold text-amber-700 mb-3">🗺️ Tu Mapa del Barrio</h3>
+              <div id="map-grid" class="grid grid-cols-3 gap-2">
+                <div class="drop-zone bg-white/50 border-2 border-dashed border-amber-300 rounded-xl h-20 flex items-center justify-center text-amber-400 text-xs" data-slot="1">
+                  Arrastra aquí
+                </div>
+                <div class="drop-zone bg-white/50 border-2 border-dashed border-amber-300 rounded-xl h-20 flex items-center justify-center text-amber-400 text-xs" data-slot="2">
+                  Arrastra aquí
+                </div>
+                <div class="drop-zone bg-white/50 border-2 border-dashed border-amber-300 rounded-xl h-20 flex items-center justify-center text-amber-400 text-xs" data-slot="3">
+                  Arrastra aquí
+                </div>
+                <div class="drop-zone bg-white/50 border-2 border-dashed border-amber-300 rounded-xl h-20 flex items-center justify-center text-amber-400 text-xs" data-slot="4">
+                  Arrastra aquí
+                </div>
+                <div class="drop-zone bg-white/50 border-2 border-dashed border-amber-300 rounded-xl h-20 flex items-center justify-center text-amber-400 text-xs" data-slot="5">
+                  Arrastra aquí
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Historia desbloqueada -->
+          <div id="story-box" class="mt-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-4 hidden">
+            <h3 class="font-bold text-purple-700 mb-2">📖 Historia del Vecindario</h3>
+            <p id="story-text" class="text-gray-700"></p>
+          </div>
+          
+          <div id="game1-complete" class="mt-4 hidden">
+            <div class="bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl p-6 text-center text-white relative overflow-hidden">
+              <h3 class="title-font text-2xl mb-2">🎉 ¡Excelente trabajo!</h3>
+              <p>Has construido tu barrio y aprendido sobre la importancia de cada lugar en tu comunidad.</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      let score = 0;
+      let placedBuildings = 0;
+      
+      const draggables = container.querySelectorAll('.draggable');
+      const dropZones = container.querySelectorAll('.drop-zone');
+      
+      draggables.forEach(drag => {
+        drag.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', drag.dataset.building);
+          e.dataTransfer.setData('story', drag.dataset.story);
+          drag.classList.add('opacity-50');
+        });
+        
+        drag.addEventListener('dragend', () => {
+          drag.classList.remove('opacity-50');
+        });
+      });
+      
+      dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          zone.classList.add('drag-over');
+        });
+        
+        zone.addEventListener('dragleave', () => {
+          zone.classList.remove('drag-over');
+        });
+        
+        zone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          zone.classList.remove('drag-over');
+          
+          if (zone.dataset.filled) return;
+          
+          const building = e.dataTransfer.getData('text/plain');
+          const story = e.dataTransfer.getData('story');
+          
+          const icons = {
+            escuela: '🏫',
+            mercado: '🏪',
+            parque: '🌳',
+            iglesia: '⛪',
+            biblioteca: '📚'
+          };
+          
+          zone.innerHTML = `<span class="text-4xl bounce-in">${icons[building]}</span>`;
+          zone.classList.remove('border-dashed');
+          zone.classList.add('bg-white', 'shadow-md');
+          zone.dataset.filled = 'true';
+          
+          // Mostrar historia
+          const storyBox = document.getElementById('story-box');
+          const storyText = document.getElementById('story-text');
+          storyBox.classList.remove('hidden');
+          storyText.textContent = story;
+          
+          // Ocultar el edificio original
+          const original = container.querySelector(`[data-building="${building}"]`);
+          if (original) original.classList.add('opacity-30', 'pointer-events-none');
+          
+          placedBuildings++;
+          score = placedBuildings * 20;
+          document.getElementById('game1-score').textContent = score;
+          
+          if (placedBuildings >= 5) {
+            document.getElementById('game1-complete').classList.remove('hidden');
+            saveGameScore('game_1', 100, true);
+            showConfetti(container);
+          } else {
+            saveGameScore('game_1', score, false);
+          }
+        });
+      });
+    }
+
+    // ============ JUEGO 2: ÁRBOL DE COLABORACIÓN ============
+    function renderGame2() {
+      const container = document.getElementById('game-container');
+      container.innerHTML = `
+        <div class="max-w-4xl mx-auto">
+          <div class="flex items-center justify-between mb-4">
+            <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+              ← Volver
+            </button>
+            <div class="bg-green-500 text-white px-4 py-2 rounded-full font-semibold">
+              Hojas colocadas: <span id="game2-leaves">0</span>/8
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+            <h2 class="title-font text-2xl text-green-600 mb-2">🌳 Árbol de Colaboración Familiar</h2>
+            <p class="text-gray-600 mb-2">Haz clic en las hojas de colores y asígnalas a los miembros de tu familia según las tareas que realizan.</p>
+            <div class="bg-green-50 border-2 border-green-200 rounded-lg p-3 text-sm">
+              <strong>📚 Contenido:</strong> Las familias como espacio de protección<br>
+              <strong>🎯 PDA:</strong> Identifica formas de convivencia y socialización en las familias para distinguir formas de participación y colaboración.
+            </div>
+          </div>
+          
+          <div class="grid md:grid-cols-3 gap-4">
+            <!-- Hojas con tareas -->
+            <div class="bg-gradient-to-br from-green-100 to-lime-100 rounded-2xl p-4">
+              <h3 class="font-bold text-green-700 mb-3">🍃 Tareas del Hogar</h3>
+              <div id="leaves-container" class="flex flex-wrap gap-2">
+                <div class="leaf bg-red-400 text-white px-3 py-2 rounded-full text-sm font-semibold shadow-md" data-task="Cocinar">🍳 Cocinar</div>
+                <div class="leaf bg-blue-400 text-white px-3 py-2 rounded-full text-sm font-semibold shadow-md" data-task="Limpiar">🧹 Limpiar</div>
+                <div class="leaf bg-yellow-400 text-gray-800 px-3 py-2 rounded-full text-sm font-semibold shadow-md" data-task="Compras">🛒 Compras</div>
+                <div class="leaf bg-purple-400 text-white px-3 py-2 rounded-full text-sm font-semibold shadow-md" data-task="Cuidar">❤️ Cuidar</div>
+                <div class="leaf bg-pink-400 text-white px-3 py-2 rounded-full text-sm font-semibold shadow-md" data-task="Lavar">🧺 Lavar ropa</div>
+                <div class="leaf bg-orange-400 text-white px-3 py-2 rounded-full text-sm font-semibold shadow-md" data-task="Trabajar">💼 Trabajar</div>
+                <div class="leaf bg-teal-400 text-white px-3 py-2 rounded-full text-sm font-semibold shadow-md" data-task="Estudiar">📖 Ayudar a estudiar</div>
+                <div class="leaf bg-indigo-400 text-white px-3 py-2 rounded-full text-sm font-semibold shadow-md" data-task="Jugar">🎮 Jugar juntos</div>
+              </div>
+            </div>
+            
+            <!-- Árbol con miembros -->
+            <div class="md:col-span-2 bg-gradient-to-br from-amber-50 to-green-50 rounded-2xl p-4 text-center relative">
+              <div class="text-6xl mb-4">🌳</div>
+              
+              <div class="grid grid-cols-2 gap-3">
+                <div class="family-member bg-white rounded-xl p-3 shadow-md hover:shadow-lg transition-all cursor-pointer" data-member="Mamá">
+                  <span class="text-3xl">👩</span>
+                  <p class="font-bold text-gray-700">Mamá</p>
+                  <div class="tasks flex flex-wrap gap-1 mt-2 justify-center min-h-[24px]"></div>
+                </div>
+                <div class="family-member bg-white rounded-xl p-3 shadow-md hover:shadow-lg transition-all cursor-pointer" data-member="Papá">
+                  <span class="text-3xl">👨</span>
+                  <p class="font-bold text-gray-700">Papá</p>
+                  <div class="tasks flex flex-wrap gap-1 mt-2 justify-center min-h-[24px]"></div>
+                </div>
+                <div class="family-member bg-white rounded-xl p-3 shadow-md hover:shadow-lg transition-all cursor-pointer" data-member="Abuela">
+                  <span class="text-3xl">👵</span>
+                  <p class="font-bold text-gray-700">Abuela</p>
+                  <div class="tasks flex flex-wrap gap-1 mt-2 justify-center min-h-[24px]"></div>
+                </div>
+                <div class="family-member bg-white rounded-xl p-3 shadow-md hover:shadow-lg transition-all cursor-pointer" data-member="Yo">
+                  <span class="text-3xl">🧒</span>
+                  <p class="font-bold text-gray-700">Yo</p>
+                  <div class="tasks flex flex-wrap gap-1 mt-2 justify-center min-h-[24px]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div id="game2-message" class="mt-4 bg-blue-100 rounded-xl p-3 text-blue-700 text-center hidden">
+            Selecciona una hoja y luego haz clic en un miembro de la familia
+          </div>
+          
+          <div id="game2-complete" class="mt-4 hidden">
+            <div class="bg-gradient-to-r from-green-400 to-lime-400 rounded-2xl p-6 text-center text-white relative overflow-hidden">
+              <h3 class="title-font text-2xl mb-2">🎉 ¡Árbol completo!</h3>
+              <p>Has aprendido que en familia todos colaboramos con diferentes tareas. ¡Cada persona es importante!</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      let selectedLeaf = null;
+      let placedLeaves = 0;
+      
+      const leaves = container.querySelectorAll('.leaf');
+      const members = container.querySelectorAll('.family-member');
+      const message = document.getElementById('game2-message');
+      
+      leaves.forEach(leaf => {
+        leaf.addEventListener('click', () => {
+          if (leaf.classList.contains('opacity-30')) return;
+          
+          leaves.forEach(l => l.classList.remove('ring-4', 'ring-white'));
+          leaf.classList.add('ring-4', 'ring-white');
+          selectedLeaf = leaf;
+          message.classList.remove('hidden');
+          message.textContent = `Ahora haz clic en quién hace "${leaf.dataset.task}" en tu familia`;
+        });
+      });
+      
+      members.forEach(member => {
+        member.addEventListener('click', () => {
+          if (!selectedLeaf) {
+            message.classList.remove('hidden');
+            message.textContent = '👆 Primero selecciona una hoja de tarea';
+            return;
+          }
+          
+          const tasksContainer = member.querySelector('.tasks');
+          const taskBadge = document.createElement('span');
+          taskBadge.className = 'text-xs px-2 py-1 rounded-full bounce-in ' + selectedLeaf.className.split(' ').filter(c => c.startsWith('bg-'))[0];
+          taskBadge.textContent = selectedLeaf.dataset.task;
+          tasksContainer.appendChild(taskBadge);
+          
+          selectedLeaf.classList.add('opacity-30', 'pointer-events-none');
+          selectedLeaf.classList.remove('ring-4', 'ring-white');
+          selectedLeaf = null;
+          
+          placedLeaves++;
+          document.getElementById('game2-leaves').textContent = placedLeaves;
+          message.classList.add('hidden');
+          
+          if (placedLeaves >= 8) {
+            document.getElementById('game2-complete').classList.remove('hidden');
+            saveGameScore('game_2', 100, true);
+            showConfetti(container);
+          } else {
+            saveGameScore('game_2', placedLeaves * 12, false);
+          }
+        });
+      });
+    }
+
+    // ============ JUEGO 3: ASAMBLEA ESCOLAR ============
+    function renderGame3() {
+      const container = document.getElementById('game-container');
+      
+      const rules = [
+        {
+          text: "Todos deben levantar la mano antes de hablar",
+          good: true,
+          consequence: "✅ ¡Todos se escuchan mejor y nadie se queda sin participar!",
+          badConsequence: "❌ Todos hablan al mismo tiempo y hay confusión"
+        },
+        {
+          text: "Solo los niños más grandes pueden opinar",
+          good: false,
+          consequence: "❌ Los pequeños se sienten tristes porque no los escuchan",
+          badConsequence: "✅ Todos pueden dar ideas buenas sin importar la edad"
+        },
+        {
+          text: "Respetar los turnos en los juegos",
+          good: true,
+          consequence: "✅ Todos tienen oportunidad de jugar y se divierten más",
+          badConsequence: "❌ Algunos niños nunca juegan y se enojan"
+        },
+        {
+          text: "El que llegue primero escoge todo",
+          good: false,
+          consequence: "❌ Los demás no pueden elegir nada y se sienten mal",
+          badConsequence: "✅ Todos tienen oportunidad de elegir por turnos"
+        },
+        {
+          text: "Cuidar los materiales del salón entre todos",
+          good: true,
+          consequence: "✅ Los materiales duran más y todos pueden usarlos",
+          badConsequence: "❌ Los materiales se rompen y nadie puede usarlos"
+        }
+      ];
+      
+      let currentRule = 0;
+      let score = 0;
+      
+      function renderRule() {
+        const rule = rules[currentRule];
+        container.innerHTML = `
+          <div class="max-w-3xl mx-auto">
+            <div class="flex items-center justify-between mb-4">
+              <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+                ← Volver
+              </button>
+              <div class="bg-indigo-500 text-white px-4 py-2 rounded-full font-semibold">
+                Pregunta ${currentRule + 1}/5 | Puntos: ${score}
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+              <h2 class="title-font text-2xl text-indigo-600 mb-2">🏛️ Asamblea Escolar</h2>
+              <p class="text-gray-600 mb-2">Vota si crees que cada regla propuesta es buena o mala para la convivencia.</p>
+              <div class="bg-indigo-50 border-2 border-indigo-200 rounded-lg p-3 text-sm">
+                <strong>📚 Contenido:</strong> Entendimiento mutuo en la escuela<br>
+                <strong>🎯 PDA:</strong> Participa en distintas situaciones para acordar reglas en su familia, escuela y comunidad.
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-indigo-100 to-blue-100 rounded-2xl p-6 text-center slide-in">
+              <div class="text-6xl mb-4">🗳️</div>
+              <div class="bg-white rounded-xl p-4 shadow-lg mb-6">
+                <h3 class="text-lg font-bold text-gray-800">Regla propuesta:</h3>
+                <p class="text-xl text-indigo-700 font-semibold mt-2">"${rule.text}"</p>
+              </div>
+              
+              <p class="text-gray-600 mb-4">¿Crees que esta regla es buena para todos?</p>
+              
+              <div class="flex justify-center gap-4">
+                <button onclick="vote(true)" class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl text-xl font-bold shadow-lg hover:scale-105 transition-all">
+                  👍 Sí, es buena
+                </button>
+                <button onclick="vote(false)" class="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-2xl text-xl font-bold shadow-lg hover:scale-105 transition-all">
+                  👎 No, es mala
+                </button>
+              </div>
+            </div>
+            
+            <div id="consequence" class="mt-4 hidden">
+            </div>
+          </div>
+        `;
+      }
+      
+      window.vote = function(isGood) {
+        const rule = rules[currentRule];
+        const correct = (isGood === rule.good);
+        const consequence = document.getElementById('consequence');
+        
+        if (correct) {
+          score += 20;
+          consequence.innerHTML = `
+            <div class="bg-green-100 border-2 border-green-400 rounded-2xl p-4 text-center bounce-in">
+              <span class="text-4xl">🎉</span>
+              <h4 class="text-green-700 font-bold text-lg mt-2">¡Correcto!</h4>
+              <p class="text-green-600">${isGood ? rule.consequence : rule.badConsequence}</p>
+            </div>
+          `;
+        } else {
+          consequence.innerHTML = `
+            <div class="bg-red-100 border-2 border-red-400 rounded-2xl p-4 text-center bounce-in">
+              <span class="text-4xl">🤔</span>
+              <h4 class="text-red-700 font-bold text-lg mt-2">Piénsalo mejor</h4>
+              <p class="text-red-600">${isGood ? rule.consequence : rule.badConsequence}</p>
+            </div>
+          `;
+        }
+        
+        consequence.classList.remove('hidden');
+        
+        setTimeout(() => {
+          currentRule++;
+          if (currentRule < rules.length) {
+            renderRule();
+          } else {
+            showFinalResult();
+          }
+        }, 2500);
+      };
+      
+      function showFinalResult() {
+        container.innerHTML = `
+          <div class="max-w-3xl mx-auto text-center">
+            <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all mb-4">
+              ← Volver al menú
+            </button>
+            
+            <div class="bg-gradient-to-r from-indigo-400 to-purple-400 rounded-2xl p-8 text-white relative overflow-hidden">
+              <div class="text-6xl mb-4">🏛️</div>
+              <h2 class="title-font text-3xl mb-4">¡Asamblea terminada!</h2>
+              <p class="text-xl mb-4">Tu puntuación: ${score}/100</p>
+              <p class="text-lg">${score >= 80 ? '¡Excelente! Sabes crear reglas justas para todos.' : score >= 60 ? '¡Bien! Estás aprendiendo sobre las buenas reglas.' : 'Sigue practicando para crear mejores reglas.'}</p>
+            </div>
+          </div>
+        `;
+        saveGameScore('game_3', score, score >= 60);
+        if (score >= 80) showConfetti(container);
+      }
+      
+      renderRule();
+    }
+
+    // ============ JUEGO 4: ORDEN EN EL AULA ============
+    function renderGame4() {
+      const container = document.getElementById('game-container');
+      
+      const items = [
+        { emoji: '📚', name: 'Libro', category: 'libros' },
+        { emoji: '⚽', name: 'Balón', category: 'deportes' },
+        { emoji: '🎨', name: 'Pintura', category: 'arte' },
+        { emoji: '📖', name: 'Cuaderno', category: 'libros' },
+        { emoji: '🏀', name: 'Pelota', category: 'deportes' },
+        { emoji: '✏️', name: 'Lápiz', category: 'arte' },
+        { emoji: '📕', name: 'Diccionario', category: 'libros' },
+        { emoji: '🎾', name: 'Raqueta', category: 'deportes' },
+        { emoji: '🖌️', name: 'Pincel', category: 'arte' }
+      ];
+      
+      let score = 0;
+      let timeLeft = 60;
+      let gameActive = true;
+      let timer;
+      
+      container.innerHTML = `
+        <div class="max-w-4xl mx-auto">
+          <div class="flex items-center justify-between mb-4">
+            <button onclick="stopGame4(); backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+              ← Volver
+            </button>
+            <div class="flex gap-2">
+              <div class="bg-red-500 text-white px-4 py-2 rounded-full font-semibold">
+                ⏱️ <span id="timer">60</span>s
+              </div>
+              <div class="bg-orange-500 text-white px-4 py-2 rounded-full font-semibold">
+                ✅ <span id="game4-score">0</span>/9
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+            <h2 class="title-font text-2xl text-orange-600 mb-2">📚 Orden en el Aula</h2>
+            <p class="text-gray-600 mb-2">¡Rápido! Arrastra cada material a su estante correcto antes de que se acabe el tiempo.</p>
+            <div class="bg-orange-50 border-2 border-orange-200 rounded-lg p-3 text-sm">
+              <strong>📚 Contenido:</strong> La escuela como espacio de convivencia<br>
+              <strong>🎯 PDA:</strong> Participa en la organización del aula y en la generación de normas para el uso de materiales de apoyo.
+            </div>
+          </div>
+          
+          <!-- Materiales desordenados -->
+          <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-4 mb-4">
+            <h3 class="font-bold text-gray-700 mb-3">🗃️ Materiales desordenados</h3>
+            <div id="items-source" class="flex flex-wrap gap-2 min-h-[60px]">
+              ${items.map((item, i) => `
+                <div class="draggable bg-white p-3 rounded-xl shadow-md text-center cursor-grab hover:scale-105 transition-all" draggable="true" data-category="${item.category}" data-index="${i}">
+                  <span class="text-2xl">${item.emoji}</span>
+                  <p class="text-xs">${item.name}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <!-- Estantes -->
+          <div class="grid grid-cols-3 gap-3">
+            <div class="bg-gradient-to-br from-blue-200 to-blue-300 rounded-2xl p-3">
+              <h4 class="font-bold text-blue-800 text-center mb-2">📚 Libros</h4>
+              <div class="drop-zone bg-blue-100 border-2 border-dashed border-blue-400 rounded-xl min-h-[80px] flex flex-wrap gap-1 p-2 justify-center items-start" data-category="libros">
+              </div>
+            </div>
+            <div class="bg-gradient-to-br from-green-200 to-green-300 rounded-2xl p-3">
+              <h4 class="font-bold text-green-800 text-center mb-2">⚽ Deportes</h4>
+              <div class="drop-zone bg-green-100 border-2 border-dashed border-green-400 rounded-xl min-h-[80px] flex flex-wrap gap-1 p-2 justify-center items-start" data-category="deportes">
+              </div>
+            </div>
+            <div class="bg-gradient-to-br from-pink-200 to-pink-300 rounded-2xl p-3">
+              <h4 class="font-bold text-pink-800 text-center mb-2">🎨 Arte</h4>
+              <div class="drop-zone bg-pink-100 border-2 border-dashed border-pink-400 rounded-xl min-h-[80px] flex flex-wrap gap-1 p-2 justify-center items-start" data-category="arte">
+              </div>
+            </div>
+          </div>
+          
+          <div id="game4-result" class="mt-4 hidden">
+          </div>
+        </div>
+      `;
+      
+      window.stopGame4 = function() {
+        gameActive = false;
+        clearInterval(timer);
+      };
+      
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft;
+        if (timeLeft <= 0) {
+          gameActive = false;
+          clearInterval(timer);
+          endGame4();
+        }
+      }, 1000);
+      
+      function endGame4() {
+        const result = document.getElementById('game4-result');
+        const finalScore = Math.round((score / 9) * 100);
+        
+        result.innerHTML = `
+          <div class="bg-gradient-to-r from-orange-400 to-amber-400 rounded-2xl p-6 text-center text-white">
+            <h3 class="title-font text-2xl mb-2">${score >= 7 ? '🎉 ¡Excelente orden!' : score >= 5 ? '👍 ¡Buen trabajo!' : '💪 ¡Sigue practicando!'}</h3>
+            <p class="text-xl">Organizaste ${score} de 9 materiales correctamente</p>
+          </div>
+        `;
+        result.classList.remove('hidden');
+        
+        saveGameScore('game_4', finalScore, score >= 7);
+        if (score >= 7) showConfetti(container);
+      }
+      
+      const draggables = container.querySelectorAll('.draggable');
+      const dropZones = container.querySelectorAll('.drop-zone');
+      
+      draggables.forEach(drag => {
+        drag.addEventListener('dragstart', (e) => {
+          if (!gameActive) return e.preventDefault();
+          e.dataTransfer.setData('category', drag.dataset.category);
+          e.dataTransfer.setData('index', drag.dataset.index);
+          drag.classList.add('opacity-50');
+        });
+        
+        drag.addEventListener('dragend', () => {
+          drag.classList.remove('opacity-50');
+        });
+      });
+      
+      dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+          if (!gameActive) return;
+          e.preventDefault();
+          zone.classList.add('drag-over');
+        });
+        
+        zone.addEventListener('dragleave', () => {
+          zone.classList.remove('drag-over');
+        });
+        
+        zone.addEventListener('drop', (e) => {
+          if (!gameActive) return;
+          e.preventDefault();
+          zone.classList.remove('drag-over');
+          
+          const itemCategory = e.dataTransfer.getData('category');
+          const itemIndex = e.dataTransfer.getData('index');
+          const zoneCategory = zone.dataset.category;
+          
+          const item = container.querySelector(`[data-index="${itemIndex}"]`);
+          if (!item || item.dataset.placed) return;
+          
+          if (itemCategory === zoneCategory) {
+            const clone = item.cloneNode(true);
+            clone.classList.remove('cursor-grab');
+            clone.classList.add('bounce-in');
+            clone.draggable = false;
+            zone.appendChild(clone);
+            
+            item.classList.add('opacity-30', 'pointer-events-none');
+            item.dataset.placed = 'true';
+            
+            score++;
+            document.getElementById('game4-score').textContent = score;
+            
+            if (score >= 9) {
+              gameActive = false;
+              clearInterval(timer);
+              endGame4();
+            }
+          } else {
+            item.classList.add('animate-pulse', 'bg-red-200');
+            setTimeout(() => {
+              item.classList.remove('animate-pulse', 'bg-red-200');
+            }, 500);
+          }
+        });
+      });
+    }
+
+    // ============ JUEGO 5: AVATAR DE IDENTIDAD ============
+    function renderGame5() {
+      const container = document.getElementById('game-container');
+      
+      const options = {
+        skin: ['🧒', '👧', '👦', '🧒🏻', '🧒🏽', '🧒🏿'],
+        hobby: ['⚽ Fútbol', '🎨 Dibujar', '📚 Leer', '🎮 Videojuegos', '🎵 Música', '🩰 Bailar'],
+        food: ['🍕 Pizza', '🌮 Tacos', '🍝 Pasta', '🍎 Frutas', '🍦 Helado', '🍔 Hamburguesa'],
+        talent: ['✏️ Escribir', '🧮 Matemáticas', '🎤 Cantar', '🏃 Correr', '🤝 Ayudar', '😂 Hacer reír']
+      };
+      
+      const avatar = {
+        skin: null,
+        hobby: null,
+        food: null,
+        talent: null
+      };
+      
+      function renderCreator() {
+        container.innerHTML = `
+          <div class="max-w-4xl mx-auto">
+            <div class="flex items-center justify-between mb-4">
+              <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+                ← Volver
+              </button>
+              <div class="bg-violet-500 text-white px-4 py-2 rounded-full font-semibold">
+                Selecciones: <span id="selections">${Object.values(avatar).filter(v => v).length}</span>/4
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+              <h2 class="title-font text-2xl text-violet-600 mb-2">🎭 Creador de Avatar de Identidad</h2>
+              <p class="text-gray-600 mb-2">Crea un avatar que muestre quién eres: tus gustos, talentos y lo que te hace especial.</p>
+              <div class="bg-violet-50 border-2 border-violet-200 rounded-lg p-3 text-sm">
+                <strong>📚 Contenido:</strong> Formas de ser, pensar, actuar y relacionarse<br>
+                <strong>🎯 PDA:</strong> Reconoce características que le hacen a una persona diferente y única para favorecer la construcción de su identidad.
+              </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Preview del Avatar -->
+              <div class="bg-gradient-to-br from-violet-100 to-purple-100 rounded-2xl p-6 text-center">
+                <h3 class="font-bold text-violet-700 mb-4">👤 Tu Avatar</h3>
+                <div class="bg-white rounded-2xl p-6 shadow-lg">
+                  <div class="text-6xl mb-4" id="avatar-face">${avatar.skin || '❓'}</div>
+                  <div class="space-y-2 text-left">
+                    <p class="bg-violet-100 rounded-lg px-3 py-2 text-sm">
+                      <strong>Me gusta:</strong> ${avatar.hobby || '...'}</p>
+                    <p class="bg-pink-100 rounded-lg px-3 py-2 text-sm">
+                      <strong>Mi comida favorita:</strong> ${avatar.food || '...'}</p>
+                    <p class="bg-amber-100 rounded-lg px-3 py-2 text-sm">
+                      <strong>Soy bueno/a en:</strong> ${avatar.talent || '...'}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Opciones -->
+              <div class="space-y-4">
+                <div class="bg-white rounded-xl p-4 shadow-md">
+                  <h4 class="font-bold text-gray-700 mb-2">👤 Elige tu cara</h4>
+                  <div class="flex flex-wrap gap-2">
+                    ${options.skin.map(s => `
+                      <div class="avatar-option text-3xl p-2 rounded-lg ${avatar.skin === s ? 'selected' : ''}" onclick="selectOption('skin', '${s}')">${s}</div>
+                    `).join('')}
+                  </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-4 shadow-md">
+                  <h4 class="font-bold text-gray-700 mb-2">⭐ ¿Qué te gusta hacer?</h4>
+                  <div class="flex flex-wrap gap-2">
+                    ${options.hobby.map(h => `
+                      <div class="avatar-option text-sm px-3 py-2 rounded-lg bg-violet-50 ${avatar.hobby === h ? 'selected' : ''}" onclick="selectOption('hobby', '${h}')">${h}</div>
+                    `).join('')}
+                  </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-4 shadow-md">
+                  <h4 class="font-bold text-gray-700 mb-2">🍽️ Tu comida favorita</h4>
+                  <div class="flex flex-wrap gap-2">
+                    ${options.food.map(f => `
+                      <div class="avatar-option text-sm px-3 py-2 rounded-lg bg-pink-50 ${avatar.food === f ? 'selected' : ''}" onclick="selectOption('food', '${f}')">${f}</div>
+                    `).join('')}
+                  </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-4 shadow-md">
+                  <h4 class="font-bold text-gray-700 mb-2">💪 Tu talento especial</h4>
+                  <div class="flex flex-wrap gap-2">
+                    ${options.talent.map(t => `
+                      <div class="avatar-option text-sm px-3 py-2 rounded-lg bg-amber-50 ${avatar.talent === t ? 'selected' : ''}" onclick="selectOption('talent', '${t}')">${t}</div>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div id="game5-complete" class="mt-4 ${Object.values(avatar).filter(v => v).length >= 4 ? '' : 'hidden'}">
+              <div class="bg-gradient-to-r from-violet-400 to-purple-400 rounded-2xl p-6 text-center text-white">
+                <h3 class="title-font text-2xl mb-2">🎉 ¡Avatar completado!</h3>
+                <p>Has creado un avatar único que muestra quién eres. ¡Cada persona es especial!</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      window.selectOption = function(category, value) {
+        avatar[category] = value;
+        renderCreator();
+        
+        const count = Object.values(avatar).filter(v => v).length;
+        const score = count * 25;
+        
+        if (count >= 4) {
+          saveGameScore('game_5', 100, true);
+          showConfetti(container);
+        } else {
+          saveGameScore('game_5', score, false);
+        }
+      };
+      
+      renderCreator();
+    }
+
+    // ============ JUEGO 6: LÍNEA DEL TIEMPO DE LOGROS ============
+    function renderGame6() {
+      const container = document.getElementById('game-container');
+      
+      const achievements = [
+        { id: 1, title: 'Amarrarme las agujetas', emoji: '👟', age: '5 años' },
+        { id: 2, title: 'Aprender a leer', emoji: '📖', age: '6 años' },
+        { id: 3, title: 'Hacer un amigo', emoji: '🤝', age: '4 años' },
+        { id: 4, title: 'Nadar solo/a', emoji: '🏊', age: '7 años' },
+        { id: 5, title: 'Andar en bicicleta', emoji: '🚲', age: '6 años' },
+        { id: 6, title: 'Cocinar algo simple', emoji: '🍳', age: '8 años' },
+        { id: 7, title: 'Terminar un libro', emoji: '📚', age: '7 años' },
+        { id: 8, title: 'Ayudar en casa', emoji: '🏠', age: '5 años' }
+      ];
+      
+      let achieved = [];
+      
+      container.innerHTML = `
+        <div class="max-w-4xl mx-auto">
+          <div class="flex items-center justify-between mb-4">
+            <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+              ← Volver
+            </button>
+            <div class="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold">
+              🏅 Logros: <span id="achievements-count">0</span>/8
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+            <h2 class="title-font text-2xl text-yellow-600 mb-2">🏅 Línea del Tiempo de Logros</h2>
+            <p class="text-gray-600 mb-2">Haz clic en los logros que YA has alcanzado para colocar tu medalla. ¡Celebra tus éxitos!</p>
+            <div class="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3 text-sm">
+              <strong>📚 Contenido:</strong> Construcción del proyecto de vida<br>
+              <strong>🎯 PDA:</strong> Reflexiona acerca de logros cotidianos, académicos y emocionales para valorar su nivel de independencia y replantear metas.
+            </div>
+          </div>
+          
+          <div class="bg-gradient-to-br from-yellow-100 to-amber-100 rounded-2xl p-6">
+            <div class="relative">
+              <!-- Línea central -->
+              <div class="absolute left-1/2 transform -translate-x-1/2 w-2 h-full bg-amber-300 rounded-full"></div>
+              
+              <div class="space-y-4 relative">
+                ${achievements.map((a, i) => `
+                  <div class="timeline-item flex items-center ${i % 2 === 0 ? '' : 'flex-row-reverse'}" data-id="${a.id}" onclick="toggleAchievement(${a.id})">
+                    <div class="w-1/2 ${i % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}">
+                      <div class="bg-white rounded-xl p-3 shadow-md hover:shadow-lg transition-all cursor-pointer ${achieved.includes(a.id) ? 'ring-4 ring-yellow-400' : ''}">
+                        <span class="text-2xl">${a.emoji}</span>
+                        <p class="font-bold text-gray-700">${a.title}</p>
+                        <p class="text-xs text-gray-500">Aprox. ${a.age}</p>
+                        <div class="medal mt-2 ${achieved.includes(a.id) ? '' : 'hidden'}">
+                          <span class="text-2xl">🏅</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="w-8 h-8 bg-amber-400 rounded-full flex items-center justify-center text-white font-bold z-10 shadow-lg">
+                      ${achieved.includes(a.id) ? '✓' : i + 1}
+                    </div>
+                    <div class="w-1/2"></div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+          
+          <div id="game6-message" class="mt-4 text-center text-gray-600">
+            Haz clic en los logros que ya has conseguido
+          </div>
+          
+          <div id="game6-complete" class="mt-4 hidden">
+            <div class="bg-gradient-to-r from-yellow-400 to-amber-400 rounded-2xl p-6 text-center text-white">
+              <h3 class="title-font text-2xl mb-2">🎉 ¡Felicidades!</h3>
+              <p>Has reflexionado sobre tus logros. ¡Cada día aprendes y logras cosas nuevas!</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      window.toggleAchievement = function(id) {
+        const index = achieved.indexOf(id);
+        if (index > -1) {
+          achieved.splice(index, 1);
+        } else {
+          achieved.push(id);
+        }
+        
+        // Actualizar visual
+        const item = container.querySelector(`[data-id="${id}"]`);
+        const card = item.querySelector('.bg-white');
+        const medal = item.querySelector('.medal');
+        const circle = item.querySelector('.rounded-full');
+        
+        if (achieved.includes(id)) {
+          card.classList.add('ring-4', 'ring-yellow-400');
+          medal.classList.remove('hidden');
+          circle.textContent = '✓';
+          circle.classList.add('bg-green-500');
+        } else {
+          card.classList.remove('ring-4', 'ring-yellow-400');
+          medal.classList.add('hidden');
+          circle.textContent = achievements.findIndex(a => a.id === id) + 1;
+          circle.classList.remove('bg-green-500');
+        }
+        
+        document.getElementById('achievements-count').textContent = achieved.length;
+        
+        const score = Math.round((achieved.length / 8) * 100);
+        
+        if (achieved.length >= 5) {
+          document.getElementById('game6-complete').classList.remove('hidden');
+          saveGameScore('game_6', score, true);
+          showConfetti(container);
+        } else {
+          saveGameScore('game_6', score, false);
+        }
+      };
+    }
+
+    // ============ JUEGO 7: BALANZA DE EQUIDAD ============
+    function renderGame7() {
+      const container = document.getElementById('game-container');
+      
+      const tasks = [
+        { emoji: '🍳', name: 'Cocinar', weight: 2 },
+        { emoji: '🧹', name: 'Barrer', weight: 1 },
+        { emoji: '🧺', name: 'Lavar ropa', weight: 2 },
+        { emoji: '🍽️', name: 'Lavar platos', weight: 1 },
+        { emoji: '🛒', name: 'Compras', weight: 2 },
+        { emoji: '🗑️', name: 'Sacar basura', weight: 1 },
+        { emoji: '📖', name: 'Ayudar tarea', weight: 2 },
+        { emoji: '🛏️', name: 'Tender cama', weight: 1 }
+      ];
+      
+      let leftSide = [];
+      let rightSide = [];
+      let selectedTask = null;
+      
+      function calculateWeight(side) {
+        return side.reduce((sum, t) => sum + t.weight, 0);
+      }
+      
+      function getBalance() {
+        const left = calculateWeight(leftSide);
+        const right = calculateWeight(rightSide);
+        return { left, right, balanced: Math.abs(left - right) <= 1 };
+      }
+      
+      function renderBalance() {
+        const balance = getBalance();
+        const rotation = (balance.right - balance.left) * 5;
+        
+        container.innerHTML = `
+          <div class="max-w-4xl mx-auto">
+            <div class="flex items-center justify-between mb-4">
+              <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+                ← Volver
+              </button>
+              <div class="bg-pink-500 text-white px-4 py-2 rounded-full font-semibold">
+                ${balance.balanced && leftSide.length >= 4 ? '⚖️ ¡Equilibrado!' : `Tareas: ${leftSide.length + rightSide.length}/8`}
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+              <h2 class="title-font text-2xl text-pink-600 mb-2">⚖️ Balanza de Equidad</h2>
+              <p class="text-gray-600 mb-2">Reparte las tareas del hogar de forma equitativa entre hombres y mujeres.</p>
+              <div class="bg-pink-50 border-2 border-pink-200 rounded-lg p-3 text-sm">
+                <strong>📚 Contenido:</strong> Equidad de género<br>
+                <strong>🎯 PDA:</strong> Analiza prácticas equitativas en la distribución de tareas y responsabilidades cotidianas para proponer mejores formas de relación.
+              </div>
+            </div>
+            
+            <!-- Tareas disponibles -->
+            <div class="bg-gray-100 rounded-2xl p-4 mb-4">
+              <h3 class="font-bold text-gray-700 mb-2">🏠 Tareas del hogar (haz clic para asignar)</h3>
+              <div id="tasks-available" class="flex flex-wrap gap-2">
+                ${tasks.filter(t => !leftSide.includes(t) && !rightSide.includes(t)).map(t => `
+                  <div class="bg-white px-3 py-2 rounded-xl shadow cursor-pointer hover:scale-105 transition-all ${selectedTask === t ? 'ring-2 ring-pink-500' : ''}" onclick="selectTask7('${t.name}')">
+                    <span class="text-xl">${t.emoji}</span>
+                    <span class="text-sm">${t.name}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            
+            <!-- Balanza -->
+            <div class="relative bg-gradient-to-br from-pink-100 to-rose-100 rounded-2xl p-6 overflow-hidden">
+              <!-- Base de la balanza -->
+              <div class="text-center mb-4">
+                <div class="text-6xl">⚖️</div>
+              </div>
+              
+              <!-- Barra de balance -->
+              <div class="balance-beam bg-amber-600 h-3 rounded-full mx-auto w-3/4 mb-4" style="transform: rotate(${rotation}deg)"></div>
+              
+              <!-- Platillos -->
+              <div class="grid grid-cols-2 gap-4">
+                <div class="text-center">
+                  <div class="text-4xl mb-2">👩</div>
+                  <h4 class="font-bold text-pink-700">Mujeres</h4>
+                  <p class="text-sm text-gray-600">Peso: ${balance.left}</p>
+                  <div class="bg-white rounded-xl p-3 min-h-[100px] mt-2 cursor-pointer hover:bg-pink-50 transition-all" onclick="assignTask('left')">
+                    ${leftSide.length === 0 ? '<p class="text-gray-400 text-sm">Clic para asignar</p>' : 
+                      leftSide.map(t => `<span class="inline-block m-1">${t.emoji}</span>`).join('')}
+                  </div>
+                </div>
+                <div class="text-center">
+                  <div class="text-4xl mb-2">👨</div>
+                  <h4 class="font-bold text-blue-700">Hombres</h4>
+                  <p class="text-sm text-gray-600">Peso: ${balance.right}</p>
+                  <div class="bg-white rounded-xl p-3 min-h-[100px] mt-2 cursor-pointer hover:bg-blue-50 transition-all" onclick="assignTask('right')">
+                    ${rightSide.length === 0 ? '<p class="text-gray-400 text-sm">Clic para asignar</p>' : 
+                      rightSide.map(t => `<span class="inline-block m-1">${t.emoji}</span>`).join('')}
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Mensaje de balance -->
+              <div class="text-center mt-4">
+                ${balance.balanced ? 
+                  '<p class="text-green-600 font-bold">✅ ¡La balanza está equilibrada!</p>' :
+                  balance.left > balance.right ?
+                    '<p class="text-amber-600">⚠️ Las mujeres tienen más tareas</p>' :
+                    '<p class="text-amber-600">⚠️ Los hombres tienen más tareas</p>'
+                }
+              </div>
+            </div>
+            
+            <div id="game7-complete" class="mt-4 ${balance.balanced && leftSide.length >= 4 ? '' : 'hidden'}">
+              <div class="bg-gradient-to-r from-pink-400 to-rose-400 rounded-2xl p-6 text-center text-white">
+                <h3 class="title-font text-2xl mb-2">🎉 ¡Equilibrio logrado!</h3>
+                <p>Has aprendido que las tareas del hogar deben repartirse de forma justa entre todos.</p>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        if (balance.balanced && leftSide.length >= 4) {
+          saveGameScore('game_7', 100, true);
+          showConfetti(container);
+        } else {
+          const score = Math.round(((leftSide.length + rightSide.length) / 8) * 100);
+          saveGameScore('game_7', score, false);
+        }
+      }
+      
+      window.selectTask7 = function(name) {
+        selectedTask = tasks.find(t => t.name === name);
+        renderBalance();
+      };
+      
+      window.assignTask = function(side) {
+        if (!selectedTask) return;
+        
+        if (side === 'left') {
+          leftSide.push(selectedTask);
+        } else {
+          rightSide.push(selectedTask);
+        }
+        
+        selectedTask = null;
+        renderBalance();
+      };
+      
+      renderBalance();
+    }
+
+    // ============ JUEGO 8: RITMO EN MOVIMIENTO ============
+    function renderGame8() {
+      const container = document.getElementById('game-container');
+      
+      const moves = ['⬆️', '⬇️', '⬅️', '➡️'];
+      const keyMap = { 'ArrowUp': '⬆️', 'ArrowDown': '⬇️', 'ArrowLeft': '⬅️', 'ArrowRight': '➡️' };
+      
+      let sequence = [];
+      let currentIndex = 0;
+      let score = 0;
+      let level = 1;
+      let gameActive = false;
+      
+      function generateSequence() {
+        sequence = [];
+        const length = 3 + level;
+        for (let i = 0; i < length; i++) {
+          sequence.push(moves[Math.floor(Math.random() * moves.length)]);
+        }
+      }
+      
+      function renderGame() {
+        container.innerHTML = `
+          <div class="max-w-3xl mx-auto">
+            <div class="flex items-center justify-between mb-4">
+              <button onclick="stopGame8(); backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+                ← Volver
+              </button>
+              <div class="flex gap-2">
+                <div class="bg-cyan-500 text-white px-4 py-2 rounded-full font-semibold">
+                  Nivel: ${level}
+                </div>
+                <div class="bg-sky-500 text-white px-4 py-2 rounded-full font-semibold">
+                  Puntos: ${score}
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+              <h2 class="title-font text-2xl text-cyan-600 mb-2">🎵 Ritmo en Movimiento</h2>
+              <p class="text-gray-600 mb-2">Memoriza la secuencia y repítela usando las flechas del teclado o los botones.</p>
+              <div class="bg-cyan-50 border-2 border-cyan-200 rounded-lg p-3 text-sm">
+                <strong>📚 Contenido:</strong> Capacidades y habilidades motrices<br>
+                <strong>🎯 PDA:</strong> Adapta sus movimientos de acuerdo con los elementos básicos de los juegos para responder a las condiciones que se presentan.
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-cyan-100 to-sky-100 rounded-2xl p-6 text-center">
+              <!-- Secuencia a memorizar -->
+              <div class="bg-white rounded-xl p-4 mb-4 min-h-[80px]">
+                <h3 class="font-bold text-gray-700 mb-2" id="instruction">
+                  ${gameActive ? 'Tu turno: repite la secuencia' : 'Presiona "Iniciar" para comenzar'}
+                </h3>
+                <div class="flex justify-center gap-2 text-4xl" id="sequence-display">
+                  ${sequence.map((m, i) => `
+                    <span class="${i < currentIndex ? 'opacity-30' : ''} ${i === currentIndex && gameActive ? 'animate-pulse ring-4 ring-cyan-400 rounded-lg' : ''}">${m}</span>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <!-- Controles -->
+              <div class="grid grid-cols-3 gap-2 max-w-xs mx-auto mb-4">
+                <div></div>
+                <button class="rhythm-key bg-white hover:bg-gray-100 p-4 rounded-xl shadow-lg text-3xl active:scale-95 transition-all" onclick="pressKey('⬆️')" ${!gameActive ? 'disabled' : ''}>⬆️</button>
+                <div></div>
+                <button class="rhythm-key bg-white hover:bg-gray-100 p-4 rounded-xl shadow-lg text-3xl active:scale-95 transition-all" onclick="pressKey('⬅️')" ${!gameActive ? 'disabled' : ''}>⬅️</button>
+                <button class="rhythm-key bg-white hover:bg-gray-100 p-4 rounded-xl shadow-lg text-3xl active:scale-95 transition-all" onclick="pressKey('⬇️')" ${!gameActive ? 'disabled' : ''}>⬇️</button>
+                <button class="rhythm-key bg-white hover:bg-gray-100 p-4 rounded-xl shadow-lg text-3xl active:scale-95 transition-all" onclick="pressKey('➡️')" ${!gameActive ? 'disabled' : ''}>➡️</button>
+              </div>
+              
+              ${!gameActive ? `
+                <button onclick="startLevel()" class="bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-600 hover:to-sky-600 text-white px-8 py-3 rounded-2xl font-bold text-lg shadow-lg hover:scale-105 transition-all">
+                  🎬 ${level === 1 ? 'Iniciar' : 'Siguiente nivel'}
+                </button>
+              ` : ''}
+              
+              <div id="feedback" class="mt-4 text-xl font-bold"></div>
+            </div>
+            
+            <div id="game8-complete" class="mt-4 hidden">
+              <div class="bg-gradient-to-r from-cyan-400 to-sky-400 rounded-2xl p-6 text-center text-white">
+                <h3 class="title-font text-2xl mb-2">🎉 ¡Excelente coordinación!</h3>
+                <p>Has demostrado gran habilidad siguiendo los ritmos y movimientos.</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      window.stopGame8 = function() {
+        gameActive = false;
+        document.removeEventListener('keydown', handleKeyPress);
+      };
+      
+      window.startLevel = function() {
+        generateSequence();
+        currentIndex = 0;
+        gameActive = false;
+        
+        // Mostrar secuencia
+        container.querySelector('#instruction').textContent = '¡Memoriza la secuencia!';
+        container.querySelector('#sequence-display').innerHTML = sequence.map(m => `<span class="text-4xl">${m}</span>`).join('');
+        
+        // Destacar cada elemento
+        let showIndex = 0;
+        const interval = setInterval(() => {
+          const spans = container.querySelectorAll('#sequence-display span');
+          spans.forEach((s, i) => {
+            s.classList.remove('bg-cyan-200', 'rounded-lg', 'p-1');
+            if (i === showIndex) {
+              s.classList.add('bg-cyan-200', 'rounded-lg', 'p-1');
+            }
+          });
+          showIndex++;
+          
+          if (showIndex > sequence.length) {
+            clearInterval(interval);
+            gameActive = true;
+            renderGame();
+          }
+        }, 800);
+      };
+      
+      function handleKeyPress(e) {
+        if (!gameActive) return;
+        const move = keyMap[e.key];
+        if (move) {
+          e.preventDefault();
+          pressKey(move);
+        }
+      }
+      
+      window.pressKey = function(move) {
+        if (!gameActive) return;
+        
+        const btn = container.querySelector(`.rhythm-key:nth-child(${move === '⬆️' ? 2 : move === '⬅️' ? 4 : move === '⬇️' ? 5 : 6})`);
+        if (btn) {
+          btn.classList.add('active');
+          setTimeout(() => btn.classList.remove('active'), 100);
+        }
+        
+        if (move === sequence[currentIndex]) {
+          currentIndex++;
+          
+          if (currentIndex >= sequence.length) {
+            // Nivel completado
+            gameActive = false;
+            score += level * 10;
+            
+            const feedback = document.getElementById('feedback');
+            feedback.innerHTML = '<span class="text-green-600">✅ ¡Perfecto!</span>';
+            
+            if (level >= 5) {
+              document.getElementById('game8-complete').classList.remove('hidden');
+              saveGameScore('game_8', 100, true);
+              showConfetti(container);
+            } else {
+              level++;
+              setTimeout(() => renderGame(), 1500);
+              saveGameScore('game_8', score, false);
+            }
+          } else {
+            renderGame();
+          }
+        } else {
+          // Error
+          gameActive = false;
+          const feedback = document.getElementById('feedback');
+          feedback.innerHTML = '<span class="text-red-600">❌ ¡Ups! Intenta de nuevo</span>';
+          setTimeout(() => renderGame(), 1500);
+        }
+      };
+      
+      document.addEventListener('keydown', handleKeyPress);
+      renderGame();
+    }
+
+    // ============ JUEGO 9: CONTADOR DE ENERGÍA ============
+    function renderGame9() {
+      const container = document.getElementById('game-container');
+      
+      const activities = [
+        { emoji: '🏃', name: 'Correr', energy: 25, time: '30 min' },
+        { emoji: '💃', name: 'Bailar', energy: 20, time: '20 min' },
+        { emoji: '🚴', name: 'Andar en bici', energy: 25, time: '30 min' },
+        { emoji: '⚽', name: 'Jugar fútbol', energy: 30, time: '45 min' },
+        { emoji: '🧘', name: 'Yoga', energy: 15, time: '15 min' },
+        { emoji: '🏊', name: 'Nadar', energy: 30, time: '30 min' },
+        { emoji: '🤸', name: 'Gimnasia', energy: 20, time: '20 min' },
+        { emoji: '🚶', name: 'Caminar', energy: 10, time: '20 min' }
+      ];
+      
+      let energy = 0;
+      let selectedActivities = [];
+      
+      function render() {
+        container.innerHTML = `
+          <div class="max-w-4xl mx-auto">
+            <div class="flex items-center justify-between mb-4">
+              <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+                ← Volver
+              </button>
+              <div class="bg-red-500 text-white px-4 py-2 rounded-full font-semibold">
+                ⚡ Energía: ${energy}/100
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+              <h2 class="title-font text-2xl text-red-600 mb-2">⚡ Contador de Energía</h2>
+              <p class="text-gray-600 mb-2">Elige actividades físicas para llenar la barra de energía de tu personaje.</p>
+              <div class="bg-red-50 border-2 border-red-200 rounded-lg p-3 text-sm">
+                <strong>📚 Contenido:</strong> Estilos de vida activos y saludables<br>
+                <strong>🎯 PDA:</strong> Socializa actividades físicas que practica cotidianamente para valorar su incidencia en el bienestar y la salud.
+              </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Personaje y barra de energía -->
+              <div class="bg-gradient-to-br from-red-100 to-orange-100 rounded-2xl p-6 text-center">
+                <div class="text-6xl mb-4 ${energy >= 100 ? 'animate-bounce' : ''}">${energy >= 100 ? '🦸' : energy >= 50 ? '😊' : '😴'}</div>
+                
+                <!-- Barra de energía -->
+                <div class="bg-gray-200 rounded-full h-8 overflow-hidden mb-4">
+                  <div class="progress-fill h-full rounded-full ${energy >= 100 ? 'bg-gradient-to-r from-green-400 to-emerald-500' : energy >= 50 ? 'bg-gradient-to-r from-yellow-400 to-amber-500' : 'bg-gradient-to-r from-red-400 to-orange-500'}" style="width: ${Math.min(energy, 100)}%">
+                  </div>
+                </div>
+                
+                <p class="text-gray-700 font-semibold mb-4">
+                  ${energy >= 100 ? '¡Energía al máximo! 💪' : energy >= 50 ? '¡Vas muy bien!' : 'Necesitas más actividad'}
+                </p>
+                
+                <!-- Actividades seleccionadas -->
+                <div class="bg-white rounded-xl p-3">
+                  <h4 class="font-bold text-gray-700 mb-2">Actividades del día:</h4>
+                  <div class="flex flex-wrap gap-2 justify-center min-h-[40px]">
+                    ${selectedActivities.length === 0 ? 
+                      '<p class="text-gray-400 text-sm">Elige actividades →</p>' :
+                      selectedActivities.map(a => `<span class="text-2xl">${a.emoji}</span>`).join('')
+                    }
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Actividades disponibles -->
+              <div class="bg-white rounded-2xl p-4 shadow-md">
+                <h3 class="font-bold text-gray-700 mb-3">🏋️ Actividades Físicas</h3>
+                <div class="grid grid-cols-2 gap-2">
+                  ${activities.map(a => `
+                    <div class="ingredient bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-3 text-center hover:shadow-lg ${selectedActivities.includes(a) ? 'opacity-50' : ''}" onclick="selectActivity9('${a.name}')">
+                      <span class="text-3xl">${a.emoji}</span>
+                      <p class="font-semibold text-sm">${a.name}</p>
+                      <p class="text-xs text-gray-500">${a.time}</p>
+                      <p class="text-xs text-green-600 font-bold">+${a.energy} ⚡</p>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+            
+            <div id="game9-complete" class="mt-4 ${energy >= 100 ? '' : 'hidden'}">
+              <div class="bg-gradient-to-r from-red-400 to-orange-400 rounded-2xl p-6 text-center text-white">
+                <h3 class="title-font text-2xl mb-2">🎉 ¡Energía completa!</h3>
+                <p>Has aprendido que la actividad física nos da energía y nos mantiene saludables.</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      window.selectActivity9 = function(name) {
+        const activity = activities.find(a => a.name === name);
+        if (!activity || selectedActivities.includes(activity)) return;
+        
+        selectedActivities.push(activity);
+        energy = Math.min(100, energy + activity.energy);
+        render();
+        
+        if (energy >= 100) {
+          saveGameScore('game_9', 100, true);
+          showConfetti(container);
+        } else {
+          saveGameScore('game_9', energy, false);
+        }
+      };
+      
+      render();
+    }
+
+    // ============ JUEGO 10: CHEF DEL BIENESTAR ============
+    function renderGame10() {
+      const container = document.getElementById('game-container');
+      
+      const ingredients = {
+        healthy: [
+          { emoji: '🥕', name: 'Zanahoria', category: 'verdura' },
+          { emoji: '🥦', name: 'Brócoli', category: 'verdura' },
+          { emoji: '🍎', name: 'Manzana', category: 'fruta' },
+          { emoji: '🍌', name: 'Plátano', category: 'fruta' },
+          { emoji: '🥚', name: 'Huevo', category: 'proteína' },
+          { emoji: '🐟', name: 'Pescado', category: 'proteína' },
+          { emoji: '🍚', name: 'Arroz', category: 'cereal' },
+          { emoji: '🥛', name: 'Leche', category: 'lácteo' }
+        ],
+        unhealthy: [
+          { emoji: '🍟', name: 'Papas fritas', category: 'chatarra' },
+          { emoji: '🍬', name: 'Dulces', category: 'chatarra' },
+          { emoji: '🥤', name: 'Refresco', category: 'chatarra' },
+          { emoji: '🍩', name: 'Dona', category: 'chatarra' }
+        ]
+      };
+      
+      let plate = [];
+      let score = 0;
+      let mistakes = 0;
+      
+      function render() {
+        const allIngredients = [...ingredients.healthy, ...ingredients.unhealthy].sort(() => Math.random() - 0.5);
+        
+        container.innerHTML = `
+          <div class="max-w-4xl mx-auto">
+            <div class="flex items-center justify-between mb-4">
+              <button onclick="backToMenu()" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-full text-gray-700 font-semibold transition-all">
+                ← Volver
+              </button>
+              <div class="flex gap-2">
+                <div class="bg-green-500 text-white px-4 py-2 rounded-full font-semibold">
+                  ✅ Aciertos: ${plate.length}
+                </div>
+                <div class="bg-red-500 text-white px-4 py-2 rounded-full font-semibold">
+                  ❌ Errores: ${mistakes}
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-4 shadow-xl mb-4">
+              <h2 class="title-font text-2xl text-green-600 mb-2">👨‍🍳 Chef del Bienestar</h2>
+              <p class="text-gray-600 mb-2">Selecciona solo los ingredientes SALUDABLES para crear un menú nutritivo.</p>
+              <div class="bg-green-50 border-2 border-green-200 rounded-lg p-3 text-sm">
+                <strong>📚 Contenido:</strong> Hábitos saludables y bienestar<br>
+                <strong>🎯 PDA:</strong> Distingue alimentos saludables y no saludables para promover una alimentación saludable.
+              </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+              <!-- Cinta de ingredientes -->
+              <div class="bg-gradient-to-br from-amber-100 to-yellow-100 rounded-2xl p-4">
+                <h3 class="font-bold text-amber-700 mb-3">🍽️ Ingredientes disponibles</h3>
+                <div class="grid grid-cols-3 gap-2">
+                  ${allIngredients.filter(i => !plate.includes(i)).map(i => `
+                    <div class="ingredient bg-white rounded-xl p-3 text-center shadow-md" onclick="selectIngredient10('${i.name}', ${ingredients.healthy.includes(i)})">
+                      <span class="text-3xl">${i.emoji}</span>
+                      <p class="text-xs font-semibold">${i.name}</p>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <!-- Plato -->
+              <div class="bg-gradient-to-br from-green-100 to-lime-100 rounded-2xl p-4 text-center">
+                <h3 class="font-bold text-green-700 mb-3">🥗 Tu Menú Saludable</h3>
+                <div class="bg-white rounded-full w-48 h-48 mx-auto flex items-center justify-center shadow-lg">
+                  <div class="flex flex-wrap gap-1 justify-center p-4">
+                    ${plate.length === 0 ? 
+                      '<p class="text-gray-400 text-sm">Agrega ingredientes saludables</p>' :
+                      plate.map(i => `<span class="text-3xl">${i.emoji}</span>`).join('')
+                    }
+                  </div>
+                </div>
+                
+                <div id="feedback10" class="mt-4 text-lg font-bold min-h-[30px]"></div>
+              </div>
+            </div>
+            
+            <div id="game10-complete" class="mt-4 ${plate.length >= 6 ? '' : 'hidden'}">
+              <div class="bg-gradient-to-r from-green-400 to-lime-400 rounded-2xl p-6 text-center text-white">
+                <h3 class="title-font text-2xl mb-2">🎉 ¡Menú saludable listo!</h3>
+                <p>Has aprendido a elegir alimentos nutritivos. ¡Tu cuerpo te lo agradece!</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      window.selectIngredient10 = function(name, isHealthy) {
+        const feedback = document.getElementById('feedback10');
+        
+        if (isHealthy) {
+          const ingredient = ingredients.healthy.find(i => i.name === name);
+          plate.push(ingredient);
+          feedback.innerHTML = '<span class="text-green-600">✅ ¡Buena elección!</span>';
+          
+          if (plate.length >= 6) {
+            const finalScore = Math.max(0, 100 - mistakes * 10);
+            saveGameScore('game_10', finalScore, true);
+            showConfetti(container);
+          } else {
+            saveGameScore('game_10', plate.length * 15, false);
+          }
+        } else {
+          mistakes++;
+          feedback.innerHTML = '<span class="text-red-600">❌ ¡Eso no es saludable!</span>';
+        }
+        
+        setTimeout(() => {
+          render();
+        }, 800);
+      };
+      
+      render();
+    }
+
+    // Inicializar la aplicación
+    initApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d64bfc5807ad749',t:'MTc3MjUwMDA5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
