@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordenando el Alfabeto</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Nunito', sans-serif; }
+    .title-font { font-family: 'Fredoka One', cursive; }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.5); }
+    }
+    
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100%) rotate(720deg); opacity: 0; }
+    }
+    
+    .animate-bounce-in { animation: bounce-in 0.5s ease-out forwards; }
+    .animate-wiggle { animation: wiggle 0.5s ease-in-out; }
+    .animate-pop { animation: pop 0.3s ease-in-out; }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    .animate-sparkle { animation: sparkle 1s ease-in-out infinite; }
+    
+    .letter-card {
+      cursor: grab;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+    
+    .letter-card:hover {
+      transform: scale(1.1) rotate(2deg);
+    }
+    
+    .letter-card:active {
+      cursor: grabbing;
+      transform: scale(1.15);
+    }
+    
+    .letter-card.dragging {
+      opacity: 0.7;
+      transform: scale(1.2) rotate(5deg);
+      z-index: 100;
+    }
+    
+    .drop-zone {
+      transition: all 0.3s ease;
+    }
+    
+    .drop-zone.drag-over {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 200, 0, 0.8);
+    }
+    
+    .drop-zone.correct {
+      background: linear-gradient(135deg, #4ade80, #22c55e) !important;
+      animation: pop 0.3s ease-in-out;
+    }
+    
+    .drop-zone.incorrect {
+      animation: wiggle 0.3s ease-in-out;
+    }
+    
+    .star {
+      position: absolute;
+      font-size: 24px;
+      pointer-events: none;
+    }
+    
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confetti-fall 3s ease-in-out forwards;
+    }
+    
+    .btn-game {
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    }
+    
+    .btn-game:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+    }
+    
+    .btn-game:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+    }
+    
+    .info-card {
+      background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 50%, #ffffff 100%);">
+  <div id="app" class="w-full min-h-full flex flex-col"><!-- Header -->
+   <header class="text-center py-4 px-4">
+    <h1 id="game-title" class="title-font text-3xl md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 animate-float">🎨 Ordenando el Alfabeto 🎨</h1>
+    <p class="text-gray-600 mt-2 text-sm md:text-base">¡Arrastra las letras y ordénalas correctamente!</p>
+   </header><!-- Score and Level Display -->
+   <div class="flex justify-center gap-3 md:gap-6 px-4 mb-4 flex-wrap">
+    <div class="bg-gradient-to-r from-yellow-400 to-orange-400 px-4 py-2 rounded-full shadow-lg"><span class="text-white font-bold text-sm md:text-base">⭐ Puntos: <span id="score">0</span></span>
+    </div>
+    <div class="bg-gradient-to-r from-blue-400 to-cyan-400 px-4 py-2 rounded-full shadow-lg"><span class="text-white font-bold text-sm md:text-base">🎯 Nivel: <span id="level">1</span></span>
+    </div>
+    <div class="bg-gradient-to-r from-green-400 to-emerald-400 px-4 py-2 rounded-full shadow-lg"><span class="text-white font-bold text-sm md:text-base">✅ Racha: <span id="streak">0</span></span>
+    </div>
+   </div><!-- Main Game Area -->
+   <main class="flex-1 px-4 pb-4"><!-- Instructions -->
+    <div id="instructions" class="bg-white rounded-2xl p-4 mb-4 shadow-lg border-4 border-dashed border-pink-300 max-w-2xl mx-auto">
+     <p class="text-center text-gray-700 font-semibold text-sm md:text-base"><span class="text-2xl">👆</span> Arrastra cada letra al lugar correcto para ordenar el alfabeto</p>
+    </div><!-- Drop Zones -->
+    <div id="drop-zones" class="flex justify-center gap-2 md:gap-3 mb-6 flex-wrap max-w-3xl mx-auto"><!-- Drop zones will be generated here -->
+    </div><!-- Letter Cards -->
+    <div id="letter-cards" class="flex justify-center gap-2 md:gap-3 flex-wrap max-w-3xl mx-auto mb-6"><!-- Draggable letters will be generated here -->
+    </div><!-- Game Controls -->
+    <div class="flex justify-center gap-3 flex-wrap mb-6"><button id="hint-btn" class="btn-game bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-5 py-3 rounded-2xl font-bold text-sm md:text-base"> 💡 Pista </button> <button id="new-game-btn" class="btn-game bg-gradient-to-r from-green-500 to-emerald-500 text-white px-5 py-3 rounded-2xl font-bold text-sm md:text-base"> 🔄 Nuevo Juego </button> <button id="easy-btn" class="btn-game bg-gradient-to-r from-cyan-400 to-blue-400 text-white px-5 py-3 rounded-2xl font-bold text-sm md:text-base"> 😊 Fácil </button> <button id="hard-btn" class="btn-game bg-gradient-to-r from-red-400 to-pink-500 text-white px-5 py-3 rounded-2xl font-bold text-sm md:text-base"> 🔥 Difícil </button>
+    </div><!-- Success Message -->
+    <div id="success-message" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+     <div class="bg-white rounded-3xl p-8 text-center shadow-2xl max-w-sm mx-4 transform scale-0" id="success-content">
+      <div class="text-6xl mb-4">
+       🎉
+      </div>
+      <h2 class="title-font text-3xl text-green-500 mb-2">¡Excelente!</h2>
+      <p class="text-gray-600 mb-4">¡Has ordenado el alfabeto correctamente!</p>
+      <p class="text-2xl font-bold text-orange-500 mb-4">+<span id="points-earned">10</span> puntos</p><button id="continue-btn" class="btn-game bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-3 rounded-2xl font-bold"> ¡Continuar! 🚀 </button>
+     </div>
+    </div><!-- Learning Content Card -->
+    <div class="info-card rounded-3xl p-5 shadow-xl border-4 border-blue-200 max-w-2xl mx-auto mb-4">
+     <div class="flex items-center gap-2 mb-3"><span class="text-3xl">📚</span>
+      <h3 class="title-font text-xl text-blue-600">Aprendizajes Esperados</h3>
+     </div>
+     <ul class="space-y-2 text-gray-700 text-sm md:text-base">
+      <li class="flex items-start gap-2"><span class="text-green-500 text-xl">✓</span> <span><strong>Reconocimiento de letras:</strong> Identificar cada letra del alfabeto por su forma y nombre.</span></li>
+      <li class="flex items-start gap-2"><span class="text-green-500 text-xl">✓</span> <span><strong>Orden alfabético:</strong> Comprender y memorizar la secuencia correcta de las letras.</span></li>
+      <li class="flex items-start gap-2"><span class="text-green-500 text-xl">✓</span> <span><strong>Coordinación motriz:</strong> Desarrollar habilidades de arrastrar y soltar con precisión.</span></li>
+      <li class="flex items-start gap-2"><span class="text-green-500 text-xl">✓</span> <span><strong>Pensamiento lógico:</strong> Resolver problemas de secuenciación y patrones.</span></li>
+      <li class="flex items-start gap-2"><span class="text-green-500 text-xl">✓</span> <span><strong>Memoria visual:</strong> Recordar la posición de las letras en el alfabeto.</span></li>
+     </ul>
+    </div>
+   </main><!-- Footer -->
+   <footer class="bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 py-4 px-4 text-center">
+    <div class="flex items-center justify-center gap-2 flex-wrap"><span class="text-2xl">👩‍🏫</span>
+     <p id="teacher-credit" class="text-gray-700 font-semibold text-sm md:text-base">Material elaborado por Maestra María Fernanda Flores Valenzuela</p><span class="text-2xl">💖</span>
+    </div>
+    <p class="text-gray-500 text-xs mt-2">Primer Grado de Primaria • Lectoescritura</p>
+   </footer>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      game_title: 'Ordenando el Alfabeto',
+      teacher_name: 'María Fernanda Flores Valenzuela',
+      primary_color: '#f97316',
+      secondary_color: '#ec4899',
+      accent_color: '#8b5cf6',
+      text_color: '#374151',
+      background_color: '#e0f2fe',
+      font_family: 'Nunito',
+      font_size: 16
+    };
+
+    // Game state
+    let gameState = {
+      score: 0,
+      level: 1,
+      streak: 0,
+      hintsUsed: 0,
+      difficulty: 'easy',
+      currentLetters: [],
+      placedLetters: {},
+      draggedElement: null
+    };
+
+    const alphabet = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
+    const letterColors = [
+      'from-orange-400 to-orange-500',
+      'from-pink-400 to-pink-500',
+      'from-yellow-400 to-amber-500',
+      'from-green-400 to-emerald-500',
+      'from-blue-400 to-cyan-500',
+      'from-purple-400 to-violet-500',
+      'from-red-400 to-rose-500',
+      'from-teal-400 to-cyan-500'
+    ];
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          const titleEl = document.getElementById('game-title');
+          const creditEl = document.getElementById('teacher-credit');
+          
+          if (titleEl) {
+            titleEl.textContent = `🎨 ${config.game_title || defaultConfig.game_title} 🎨`;
+          }
+          if (creditEl) {
+            creditEl.textContent = `Material elaborado por Maestra ${config.teacher_name || defaultConfig.teacher_name}`;
+          }
+          
+          // Apply font
+          const fontFamily = config.font_family || defaultConfig.font_family;
+          document.body.style.fontFamily = `${fontFamily}, Nunito, sans-serif`;
+          
+          // Apply font size scaling
+          const baseSize = config.font_size || defaultConfig.font_size;
+          document.documentElement.style.fontSize = `${baseSize}px`;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => window.elementSdk.setConfig({ background_color: value })
+            },
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => window.elementSdk.setConfig({ primary_color: value })
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => window.elementSdk.setConfig({ text_color: value })
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => window.elementSdk.setConfig({ font_family: value })
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => window.elementSdk.setConfig({ font_size: value })
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['game_title', config.game_title || defaultConfig.game_title],
+          ['teacher_name', config.teacher_name || defaultConfig.teacher_name]
+        ])
+      });
+    }
+
+    // Get random letters based on difficulty
+    function getGameLetters() {
+      const count = gameState.difficulty === 'easy' ? 5 : 8;
+      const startIndex = Math.floor(Math.random() * (alphabet.length - count));
+      return alphabet.slice(startIndex, startIndex + count);
+    }
+
+    // Shuffle array
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    // Get random color for letter
+    function getRandomColor(index) {
+      return letterColors[index % letterColors.length];
+    }
+
+    // Create drop zones
+    function createDropZones() {
+      const container = document.getElementById('drop-zones');
+      container.innerHTML = '';
+      
+      gameState.currentLetters.forEach((letter, index) => {
+        const zone = document.createElement('div');
+        zone.className = `drop-zone w-12 h-12 md:w-16 md:h-16 rounded-2xl border-4 border-dashed border-gray-300 bg-white flex items-center justify-center text-2xl md:text-3xl font-bold text-gray-300`;
+        zone.dataset.index = index;
+        zone.dataset.expectedLetter = letter;
+        zone.textContent = '?';
+        zone.style.animationDelay = `${index * 0.1}s`;
+        zone.classList.add('animate-bounce-in');
+        
+        // Drop zone events
+        zone.addEventListener('dragover', handleDragOver);
+        zone.addEventListener('dragleave', handleDragLeave);
+        zone.addEventListener('drop', handleDrop);
+        zone.addEventListener('touchmove', handleTouchMove);
+        zone.addEventListener('touchend', handleTouchEnd);
+        
+        container.appendChild(zone);
+      });
+    }
+
+    // Create letter cards
+    function createLetterCards() {
+      const container = document.getElementById('letter-cards');
+      container.innerHTML = '';
+      
+      const shuffledLetters = shuffleArray([...gameState.currentLetters]);
+      
+      shuffledLetters.forEach((letter, index) => {
+        const card = document.createElement('div');
+        card.className = `letter-card w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${getRandomColor(index)} flex items-center justify-center text-white text-2xl md:text-3xl font-bold shadow-lg`;
+        card.draggable = true;
+        card.dataset.letter = letter;
+        card.textContent = letter;
+        card.style.animationDelay = `${index * 0.1 + 0.3}s`;
+        card.classList.add('animate-bounce-in');
+        
+        // Drag events
+        card.addEventListener('dragstart', handleDragStart);
+        card.addEventListener('dragend', handleDragEnd);
+        
+        // Touch events for mobile
+        card.addEventListener('touchstart', handleTouchStart);
+        card.addEventListener('touchmove', handleTouchMove);
+        card.addEventListener('touchend', handleTouchEnd);
+        
+        container.appendChild(card);
+      });
+    }
+
+    // Drag handlers
+    function handleDragStart(e) {
+      gameState.draggedElement = e.target;
+      e.target.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', e.target.dataset.letter);
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      gameState.draggedElement = null;
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.target.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+      e.target.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      const zone = e.target.closest('.drop-zone');
+      if (!zone) return;
+      
+      zone.classList.remove('drag-over');
+      
+      const letter = e.dataTransfer.getData('text/plain');
+      const expectedLetter = zone.dataset.expectedLetter;
+      
+      if (letter === expectedLetter) {
+        placeLetterCorrectly(zone, letter);
+      } else {
+        showIncorrect(zone);
+      }
+    }
+
+    // Touch handlers for mobile
+    let touchedElement = null;
+    let touchClone = null;
+
+    function handleTouchStart(e) {
+      if (!e.target.classList.contains('letter-card')) return;
+      
+      touchedElement = e.target;
+      touchedElement.classList.add('dragging');
+      
+      // Create visual clone
+      touchClone = touchedElement.cloneNode(true);
+      touchClone.style.position = 'fixed';
+      touchClone.style.pointerEvents = 'none';
+      touchClone.style.zIndex = '1000';
+      touchClone.style.opacity = '0.8';
+      document.body.appendChild(touchClone);
+      
+      const touch = e.touches[0];
+      touchClone.style.left = `${touch.clientX - 30}px`;
+      touchClone.style.top = `${touch.clientY - 30}px`;
+    }
+
+    function handleTouchMove(e) {
+      if (!touchedElement || !touchClone) return;
+      e.preventDefault();
+      
+      const touch = e.touches[0];
+      touchClone.style.left = `${touch.clientX - 30}px`;
+      touchClone.style.top = `${touch.clientY - 30}px`;
+      
+      // Highlight drop zone under touch
+      const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+      const dropZone = elemBelow?.closest('.drop-zone');
+      
+      document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('drag-over'));
+      if (dropZone) {
+        dropZone.classList.add('drag-over');
+      }
+    }
+
+    function handleTouchEnd(e) {
+      if (!touchedElement) return;
+      
+      if (touchClone) {
+        touchClone.remove();
+        touchClone = null;
+      }
+      
+      touchedElement.classList.remove('dragging');
+      
+      const touch = e.changedTouches[0];
+      const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+      const dropZone = elemBelow?.closest('.drop-zone');
+      
+      if (dropZone) {
+        dropZone.classList.remove('drag-over');
+        const letter = touchedElement.dataset.letter;
+        const expectedLetter = dropZone.dataset.expectedLetter;
+        
+        if (letter === expectedLetter) {
+          placeLetterCorrectly(dropZone, letter);
+        } else {
+          showIncorrect(dropZone);
+        }
+      }
+      
+      touchedElement = null;
+    }
+
+    // Place letter correctly
+    function placeLetterCorrectly(zone, letter) {
+      zone.textContent = letter;
+      zone.classList.add('correct');
+      zone.classList.remove('border-dashed', 'border-gray-300', 'text-gray-300');
+      zone.classList.add('text-white');
+      
+      // Remove the card
+      const card = document.querySelector(`.letter-card[data-letter="${letter}"]`);
+      if (card) {
+        card.style.visibility = 'hidden';
+      }
+      
+      gameState.placedLetters[zone.dataset.index] = letter;
+      gameState.streak++;
+      
+      // Update display
+      document.getElementById('streak').textContent = gameState.streak;
+      
+      // Create sparkle effect
+      createSparkles(zone);
+      
+      // Play success sound effect (visual feedback instead)
+      zone.animate([
+        { transform: 'scale(1)' },
+        { transform: 'scale(1.2)' },
+        { transform: 'scale(1)' }
+      ], { duration: 300 });
+      
+      // Check if game complete
+      checkGameComplete();
+    }
+
+    // Show incorrect feedback
+    function showIncorrect(zone) {
+      zone.classList.add('incorrect');
+      gameState.streak = 0;
+      document.getElementById('streak').textContent = 0;
+      
+      setTimeout(() => {
+        zone.classList.remove('incorrect');
+      }, 500);
+    }
+
+    // Create sparkle effect
+    function createSparkles(element) {
+      const rect = element.getBoundingClientRect();
+      const sparkles = ['✨', '⭐', '🌟', '💫'];
+      
+      for (let i = 0; i < 6; i++) {
+        const sparkle = document.createElement('span');
+        sparkle.className = 'star animate-sparkle';
+        sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+        sparkle.style.left = `${rect.left + Math.random() * rect.width}px`;
+        sparkle.style.top = `${rect.top + Math.random() * rect.height}px`;
+        sparkle.style.animationDelay = `${Math.random() * 0.5}s`;
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => sparkle.remove(), 1000);
+      }
+    }
+
+    // Create confetti
+    function createConfetti() {
+      const colors = ['#f97316', '#ec4899', '#8b5cf6', '#22c55e', '#3b82f6', '#eab308'];
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.top = '-20px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = `${Math.random() * 2}s`;
+        confetti.style.animationDuration = `${2 + Math.random() * 2}s`;
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+
+    // Check if game is complete
+    function checkGameComplete() {
+      if (Object.keys(gameState.placedLetters).length === gameState.currentLetters.length) {
+        // Calculate points
+        const basePoints = gameState.difficulty === 'easy' ? 10 : 20;
+        const streakBonus = Math.floor(gameState.streak / 3) * 5;
+        const hintPenalty = gameState.hintsUsed * 2;
+        const totalPoints = Math.max(basePoints + streakBonus - hintPenalty, 5);
+        
+        gameState.score += totalPoints;
+        gameState.level++;
+        
+        // Update display
+        document.getElementById('score').textContent = gameState.score;
+        document.getElementById('level').textContent = gameState.level;
+        document.getElementById('points-earned').textContent = totalPoints;
+        
+        // Show success modal
+        createConfetti();
+        showSuccessMessage();
+      }
+    }
+
+    // Show success message
+    function showSuccessMessage() {
+      const modal = document.getElementById('success-message');
+      const content = document.getElementById('success-content');
+      
+      modal.classList.remove('hidden');
+      
+      setTimeout(() => {
+        content.style.transform = 'scale(1)';
+        content.style.transition = 'transform 0.3s ease-out';
+      }, 100);
+    }
+
+    // Hide success message
+    function hideSuccessMessage() {
+      const modal = document.getElementById('success-message');
+      const content = document.getElementById('success-content');
+      
+      content.style.transform = 'scale(0)';
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+    }
+
+    // Give hint
+    function giveHint() {
+      const zones = document.querySelectorAll('.drop-zone:not(.correct)');
+      if (zones.length === 0) return;
+      
+      const zone = zones[0];
+      const expectedLetter = zone.dataset.expectedLetter;
+      
+      // Highlight the correct letter card
+      const card = document.querySelector(`.letter-card[data-letter="${expectedLetter}"]`);
+      if (card && card.style.visibility !== 'hidden') {
+        card.classList.add('animate-wiggle');
+        card.style.boxShadow = '0 0 20px rgba(255, 200, 0, 0.8)';
+        
+        setTimeout(() => {
+          card.classList.remove('animate-wiggle');
+          card.style.boxShadow = '';
+        }, 1000);
+        
+        gameState.hintsUsed++;
+      }
+    }
+
+    // Start new game
+    function startNewGame() {
+      gameState.placedLetters = {};
+      gameState.hintsUsed = 0;
+      gameState.currentLetters = getGameLetters();
+      
+      createDropZones();
+      createLetterCards();
+    }
+
+    // Set difficulty
+    function setDifficulty(difficulty) {
+      gameState.difficulty = difficulty;
+      startNewGame();
+      
+      // Update button states
+      document.getElementById('easy-btn').classList.toggle('ring-4', difficulty === 'easy');
+      document.getElementById('easy-btn').classList.toggle('ring-yellow-300', difficulty === 'easy');
+      document.getElementById('hard-btn').classList.toggle('ring-4', difficulty === 'hard');
+      document.getElementById('hard-btn').classList.toggle('ring-yellow-300', difficulty === 'hard');
+    }
+
+    // Event listeners
+    document.getElementById('hint-btn').addEventListener('click', giveHint);
+    document.getElementById('new-game-btn').addEventListener('click', startNewGame);
+    document.getElementById('easy-btn').addEventListener('click', () => setDifficulty('easy'));
+    document.getElementById('hard-btn').addEventListener('click', () => setDifficulty('hard'));
+    document.getElementById('continue-btn').addEventListener('click', () => {
+      hideSuccessMessage();
+      startNewGame();
+    });
+
+    // Initialize game
+    setDifficulty('easy');
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d69f57747fa4f14',t:'MTc3MjU1NDcyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
