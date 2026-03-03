@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conteo Mágico</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    .title-font { font-family: 'Fredoka', sans-serif; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes celebrate {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.1) rotate(-5deg); }
+      50% { transform: scale(1.2); }
+      75% { transform: scale(1.1) rotate(5deg); }
+      100% { transform: scale(1); }
+    }
+    
+    .float { animation: float 3s ease-in-out infinite; }
+    .pop { animation: pop 0.5s ease-out forwards; }
+    .wiggle { animation: wiggle 0.5s ease-in-out; }
+    .bounce-in { animation: bounce-in 0.6s ease-out forwards; }
+    .celebrate { animation: celebrate 0.5s ease-in-out; }
+    
+    .sparkle::before, .sparkle::after {
+      content: '✨';
+      position: absolute;
+      animation: sparkle 1s ease-in-out infinite;
+    }
+    .sparkle::before { top: -10px; left: -10px; animation-delay: 0s; }
+    .sparkle::after { bottom: -10px; right: -10px; animation-delay: 0.5s; }
+    
+    .btn-3d {
+      box-shadow: 0 6px 0 rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.1);
+      transition: all 0.1s ease;
+    }
+    .btn-3d:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 12px 25px rgba(0,0,0,0.15);
+    }
+    .btn-3d:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .card-shadow {
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .fruit-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      max-width: 200px;
+    }
+    
+    .fruit {
+      font-size: 2rem;
+      animation: pop 0.3s ease-out forwards;
+      opacity: 0;
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+      background-size: 200% 100%;
+      animation: gradient-shift 2s ease infinite;
+    }
+    
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #e8f4fc 0%, #f0f9ff 50%, #ffffff 100%);">
+  <div id="app" class="min-h-full w-full p-4 md:p-6"><!-- Pantalla de Inicio -->
+   <div id="start-screen" class="max-w-4xl mx-auto"><!-- Header decorativo -->
+    <div class="text-center mb-6">
+     <div class="inline-block relative">
+      <h1 id="main-title" class="title-font text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 float">✨ Conteo Mágico ✨</h1>
+      <div class="absolute -top-4 -left-4 text-3xl animate-pulse">
+       🌟
+      </div>
+      <div class="absolute -top-4 -right-4 text-3xl animate-pulse" style="animation-delay: 0.5s;">
+       🌟
+      </div>
+     </div>
+     <p class="text-lg md:text-xl text-gray-600 mt-3 font-semibold">¡Aprende a sumar de manera divertida!</p>
+    </div><!-- Tarjetas de selección de nivel -->
+    <div class="grid md:grid-cols-2 gap-6 mb-6"><!-- Nivel 1er Grado --> <button onclick="startGame(1)" class="group relative bg-gradient-to-br from-blue-400 to-cyan-500 rounded-3xl p-6 card-shadow btn-3d transform hover:scale-105 transition-all duration-300 text-white text-left">
+      <div class="absolute top-3 right-3 text-4xl group-hover:animate-bounce">
+       🎈
+      </div>
+      <div class="flex items-center gap-3 mb-3"><span class="text-5xl">1️⃣</span>
+       <div>
+        <h2 class="title-font text-2xl md:text-3xl font-bold">Primer Grado</h2><span class="bg-white/30 px-3 py-1 rounded-full text-sm font-bold">NIVEL FÁCIL</span>
+       </div>
+      </div><p class="text-white/90 font-medium mb-2">📊 Números del 1 al 10</p><p class="text-white/80 text-sm">🍎 Aprende con frutas y figuras coloridas</p>
+      <div class="mt-4 flex gap-2 text-2xl">
+       🍎🍊🍋🍇🍓
+      </div></button> <!-- Nivel 2do Grado --> <button onclick="startGame(2)" class="group relative bg-gradient-to-br from-orange-400 to-pink-500 rounded-3xl p-6 card-shadow btn-3d transform hover:scale-105 transition-all duration-300 text-white text-left">
+      <div class="absolute top-3 right-3 text-4xl group-hover:animate-bounce">
+       🚀
+      </div>
+      <div class="flex items-center gap-3 mb-3"><span class="text-5xl">2️⃣</span>
+       <div>
+        <h2 class="title-font text-2xl md:text-3xl font-bold">Segundo Grado</h2><span class="bg-white/30 px-3 py-1 rounded-full text-sm font-bold">NIVEL INTERMEDIO</span>
+       </div>
+      </div><p class="text-white/90 font-medium mb-2">📊 Números del 1 al 20</p><p class="text-white/80 text-sm">🔢 Practica con números y operaciones</p>
+      <div class="mt-4 flex gap-2 text-2xl font-bold"><span class="bg-white/20 px-3 py-1 rounded-lg">7+8</span> <span class="bg-white/20 px-3 py-1 rounded-lg">12+5</span>
+      </div></button>
+    </div><!-- Tarjeta de Aprendizajes -->
+    <div class="bg-gradient-to-r from-emerald-400 to-teal-500 rounded-3xl p-6 card-shadow text-white mb-6">
+     <div class="flex items-center gap-3 mb-4"><span class="text-4xl">📚</span>
+      <h2 class="title-font text-2xl md:text-3xl font-bold">Aprendizajes Esperados</h2>
+     </div>
+     <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-white/20 rounded-2xl p-4">
+       <h3 class="font-bold text-lg mb-2 flex items-center gap-2"><span class="text-2xl">🧠</span> Pensamiento Matemático</h3>
+       <ul class="space-y-2 text-white/90">
+        <li class="flex items-start gap-2"><span>✅</span> <span>Resuelve problemas de suma con números naturales</span></li>
+        <li class="flex items-start gap-2"><span>✅</span> <span>Desarrolla el cálculo mental</span></li>
+        <li class="flex items-start gap-2"><span>✅</span> <span>Relaciona cantidad con símbolo numérico</span></li>
+       </ul>
+      </div>
+      <div class="bg-white/20 rounded-2xl p-4">
+       <h3 class="font-bold text-lg mb-2 flex items-center gap-2"><span class="text-2xl">💡</span> Habilidades Desarrolladas</h3>
+       <ul class="space-y-2 text-white/90">
+        <li class="flex items-start gap-2"><span>⭐</span> <span>Conteo y correspondencia uno a uno</span></li>
+        <li class="flex items-start gap-2"><span>⭐</span> <span>Razonamiento lógico-matemático</span></li>
+        <li class="flex items-start gap-2"><span>⭐</span> <span>Resolución de problemas</span></li>
+       </ul>
+      </div>
+     </div>
+    </div><!-- Créditos -->
+    <div class="text-center">
+     <div class="inline-block bg-white/80 backdrop-blur-sm rounded-2xl px-6 py-3 card-shadow">
+      <p class="text-gray-600 font-medium">📝 Material creado por <span id="teacher-credit" class="font-bold text-purple-600">Maestra María Fernanda Flores Valenzuela</span></p>
+     </div>
+    </div>
+   </div><!-- Pantalla de Juego -->
+   <div id="game-screen" class="hidden max-w-3xl mx-auto"><!-- Header del juego -->
+    <div class="bg-white rounded-3xl p-4 card-shadow mb-6">
+     <div class="flex flex-wrap items-center justify-between gap-4"><button onclick="goHome()" class="bg-gray-100 hover:bg-gray-200 rounded-2xl px-4 py-2 font-bold text-gray-700 transition-colors flex items-center gap-2"> <span>🏠</span> Inicio </button>
+      <div class="flex items-center gap-2"><span id="level-badge" class="title-font text-lg font-bold px-4 py-1 rounded-full"></span>
+      </div>
+      <div class="flex items-center gap-4">
+       <div class="bg-yellow-100 rounded-2xl px-4 py-2 flex items-center gap-2"><span class="text-2xl">⭐</span> <span id="score" class="title-font text-xl font-bold text-yellow-600">0</span>
+       </div>
+       <div class="bg-purple-100 rounded-2xl px-4 py-2 flex items-center gap-2"><span class="text-2xl">🎯</span> <span id="progress" class="title-font text-xl font-bold text-purple-600">1/10</span>
+       </div>
+      </div>
+     </div><!-- Barra de progreso -->
+     <div class="mt-4 bg-gray-200 rounded-full h-4 overflow-hidden">
+      <div id="progress-bar" class="progress-bar h-full rounded-full transition-all duration-500" style="width: 10%"></div>
+     </div>
+    </div><!-- Área de la pregunta -->
+    <div id="question-area" class="bg-white rounded-3xl p-6 md:p-8 card-shadow mb-6">
+     <div class="text-center mb-6">
+      <p class="text-gray-500 font-semibold mb-2">¿Cuánto es...?</p>
+      <div id="question-display" class="title-font text-4xl md:text-6xl font-bold text-gray-800"><!-- La pregunta aparece aquí -->
+      </div>
+     </div><!-- Área visual (frutas) -->
+     <div id="visual-area" class="flex flex-wrap justify-center items-center gap-4 mb-6"><!-- Las frutas aparecen aquí -->
+     </div>
+    </div><!-- Opciones de respuesta -->
+    <div id="options-area" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"><!-- Las opciones aparecen aquí -->
+    </div><!-- Feedback -->
+    <div id="feedback-area" class="hidden text-center">
+     <div id="feedback-message" class="inline-block rounded-3xl px-8 py-4 card-shadow"><!-- El mensaje de feedback aparece aquí -->
+     </div>
+    </div>
+   </div><!-- Pantalla de Resultados -->
+   <div id="results-screen" class="hidden max-w-2xl mx-auto text-center">
+    <div class="bg-white rounded-3xl p-8 card-shadow">
+     <div id="results-icon" class="text-8xl mb-4">
+      🏆
+     </div>
+     <h2 id="results-title" class="title-font text-4xl font-bold text-gray-800 mb-4">¡Excelente trabajo!</h2>
+     <p id="results-message" class="text-xl text-gray-600 mb-6"></p>
+     <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-6 mb-6">
+      <div class="grid grid-cols-2 gap-4">
+       <div class="bg-white rounded-xl p-4">
+        <p class="text-gray-500 font-medium">Puntuación</p>
+        <p id="final-score" class="title-font text-4xl font-bold text-yellow-600">0</p>
+       </div>
+       <div class="bg-white rounded-xl p-4">
+        <p class="text-gray-500 font-medium">Respuestas correctas</p>
+        <p id="correct-answers" class="title-font text-4xl font-bold text-green-600">0/10</p>
+       </div>
+      </div>
+     </div>
+     <div class="flex flex-col sm:flex-row gap-4 justify-center"><button onclick="startGame(currentLevel)" class="bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-2xl px-8 py-4 font-bold text-lg btn-3d flex items-center justify-center gap-2"> <span>🔄</span> Jugar de nuevo </button> <button onclick="goHome()" class="bg-gradient-to-r from-purple-400 to-pink-500 text-white rounded-2xl px-8 py-4 font-bold text-lg btn-3d flex items-center justify-center gap-2"> <span>🏠</span> Cambiar nivel </button>
+     </div>
+    </div><!-- Créditos en resultados -->
+    <div class="mt-6">
+     <div class="inline-block bg-white/80 backdrop-blur-sm rounded-2xl px-6 py-3 card-shadow">
+      <p class="text-gray-600 font-medium">📝 Material creado por <span class="font-bold text-purple-600">Maestra María Fernanda Flores Valenzuela</span></p>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // ============================================
+    // CONTEO MÁGICO - Juego Educativo de Sumas
+    // Creado para niños de 1° y 2° grado
+    // ============================================
+    
+    // Estado del juego
+    let currentLevel = 1;
+    let currentQuestion = 0;
+    let score = 0;
+    let correctAnswers = 0;
+    let totalQuestions = 10;
+    let currentAnswer = 0;
+    let isAnswered = false;
+    
+    // Frutas y emojis para representación visual
+    const fruits = ['🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍐', '🥝', '🍒', '🫐'];
+    const celebrationEmojis = ['🎉', '🌟', '⭐', '🎊', '✨', '💫', '🏆', '👏'];
+    
+    // Configuración por defecto
+    const defaultConfig = {
+      game_title: 'Conteo Mágico',
+      teacher_name: 'María Fernanda Flores Valenzuela',
+      primary_color: '#8b5cf6',
+      secondary_color: '#ec4899',
+      background_color: '#e8f4fc',
+      text_color: '#1f2937',
+      accent_color: '#10b981'
+    };
+    
+    // Inicializar SDK si está disponible
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          const title = config.game_title || defaultConfig.game_title;
+          const teacher = config.teacher_name || defaultConfig.teacher_name;
+          
+          document.getElementById('main-title').textContent = `✨ ${title} ✨`;
+          document.getElementById('teacher-credit').textContent = `Maestra ${teacher}`;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); }
+            },
+            {
+              get: () => config.accent_color || defaultConfig.accent_color,
+              set: (value) => { config.accent_color = value; window.elementSdk.setConfig({ accent_color: value }); }
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['game_title', config.game_title || defaultConfig.game_title],
+          ['teacher_name', config.teacher_name || defaultConfig.teacher_name]
+        ])
+      });
+    }
+    
+    // Generar pregunta según el nivel y progreso
+    function generateQuestion() {
+      let num1, num2, maxSum;
+      
+      if (currentLevel === 1) {
+        // Primer grado: números del 1 al 10
+        maxSum = 10;
+        num1 = Math.floor(Math.random() * 5) + 1; // 1-5
+        num2 = Math.floor(Math.random() * (maxSum - num1)) + 1; // Asegurar que la suma no exceda maxSum
+      } else {
+        // Segundo grado: números del 1 al 20
+        maxSum = 20;
+        num1 = Math.floor(Math.random() * 10) + 1; // 1-10
+        num2 = Math.floor(Math.random() * Math.min(10, maxSum - num1)) + 1;
+      }
+      
+      currentAnswer = num1 + num2;
+      return { num1, num2, answer: currentAnswer };
+    }
+    
+    // Mostrar pregunta visual (con frutas) o numérica
+    function displayQuestion(question) {
+      const questionDisplay = document.getElementById('question-display');
+      const visualArea = document.getElementById('visual-area');
+      
+      // Determinar si mostrar visual o numérico
+      // Nivel 1: primeras 5 preguntas visuales, luego numéricas
+      // Nivel 2: solo numéricas
+      const showVisual = currentLevel === 1 && currentQuestion < 5;
+      
+      if (showVisual) {
+        // Seleccionar fruta aleatoria
+        const fruit = fruits[Math.floor(Math.random() * fruits.length)];
+        
+        // Mostrar pregunta con frutas
+        questionDisplay.innerHTML = `
+          <span class="text-blue-500">${question.num1}</span> 
+          <span class="text-purple-500">+</span> 
+          <span class="text-pink-500">${question.num2}</span> 
+          <span class="text-gray-400">=</span> 
+          <span class="text-green-500">?</span>
+        `;
+        
+        // Crear representación visual con frutas
+        visualArea.innerHTML = `
+          <div class="flex flex-col items-center gap-4">
+            <div class="bg-blue-50 rounded-2xl p-4">
+              <div class="fruit-container">
+                ${Array(question.num1).fill(fruit).map((f, i) => 
+                  `<span class="fruit" style="animation-delay: ${i * 0.1}s">${f}</span>`
+                ).join('')}
+              </div>
+              <p class="text-center mt-2 font-bold text-blue-600">${question.num1}</p>
+            </div>
+            <span class="text-4xl font-bold text-purple-500">+</span>
+            <div class="bg-pink-50 rounded-2xl p-4">
+              <div class="fruit-container">
+                ${Array(question.num2).fill(fruit).map((f, i) => 
+                  `<span class="fruit" style="animation-delay: ${(question.num1 + i) * 0.1}s">${f}</span>`
+                ).join('')}
+              </div>
+              <p class="text-center mt-2 font-bold text-pink-600">${question.num2}</p>
+            </div>
+          </div>
+        `;
+        visualArea.classList.remove('hidden');
+      } else {
+        // Mostrar solo números
+        questionDisplay.innerHTML = `
+          <div class="flex items-center justify-center gap-4 flex-wrap">
+            <span class="bg-blue-100 text-blue-600 px-6 py-3 rounded-2xl bounce-in">${question.num1}</span>
+            <span class="text-purple-500 bounce-in" style="animation-delay: 0.1s">+</span>
+            <span class="bg-pink-100 text-pink-600 px-6 py-3 rounded-2xl bounce-in" style="animation-delay: 0.2s">${question.num2}</span>
+            <span class="text-gray-400 bounce-in" style="animation-delay: 0.3s">=</span>
+            <span class="bg-green-100 text-green-600 px-6 py-3 rounded-2xl bounce-in" style="animation-delay: 0.4s">?</span>
+          </div>
+        `;
+        visualArea.innerHTML = '';
+        visualArea.classList.add('hidden');
+      }
+    }
+    
+    // Generar opciones de respuesta
+    function generateOptions(correctAnswer) {
+      const options = [correctAnswer];
+      const maxOption = currentLevel === 1 ? 10 : 20;
+      
+      while (options.length < 4) {
+        let option;
+        // Generar opciones cercanas a la respuesta correcta
+        const variation = Math.floor(Math.random() * 5) - 2; // -2 a +2
+        option = correctAnswer + variation;
+        
+        // Asegurar que la opción esté en rango válido y no sea duplicada
+        if (option > 0 && option <= maxOption && !options.includes(option)) {
+          options.push(option);
+        } else {
+          // Si no es válida, generar una aleatoria
+          option = Math.floor(Math.random() * maxOption) + 1;
+          if (!options.includes(option)) {
+            options.push(option);
+          }
+        }
+      }
+      
+      // Mezclar opciones
+      return options.sort(() => Math.random() - 0.5);
+    }
+    
+    // Mostrar opciones
+    function displayOptions(options) {
+      const optionsArea = document.getElementById('options-area');
+      const colors = [
+        'from-blue-400 to-blue-500',
+        'from-green-400 to-green-500',
+        'from-orange-400 to-orange-500',
+        'from-purple-400 to-purple-500'
+      ];
+      
+      optionsArea.innerHTML = options.map((option, index) => `
+        <button 
+          onclick="checkAnswer(${option})"
+          class="option-btn bg-gradient-to-br ${colors[index]} text-white rounded-2xl p-6 font-bold text-3xl btn-3d transform hover:scale-105 transition-all duration-200 bounce-in"
+          style="animation-delay: ${index * 0.1}s"
+        >
+          ${option}
+        </button>
+      `).join('');
+    }
+    
+    // Verificar respuesta
+    function checkAnswer(selectedAnswer) {
+      if (isAnswered) return;
+      isAnswered = true;
+      
+      const feedbackArea = document.getElementById('feedback-area');
+      const feedbackMessage = document.getElementById('feedback-message');
+      const buttons = document.querySelectorAll('.option-btn');
+      
+      // Deshabilitar todos los botones
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+      });
+      
+      if (selectedAnswer === currentAnswer) {
+        // Respuesta correcta
+        correctAnswers++;
+        score += 10;
+        document.getElementById('score').textContent = score;
+        
+        const emoji = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
+        feedbackMessage.className = 'inline-block bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-3xl px-8 py-4 card-shadow bounce-in';
+        feedbackMessage.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-4xl celebrate">${emoji}</span>
+            <span class="text-2xl font-bold">¡Correcto!</span>
+            <span class="text-4xl celebrate">${emoji}</span>
+          </div>
+        `;
+        
+        // Resaltar botón correcto
+        buttons.forEach(btn => {
+          if (parseInt(btn.textContent) === currentAnswer) {
+            btn.classList.remove('opacity-50');
+            btn.classList.add('celebrate', 'ring-4', 'ring-yellow-400');
+          }
+        });
+      } else {
+        // Respuesta incorrecta
+        feedbackMessage.className = 'inline-block bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-3xl px-8 py-4 card-shadow bounce-in';
+        feedbackMessage.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-4xl">💪</span>
+            <div>
+              <p class="text-xl font-bold">¡Casi! La respuesta es ${currentAnswer}</p>
+              <p class="text-sm opacity-90">¡Sigue intentando!</p>
+            </div>
+          </div>
+        `;
+        
+        // Resaltar botón correcto e incorrecto
+        buttons.forEach(btn => {
+          const btnValue = parseInt(btn.textContent);
+          if (btnValue === currentAnswer) {
+            btn.classList.remove('opacity-50');
+            btn.classList.add('ring-4', 'ring-green-400');
+          } else if (btnValue === selectedAnswer) {
+            btn.classList.add('ring-4', 'ring-red-400');
+          }
+        });
+      }
+      
+      feedbackArea.classList.remove('hidden');
+      
+      // Continuar al siguiente ejercicio después de un momento
+      setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < totalQuestions) {
+          nextQuestion();
+        } else {
+          showResults();
+        }
+      }, 1500);
+    }
+    
+    // Siguiente pregunta
+    function nextQuestion() {
+      isAnswered = false;
+      document.getElementById('feedback-area').classList.add('hidden');
+      document.getElementById('progress').textContent = `${currentQuestion + 1}/${totalQuestions}`;
+      document.getElementById('progress-bar').style.width = `${((currentQuestion + 1) / totalQuestions) * 100}%`;
+      
+      const question = generateQuestion();
+      displayQuestion(question);
+      const options = generateOptions(question.answer);
+      displayOptions(options);
+    }
+    
+    // Iniciar juego
+    function startGame(level) {
+      currentLevel = level;
+      currentQuestion = 0;
+      score = 0;
+      correctAnswers = 0;
+      isAnswered = false;
+      
+      // Actualizar UI
+      document.getElementById('score').textContent = '0';
+      document.getElementById('progress').textContent = '1/10';
+      document.getElementById('progress-bar').style.width = '10%';
+      
+      // Configurar badge de nivel
+      const levelBadge = document.getElementById('level-badge');
+      if (level === 1) {
+        levelBadge.className = 'title-font text-lg font-bold px-4 py-1 rounded-full bg-blue-100 text-blue-600';
+        levelBadge.textContent = '🎈 1° Grado';
+      } else {
+        levelBadge.className = 'title-font text-lg font-bold px-4 py-1 rounded-full bg-orange-100 text-orange-600';
+        levelBadge.textContent = '🚀 2° Grado';
+      }
+      
+      // Mostrar pantalla de juego
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      
+      // Generar primera pregunta
+      nextQuestion();
+    }
+    
+    // Mostrar resultados
+    function showResults() {
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+      
+      const percentage = (correctAnswers / totalQuestions) * 100;
+      const resultsIcon = document.getElementById('results-icon');
+      const resultsTitle = document.getElementById('results-title');
+      const resultsMessage = document.getElementById('results-message');
+      
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('correct-answers').textContent = `${correctAnswers}/${totalQuestions}`;
+      
+      if (percentage === 100) {
+        resultsIcon.textContent = '🏆';
+        resultsTitle.textContent = '¡PERFECTO!';
+        resultsMessage.textContent = '¡Increíble! Respondiste todas las preguntas correctamente. ¡Eres un genio de las matemáticas!';
+      } else if (percentage >= 80) {
+        resultsIcon.textContent = '🌟';
+        resultsTitle.textContent = '¡Excelente trabajo!';
+        resultsMessage.textContent = '¡Muy bien! Casi perfecto. ¡Sigue practicando y lo lograrás!';
+      } else if (percentage >= 60) {
+        resultsIcon.textContent = '👍';
+        resultsTitle.textContent = '¡Buen trabajo!';
+        resultsMessage.textContent = '¡Vas muy bien! Con un poco más de práctica serás un experto.';
+      } else {
+        resultsIcon.textContent = '💪';
+        resultsTitle.textContent = '¡Sigue intentando!';
+        resultsMessage.textContent = '¡No te rindas! Cada intento te hace mejor. ¡Vuelve a intentarlo!';
+      }
+    }
+    
+    // Volver al inicio
+    function goHome() {
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('start-screen').classList.remove('hidden');
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d69fe3176cd1f84',t:'MTc3MjU1NTA4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
