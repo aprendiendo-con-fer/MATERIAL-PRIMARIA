@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tiendita Escolar Saludable</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    .title-font { font-family: 'Fredoka', sans-serif; }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes slide-in-left {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slide-out-right {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.8); }
+    }
+    
+    .bounce-in { animation: bounce-in 0.5s ease-out; }
+    .slide-in { animation: slide-in-left 0.5s ease-out; }
+    .slide-out { animation: slide-out-right 0.5s ease-out forwards; }
+    .float { animation: float 3s ease-in-out infinite; }
+    .sparkle { animation: sparkle 1s ease-in-out infinite; }
+    .shake { animation: shake 0.5s ease-in-out; }
+    .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    
+    .food-item {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .food-item:hover {
+      transform: scale(1.1);
+    }
+    
+    .food-item.selected {
+      transform: scale(1.15);
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
+    }
+    
+    .plate-area {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+      border: 4px dashed #93c5fd;
+    }
+    
+    .kitchen-bg {
+      background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 50%, #ffffff 100%);
+    }
+    
+    .counter-top {
+      background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
+      border-top: 6px solid #d97706;
+    }
+    
+    .shelf {
+      background: linear-gradient(180deg, #a16207 0%, #ca8a04 50%, #a16207 100%);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto">
+  <div id="app" class="min-h-full kitchen-bg flex flex-col"><!-- Pantalla de Inicio -->
+   <div id="start-screen" class="min-h-full flex flex-col items-center justify-center p-4">
+    <div class="text-center bounce-in">
+     <div class="text-8xl mb-4">
+      👩‍🍳
+     </div>
+     <h1 id="main-title" class="title-font text-4xl md:text-5xl font-bold text-blue-600 mb-2">Tiendita Escolar Saludable</h1>
+     <p class="text-xl text-blue-500 mb-6">¡Aprende a comer sano mientras juegas!</p>
+     <div class="bg-white/80 rounded-2xl p-6 max-w-md mx-auto mb-6 shadow-lg">
+      <h2 class="title-font text-2xl font-bold text-amber-600 mb-4">🍎 ¿Cómo jugar?</h2>
+      <ul class="text-left text-gray-700 space-y-2">
+       <li>👦 Los niños te pedirán comida saludable</li>
+       <li>🍽️ Selecciona los alimentos correctos</li>
+       <li>✅ Sirve el pedido antes de que se acabe el tiempo</li>
+       <li>❤️ ¡Tienes 3 vidas, no te equivoques!</li>
+       <li>🏆 ¡Completa 10 pedidos para ganar!</li>
+      </ul>
+     </div><button onclick="startGame()" class="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-4 px-10 rounded-full shadow-lg transform hover:scale-105 transition-all pulse-glow"> 🎮 ¡JUGAR! </button>
+    </div>
+    <div class="mt-8 flex gap-4 text-4xl"><span class="float" style="animation-delay: 0s;">🍎</span> <span class="float" style="animation-delay: 0.2s;">🥕</span> <span class="float" style="animation-delay: 0.4s;">🥤</span> <span class="float" style="animation-delay: 0.6s;">🥪</span> <span class="float" style="animation-delay: 0.8s;">🍊</span>
+    </div>
+   </div><!-- Pantalla de Juego -->
+   <div id="game-screen" class="hidden min-h-full flex flex-col"><!-- Header con estadísticas -->
+    <header class="bg-blue-500 text-white p-3 shadow-lg">
+     <div class="max-w-4xl mx-auto flex justify-between items-center flex-wrap gap-2">
+      <div class="flex items-center gap-2"><span class="text-2xl">👩‍🍳</span> <span class="title-font font-bold text-lg">Chef Saludable</span>
+      </div>
+      <div class="flex gap-4 items-center flex-wrap">
+       <div class="bg-white/20 rounded-full px-3 py-1 flex items-center gap-1"><span>❤️</span> <span id="lives" class="font-bold">3</span>
+       </div>
+       <div class="bg-white/20 rounded-full px-3 py-1 flex items-center gap-1"><span>⏱️</span> <span id="timer" class="font-bold">30</span>
+       </div>
+       <div class="bg-white/20 rounded-full px-3 py-1 flex items-center gap-1"><span>📋</span> <span id="orders-completed" class="font-bold">0</span>/10
+       </div>
+      </div>
+     </div>
+    </header><!-- Área principal del juego -->
+    <main class="flex-1 flex flex-col p-4 max-w-4xl mx-auto w-full"><!-- Cliente y pedido -->
+     <div class="bg-white rounded-2xl shadow-lg p-4 mb-4">
+      <div class="flex items-start gap-4">
+       <div id="customer" class="text-6xl slide-in">
+        👦
+       </div>
+       <div class="flex-1">
+        <div class="bg-blue-100 rounded-2xl p-4 relative">
+         <div class="absolute -left-2 top-4 w-4 h-4 bg-blue-100 transform rotate-45"></div>
+         <p class="text-sm text-blue-600 font-semibold mb-1">Cliente dice:</p>
+         <p id="order-text" class="text-lg font-bold text-gray-800">¡Hola! Quiero una manzana con limón y una limonada, por favor 🙏</p>
+        </div>
+        <div class="mt-2 flex flex-wrap gap-2" id="order-items"><!-- Items del pedido aparecerán aquí -->
+        </div>
+       </div>
+      </div>
+     </div><!-- Plato para servir -->
+     <div class="plate-area rounded-3xl p-4 mb-4 min-h-32">
+      <p class="text-center text-blue-400 text-sm mb-2">🍽️ Tu plato - Arrastra aquí los alimentos</p>
+      <div id="plate" class="flex flex-wrap justify-center gap-3 min-h-20 items-center"><span class="text-gray-400 text-sm" id="plate-hint">Selecciona los alimentos del menú</span>
+      </div>
+     </div><!-- Menú de alimentos -->
+     <div class="bg-white rounded-2xl shadow-lg p-4 flex-1">
+      <h3 class="title-font text-xl font-bold text-amber-600 mb-3 text-center">🥗 Menú Saludable</h3>
+      <div id="food-menu" class="grid grid-cols-4 md:grid-cols-6 gap-3"><!-- Alimentos aparecerán aquí -->
+      </div>
+     </div><!-- Botón de servir -->
+     <div class="mt-4 text-center"><button onclick="serveOrder()" id="serve-btn" class="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white text-xl font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all"> ✅ ¡SERVIR PEDIDO! </button>
+     </div>
+    </main>
+   </div><!-- Pantalla de Victoria -->
+   <div id="win-screen" class="hidden min-h-full flex flex-col items-center justify-center p-4">
+    <div class="text-center bounce-in">
+     <div class="text-8xl mb-4">
+      🏆
+     </div>
+     <h1 class="title-font text-4xl md:text-5xl font-bold text-green-600 mb-4">¡FELICIDADES!</h1>
+     <p class="text-2xl text-green-500 mb-2">🌟 ¡Eres un Chef Saludable Experto! 🌟</p>
+     <p class="text-xl text-gray-600 mb-6">Tu tiendita escolar ahora es 100% saludable</p>
+     <div class="bg-white/80 rounded-2xl p-6 max-w-md mx-auto mb-6 shadow-lg">
+      <h2 class="title-font text-2xl font-bold text-amber-600 mb-4">📊 Tu Puntuación</h2>
+      <div class="flex justify-around text-center">
+       <div>
+        <div class="text-3xl">
+         ✅
+        </div>
+        <div class="text-2xl font-bold text-green-600" id="final-orders">
+         10
+        </div>
+        <div class="text-sm text-gray-500">
+         Pedidos
+        </div>
+       </div>
+       <div>
+        <div class="text-3xl">
+         ❤️
+        </div>
+        <div class="text-2xl font-bold text-red-500" id="final-lives">
+         3
+        </div>
+        <div class="text-sm text-gray-500">
+         Vidas
+        </div>
+       </div>
+      </div>
+     </div><button onclick="restartGame()" class="bg-blue-500 hover:bg-blue-600 text-white text-2xl font-bold py-4 px-10 rounded-full shadow-lg transform hover:scale-105 transition-all"> 🔄 JUGAR DE NUEVO </button>
+    </div>
+   </div><!-- Pantalla de Game Over -->
+   <div id="lose-screen" class="hidden min-h-full flex flex-col items-center justify-center p-4">
+    <div class="text-center bounce-in">
+     <div class="text-8xl mb-4">
+      😢
+     </div>
+     <h1 class="title-font text-4xl md:text-5xl font-bold text-red-600 mb-4">¡OH NO!</h1>
+     <p class="text-xl text-gray-600 mb-6">No te preocupes, ¡puedes intentarlo de nuevo!</p>
+     <div class="bg-white/80 rounded-2xl p-6 max-w-md mx-auto mb-6 shadow-lg">
+      <h2 class="title-font text-xl font-bold text-blue-600 mb-2">💡 Consejo:</h2>
+      <p class="text-gray-700">Recuerda leer bien el pedido y seleccionar solo los alimentos que te piden. ¡La comida saludable es deliciosa!</p>
+     </div><button onclick="restartGame()" class="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-4 px-10 rounded-full shadow-lg transform hover:scale-105 transition-all"> 🎮 INTENTAR DE NUEVO </button>
+    </div>
+   </div><!-- Footer con créditos -->
+   <footer class="bg-blue-600 text-white py-3 px-4 text-center">
+    <p id="credits-text" class="text-sm md:text-base">📚 Material elaborado por: <strong>Maestra María Fernanda Flores Valenzuela</strong> 📚</p>
+   </footer>
+  </div>
+  <script>
+    // Configuración por defecto
+    const defaultConfig = {
+      game_title: 'Tiendita Escolar Saludable',
+      author_text: 'Material elaborado por: Maestra María Fernanda Flores Valenzuela'
+    };
+
+    // Estado del juego
+    let gameState = {
+      lives: 3,
+      ordersCompleted: 0,
+      currentOrder: null,
+      selectedItems: [],
+      timerInterval: null,
+      timeLeft: 30
+    };
+
+    // Base de datos de alimentos saludables
+    const healthyFoods = [
+      { id: 'manzana', name: 'Manzana', emoji: '🍎', category: 'fruta' },
+      { id: 'platano', name: 'Plátano', emoji: '🍌', category: 'fruta' },
+      { id: 'naranja', name: 'Naranja', emoji: '🍊', category: 'fruta' },
+      { id: 'uvas', name: 'Uvas', emoji: '🍇', category: 'fruta' },
+      { id: 'sandia', name: 'Sandía', emoji: '🍉', category: 'fruta' },
+      { id: 'pina', name: 'Piña', emoji: '🍍', category: 'fruta' },
+      { id: 'fresa', name: 'Fresa', emoji: '🍓', category: 'fruta' },
+      { id: 'mango', name: 'Mango', emoji: '🥭', category: 'fruta' },
+      { id: 'zanahoria', name: 'Zanahoria', emoji: '🥕', category: 'verdura' },
+      { id: 'brocoli', name: 'Brócoli', emoji: '🥦', category: 'verdura' },
+      { id: 'pepino', name: 'Pepino', emoji: '🥒', category: 'verdura' },
+      { id: 'tomate', name: 'Tomate', emoji: '🍅', category: 'verdura' },
+      { id: 'lechuga', name: 'Lechuga', emoji: '🥬', category: 'verdura' },
+      { id: 'elote', name: 'Elote', emoji: '🌽', category: 'verdura' },
+      { id: 'sandwich', name: 'Sándwich', emoji: '🥪', category: 'platillo' },
+      { id: 'ensalada', name: 'Ensalada', emoji: '🥗', category: 'platillo' },
+      { id: 'agua', name: 'Agua', emoji: '💧', category: 'bebida' },
+      { id: 'limonada', name: 'Limonada', emoji: '🍋', category: 'bebida' },
+      { id: 'jugo_naranja', name: 'Jugo de Naranja', emoji: '🧃', category: 'bebida' },
+      { id: 'leche', name: 'Leche', emoji: '🥛', category: 'bebida' },
+      { id: 'yogurt', name: 'Yogurt', emoji: '🫙', category: 'lacteo' },
+      { id: 'queso', name: 'Queso', emoji: '🧀', category: 'lacteo' },
+      { id: 'huevo', name: 'Huevo', emoji: '🥚', category: 'proteina' },
+      { id: 'nueces', name: 'Nueces', emoji: '🥜', category: 'snack' },
+      { id: 'limon', name: 'Limón', emoji: '🍋', category: 'condimento' },
+      { id: 'chile', name: 'Chile', emoji: '🌶️', category: 'condimento' }
+    ];
+
+    // Clientes (niños)
+    const customers = ['👦', '👧', '🧒', '👶', '🧒🏽', '👦🏻', '👧🏽', '👦🏾'];
+
+    // Pedidos predefinidos
+    const orders = [
+      {
+        text: '¡Hola! Quiero una manzana con limón y una limonada, por favor 🙏',
+        items: ['manzana', 'limon', 'limonada']
+      },
+      {
+        text: '¿Me das un sándwich con jugo de naranja? ¡Tengo hambre! 😋',
+        items: ['sandwich', 'jugo_naranja']
+      },
+      {
+        text: 'Quiero fresas con yogurt, ¡es mi favorito! 🍓',
+        items: ['fresa', 'yogurt']
+      },
+      {
+        text: '¿Puedo tener una ensalada con agua? Quiero comer sano 🥗',
+        items: ['ensalada', 'agua']
+      },
+      {
+        text: '¡Dame piña con limón y chile! ¡Me encanta! 🍍',
+        items: ['pina', 'limon', 'chile']
+      },
+      {
+        text: 'Quiero zanahorias con pepino y limonada 🥕',
+        items: ['zanahoria', 'pepino', 'limonada']
+      },
+      {
+        text: '¿Me das plátano con leche? ¡Es muy rico! 🍌',
+        items: ['platano', 'leche']
+      },
+      {
+        text: 'Quiero naranja con sandía y agua, por favor 🍊',
+        items: ['naranja', 'sandia', 'agua']
+      },
+      {
+        text: '¡Un sándwich con ensalada y jugo! ¡Gracias! 🥪',
+        items: ['sandwich', 'ensalada', 'jugo_naranja']
+      },
+      {
+        text: 'Quiero mango con yogurt y nueces 🥭',
+        items: ['mango', 'yogurt', 'nueces']
+      },
+      {
+        text: '¿Me das brócoli con tomate y agua? 🥦',
+        items: ['brocoli', 'tomate', 'agua']
+      },
+      {
+        text: 'Quiero uvas con queso y leche 🍇',
+        items: ['uvas', 'queso', 'leche']
+      },
+      {
+        text: '¡Dame elote con limón y limonada! 🌽',
+        items: ['elote', 'limon', 'limonada']
+      },
+      {
+        text: 'Quiero lechuga con tomate y pepino 🥬',
+        items: ['lechuga', 'tomate', 'pepino']
+      },
+      {
+        text: '¿Me das huevo con sándwich y jugo? 🥚',
+        items: ['huevo', 'sandwich', 'jugo_naranja']
+      }
+    ];
+
+    let usedOrders = [];
+
+    // Inicializar SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          const titleEl = document.getElementById('main-title');
+          const creditsEl = document.getElementById('credits-text');
+          
+          if (titleEl) {
+            titleEl.textContent = config.game_title || defaultConfig.game_title;
+          }
+          if (creditsEl) {
+            creditsEl.innerHTML = `📚 ${config.author_text || defaultConfig.author_text} 📚`;
+          }
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['game_title', config.game_title || defaultConfig.game_title],
+          ['author_text', config.author_text || defaultConfig.author_text]
+        ])
+      });
+    }
+
+    // Funciones del juego
+    function showScreen(screenId) {
+      ['start-screen', 'game-screen', 'win-screen', 'lose-screen'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(screenId).classList.remove('hidden');
+    }
+
+    function startGame() {
+      gameState = {
+        lives: 3,
+        ordersCompleted: 0,
+        currentOrder: null,
+        selectedItems: [],
+        timerInterval: null,
+        timeLeft: 30
+      };
+      usedOrders = [];
+      updateUI();
+      showScreen('game-screen');
+      renderFoodMenu();
+      nextOrder();
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    function updateUI() {
+      document.getElementById('lives').textContent = gameState.lives;
+      document.getElementById('timer').textContent = gameState.timeLeft;
+      document.getElementById('orders-completed').textContent = gameState.ordersCompleted;
+    }
+
+    function renderFoodMenu() {
+      const menuEl = document.getElementById('food-menu');
+      menuEl.innerHTML = healthyFoods.map(food => `
+        <div class="food-item bg-amber-50 rounded-xl p-2 flex flex-col items-center border-2 border-amber-200 hover:border-green-400 ${gameState.selectedItems.includes(food.id) ? 'selected border-green-500 bg-green-100' : ''}"
+             onclick="toggleFood('${food.id}')"
+             data-food-id="${food.id}">
+          <span class="text-3xl">${food.emoji}</span>
+          <span class="text-xs text-center mt-1 font-semibold text-gray-700">${food.name}</span>
+        </div>
+      `).join('');
+    }
+
+    function toggleFood(foodId) {
+      const index = gameState.selectedItems.indexOf(foodId);
+      if (index > -1) {
+        gameState.selectedItems.splice(index, 1);
+      } else {
+        gameState.selectedItems.push(foodId);
+      }
+      renderFoodMenu();
+      renderPlate();
+    }
+
+    function renderPlate() {
+      const plateEl = document.getElementById('plate');
+      if (gameState.selectedItems.length === 0) {
+        plateEl.innerHTML = '<span class="text-gray-400 text-sm">Selecciona los alimentos del menú</span>';
+      } else {
+        plateEl.innerHTML = gameState.selectedItems.map(id => {
+          const food = healthyFoods.find(f => f.id === id);
+          return `<span class="text-4xl bounce-in" title="${food.name}">${food.emoji}</span>`;
+        }).join('');
+      }
+    }
+
+    function nextOrder() {
+      // Limpiar timer anterior
+      if (gameState.timerInterval) {
+        clearInterval(gameState.timerInterval);
+      }
+
+      // Obtener pedido no usado
+      let availableOrders = orders.filter((_, i) => !usedOrders.includes(i));
+      if (availableOrders.length === 0) {
+        usedOrders = [];
+        availableOrders = orders;
+      }
+
+      const orderIndex = orders.indexOf(availableOrders[Math.floor(Math.random() * availableOrders.length)]);
+      usedOrders.push(orderIndex);
+      gameState.currentOrder = orders[orderIndex];
+      gameState.selectedItems = [];
+      gameState.timeLeft = 30;
+
+      // Actualizar UI
+      const customerEl = document.getElementById('customer');
+      customerEl.classList.remove('slide-in');
+      void customerEl.offsetWidth;
+      customerEl.classList.add('slide-in');
+      customerEl.textContent = customers[Math.floor(Math.random() * customers.length)];
+
+      document.getElementById('order-text').textContent = gameState.currentOrder.text;
+
+      // Mostrar items requeridos
+      const orderItemsEl = document.getElementById('order-items');
+      orderItemsEl.innerHTML = gameState.currentOrder.items.map(id => {
+        const food = healthyFoods.find(f => f.id === id);
+        return `<span class="bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">${food.emoji} ${food.name}</span>`;
+      }).join('');
+
+      renderFoodMenu();
+      renderPlate();
+      updateUI();
+
+      // Iniciar timer
+      gameState.timerInterval = setInterval(() => {
+        gameState.timeLeft--;
+        document.getElementById('timer').textContent = gameState.timeLeft;
+
+        if (gameState.timeLeft <= 0) {
+          clearInterval(gameState.timerInterval);
+          loseLife('¡Se acabó el tiempo!');
+        }
+      }, 1000);
+    }
+
+    function serveOrder() {
+      if (!gameState.currentOrder) return;
+
+      clearInterval(gameState.timerInterval);
+
+      const required = [...gameState.currentOrder.items].sort();
+      const served = [...gameState.selectedItems].sort();
+
+      const isCorrect = required.length === served.length && 
+                        required.every((item, index) => item === served[index]);
+
+      if (isCorrect) {
+        gameState.ordersCompleted++;
+        updateUI();
+
+        // Mostrar éxito
+        showFeedback('¡Excelente! ✅', 'green');
+
+        if (gameState.ordersCompleted >= 10) {
+          setTimeout(() => {
+            document.getElementById('final-orders').textContent = gameState.ordersCompleted;
+            document.getElementById('final-lives').textContent = gameState.lives;
+            showScreen('win-screen');
+          }, 1000);
+        } else {
+          setTimeout(nextOrder, 1500);
+        }
+      } else {
+        loseLife('¡Pedido incorrecto!');
+      }
+    }
+
+    function loseLife(reason) {
+      gameState.lives--;
+      updateUI();
+
+      showFeedback(reason + ' ❌', 'red');
+
+      const livesEl = document.getElementById('lives');
+      livesEl.parentElement.classList.add('shake');
+      setTimeout(() => livesEl.parentElement.classList.remove('shake'), 500);
+
+      if (gameState.lives <= 0) {
+        setTimeout(() => {
+          showScreen('lose-screen');
+        }, 1500);
+      } else {
+        setTimeout(nextOrder, 2000);
+      }
+    }
+
+    function showFeedback(message, color) {
+      const feedback = document.createElement('div');
+      feedback.className = `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                           bg-${color === 'green' ? 'green' : 'red'}-500 text-white text-2xl font-bold 
+                           py-4 px-8 rounded-2xl shadow-2xl bounce-in z-50`;
+      feedback.textContent = message;
+      feedback.style.backgroundColor = color === 'green' ? '#22c55e' : '#ef4444';
+      document.body.appendChild(feedback);
+
+      setTimeout(() => {
+        feedback.remove();
+      }, 1500);
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6c0a66904ae873',t:'MTc3MjU3NjU1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
