@@ -1,0 +1,2403 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juegos Educativos - Primer Grado</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Fredoka:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    .game-title { font-family: 'Fredoka', sans-serif; }
+    .main-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: white;
+      text-shadow: 
+        -3px -3px 0 #000,
+        3px -3px 0 #000,
+        -3px 3px 0 #000,
+        3px 3px 0 #000,
+        -3px 0 0 #000,
+        3px 0 0 #000,
+        0 -3px 0 #000,
+        0 3px 0 #000,
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000;
+      letter-spacing: 2px;
+    }
+    @media (min-width: 768px) {
+      .main-title { font-size: 4.5rem; }
+    }
+    
+    .photon-btn {
+      border-radius: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .photon-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 0 rgba(0,0,0,0.15), 0 15px 30px rgba(0,0,0,0.15);
+    }
+    .photon-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .game-card {
+      border-radius: 24px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+      50% { box-shadow: 0 0 40px rgba(255,255,255,0.6); }
+    }
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    @keyframes celebrate {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.2) rotate(-5deg); }
+      50% { transform: scale(1.2) rotate(5deg); }
+      75% { transform: scale(1.2) rotate(-5deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    
+    .floating { animation: float 3s ease-in-out infinite; }
+    .bounce-in { animation: bounce-in 0.5s ease-out forwards; }
+    .shake { animation: shake 0.5s ease-in-out; }
+    .celebrate { animation: celebrate 0.6s ease-in-out; }
+    
+    .bubble {
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bubble:hover {
+      transform: scale(1.15);
+    }
+    .bubble.popped {
+      transform: scale(0);
+      opacity: 0;
+    }
+    
+    .draggable {
+      cursor: grab;
+      user-select: none;
+    }
+    .draggable:active {
+      cursor: grabbing;
+    }
+    
+    .drop-zone {
+      border: 3px dashed rgba(255,255,255,0.5);
+      border-radius: 16px;
+      transition: all 0.3s;
+    }
+    .drop-zone.highlight {
+      border-color: #FFD700;
+      background: rgba(255,215,0,0.2);
+    }
+    
+    .progress-bar {
+      height: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.3);
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.5s ease-out;
+    }
+    
+    .star {
+      color: #FFD700;
+      text-shadow: 0 0 10px rgba(255,215,0,0.5);
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.5); }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #E8F4FC 0%, #D4ECFB 50%, #C5E5FA 100%);">
+  <div id="app" class="min-h-full"><!-- Menu Principal -->
+   <div id="main-menu" class="min-h-full p-4 md:p-8">
+    <header class="text-center mb-8">
+     <h1 class="main-title mb-2">🎮 Juegos Educativos</h1>
+     <p class="text-xl md:text-2xl text-gray-600 font-semibold">Primer Grado de Primaria</p>
+     <div class="flex justify-center gap-2 mt-4"><span class="text-3xl">📚</span> <span class="text-3xl">✨</span> <span class="text-3xl">🌟</span>
+     </div>
+    </header>
+    <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto"><!-- Los juegos se generan dinámicamente -->
+    </div>
+    <footer class="text-center mt-12 pb-8">
+     <div class="inline-block bg-white/60 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-lg">
+      <p class="text-gray-600 font-medium" id="footer-credit">📝 Material elaborado por Maestra María Fernanda Flores Valenzuela</p>
+      <p class="text-gray-500 text-sm mt-1">Diseñado con ❤️ para niños de primer grado</p>
+     </div>
+    </footer>
+   </div><!-- Contenedor de Juegos -->
+   <div id="game-container" class="hidden min-h-full"><!-- El juego activo se renderiza aquí -->
+   </div>
+  </div>
+  <script>
+    // Configuración inicial
+    const defaultConfig = {
+      teacher_name: 'María Fernanda Flores Valenzuela'
+    };
+    
+    let config = { ...defaultConfig };
+    
+    // Datos de los juegos
+    const gamesData = [
+      {
+        id: 1,
+        title: "Paco el Chato",
+        subtitle: "Escape Room de la Ciudad",
+        objective: "Guiar a Paco a casa usando señales de seguridad",
+        icon: "🏠",
+        color: "from-red-400 to-orange-500",
+        skill: "Seguridad vial"
+      },
+      {
+        id: 2,
+        title: "Mi Nombre Brillante",
+        subtitle: "Diseñador de Logotipos",
+        objective: "Crear un logo con las letras de tu nombre",
+        icon: "✨",
+        color: "from-purple-400 to-pink-500",
+        skill: "Nombre propio"
+      },
+      {
+        id: 3,
+        title: "Burbujas Musicales",
+        subtitle: "Explota las Vocales",
+        objective: "Identificar vocales en sonidos iniciales",
+        icon: "🫧",
+        color: "from-cyan-400 to-blue-500",
+        skill: "Vocales"
+      },
+      {
+        id: 4,
+        title: "Carrera de Números",
+        subtitle: "Cuenta hasta 20",
+        objective: "Contar objetos y escribir números",
+        icon: "🏃",
+        color: "from-green-400 to-emerald-500",
+        skill: "Números"
+      },
+      {
+        id: 5,
+        title: "Imanes Mágicos",
+        subtitle: "Une las Rimas",
+        objective: "Encontrar palabras que riman",
+        icon: "🧲",
+        color: "from-rose-400 to-red-500",
+        skill: "Rimas"
+      },
+      {
+        id: 6,
+        title: "Director de Cine",
+        subtitle: "Ordena la Historia",
+        objective: "Ordenar escenas del cuento",
+        icon: "🎬",
+        color: "from-amber-400 to-yellow-500",
+        skill: "Cuentos clásicos"
+      },
+      {
+        id: 7,
+        title: "Caja de Sombras",
+        subtitle: "Adivina el Objeto",
+        objective: "Identificar objetos por su silueta",
+        icon: "🔦",
+        color: "from-slate-500 to-gray-600",
+        skill: "Adivinanzas"
+      },
+      {
+        id: 8,
+        title: "Taller de Robots",
+        subtitle: "Sigue las Instrucciones",
+        objective: "Armar un robot paso a paso",
+        icon: "🤖",
+        color: "from-indigo-400 to-violet-500",
+        skill: "Instrucciones"
+      },
+      {
+        id: 9,
+        title: "Crea tu Monstruo",
+        subtitle: "Sigue la Descripción",
+        objective: "Crear un monstruo según se describe",
+        icon: "👾",
+        color: "from-lime-400 to-green-500",
+        skill: "Descripción"
+      },
+      {
+        id: 10,
+        title: "Montaña Rusa ABC",
+        subtitle: "Recorre el Alfabeto",
+        objective: "Recolectar letras en orden",
+        icon: "🎢",
+        color: "from-sky-400 to-blue-600",
+        skill: "Abecedario"
+      },
+      {
+        id: 11,
+        title: "Varita Mágica",
+        subtitle: "Multiplica Objetos",
+        objective: "Transformar singular en plural",
+        icon: "🪄",
+        color: "from-fuchsia-400 to-purple-600",
+        skill: "Singular y plural"
+      },
+      {
+        id: 12,
+        title: "Interruptor del Mundo",
+        subtitle: "Cambia los Opuestos",
+        objective: "Encontrar antónimos",
+        icon: "💡",
+        color: "from-yellow-300 to-amber-500",
+        skill: "Antónimos"
+      },
+      {
+        id: 13,
+        title: "Mensajero Espacial",
+        subtitle: "Envía tu Carta",
+        objective: "Crear y enviar una carta galáctica",
+        icon: "🚀",
+        color: "from-violet-400 to-indigo-600",
+        skill: "La carta"
+      },
+      {
+        id: 14,
+        title: "Semáforo de Lectura",
+        subtitle: "Respeta los Signos",
+        objective: "Identificar signos de puntuación",
+        icon: "🚦",
+        color: "from-red-500 via-yellow-400 to-green-500",
+        skill: "Puntuación"
+      },
+      {
+        id: 15,
+        title: "Ninja de Espacios",
+        subtitle: "Separa las Palabras",
+        objective: "Separar palabras correctamente",
+        icon: "🥷",
+        color: "from-gray-700 to-slate-800",
+        skill: "Separación"
+      },
+      {
+        id: 16,
+        title: "Detective de Pistas",
+        subtitle: "Encuentra las Respuestas",
+        objective: "Comprender textos y encontrar pistas",
+        icon: "🔍",
+        color: "from-amber-500 to-orange-600",
+        skill: "Comprensión"
+      },
+      {
+        id: 17,
+        title: "Pegamento de Vocales",
+        subtitle: "Une los Diptongos",
+        objective: "Identificar y formar diptongos",
+        icon: "🩹",
+        color: "from-pink-400 to-rose-500",
+        skill: "Diptongos"
+      },
+      {
+        id: 18,
+        title: "Termómetro Veloz",
+        subtitle: "Lee Rápido",
+        objective: "Practicar trabalenguas",
+        icon: "🌡️",
+        color: "from-orange-400 to-red-600",
+        skill: "Trabalenguas"
+      },
+      {
+        id: 19,
+        title: "Editor de Noticias",
+        subtitle: "Arma el Periódico",
+        objective: "Relacionar fotos con titulares",
+        icon: "📰",
+        color: "from-teal-400 to-cyan-600",
+        skill: "La noticia"
+      },
+      {
+        id: 20,
+        title: "Escritor Galáctico",
+        subtitle: "Salva la Tierra",
+        objective: "Escribir palabras correctamente",
+        icon: "☄️",
+        color: "from-purple-600 to-blue-700",
+        skill: "Dictado"
+      }
+    ];
+    
+    // Estado del juego actual
+    let currentGame = null;
+    let gameState = {};
+    
+    // Renderizar menú de juegos
+    function renderGamesMenu() {
+      const grid = document.getElementById('games-grid');
+      grid.innerHTML = gamesData.map((game, index) => `
+        <div class="game-card bg-gradient-to-br ${game.color} p-1 shadow-xl cursor-pointer bounce-in" 
+             style="animation-delay: ${index * 0.05}s"
+             onclick="startGame(${game.id})">
+          <div class="bg-white/20 backdrop-blur-sm rounded-[20px] p-4 h-full">
+            <div class="text-5xl mb-3 floating" style="animation-delay: ${index * 0.1}s">${game.icon}</div>
+            <h3 class="game-title text-white text-xl font-bold drop-shadow-lg">${game.title}</h3>
+            <p class="text-white/90 text-sm font-medium mb-2">${game.subtitle}</p>
+            <div class="bg-white/30 rounded-xl px-3 py-2 mt-3">
+              <p class="text-white text-xs font-semibold">🎯 ${game.objective}</p>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="bg-white/40 text-white text-xs font-bold px-3 py-1 rounded-full">
+                ${game.skill}
+              </span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Iniciar un juego
+    function startGame(gameId) {
+      currentGame = gamesData.find(g => g.id === gameId);
+      gameState = { score: 0, level: 1, lives: 3 };
+      
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('game-container').classList.remove('hidden');
+      
+      renderGame(gameId);
+    }
+    
+    // Volver al menú
+    function backToMenu() {
+      document.getElementById('main-menu').classList.remove('hidden');
+      document.getElementById('game-container').classList.add('hidden');
+      currentGame = null;
+    }
+    
+    // Renderizar cabecera del juego
+    function renderGameHeader() {
+      return `
+        <div class="bg-white/80 backdrop-blur-md rounded-3xl p-4 mb-6 shadow-lg flex flex-wrap items-center justify-between gap-4">
+          <button onclick="backToMenu()" class="photon-btn bg-gradient-to-r from-gray-400 to-gray-500 text-white font-bold px-6 py-3 flex items-center gap-2">
+            ← Volver
+          </button>
+          <div class="flex items-center gap-4">
+            <div class="text-4xl floating">${currentGame.icon}</div>
+            <div>
+              <h2 class="game-title text-2xl md:text-3xl font-bold text-gray-800">${currentGame.title}</h2>
+              <p class="text-gray-600 font-medium">${currentGame.subtitle}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="text-center">
+              <p class="text-xs text-gray-500 font-semibold">PUNTOS</p>
+              <p class="text-2xl font-bold text-purple-600" id="score-display">${gameState.score}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-xs text-gray-500 font-semibold">VIDAS</p>
+              <p class="text-2xl" id="lives-display">${'❤️'.repeat(gameState.lives)}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Actualizar puntuación
+    function updateScore(points) {
+      gameState.score += points;
+      const scoreEl = document.getElementById('score-display');
+      if (scoreEl) {
+        scoreEl.textContent = gameState.score;
+        scoreEl.classList.add('celebrate');
+        setTimeout(() => scoreEl.classList.remove('celebrate'), 600);
+      }
+    }
+    
+    // Perder vida
+    function loseLife() {
+      gameState.lives--;
+      const livesEl = document.getElementById('lives-display');
+      if (livesEl) {
+        livesEl.textContent = '❤️'.repeat(Math.max(0, gameState.lives));
+        livesEl.classList.add('shake');
+        setTimeout(() => livesEl.classList.remove('shake'), 500);
+      }
+      if (gameState.lives <= 0) {
+        showGameOver();
+      }
+    }
+    
+    // Mostrar victoria
+    function showVictory() {
+      const container = document.getElementById('game-container');
+      container.innerHTML = `
+        <div class="min-h-full flex items-center justify-center p-8">
+          <div class="bg-white/90 backdrop-blur-md rounded-3xl p-8 text-center max-w-md shadow-2xl">
+            <div class="text-8xl mb-4">🏆</div>
+            <h2 class="game-title text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-4">
+              ¡FELICIDADES!
+            </h2>
+            <p class="text-xl text-gray-700 mb-2">Completaste el juego</p>
+            <p class="text-3xl font-bold text-purple-600 mb-6">Puntos: ${gameState.score}</p>
+            <div class="text-4xl mb-6 star">⭐⭐⭐</div>
+            <button onclick="backToMenu()" class="photon-btn bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold px-8 py-4 text-xl">
+              Jugar Otro 🎮
+            </button>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Mostrar game over
+    function showGameOver() {
+      const container = document.getElementById('game-container');
+      container.innerHTML = `
+        <div class="min-h-full flex items-center justify-center p-8">
+          <div class="bg-white/90 backdrop-blur-md rounded-3xl p-8 text-center max-w-md shadow-2xl">
+            <div class="text-8xl mb-4">😢</div>
+            <h2 class="game-title text-4xl font-bold text-gray-700 mb-4">
+              ¡Inténtalo de nuevo!
+            </h2>
+            <p class="text-xl text-gray-600 mb-2">Puntos obtenidos</p>
+            <p class="text-3xl font-bold text-purple-600 mb-6">${gameState.score}</p>
+            <div class="flex gap-4 justify-center flex-wrap">
+              <button onclick="startGame(${currentGame.id})" class="photon-btn bg-gradient-to-r from-blue-400 to-cyan-500 text-white font-bold px-6 py-3">
+                Reintentar 🔄
+              </button>
+              <button onclick="backToMenu()" class="photon-btn bg-gradient-to-r from-gray-400 to-gray-500 text-white font-bold px-6 py-3">
+                Menú 🏠
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // ===== JUEGO 1: PACO EL CHATO =====
+    function renderGame1() {
+      const signals = [
+        { id: 1, emoji: '🚶', name: 'Cruce peatonal', correct: true },
+        { id: 2, emoji: '🚫', name: 'No pasar', correct: false },
+        { id: 3, emoji: '🟢', name: 'Semáforo verde', correct: true },
+        { id: 4, emoji: '🔴', name: 'Semáforo rojo', correct: false },
+        { id: 5, emoji: '⚠️', name: 'Precaución', correct: true },
+        { id: 6, emoji: '🏠', name: '¡Casa de Paco!', correct: true, isHome: true }
+      ];
+      
+      gameState.pacoPosition = 0;
+      gameState.signals = signals;
+      gameState.correctPath = [1, 3, 5, 6];
+      gameState.currentStep = 0;
+      
+      const container = document.getElementById('game-container');
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-white/70 backdrop-blur-md rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Ayuda a Paco a llegar a casa eligiendo las señales correctas
+              </p>
+              <p class="text-gray-500 mt-2">Elige señales que sean seguras para cruzar</p>
+            </div>
+            
+            <div class="flex justify-center mb-8">
+              <div class="relative">
+                <div class="text-8xl floating" id="paco-character">🧒</div>
+                <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-xs font-bold px-3 py-1 rounded-full">
+                  Paco
+                </div>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto" id="signals-grid">
+              ${signals.map(signal => `
+                <button onclick="selectSignal(${signal.id})" 
+                        id="signal-${signal.id}"
+                        class="photon-btn bg-gradient-to-br from-white to-gray-100 p-6 flex flex-col items-center gap-2 border-4 border-transparent hover:border-blue-300 ${signal.isHome ? 'opacity-50 pointer-events-none' : ''}">
+                  <span class="text-5xl">${signal.emoji}</span>
+                  <span class="font-bold text-gray-700">${signal.name}</span>
+                </button>
+              `).join('')}
+            </div>
+            
+            <div class="mt-6 max-w-md mx-auto">
+              <p class="text-sm text-gray-500 text-center mb-2">Progreso hacia casa</p>
+              <div class="progress-bar">
+                <div class="progress-fill bg-gradient-to-r from-green-400 to-emerald-500" id="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function selectSignal(signalId) {
+      const signal = gameState.signals.find(s => s.id === signalId);
+      const btn = document.getElementById(`signal-${signalId}`);
+      
+      if (signal.correct) {
+        btn.classList.add('border-green-500', 'bg-green-100');
+        btn.classList.remove('hover:border-blue-300');
+        btn.onclick = null;
+        updateScore(10);
+        
+        gameState.currentStep++;
+        const progress = (gameState.currentStep / gameState.correctPath.length) * 100;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+        
+        if (signal.isHome) {
+          document.getElementById('paco-character').textContent = '🏠🧒';
+          setTimeout(showVictory, 1000);
+        } else if (gameState.currentStep === gameState.correctPath.length - 1) {
+          document.getElementById('signal-6').classList.remove('opacity-50', 'pointer-events-none');
+        }
+      } else {
+        btn.classList.add('shake', 'border-red-500');
+        setTimeout(() => btn.classList.remove('shake'), 500);
+        loseLife();
+      }
+    }
+    
+    // ===== JUEGO 2: NOMBRE PROPIO =====
+    function renderGame2() {
+      gameState.letters = [];
+      gameState.colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'];
+      
+      const container = document.getElementById('game-container');
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-white/70 backdrop-blur-md rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Escribe tu nombre y crea un logo increíble
+              </p>
+            </div>
+            
+            <div class="max-w-md mx-auto mb-6">
+              <input type="text" id="name-input" 
+                     placeholder="Escribe tu nombre aquí..."
+                     maxlength="12"
+                     class="w-full text-center text-2xl font-bold p-4 rounded-2xl border-4 border-purple-300 focus:border-purple-500 focus:outline-none"
+                     oninput="updateLogoPreview()">
+            </div>
+            
+            <div class="flex justify-center mb-6">
+              <div id="logo-preview" class="min-h-32 flex items-center justify-center gap-1 flex-wrap p-8 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl min-w-64">
+                <p class="text-gray-400 text-xl">Tu logo aparecerá aquí ✨</p>
+              </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-6">
+              <button onclick="changeLogoStyle('rainbow')" class="photon-btn bg-gradient-to-r from-red-400 via-yellow-400 to-blue-400 text-white font-bold px-6 py-3">
+                🌈 Arcoíris
+              </button>
+              <button onclick="changeLogoStyle('bounce')" class="photon-btn bg-gradient-to-r from-purple-400 to-pink-500 text-white font-bold px-6 py-3">
+                ⬆️ Rebote
+              </button>
+              <button onclick="changeLogoStyle('glow')" class="photon-btn bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold px-6 py-3">
+                ✨ Brillante
+              </button>
+              <button onclick="changeLogoStyle('shadow')" class="photon-btn bg-gradient-to-r from-gray-600 to-gray-800 text-white font-bold px-6 py-3">
+                🌑 Sombra
+              </button>
+            </div>
+            
+            <div class="text-center">
+              <button onclick="saveLogo()" class="photon-btn bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold px-8 py-4 text-xl">
+                ¡Listo! Mi Logo Está Genial 🎉
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      gameState.logoStyle = 'rainbow';
+    }
+    
+    function updateLogoPreview() {
+      const name = document.getElementById('name-input').value.toUpperCase();
+      const preview = document.getElementById('logo-preview');
+      
+      if (!name) {
+        preview.innerHTML = '<p class="text-gray-400 text-xl">Tu logo aparecerá aquí ✨</p>';
+        return;
+      }
+      
+      const letters = name.split('').map((letter, i) => {
+        const color = gameState.colors[i % gameState.colors.length];
+        let style = `color: ${color}; font-size: 3.5rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2);`;
+        
+        if (gameState.logoStyle === 'bounce') {
+          style += `animation: float 1s ease-in-out infinite; animation-delay: ${i * 0.1}s;`;
+        } else if (gameState.logoStyle === 'glow') {
+          style += `text-shadow: 0 0 20px ${color}, 0 0 40px ${color};`;
+        } else if (gameState.logoStyle === 'shadow') {
+          style += `text-shadow: 4px 4px 0 #333, 6px 6px 0 #666;`;
+        }
+        
+        return `<span class="game-title inline-block" style="${style}">${letter}</span>`;
+      }).join('');
+      
+      preview.innerHTML = letters;
+    }
+    
+    function changeLogoStyle(style) {
+      gameState.logoStyle = style;
+      updateLogoPreview();
+      updateScore(5);
+    }
+    
+    function saveLogo() {
+      const name = document.getElementById('name-input').value;
+      if (name.length >= 2) {
+        updateScore(50);
+        showVictory();
+      }
+    }
+    
+    // ===== JUEGO 3: BURBUJAS MUSICALES =====
+    function renderGame3() {
+      const items = [
+        { img: '🍎', word: 'Manzana', vocal: 'A', sound: 'A' },
+        { img: '🐘', word: 'Elefante', vocal: 'E', sound: 'E' },
+        { img: '🏝️', word: 'Isla', vocal: 'I', sound: 'I' },
+        { img: '🐻', word: 'Oso', vocal: 'O', sound: 'O' },
+        { img: '🍇', word: 'Uva', vocal: 'U', sound: 'U' },
+        { img: '✈️', word: 'Avión', vocal: 'A', sound: 'A' },
+        { img: '⭐', word: 'Estrella', vocal: 'E', sound: 'E' },
+        { img: '🎁', word: 'Regalo', vocal: 'E', sound: 'E' }
+      ];
+      
+      gameState.currentItem = items[Math.floor(Math.random() * items.length)];
+      gameState.items = items;
+      gameState.correctCount = 0;
+      gameState.totalNeeded = 5;
+      
+      const container = document.getElementById('game-container');
+      renderBubblesGame(container);
+    }
+    
+    function renderBubblesGame(container) {
+      const vocales = ['A', 'E', 'I', 'O', 'U'];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-cyan-100 to-blue-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Explota la burbuja con la vocal inicial
+              </p>
+              <p class="text-gray-500">${gameState.correctCount}/${gameState.totalNeeded} correctas</p>
+            </div>
+            
+            <div class="flex flex-col items-center gap-6 mb-8">
+              <div class="text-8xl floating">${gameState.currentItem.img}</div>
+              <div class="bg-white/80 rounded-2xl px-6 py-3 shadow-lg">
+                <p class="text-2xl font-bold text-gray-800">${gameState.currentItem.word}</p>
+                <p class="text-gray-500">¿Con qué vocal empieza?</p>
+              </div>
+            </div>
+            
+            <div class="flex justify-center gap-4 flex-wrap" id="bubbles-container">
+              ${vocales.map(v => `
+                <button onclick="popBubble('${v}')" 
+                        class="bubble w-20 h-20 md:w-24 md:h-24 flex items-center justify-center text-4xl font-black text-white shadow-lg"
+                        style="background: linear-gradient(135deg, ${getVocalColor(v)} 0%, ${getVocalColorDark(v)} 100%);">
+                  ${v}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function getVocalColor(v) {
+      const colors = { A: '#FF6B6B', E: '#4ECDC4', I: '#45B7D1', O: '#FFD93D', U: '#C678DD' };
+      return colors[v];
+    }
+    
+    function getVocalColorDark(v) {
+      const colors = { A: '#E55555', E: '#3DAD9D', I: '#3A9AB5', O: '#E6C235', U: '#A85DC4' };
+      return colors[v];
+    }
+    
+    function popBubble(vocal) {
+      if (vocal === gameState.currentItem.vocal) {
+        updateScore(20);
+        gameState.correctCount++;
+        
+        if (gameState.correctCount >= gameState.totalNeeded) {
+          showVictory();
+        } else {
+          // Nueva palabra
+          const available = gameState.items.filter(i => i !== gameState.currentItem);
+          gameState.currentItem = available[Math.floor(Math.random() * available.length)];
+          renderBubblesGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+        document.getElementById('bubbles-container').classList.add('shake');
+        setTimeout(() => document.getElementById('bubbles-container').classList.remove('shake'), 500);
+      }
+    }
+    
+    // ===== JUEGO 4: CARRERA DE NÚMEROS =====
+    function renderGame4() {
+      const challenges = [
+        { objects: ['🍎', '🍎', '🍎'], answer: '3' },
+        { objects: ['🐱', '🐱', '🐱', '🐱', '🐱'], answer: '5' },
+        { objects: ['🌟', '🌟', '🌟', '🌟', '🌟', '🌟', '🌟'], answer: '7' },
+        { objects: ['🏃', '🏃', '🏃', '🏃'], answer: '4' },
+        { objects: ['🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈', '🎈'], answer: '10' }
+      ];
+      
+      gameState.challenges = challenges;
+      gameState.current = 0;
+      gameState.userAnswer = '';
+      
+      const container = document.getElementById('game-container');
+      renderCountingGame(container);
+    }
+    
+    function renderCountingGame(container) {
+      const challenge = gameState.challenges[gameState.current];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-green-100 to-emerald-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 ¡Cuenta los objetos y escribe el número!
+              </p>
+              <p class="text-gray-500">${gameState.current + 1}/${gameState.challenges.length}</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-8 shadow-lg mb-6">
+              <div class="flex flex-wrap justify-center gap-4 min-h-32 items-center">
+                ${challenge.objects.map((obj, i) => `
+                  <div class="text-6xl bounce-in" style="animation-delay: ${i * 0.05}s">${obj}</div>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div class="max-w-sm mx-auto mb-6">
+              <label class="block text-center font-bold text-gray-700 mb-3">¿Cuántos hay?</label>
+              <input type="number" 
+                     id="count-input"
+                     value="${gameState.userAnswer}"
+                     min="0"
+                     max="20"
+                     oninput="gameState.userAnswer = this.value"
+                     placeholder="Escribe el número..."
+                     class="w-full text-3xl p-4 rounded-2xl border-4 border-green-300 focus:border-green-500 focus:outline-none text-center font-bold">
+            </div>
+            
+            <div class="flex justify-center gap-4">
+              <button onclick="checkCount()" class="photon-btn bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold px-8 py-4 text-xl">
+                ✓ Verificar
+              </button>
+              <button onclick="skipCount()" class="photon-btn bg-gray-400 text-white font-bold px-8 py-4">
+                Siguiente
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function checkCount() {
+      const challenge = gameState.challenges[gameState.current];
+      
+      if (gameState.userAnswer === challenge.answer) {
+        updateScore(20);
+        gameState.current++;
+        gameState.userAnswer = '';
+        
+        if (gameState.current >= gameState.challenges.length) {
+          showVictory();
+        } else {
+          renderCountingGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+        document.getElementById('count-input').classList.add('shake', 'border-red-500');
+        setTimeout(() => {
+          const input = document.getElementById('count-input');
+          if (input) {
+            input.classList.remove('shake', 'border-red-500');
+          }
+        }, 500);
+      }
+    }
+    
+    function skipCount() {
+      gameState.current++;
+      gameState.userAnswer = '';
+      
+      if (gameState.current >= gameState.challenges.length) {
+        showVictory();
+      } else {
+        renderCountingGame(document.getElementById('game-container'));
+      }
+    }
+    
+    // ===== JUEGO 5: IMANES DE RIMAS =====
+    function renderGame5() {
+      const rhymes = [
+        { word: 'Gato', match: 'Pato', emoji1: '🐱', emoji2: '🦆' },
+        { word: 'Sol', match: 'Col', emoji1: '☀️', emoji2: '🥬' },
+        { word: 'Casa', match: 'Masa', emoji1: '🏠', emoji2: '🫓' },
+        { word: 'Luna', match: 'Cuna', emoji1: '🌙', emoji2: '🛏️' },
+        { word: 'Flor', match: 'Amor', emoji1: '🌸', emoji2: '❤️' }
+      ];
+      
+      gameState.rhymes = rhymes;
+      gameState.currentRhyme = 0;
+      gameState.options = generateRhymeOptions(rhymes[0]);
+      
+      const container = document.getElementById('game-container');
+      renderRhymeGame(container);
+    }
+    
+    function generateRhymeOptions(rhyme) {
+      const distractors = ['Mesa', 'Árbol', 'Cielo', 'Libro', 'Agua'];
+      const options = [rhyme.match, ...distractors.slice(0, 3)].sort(() => Math.random() - 0.5);
+      return options;
+    }
+    
+    function renderRhymeGame(container) {
+      const current = gameState.rhymes[gameState.currentRhyme];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-rose-100 to-red-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Encuentra la palabra que rima
+              </p>
+              <p class="text-gray-500">${gameState.currentRhyme + 1}/${gameState.rhymes.length}</p>
+            </div>
+            
+            <div class="flex justify-center mb-8">
+              <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+                <div class="text-7xl mb-4 floating">${current.emoji1}</div>
+                <p class="text-4xl font-black text-gray-800 game-title">${current.word}</p>
+                <p class="text-gray-500 mt-2">¿Qué palabra rima con "${current.word}"?</p>
+              </div>
+            </div>
+            
+            <div class="flex justify-center">
+              <div class="text-6xl mr-4 floating">🧲</div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto mt-6">
+              ${gameState.options.map(opt => `
+                <button onclick="checkRhyme('${opt}')" 
+                        class="photon-btn bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold text-xl py-4 px-6">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function checkRhyme(word) {
+      const current = gameState.rhymes[gameState.currentRhyme];
+      
+      if (word === current.match) {
+        updateScore(20);
+        gameState.currentRhyme++;
+        
+        if (gameState.currentRhyme >= gameState.rhymes.length) {
+          showVictory();
+        } else {
+          gameState.options = generateRhymeOptions(gameState.rhymes[gameState.currentRhyme]);
+          renderRhymeGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+      }
+    }
+    
+    // ===== JUEGO 6: DIRECTOR DE CINE =====
+    function renderGame6() {
+      const stories = {
+        'Caperucita Roja': [
+          { id: 1, emoji: '👧', text: 'Caperucita sale de casa' },
+          { id: 2, emoji: '🌲', text: 'Camina por el bosque' },
+          { id: 3, emoji: '🐺', text: 'Se encuentra al lobo' },
+          { id: 4, emoji: '🏠', text: 'Llega a casa de la abuela' },
+          { id: 5, emoji: '🪓', text: 'El cazador la salva' }
+        ]
+      };
+      
+      const storyName = 'Caperucita Roja';
+      const originalOrder = [...stories[storyName]];
+      const shuffled = [...originalOrder].sort(() => Math.random() - 0.5);
+      
+      gameState.story = storyName;
+      gameState.scenes = shuffled;
+      gameState.correctOrder = originalOrder.map(s => s.id);
+      gameState.userOrder = [];
+      
+      const container = document.getElementById('game-container');
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-amber-100 to-yellow-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Ordena las escenas de "${storyName}"
+              </p>
+              <p class="text-gray-500">Haz clic en las escenas en el orden correcto</p>
+            </div>
+            
+            <div class="mb-8">
+              <h3 class="text-center font-bold text-gray-600 mb-4">📽️ Tu película:</h3>
+              <div id="movie-timeline" class="flex gap-2 justify-center flex-wrap min-h-24 p-4 bg-white/50 rounded-2xl">
+                ${gameState.userOrder.length === 0 ? '<p class="text-gray-400 self-center">Haz clic en las escenas...</p>' : ''}
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="scenes-container">
+              ${shuffled.map(scene => `
+                <button onclick="addScene(${scene.id})" 
+                        id="scene-${scene.id}"
+                        class="photon-btn bg-white p-4 flex items-center gap-4 text-left">
+                  <span class="text-5xl">${scene.emoji}</span>
+                  <span class="font-medium text-gray-700">${scene.text}</span>
+                </button>
+              `).join('')}
+            </div>
+            
+            <div class="text-center mt-6">
+              <button onclick="checkStoryOrder()" class="photon-btn bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold px-8 py-4 text-xl">
+                ¡Verificar Película! 🎬
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function addScene(sceneId) {
+      if (gameState.userOrder.includes(sceneId)) return;
+      
+      gameState.userOrder.push(sceneId);
+      const scene = gameState.scenes.find(s => s.id === sceneId);
+      
+      document.getElementById(`scene-${sceneId}`).classList.add('opacity-50', 'pointer-events-none');
+      
+      const timeline = document.getElementById('movie-timeline');
+      if (gameState.userOrder.length === 1) {
+        timeline.innerHTML = '';
+      }
+      
+      const sceneEl = document.createElement('div');
+      sceneEl.className = 'bg-amber-400 rounded-xl p-3 text-center bounce-in';
+      sceneEl.innerHTML = `
+        <span class="text-3xl block">${scene.emoji}</span>
+        <span class="text-xs font-bold text-white">${gameState.userOrder.length}</span>
+      `;
+      timeline.appendChild(sceneEl);
+    }
+    
+    function checkStoryOrder() {
+      if (gameState.userOrder.length !== gameState.correctOrder.length) {
+        document.getElementById('movie-timeline').classList.add('shake');
+        setTimeout(() => document.getElementById('movie-timeline').classList.remove('shake'), 500);
+        return;
+      }
+      
+      const isCorrect = gameState.userOrder.every((id, i) => id === gameState.correctOrder[i]);
+      
+      if (isCorrect) {
+        updateScore(50);
+        showVictory();
+      } else {
+        loseLife();
+        // Reiniciar
+        gameState.userOrder = [];
+        renderGame6();
+      }
+    }
+    
+    // ===== JUEGO 7: CAJA DE SOMBRAS =====
+    function renderGame7() {
+      const riddles = [
+        { silhouette: '🟤', answer: 'Pelota', emoji: '⚽', hint: 'Rueda y rueda sin parar' },
+        { silhouette: '🟤', answer: 'Estrella', emoji: '⭐', hint: 'Brilla en el cielo de noche' },
+        { silhouette: '🟤', answer: 'Manzana', emoji: '🍎', hint: 'Fruta roja que cruje' },
+        { silhouette: '🟤', answer: 'Casa', emoji: '🏠', hint: 'Tiene techo y ventanas' },
+        { silhouette: '🟤', answer: 'Sol', emoji: '☀️', hint: 'Da luz y calor' }
+      ];
+      
+      gameState.riddles = riddles;
+      gameState.current = 0;
+      gameState.showingHint = false;
+      
+      const container = document.getElementById('game-container');
+      renderRiddleGame(container);
+    }
+    
+    function renderRiddleGame(container) {
+      const riddle = gameState.riddles[gameState.current];
+      const options = [riddle.answer, 'Mesa', 'Árbol', 'Libro'].sort(() => Math.random() - 0.5);
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-slate-200 to-gray-300 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Adivina qué objeto es por su sombra
+              </p>
+              <p class="text-gray-500">${gameState.current + 1}/${gameState.riddles.length}</p>
+            </div>
+            
+            <div class="flex justify-center mb-6">
+              <div class="relative">
+                <div class="text-9xl filter ${gameState.showingHint ? '' : 'brightness-0'} floating" id="shadow-object">
+                  ${riddle.emoji}
+                </div>
+                <div class="absolute -top-4 -right-4 text-4xl">🔦</div>
+              </div>
+            </div>
+            
+            <div class="text-center mb-6">
+              <button onclick="showHint()" class="photon-btn bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold px-6 py-2 ${gameState.showingHint ? 'opacity-50' : ''}">
+                💡 Ver Pista
+              </button>
+              ${gameState.showingHint ? `
+                <p class="mt-4 text-lg font-medium text-gray-700 bg-white/50 rounded-xl px-4 py-2 inline-block">
+                  "${riddle.hint}"
+                </p>
+              ` : ''}
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto">
+              ${options.map(opt => `
+                <button onclick="guessRiddle('${opt}')" 
+                        class="photon-btn bg-gradient-to-r from-indigo-400 to-purple-500 text-white font-bold text-xl py-4 px-6">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function showHint() {
+      if (!gameState.showingHint) {
+        gameState.showingHint = true;
+        renderRiddleGame(document.getElementById('game-container'));
+      }
+    }
+    
+    function guessRiddle(answer) {
+      const riddle = gameState.riddles[gameState.current];
+      
+      if (answer === riddle.answer) {
+        updateScore(gameState.showingHint ? 10 : 25);
+        gameState.current++;
+        gameState.showingHint = false;
+        
+        if (gameState.current >= gameState.riddles.length) {
+          showVictory();
+        } else {
+          renderRiddleGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+      }
+    }
+    
+    // ===== JUEGO 8: TALLER DE ROBOTS =====
+    function renderGame8() {
+      const parts = [
+        { id: 1, name: 'Cabeza', emoji: '🤖', instruction: 'Primero, coloca la CABEZA del robot' },
+        { id: 2, name: 'Cuerpo', emoji: '📦', instruction: 'Ahora, añade el CUERPO' },
+        { id: 3, name: 'Brazos', emoji: '🦾', instruction: 'Conecta los BRAZOS' },
+        { id: 4, name: 'Piernas', emoji: '🦿', instruction: 'Instala las PIERNAS' },
+        { id: 5, name: 'Antena', emoji: '📡', instruction: '¡Por último, la ANTENA!' }
+      ];
+      
+      gameState.parts = parts;
+      gameState.currentStep = 0;
+      gameState.assembled = [];
+      
+      const shuffled = [...parts].sort(() => Math.random() - 0.5);
+      gameState.shuffledParts = shuffled;
+      
+      const container = document.getElementById('game-container');
+      renderRobotGame(container);
+    }
+    
+    function renderRobotGame(container) {
+      const currentInstruction = gameState.parts[gameState.currentStep]?.instruction || '¡Robot completado!';
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-indigo-100 to-violet-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-4">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Sigue las instrucciones para armar el robot
+              </p>
+            </div>
+            
+            <div class="bg-white/80 rounded-2xl p-4 mb-6 text-center">
+              <p class="text-xl font-bold text-purple-700">
+                📋 ${currentInstruction}
+              </p>
+              <p class="text-gray-500 text-sm mt-1">Paso ${gameState.currentStep + 1} de ${gameState.parts.length}</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-8 max-w-3xl mx-auto">
+              <div>
+                <h3 class="text-center font-bold text-gray-700 mb-4">🔧 Piezas disponibles</h3>
+                <div class="space-y-3" id="parts-available">
+                  ${gameState.shuffledParts.filter(p => !gameState.assembled.includes(p.id)).map(part => `
+                    <button onclick="addRobotPart(${part.id})" 
+                            class="photon-btn w-full bg-white p-4 flex items-center gap-4">
+                      <span class="text-4xl">${part.emoji}</span>
+                      <span class="font-bold text-gray-700">${part.name}</span>
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <div>
+                <h3 class="text-center font-bold text-gray-700 mb-4">🤖 Tu Robot</h3>
+                <div class="bg-gradient-to-b from-gray-700 to-gray-900 rounded-3xl p-6 min-h-64 flex flex-col items-center justify-center gap-2">
+                  ${gameState.assembled.length === 0 ? 
+                    '<p class="text-gray-400">Empieza a armar...</p>' : 
+                    gameState.assembled.map(id => {
+                      const part = gameState.parts.find(p => p.id === id);
+                      return `<div class="text-5xl bounce-in">${part.emoji}</div>`;
+                    }).join('')
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function addRobotPart(partId) {
+      const expectedPartId = gameState.parts[gameState.currentStep].id;
+      
+      if (partId === expectedPartId) {
+        gameState.assembled.push(partId);
+        gameState.currentStep++;
+        updateScore(15);
+        
+        if (gameState.currentStep >= gameState.parts.length) {
+          setTimeout(showVictory, 500);
+        } else {
+          renderRobotGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+        document.getElementById('parts-available').classList.add('shake');
+        setTimeout(() => document.getElementById('parts-available').classList.remove('shake'), 500);
+      }
+    }
+    
+    // ===== JUEGO 9: CREA TU MONSTRUO =====
+    function renderGame9() {
+      const descriptions = [
+        { eyes: 'tres', eyeEmoji: '👁️👁️👁️', color: 'verde', horns: 'dos' },
+        { eyes: 'un', eyeEmoji: '👁️', color: 'morado', horns: 'uno' },
+        { eyes: 'cuatro', eyeEmoji: '👁️👁️👁️👁️', color: 'azul', horns: 'tres' }
+      ];
+      
+      gameState.monsterDesc = descriptions[Math.floor(Math.random() * descriptions.length)];
+      gameState.monster = { eyes: '', color: '', horns: '' };
+      
+      const container = document.getElementById('game-container');
+      renderMonsterGame(container);
+    }
+    
+    function renderMonsterGame(container) {
+      const desc = gameState.monsterDesc;
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-lime-100 to-green-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Crea el monstruo según la descripción
+              </p>
+            </div>
+            
+            <div class="bg-white/80 rounded-2xl p-4 mb-6 text-center max-w-lg mx-auto">
+              <p class="text-xl font-medium text-gray-800">
+                "El monstruo tiene <span class="font-bold text-purple-600">${desc.eyes} ojo(s)</span>, 
+                es de color <span class="font-bold text-green-600">${desc.color}</span>, 
+                y tiene <span class="font-bold text-orange-600">${desc.horns} cuerno(s)</span>"
+              </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <!-- Ojos -->
+              <div class="bg-white/50 rounded-2xl p-4">
+                <h3 class="text-center font-bold text-gray-700 mb-3">👁️ Ojos</h3>
+                <div class="space-y-2">
+                  ${['un', 'dos', 'tres', 'cuatro'].map(n => `
+                    <button onclick="setMonsterPart('eyes', '${n}')" 
+                            class="photon-btn w-full py-2 ${gameState.monster.eyes === n ? 'bg-purple-500 text-white' : 'bg-white'}">
+                      ${n}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <!-- Color -->
+              <div class="bg-white/50 rounded-2xl p-4">
+                <h3 class="text-center font-bold text-gray-700 mb-3">🎨 Color</h3>
+                <div class="space-y-2">
+                  ${['verde', 'morado', 'azul', 'rojo'].map(c => `
+                    <button onclick="setMonsterPart('color', '${c}')" 
+                            class="photon-btn w-full py-2 ${gameState.monster.color === c ? 'bg-green-500 text-white' : 'bg-white'}">
+                      ${c}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <!-- Cuernos -->
+              <div class="bg-white/50 rounded-2xl p-4">
+                <h3 class="text-center font-bold text-gray-700 mb-3">🦴 Cuernos</h3>
+                <div class="space-y-2">
+                  ${['uno', 'dos', 'tres'].map(h => `
+                    <button onclick="setMonsterPart('horns', '${h}')" 
+                            class="photon-btn w-full py-2 ${gameState.monster.horns === h ? 'bg-orange-500 text-white' : 'bg-white'}">
+                      ${h}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-center mt-6">
+              <button onclick="checkMonster()" class="photon-btn bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold px-8 py-4 text-xl">
+                ¡Verificar Monstruo! 👾
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function setMonsterPart(part, value) {
+      gameState.monster[part] = value;
+      renderMonsterGame(document.getElementById('game-container'));
+    }
+    
+    function checkMonster() {
+      const desc = gameState.monsterDesc;
+      const monster = gameState.monster;
+      
+      if (monster.eyes === desc.eyes && monster.color === desc.color && monster.horns === desc.horns) {
+        updateScore(40);
+        showVictory();
+      } else {
+        loseLife();
+      }
+    }
+    
+    // ===== JUEGO 10: MONTAÑA RUSA ABC =====
+    function renderGame10() {
+      const alphabet = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
+      const startIndex = Math.floor(Math.random() * 20);
+      const sequence = alphabet.slice(startIndex, startIndex + 5);
+      const shuffled = [...sequence].sort(() => Math.random() - 0.5);
+      
+      gameState.correctSequence = sequence;
+      gameState.shuffledLetters = shuffled;
+      gameState.collected = [];
+      
+      const container = document.getElementById('game-container');
+      renderABCGame(container);
+    }
+    
+    function renderABCGame(container) {
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-sky-100 to-blue-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Recoge las letras en orden alfabético
+              </p>
+              <p class="text-gray-500">Empieza con: ${gameState.correctSequence[0]}</p>
+            </div>
+            
+            <div class="mb-6">
+              <h3 class="text-center font-bold text-gray-600 mb-3">🎢 Tu tren de letras:</h3>
+              <div class="flex justify-center gap-2 min-h-20 items-center p-4 bg-white/50 rounded-2xl">
+                ${gameState.collected.length === 0 ? 
+                  '<p class="text-gray-400">Haz clic en las letras en orden...</p>' :
+                  gameState.collected.map(l => `
+                    <div class="bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl w-14 h-14 flex items-center justify-center text-white font-black text-2xl shadow-lg bounce-in">
+                      ${l}
+                    </div>
+                  `).join('')
+                }
+              </div>
+            </div>
+            
+            <div class="flex justify-center gap-4 flex-wrap" id="letters-available">
+              ${gameState.shuffledLetters.filter(l => !gameState.collected.includes(l)).map(letter => `
+                <button onclick="collectLetter('${letter}')" 
+                        class="photon-btn w-16 h-16 bg-gradient-to-br from-yellow-300 to-orange-400 text-3xl font-black text-white shadow-lg floating"
+                        style="animation-delay: ${Math.random() * 0.5}s">
+                  ${letter}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function collectLetter(letter) {
+      const expectedLetter = gameState.correctSequence[gameState.collected.length];
+      
+      if (letter === expectedLetter) {
+        gameState.collected.push(letter);
+        updateScore(15);
+        
+        if (gameState.collected.length === gameState.correctSequence.length) {
+          setTimeout(showVictory, 500);
+        } else {
+          renderABCGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+        document.getElementById('letters-available').classList.add('shake');
+        setTimeout(() => document.getElementById('letters-available').classList.remove('shake'), 500);
+      }
+    }
+    
+    // ===== JUEGO 11: VARITA MÁGICA =====
+    function renderGame11() {
+      const words = [
+        { singular: 'gato', plural: 'gatos', emoji: '🐱' },
+        { singular: 'flor', plural: 'flores', emoji: '🌸' },
+        { singular: 'libro', plural: 'libros', emoji: '📚' },
+        { singular: 'estrella', plural: 'estrellas', emoji: '⭐' },
+        { singular: 'casa', plural: 'casas', emoji: '🏠' }
+      ];
+      
+      gameState.words = words;
+      gameState.currentWord = 0;
+      
+      const container = document.getElementById('game-container');
+      renderMagicWandGame(container);
+    }
+    
+    function renderMagicWandGame(container) {
+      const word = gameState.words[gameState.currentWord];
+      const options = [word.plural, word.singular + 'es', word.singular + 'as', word.singular + 'os'].filter((v, i, a) => a.indexOf(v) === i).sort(() => Math.random() - 0.5);
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-fuchsia-100 to-purple-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 ¡Usa la varita para multiplicar!
+              </p>
+              <p class="text-gray-500">${gameState.currentWord + 1}/${gameState.words.length}</p>
+            </div>
+            
+            <div class="flex justify-center items-center gap-8 mb-8">
+              <div class="text-center">
+                <div class="text-8xl floating">${word.emoji}</div>
+                <p class="text-2xl font-bold text-gray-800 mt-2">${word.singular}</p>
+                <p class="text-gray-500">singular</p>
+              </div>
+              
+              <div class="text-6xl floating" style="animation-delay: 0.2s">🪄</div>
+              <div class="text-4xl">➡️</div>
+              
+              <div class="text-center">
+                <div class="text-8xl floating" style="animation-delay: 0.4s">${word.emoji}${word.emoji}${word.emoji}</div>
+                <p class="text-2xl font-bold text-purple-600 mt-2">???</p>
+                <p class="text-gray-500">plural</p>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto">
+              ${options.map(opt => `
+                <button onclick="checkPlural('${opt}')" 
+                        class="photon-btn bg-gradient-to-r from-purple-400 to-pink-500 text-white font-bold text-xl py-4">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function checkPlural(answer) {
+      const word = gameState.words[gameState.currentWord];
+      
+      if (answer === word.plural) {
+        updateScore(20);
+        gameState.currentWord++;
+        
+        if (gameState.currentWord >= gameState.words.length) {
+          showVictory();
+        } else {
+          renderMagicWandGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+      }
+    }
+    
+    // ===== JUEGO 12: INTERRUPTOR DEL MUNDO =====
+    function renderGame12() {
+      const antonyms = [
+        { word1: 'día', word2: 'noche', emoji1: '☀️', emoji2: '🌙' },
+        { word1: 'frío', word2: 'caliente', emoji1: '❄️', emoji2: '🔥' },
+        { word1: 'grande', word2: 'pequeño', emoji1: '🐘', emoji2: '🐁' },
+        { word1: 'feliz', word2: 'triste', emoji1: '😊', emoji2: '😢' },
+        { word1: 'arriba', word2: 'abajo', emoji1: '⬆️', emoji2: '⬇️' }
+      ];
+      
+      gameState.antonyms = antonyms;
+      gameState.current = 0;
+      gameState.showingFirst = true;
+      
+      const container = document.getElementById('game-container');
+      renderAntonymGame(container);
+    }
+    
+    function renderAntonymGame(container) {
+      const pair = gameState.antonyms[gameState.current];
+      const shown = gameState.showingFirst ? pair : { word1: pair.word2, word2: pair.word1, emoji1: pair.emoji2, emoji2: pair.emoji1 };
+      const distractors = ['agua', 'mesa', 'libro', 'carro'];
+      const options = [shown.word2, ...distractors.slice(0, 3)].sort(() => Math.random() - 0.5);
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br ${gameState.showingFirst ? 'from-yellow-100 to-amber-200' : 'from-indigo-100 to-purple-200'} rounded-3xl p-6 shadow-xl transition-all duration-500">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Encuentra el opuesto (antónimo)
+              </p>
+              <p class="text-gray-500">${gameState.current + 1}/${gameState.antonyms.length}</p>
+            </div>
+            
+            <div class="flex justify-center items-center gap-8 mb-8">
+              <div class="text-center bg-white/80 rounded-3xl p-8 shadow-lg">
+                <div class="text-8xl floating">${shown.emoji1}</div>
+                <p class="text-3xl font-black text-gray-800 mt-4 game-title">${shown.word1}</p>
+              </div>
+              
+              <div class="flex flex-col items-center gap-2">
+                <button onclick="toggleSwitch()" class="w-20 h-10 bg-gray-300 rounded-full relative cursor-pointer shadow-inner">
+                  <div class="absolute w-8 h-8 bg-white rounded-full top-1 ${gameState.showingFirst ? 'left-1' : 'left-11'} transition-all shadow-lg"></div>
+                </button>
+                <p class="text-sm text-gray-500">💡 Interruptor</p>
+              </div>
+              
+              <div class="text-center">
+                <div class="text-8xl">❓</div>
+                <p class="text-3xl font-black text-purple-600 mt-4 game-title">???</p>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto">
+              ${options.map(opt => `
+                <button onclick="checkAntonym('${opt}')" 
+                        class="photon-btn bg-gradient-to-r from-amber-400 to-orange-500 text-white font-bold text-xl py-4">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function toggleSwitch() {
+      gameState.showingFirst = !gameState.showingFirst;
+      renderAntonymGame(document.getElementById('game-container'));
+    }
+    
+    function checkAntonym(answer) {
+      const pair = gameState.antonyms[gameState.current];
+      const correctAnswer = gameState.showingFirst ? pair.word2 : pair.word1;
+      
+      if (answer === correctAnswer) {
+        updateScore(20);
+        gameState.current++;
+        gameState.showingFirst = Math.random() > 0.5;
+        
+        if (gameState.current >= gameState.antonyms.length) {
+          showVictory();
+        } else {
+          renderAntonymGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+      }
+    }
+    
+    // ===== JUEGO 13: MENSAJERO ESPACIAL =====
+    function renderGame13() {
+      const stamps = ['🌟', '🚀', '🪐', '👽', '🌙'];
+      const destinations = ['Marte', 'Luna', 'Júpiter', 'Saturno', 'Neptuno'];
+      
+      gameState.stamps = stamps;
+      gameState.destinations = destinations;
+      gameState.selectedStamp = null;
+      gameState.selectedDest = null;
+      gameState.message = '';
+      
+      const container = document.getElementById('game-container');
+      renderLetterGame(container);
+    }
+    
+    function renderLetterGame(container) {
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-violet-100 to-indigo-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Crea tu carta espacial
+              </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              <!-- Carta -->
+              <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="text-5xl" id="stamp-preview">${gameState.selectedStamp || '📮'}</div>
+                  <div class="text-right">
+                    <p class="text-sm text-gray-500">Para:</p>
+                    <p class="font-bold text-purple-600">${gameState.selectedDest || '???'}</p>
+                  </div>
+                </div>
+                <textarea 
+                  id="letter-message"
+                  placeholder="Escribe tu mensaje espacial aquí..."
+                  class="w-full h-32 p-4 border-2 border-gray-200 rounded-xl resize-none focus:border-purple-400 focus:outline-none"
+                  oninput="gameState.message = this.value"
+                >${gameState.message}</textarea>
+                <p class="text-right text-sm text-gray-400 mt-2">De: Astronauta Terrestre 🧑‍🚀</p>
+              </div>
+              
+              <!-- Opciones -->
+              <div class="space-y-6">
+                <div>
+                  <h3 class="font-bold text-gray-700 mb-3">🌟 Elige tu sello:</h3>
+                  <div class="flex gap-2 flex-wrap">
+                    ${gameState.stamps.map(s => `
+                      <button onclick="selectStamp('${s}')" 
+                              class="photon-btn w-14 h-14 text-3xl ${gameState.selectedStamp === s ? 'bg-purple-500' : 'bg-white'}">
+                        ${s}
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 class="font-bold text-gray-700 mb-3">🪐 Elige destino:</h3>
+                  <div class="space-y-2">
+                    ${gameState.destinations.map(d => `
+                      <button onclick="selectDestination('${d}')" 
+                              class="photon-btn w-full py-2 text-left px-4 ${gameState.selectedDest === d ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white' : 'bg-white'}">
+                        🌍 → ${d}
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-center mt-6">
+              <button onclick="sendSpaceLetter()" class="photon-btn bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold px-8 py-4 text-xl">
+                ¡Enviar Carta! 🚀
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function selectStamp(stamp) {
+      gameState.selectedStamp = stamp;
+      updateScore(5);
+      renderLetterGame(document.getElementById('game-container'));
+    }
+    
+    function selectDestination(dest) {
+      gameState.selectedDest = dest;
+      updateScore(5);
+      renderLetterGame(document.getElementById('game-container'));
+    }
+    
+    function sendSpaceLetter() {
+      if (gameState.selectedStamp && gameState.selectedDest && gameState.message.length >= 5) {
+        updateScore(30);
+        showVictory();
+      }
+    }
+    
+    // ===== JUEGO 14: SEMÁFORO DE LECTURA =====
+    function renderGame14() {
+      const sentences = [
+        { text: 'Hola, ¿cómo estás?', signs: ['coma', 'pregunta'] },
+        { text: 'Me gusta el sol. Es muy brillante.', signs: ['punto', 'punto'] },
+        { text: '¡Qué bonito día!', signs: ['exclamacion'] }
+      ];
+      
+      gameState.sentences = sentences;
+      gameState.current = 0;
+      
+      const container = document.getElementById('game-container');
+      renderPunctuationGame(container);
+    }
+    
+    function renderPunctuationGame(container) {
+      const sentence = gameState.sentences[gameState.current];
+      const signs = [
+        { name: 'punto', emoji: '🔴', symbol: '.' },
+        { name: 'coma', emoji: '🟡', symbol: ',' },
+        { name: 'pregunta', emoji: '🟢', symbol: '?' },
+        { name: 'exclamacion', emoji: '🔵', symbol: '!' }
+      ];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-red-50 via-yellow-50 to-green-50 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Identifica los signos de puntuación
+              </p>
+              <p class="text-gray-500">${gameState.current + 1}/${gameState.sentences.length}</p>
+            </div>
+            
+            <div class="flex justify-center mb-6">
+              <div class="bg-white rounded-2xl p-6 shadow-lg max-w-lg">
+                <p class="text-2xl font-medium text-gray-800 text-center">${sentence.text}</p>
+              </div>
+            </div>
+            
+            <div class="text-center mb-6">
+              <p class="text-gray-600">¿Qué signos tiene esta oración?</p>
+              <p class="text-sm text-gray-400">Haz clic en todos los que encuentres</p>
+            </div>
+            
+            <div class="flex justify-center gap-4 flex-wrap" id="signs-container">
+              ${signs.map(s => `
+                <button onclick="checkSign('${s.name}')" 
+                        id="sign-${s.name}"
+                        class="photon-btn bg-white p-4 flex flex-col items-center gap-2 w-24">
+                  <span class="text-4xl">${s.emoji}</span>
+                  <span class="text-2xl font-bold">${s.symbol}</span>
+                  <span class="text-xs text-gray-500">${s.name}</span>
+                </button>
+              `).join('')}
+            </div>
+            
+            <div class="text-center mt-6">
+              <button onclick="nextSentence()" class="photon-btn bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold px-8 py-4 text-xl">
+                Siguiente ➡️
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      gameState.foundSigns = [];
+    }
+    
+    function checkSign(signName) {
+      const sentence = gameState.sentences[gameState.current];
+      const btn = document.getElementById(`sign-${signName}`);
+      
+      if (sentence.signs.includes(signName) && !gameState.foundSigns.includes(signName)) {
+        gameState.foundSigns.push(signName);
+        btn.classList.add('bg-green-200', 'border-4', 'border-green-500');
+        updateScore(10);
+      } else if (!sentence.signs.includes(signName)) {
+        btn.classList.add('shake', 'bg-red-100');
+        setTimeout(() => btn.classList.remove('shake', 'bg-red-100'), 500);
+        loseLife();
+      }
+    }
+    
+    function nextSentence() {
+      gameState.current++;
+      if (gameState.current >= gameState.sentences.length) {
+        showVictory();
+      } else {
+        renderPunctuationGame(document.getElementById('game-container'));
+      }
+    }
+    
+    // ===== JUEGO 15: NINJA DE ESPACIOS =====
+    function renderGame15() {
+      const sentences = [
+        { joined: 'Elgatocorre', separated: 'El gato corre' },
+        { joined: 'Megustaelhelado', separated: 'Me gusta el helado' },
+        { joined: 'Elsolbrilla', separated: 'El sol brilla' },
+        { joined: 'Mimamámequiere', separated: 'Mi mamá me quiere' }
+      ];
+      
+      gameState.sentences = sentences;
+      gameState.current = 0;
+      gameState.userAnswer = '';
+      
+      const container = document.getElementById('game-container');
+      renderNinjaGame(container);
+    }
+    
+    function renderNinjaGame(container) {
+      const sentence = gameState.sentences[gameState.current];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-gray-200 to-slate-300 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 ¡Separa las palabras con tu katana ninja!
+              </p>
+              <p class="text-gray-500">${gameState.current + 1}/${gameState.sentences.length}</p>
+            </div>
+            
+            <div class="flex justify-center mb-6">
+              <div class="bg-red-100 border-4 border-red-300 rounded-2xl p-6 max-w-lg">
+                <div class="text-4xl text-center mb-2">🥷</div>
+                <p class="text-2xl font-bold text-gray-800 text-center tracking-widest">${sentence.joined}</p>
+                <p class="text-sm text-red-500 text-center mt-2">¡Las palabras están pegadas!</p>
+              </div>
+            </div>
+            
+            <div class="max-w-lg mx-auto">
+              <label class="block text-center font-bold text-gray-700 mb-2">Escribe la oración con espacios:</label>
+              <input type="text" 
+                     id="ninja-input"
+                     value="${gameState.userAnswer}"
+                     oninput="gameState.userAnswer = this.value"
+                     placeholder="Escribe aquí..."
+                     class="w-full text-xl p-4 rounded-2xl border-4 border-gray-300 focus:border-gray-500 focus:outline-none text-center">
+            </div>
+            
+            <div class="text-center mt-6">
+              <button onclick="checkNinjaSeparation()" class="photon-btn bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold px-8 py-4 text-xl">
+                ¡Cortar! 🗡️
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function checkNinjaSeparation() {
+      const sentence = gameState.sentences[gameState.current];
+      const input = document.getElementById('ninja-input');
+      
+      if (gameState.userAnswer.toLowerCase().trim() === sentence.separated.toLowerCase()) {
+        updateScore(25);
+        gameState.current++;
+        gameState.userAnswer = '';
+        
+        if (gameState.current >= gameState.sentences.length) {
+          showVictory();
+        } else {
+          renderNinjaGame(document.getElementById('game-container'));
+        }
+      } else {
+        input.classList.add('shake', 'border-red-500');
+        setTimeout(() => input.classList.remove('shake', 'border-red-500'), 500);
+        loseLife();
+      }
+    }
+    
+    // ===== JUEGO 16: DETECTIVE DE PISTAS =====
+    function renderGame16() {
+      const cases = [
+        {
+          text: 'María tiene una mascota. Es pequeña, tiene bigotes y dice "miau".',
+          question: '¿Qué mascota tiene María?',
+          answer: 'gato',
+          options: ['gato', 'perro', 'pájaro', 'pez']
+        },
+        {
+          text: 'En el parque hay un árbol muy grande. Tiene hojas verdes y manzanas rojas.',
+          question: '¿De qué color son las manzanas?',
+          answer: 'rojas',
+          options: ['verdes', 'rojas', 'amarillas', 'azules']
+        }
+      ];
+      
+      gameState.cases = cases;
+      gameState.current = 0;
+      
+      const container = document.getElementById('game-container');
+      renderDetectiveGame(container);
+    }
+    
+    function renderDetectiveGame(container) {
+      const caseData = gameState.cases[gameState.current];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-amber-100 to-orange-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Lee el texto y encuentra la respuesta
+              </p>
+              <p class="text-gray-500">Caso ${gameState.current + 1}/${gameState.cases.length}</p>
+            </div>
+            
+            <div class="flex justify-center mb-6">
+              <div class="bg-white rounded-2xl p-6 shadow-lg max-w-lg">
+                <div class="text-5xl text-center mb-4">🔍</div>
+                <p class="text-xl text-gray-800 leading-relaxed">${caseData.text}</p>
+              </div>
+            </div>
+            
+            <div class="bg-yellow-100 border-4 border-yellow-400 rounded-2xl p-4 max-w-lg mx-auto mb-6">
+              <p class="text-xl font-bold text-center text-gray-800">❓ ${caseData.question}</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto">
+              ${caseData.options.map(opt => `
+                <button onclick="checkDetectiveAnswer('${opt}')" 
+                        class="photon-btn bg-gradient-to-r from-orange-400 to-amber-500 text-white font-bold text-xl py-4">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function checkDetectiveAnswer(answer) {
+      const caseData = gameState.cases[gameState.current];
+      
+      if (answer === caseData.answer) {
+        updateScore(30);
+        gameState.current++;
+        
+        if (gameState.current >= gameState.cases.length) {
+          showVictory();
+        } else {
+          renderDetectiveGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+      }
+    }
+    
+    // ===== JUEGO 17: PEGAMENTO DE VOCALES =====
+    function renderGame17() {
+      const diphthongs = [
+        { vowels: ['a', 'i'], word: 'aire', emoji: '💨' },
+        { vowels: ['e', 'u'], word: 'deuda', emoji: '💰' },
+        { vowels: ['i', 'e'], word: 'cielo', emoji: '🌤️' },
+        { vowels: ['u', 'a'], word: 'agua', emoji: '💧' },
+        { vowels: ['o', 'i'], word: 'oigo', emoji: '👂' }
+      ];
+      
+      gameState.diphthongs = diphthongs;
+      gameState.current = 0;
+      gameState.selected = [];
+      
+      const container = document.getElementById('game-container');
+      renderDiphthongGame(container);
+    }
+    
+    function renderDiphthongGame(container) {
+      const diphthong = gameState.diphthongs[gameState.current];
+      const allVowels = ['a', 'e', 'i', 'o', 'u'];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-pink-100 to-rose-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 ¡Pega las vocales para formar el diptongo!
+              </p>
+              <p class="text-gray-500">${gameState.current + 1}/${gameState.diphthongs.length}</p>
+            </div>
+            
+            <div class="text-center mb-6">
+              <div class="text-7xl mb-2">${diphthong.emoji}</div>
+              <p class="text-3xl font-bold text-gray-800">${diphthong.word}</p>
+              <p class="text-gray-500">¿Qué dos vocales van juntas?</p>
+            </div>
+            
+            <div class="flex justify-center gap-2 mb-6 min-h-20 items-center">
+              ${gameState.selected.map(v => `
+                <div class="bg-pink-500 text-white w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-bold bounce-in">
+                  ${v}
+                </div>
+              `).join('')}
+              ${gameState.selected.length < 2 ? `
+                <div class="border-4 border-dashed border-pink-300 w-16 h-16 rounded-xl flex items-center justify-center text-pink-300 text-3xl">
+                  ?
+                </div>
+              ` : ''}
+            </div>
+            
+            <div class="flex justify-center gap-3" id="vowels-selection">
+              ${allVowels.map(v => `
+                <button onclick="selectVowel('${v}')" 
+                        class="photon-btn w-14 h-14 text-2xl font-bold ${gameState.selected.includes(v) ? 'bg-gray-300 opacity-50' : 'bg-white hover:bg-pink-100'}">
+                  ${v}
+                </button>
+              `).join('')}
+            </div>
+            
+            <div class="text-center mt-6 space-x-4">
+              <button onclick="resetVowelSelection()" class="photon-btn bg-gray-400 text-white font-bold px-6 py-3">
+                Reiniciar 🔄
+              </button>
+              <button onclick="checkDiphthong()" class="photon-btn bg-gradient-to-r from-pink-400 to-rose-500 text-white font-bold px-8 py-3 text-xl">
+                ¡Pegar! 🩹
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function selectVowel(vowel) {
+      if (gameState.selected.length < 2 && !gameState.selected.includes(vowel)) {
+        gameState.selected.push(vowel);
+        renderDiphthongGame(document.getElementById('game-container'));
+      }
+    }
+    
+    function resetVowelSelection() {
+      gameState.selected = [];
+      renderDiphthongGame(document.getElementById('game-container'));
+    }
+    
+    function checkDiphthong() {
+      const diphthong = gameState.diphthongs[gameState.current];
+      const isCorrect = gameState.selected.length === 2 && 
+                        gameState.selected[0] === diphthong.vowels[0] && 
+                        gameState.selected[1] === diphthong.vowels[1];
+      
+      if (isCorrect) {
+        updateScore(20);
+        gameState.current++;
+        gameState.selected = [];
+        
+        if (gameState.current >= gameState.diphthongs.length) {
+          showVictory();
+        } else {
+          renderDiphthongGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+        gameState.selected = [];
+        renderDiphthongGame(document.getElementById('game-container'));
+      }
+    }
+    
+    // ===== JUEGO 18: TERMÓMETRO VELOZ =====
+    function renderGame18() {
+      const tongueTwisters = [
+        'Tres tristes tigres',
+        'Pablito clavó un clavito',
+        'El cielo está enladrillado',
+        'Pepe Pecas pica papas'
+      ];
+      
+      gameState.tongueTwisters = tongueTwisters;
+      gameState.current = 0;
+      gameState.isReading = false;
+      gameState.temperature = 0;
+      
+      const container = document.getElementById('game-container');
+      renderTongueTwisterGame(container);
+    }
+    
+    function renderTongueTwisterGame(container) {
+      const twister = gameState.tongueTwisters[gameState.current];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-orange-100 to-red-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 ¡Lee el trabalenguas lo más rápido que puedas!
+              </p>
+              <p class="text-gray-500">${gameState.current + 1}/${gameState.tongueTwisters.length}</p>
+            </div>
+            
+            <div class="flex justify-center items-center gap-8 mb-6">
+              <!-- Termómetro -->
+              <div class="relative w-16 h-48 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+                <div id="temp-fill" class="absolute bottom-0 w-full bg-gradient-to-t from-red-500 to-orange-400 transition-all duration-100" style="height: ${gameState.temperature}%"></div>
+                <div class="absolute top-2 left-1/2 transform -translate-x-1/2 text-2xl">🌡️</div>
+              </div>
+              
+              <!-- Trabalenguas -->
+              <div class="bg-white rounded-2xl p-6 shadow-lg max-w-md">
+                <p class="text-2xl font-bold text-gray-800 text-center leading-relaxed">${twister}</p>
+              </div>
+            </div>
+            
+            <div class="text-center">
+              <p class="text-gray-600 mb-4">Mantén presionado el botón mientras lees</p>
+              <button id="read-btn"
+                      onmousedown="startReading()" 
+                      onmouseup="stopReading()"
+                      ontouchstart="startReading()"
+                      ontouchend="stopReading()"
+                      class="photon-btn bg-gradient-to-r from-orange-400 to-red-500 text-white font-bold px-12 py-6 text-2xl select-none">
+                📖 LEER
+              </button>
+            </div>
+            
+            <div class="text-center mt-6">
+              <p class="text-gray-500">Meta: Llena el termómetro al 100%</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function startReading() {
+      gameState.isReading = true;
+      gameState.readingInterval = setInterval(() => {
+        if (gameState.temperature < 100) {
+          gameState.temperature += 2;
+          document.getElementById('temp-fill').style.height = `${gameState.temperature}%`;
+        } else {
+          stopReading();
+          updateScore(25);
+          gameState.current++;
+          gameState.temperature = 0;
+          
+          if (gameState.current >= gameState.tongueTwisters.length) {
+            showVictory();
+          } else {
+            renderTongueTwisterGame(document.getElementById('game-container'));
+          }
+        }
+      }, 50);
+    }
+    
+    function stopReading() {
+      gameState.isReading = false;
+      if (gameState.readingInterval) {
+        clearInterval(gameState.readingInterval);
+      }
+    }
+    
+    // ===== JUEGO 19: EDITOR DE NOTICIAS =====
+    function renderGame19() {
+      const news = [
+        { headline: '¡Perrito rescata a gatito!', correctImg: '🐕', options: ['🐕', '🚗', '🌧️', '🏠'] },
+        { headline: 'Gran tormenta en la ciudad', correctImg: '🌧️', options: ['☀️', '🌧️', '🎂', '📚'] },
+        { headline: 'Niños ganan competencia de lectura', correctImg: '📚', options: ['⚽', '🍕', '📚', '🎸'] }
+      ];
+      
+      gameState.news = news;
+      gameState.current = 0;
+      
+      const container = document.getElementById('game-container');
+      renderNewsGame(container);
+    }
+    
+    function renderNewsGame(container) {
+      const newsItem = gameState.news[gameState.current];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-teal-100 to-cyan-200 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-gray-700 font-semibold">
+                🎯 Elige la foto correcta para el titular
+              </p>
+              <p class="text-gray-500">${gameState.current + 1}/${gameState.news.length}</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg max-w-lg mx-auto mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="text-2xl">📰</span>
+                <span class="font-bold text-gray-500">NOTICIAS ESCOLARES</span>
+              </div>
+              <h2 class="text-2xl font-black text-gray-800">${newsItem.headline}</h2>
+              <div class="mt-4 border-4 border-dashed border-gray-300 rounded-xl h-32 flex items-center justify-center">
+                <p class="text-gray-400 text-lg">📷 Foto aquí</p>
+              </div>
+            </div>
+            
+            <div class="text-center mb-4">
+              <p class="text-gray-600">¿Qué foto va mejor con esta noticia?</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-lg mx-auto">
+              ${newsItem.options.map(opt => `
+                <button onclick="selectNewsPhoto('${opt}')" 
+                        class="photon-btn bg-white p-6 text-6xl hover:bg-teal-50">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function selectNewsPhoto(photo) {
+      const newsItem = gameState.news[gameState.current];
+      
+      if (photo === newsItem.correctImg) {
+        updateScore(25);
+        gameState.current++;
+        
+        if (gameState.current >= gameState.news.length) {
+          showVictory();
+        } else {
+          renderNewsGame(document.getElementById('game-container'));
+        }
+      } else {
+        loseLife();
+      }
+    }
+    
+    // ===== JUEGO 20: ESCRITOR GALÁCTICO =====
+    function renderGame20() {
+      const words = [
+        { word: 'casa', hint: 'Donde vivimos' },
+        { word: 'gato', hint: 'Animal que dice miau' },
+        { word: 'sol', hint: 'Brilla en el cielo de día' },
+        { word: 'luna', hint: 'Brilla en el cielo de noche' },
+        { word: 'mama', hint: 'Nos cuida y nos quiere' }
+      ];
+      
+      gameState.words = words;
+      gameState.current = 0;
+      gameState.userInput = '';
+      gameState.meteorPosition = 100;
+      
+      const container = document.getElementById('game-container');
+      renderGalacticGame(container);
+    }
+    
+    function renderGalacticGame(container) {
+      const wordData = gameState.words[gameState.current];
+      
+      container.innerHTML = `
+        <div class="min-h-full p-4 md:p-8">
+          ${renderGameHeader()}
+          <div class="bg-gradient-to-br from-purple-900 to-blue-900 rounded-3xl p-6 shadow-xl">
+            <div class="text-center mb-6">
+              <p class="text-lg text-white font-semibold">
+                🎯 ¡Escribe la palabra para detener el meteorito!
+              </p>
+              <p class="text-purple-300">${gameState.current + 1}/${gameState.words.length}</p>
+            </div>
+            
+            <!-- Animación del meteorito -->
+            <div class="relative h-32 mb-6 overflow-hidden">
+              <div id="meteor" class="absolute text-6xl transition-all duration-100" style="left: ${gameState.meteorPosition}%; top: 20%;">
+                ☄️
+              </div>
+              <div class="absolute right-4 bottom-0 text-5xl">🌍</div>
+            </div>
+            
+            <div class="bg-white/20 backdrop-blur rounded-2xl p-4 max-w-md mx-auto mb-6">
+              <p class="text-yellow-300 text-lg text-center">💡 Pista: ${wordData.hint}</p>
+            </div>
+            
+            <div class="max-w-md mx-auto">
+              <input type="text" 
+                     id="galactic-input"
+                     value="${gameState.userInput}"
+                     oninput="updateGalacticInput(this.value)"
+                     placeholder="Escribe la palabra..."
+                     autocomplete="off"
+                     class="w-full text-2xl p-4 rounded-2xl text-center font-bold focus:outline-none focus:ring-4 focus:ring-purple-400">
+            </div>
+            
+            <div class="text-center mt-6">
+              <button onclick="checkGalacticWord()" class="photon-btn bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold px-8 py-4 text-xl">
+                ¡Detener! 🛡️
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Iniciar animación del meteorito
+      startMeteorAnimation();
+    }
+    
+    function updateGalacticInput(value) {
+      gameState.userInput = value;
+    }
+    
+    function startMeteorAnimation() {
+      gameState.meteorInterval = setInterval(() => {
+        if (gameState.meteorPosition > 10) {
+          gameState.meteorPosition -= 1;
+          const meteor = document.getElementById('meteor');
+          if (meteor) {
+            meteor.style.left = `${gameState.meteorPosition}%`;
+          }
+        } else {
+          // El meteorito llegó
+          clearInterval(gameState.meteorInterval);
+          loseLife();
+          if (gameState.lives > 0) {
+            gameState.meteorPosition = 100;
+            gameState.userInput = '';
+            renderGalacticGame(document.getElementById('game-container'));
+          }
+        }
+      }, 100);
+    }
+    
+    function checkGalacticWord() {
+      const wordData = gameState.words[gameState.current];
+      
+      if (gameState.userInput.toLowerCase().trim() === wordData.word) {
+        clearInterval(gameState.meteorInterval);
+        updateScore(30);
+        gameState.current++;
+        gameState.userInput = '';
+        gameState.meteorPosition = 100;
+        
+        if (gameState.current >= gameState.words.length) {
+          showVictory();
+        } else {
+          renderGalacticGame(document.getElementById('game-container'));
+        }
+      } else {
+        document.getElementById('galactic-input').classList.add('shake', 'border-red-500');
+        setTimeout(() => {
+          const input = document.getElementById('galactic-input');
+          if (input) {
+            input.classList.remove('shake', 'border-red-500');
+          }
+        }, 500);
+      }
+    }
+    
+    // Dispatcher de juegos
+    function renderGame(gameId) {
+      const gameRenderers = {
+        1: renderGame1,
+        2: renderGame2,
+        3: renderGame3,
+        4: renderGame4,
+        5: renderGame5,
+        6: renderGame6,
+        7: renderGame7,
+        8: renderGame8,
+        9: renderGame9,
+        10: renderGame10,
+        11: renderGame11,
+        12: renderGame12,
+        13: renderGame13,
+        14: renderGame14,
+        15: renderGame15,
+        16: renderGame16,
+        17: renderGame17,
+        18: renderGame18,
+        19: renderGame19,
+        20: renderGame20
+      };
+      
+      if (gameRenderers[gameId]) {
+        gameRenderers[gameId]();
+      }
+    }
+    
+    // Inicialización del SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = { ...defaultConfig, ...newConfig };
+          const footer = document.getElementById('footer-credit');
+          if (footer) {
+            footer.innerHTML = `📝 Material elaborado por Maestra ${config.teacher_name}`;
+          }
+        },
+        mapToCapabilities: (cfg) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['teacher_name', cfg.teacher_name || defaultConfig.teacher_name]
+        ])
+      });
+    }
+    
+    // Iniciar aplicación
+    renderGamesMenu();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d64cb9063a54f14',t:'MTc3MjUwMDU4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
