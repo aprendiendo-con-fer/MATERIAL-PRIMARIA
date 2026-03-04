@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprendo Mis Emociones</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse-soft {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes slide-up {
+      0% { transform: translateY(30px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes celebrate {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-10deg) scale(1.1); }
+      75% { transform: rotate(10deg) scale(1.1); }
+    }
+    
+    @keyframes star-burst {
+      0% { transform: scale(0) rotate(0deg); opacity: 1; }
+      100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+    }
+    
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    .pulse-animation { animation: pulse-soft 2s ease-in-out infinite; }
+    .bounce-in { animation: bounce-in 0.5s ease-out forwards; }
+    .slide-up { animation: slide-up 0.4s ease-out forwards; }
+    .celebrate { animation: celebrate 0.5s ease-in-out; }
+    .star-burst { animation: star-burst 0.8s ease-out forwards; }
+    
+    .btn-game {
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    }
+    .btn-game:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+    }
+    .btn-game:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+    }
+    
+    .option-btn {
+      transition: all 0.2s ease;
+    }
+    .option-btn:hover {
+      transform: scale(1.02);
+    }
+    
+    .character {
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #e8f4fc 0%, #f0f8ff 50%, #e8f4fc 100%);">
+  <div id="app" class="w-full min-h-full flex flex-col"><!-- Pantalla Principal -->
+   <div id="main-menu" class="flex-1 flex flex-col items-center justify-center p-4"><!-- Nubes decorativas -->
+    <div class="absolute top-4 left-4 text-6xl opacity-30 float-animation" style="animation-delay: 0s;">
+     ☁️
+    </div>
+    <div class="absolute top-12 right-8 text-5xl opacity-25 float-animation" style="animation-delay: 1s;">
+     ☁️
+    </div>
+    <div class="absolute top-24 left-1/4 text-4xl opacity-20 float-animation" style="animation-delay: 2s;">
+     ☁️
+    </div><!-- Logo y Título -->
+    <div class="text-center mb-8 bounce-in">
+     <div class="text-7xl mb-4 pulse-animation">
+      🌈
+     </div>
+     <h1 id="title-text" class="text-3xl md:text-4xl font-extrabold text-sky-600 drop-shadow-sm mb-2">¡Aprendo Mis Emociones!</h1>
+     <p class="text-lg text-sky-500 font-semibold">Juego de Educación Socioemocional</p>
+    </div><!-- Personajes -->
+    <div class="flex gap-4 mb-8">
+     <div class="character text-5xl float-animation" style="animation-delay: 0.2s;">
+      👧
+     </div>
+     <div class="character text-5xl float-animation" style="animation-delay: 0.4s;">
+      👦
+     </div>
+     <div class="character text-5xl float-animation" style="animation-delay: 0.6s;">
+      🧒
+     </div>
+    </div><!-- Botones de Nivel -->
+    <div class="flex flex-col gap-4 w-full max-w-sm"><button onclick="startGame(1)" class="btn-game bg-green-400 hover:bg-green-500 text-white font-bold py-4 px-8 rounded-2xl text-xl flex items-center justify-center gap-3"> <span class="text-3xl">⭐</span> <span>1° Primaria</span> <span class="text-sm bg-green-500 px-2 py-1 rounded-full">Fácil</span> </button> <button onclick="startGame(2)" class="btn-game bg-orange-400 hover:bg-orange-500 text-white font-bold py-4 px-8 rounded-2xl text-xl flex items-center justify-center gap-3"> <span class="text-3xl">⭐⭐</span> <span>2° Primaria</span> <span class="text-sm bg-orange-500 px-2 py-1 rounded-full">Medio</span> </button>
+    </div><!-- Categorías -->
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+     <div class="bg-white/60 rounded-xl p-3 slide-up" style="animation-delay: 0.1s;">
+      <div class="text-3xl mb-1">
+       🛁
+      </div>
+      <p class="text-xs font-semibold text-sky-700">Cuidado Personal</p>
+     </div>
+     <div class="bg-white/60 rounded-xl p-3 slide-up" style="animation-delay: 0.2s;">
+      <div class="text-3xl mb-1">
+       🧍🏽
+      </div>
+      <p class="text-xs font-semibold text-sky-700">Identidad</p>
+     </div>
+     <div class="bg-white/60 rounded-xl p-3 slide-up" style="animation-delay: 0.3s;">
+      <div class="text-3xl mb-1">
+       💖
+      </div>
+      <p class="text-xs font-semibold text-sky-700">Emociones</p>
+     </div>
+     <div class="bg-white/60 rounded-xl p-3 slide-up" style="animation-delay: 0.4s;">
+      <div class="text-3xl mb-1">
+       🤝
+      </div>
+      <p class="text-xs font-semibold text-sky-700">Relaciones</p>
+     </div>
+    </div>
+   </div><!-- Pantalla de Juego -->
+   <div id="game-screen" class="hidden flex-1 flex flex-col p-4"><!-- Header del juego -->
+    <div class="flex justify-between items-center mb-4"><button onclick="goToMenu()" class="btn-game bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-xl flex items-center gap-2"> <span>🏠</span> <span>Menú</span> </button>
+     <div class="flex items-center gap-2 bg-white/80 rounded-full px-4 py-2"><span class="text-2xl">⭐</span> <span id="score" class="font-bold text-xl text-amber-500">0</span>
+     </div>
+     <div class="bg-white/80 rounded-full px-4 py-2"><span id="question-counter" class="font-bold text-sky-600">1/5</span>
+     </div>
+    </div><!-- Progreso -->
+    <div class="w-full bg-white/50 rounded-full h-4 mb-4">
+     <div id="progress-bar" class="bg-gradient-to-r from-green-400 to-emerald-500 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+    </div><!-- Categoría actual -->
+    <div id="category-badge" class="flex justify-center mb-4"><span class="bg-purple-500 text-white px-4 py-2 rounded-full font-bold flex items-center gap-2"> <span id="category-icon">💖</span> <span id="category-name">Emociones</span> </span>
+    </div><!-- Escenario dramatizado -->
+    <div id="scenario-container" class="bg-white/80 rounded-3xl p-6 mb-4 shadow-lg">
+     <div id="character-display" class="text-6xl text-center mb-4">
+      👧
+     </div>
+     <div id="scenario-text" class="text-center text-lg font-semibold text-gray-700 leading-relaxed"></div>
+    </div><!-- Pregunta -->
+    <div id="question-container" class="bg-sky-100 rounded-2xl p-4 mb-4">
+     <p id="question-text" class="text-center text-xl font-bold text-sky-800"></p>
+    </div><!-- Opciones -->
+    <div id="options-container" class="grid gap-3"></div><!-- Retroalimentación -->
+    <div id="feedback-container" class="hidden fixed inset-0 flex items-center justify-center bg-black/30 z-50">
+     <div id="feedback-box" class="bg-white rounded-3xl p-8 text-center max-w-sm mx-4 shadow-2xl">
+      <div id="feedback-emoji" class="text-7xl mb-4"></div>
+      <p id="feedback-text" class="text-xl font-bold mb-4"></p>
+      <p id="feedback-explanation" class="text-gray-600 mb-6"></p><button onclick="nextQuestion()" class="btn-game bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-8 rounded-xl text-lg"> ¡Siguiente! ➡️ </button>
+     </div>
+    </div>
+   </div><!-- Pantalla de Resultados -->
+   <div id="results-screen" class="hidden flex-1 flex flex-col items-center justify-center p-4">
+    <div class="bg-white/90 rounded-3xl p-8 text-center max-w-md shadow-2xl">
+     <div id="results-emoji" class="text-8xl mb-4 celebrate">
+      🏆
+     </div>
+     <h2 class="text-3xl font-extrabold text-sky-600 mb-2">¡Felicidades!</h2>
+     <p class="text-xl text-gray-600 mb-4">Has completado el juego</p>
+     <div class="bg-amber-100 rounded-2xl p-4 mb-6">
+      <p class="text-lg text-amber-800">Tu puntuación:</p>
+      <p id="final-score" class="text-5xl font-extrabold text-amber-500">0</p>
+      <p class="text-amber-600">estrellas</p>
+     </div>
+     <div id="achievement-message" class="bg-green-100 rounded-xl p-4 mb-6">
+      <p class="text-green-700 font-semibold"></p>
+     </div>
+     <div class="flex flex-col gap-3"><button onclick="restartGame()" class="btn-game bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl text-lg"> 🔄 Jugar de Nuevo </button> <button onclick="goToMenu()" class="btn-game bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-6 rounded-xl text-lg"> 🏠 Menú Principal </button>
+     </div>
+    </div>
+   </div><!-- Créditos -->
+   <footer class="text-center py-4 bg-white/40">
+    <p id="credit-text" class="text-sm text-sky-600 font-semibold">📚 Material creado por Maestra María Fernanda Flores Valenzuela</p>
+   </footer>
+  </div>
+  <script>
+    // Configuración por defecto
+    const defaultConfig = {
+      game_title: '¡Aprendo Mis Emociones!',
+      teacher_credit: 'Maestra María Fernanda Flores Valenzuela',
+      primary_color: '#0ea5e9',
+      secondary_color: '#ffffff',
+      text_color: '#0369a1',
+      accent_color: '#22c55e',
+      button_color: '#f97316',
+      font_family: 'Nunito',
+      font_size: 16
+    };
+
+    // Estado del juego
+    let currentLevel = 1;
+    let currentQuestion = 0;
+    let score = 0;
+    let questions = [];
+
+    // Banco de preguntas por nivel
+    const questionBank = {
+      1: [ // Primer grado - más sencillo
+        // Cuidado Personal
+        {
+          category: 'Cuidado Personal',
+          icon: '🛁',
+          character: '👧',
+          scenario: 'Luna se despertó muy temprano. Se ve en el espejo y nota que tiene el cabello despeinado y los dientes sucios.',
+          question: '¿Qué debe hacer Luna primero?',
+          options: [
+            { text: '🪥 Cepillarse los dientes', correct: true },
+            { text: '📺 Ver televisión', correct: false },
+            { text: '🍫 Comer dulces', correct: false }
+          ],
+          explanation: '¡Muy bien! Cepillarnos los dientes cada mañana nos mantiene sanos y con una sonrisa bonita.'
+        },
+        {
+          category: 'Cuidado Personal',
+          icon: '🛁',
+          character: '👦',
+          scenario: 'Mateo jugó mucho en el parque y ahora tiene las manos muy sucias. Su mamá lo llama para comer.',
+          question: '¿Qué debe hacer Mateo antes de comer?',
+          options: [
+            { text: '🧼 Lavarse las manos con jabón', correct: true },
+            { text: '🍽️ Sentarse a comer', correct: false },
+            { text: '📱 Jugar con el celular', correct: false }
+          ],
+          explanation: '¡Excelente! Lavarnos las manos antes de comer nos protege de los gérmenes.'
+        },
+        // Identidad
+        {
+          category: 'Identidad',
+          icon: '🪞',
+          character: '🧒',
+          scenario: 'En la escuela, la maestra pregunta a cada niño qué les hace especiales. Sofía piensa en lo que ella sabe hacer.',
+          question: '¿Qué hace especial a cada persona?',
+          options: [
+            { text: '⭐ Todos somos diferentes y especiales', correct: true },
+            { text: '👕 La ropa que usamos', correct: false },
+            { text: '🧸 Los juguetes que tenemos', correct: false }
+          ],
+          explanation: '¡Correcto! Cada persona es única y especial por lo que es, no por lo que tiene.'
+        },
+        {
+          category: 'Identidad',
+          icon: '🪞',
+          character: '👧',
+          scenario: 'María ve que su compañero dibuja muy bonito, pero ella no sabe dibujar igual. Se siente un poco triste.',
+          question: '¿Qué le dirías a María?',
+          options: [
+            { text: '🌟 Tú tienes otros talentos especiales', correct: true },
+            { text: '😢 Es normal no ser bueno en nada', correct: false },
+            { text: '🚫 No intentes dibujar nunca', correct: false }
+          ],
+          explanation: '¡Muy bien! Todos tenemos diferentes talentos y eso nos hace especiales.'
+        },
+        // Emociones
+        {
+          category: 'Emociones',
+          icon: '💖',
+          character: '👦',
+          scenario: 'Pedro perdió su juguete favorito. Siente que quiere llorar y tiene un nudo en la garganta.',
+          question: '¿Qué está sintiendo Pedro?',
+          options: [
+            { text: '😢 Tristeza', correct: true },
+            { text: '😊 Felicidad', correct: false },
+            { text: '😴 Sueño', correct: false }
+          ],
+          explanation: '¡Correcto! Es normal sentir tristeza cuando perdemos algo importante. Está bien llorar.'
+        },
+        {
+          category: 'Emociones',
+          icon: '💖',
+          character: '👧',
+          scenario: 'Ana recibió una sorpresa de cumpleaños. Tiene una gran sonrisa, salta y quiere abrazar a todos.',
+          question: '¿Qué emoción siente Ana?',
+          options: [
+            { text: '🥳 Alegría', correct: true },
+            { text: '😠 Enojo', correct: false },
+            { text: '😨 Miedo', correct: false }
+          ],
+          explanation: '¡Excelente! La alegría nos hace sonreír y querer compartir con los demás.'
+        },
+        // Relaciones Sociales
+        {
+          category: 'Relaciones Sociales',
+          icon: '🤝',
+          character: '🧒',
+          scenario: 'Carlos ve que un niño nuevo está solo en el recreo. Se ve nervioso y no conoce a nadie.',
+          question: '¿Qué puede hacer Carlos?',
+          options: [
+            { text: '👋 Invitarlo a jugar', correct: true },
+            { text: '🚶 Ignorarlo', correct: false },
+            { text: '😆 Reírse de él', correct: false }
+          ],
+          explanation: '¡Muy bien! Ser amable con los demás nos ayuda a hacer buenos amigos.'
+        },
+        {
+          category: 'Relaciones Sociales',
+          icon: '🤝',
+          character: '👧',
+          scenario: 'Lucía quiere el mismo columpio que su amiga. Las dos quieren subirse al mismo tiempo.',
+          question: '¿Qué es lo mejor que pueden hacer?',
+          options: [
+            { text: '🔄 Turnarse para usarlo', correct: true },
+            { text: '😤 Pelear por el columpio', correct: false },
+            { text: '😢 Irse llorando', correct: false }
+          ],
+          explanation: '¡Correcto! Compartir y turnarnos nos ayuda a llevarnos bien con los demás.'
+        }
+      ],
+      2: [ // Segundo grado - más complejo
+        // Cuidado Personal
+        {
+          category: 'Cuidado Personal',
+          icon: '🛁',
+          character: '👦',
+          scenario: 'Diego nota que su compañero Tomás no se ha bañado y tiene un olor desagradable. Algunos niños se burlan de él.',
+          question: '¿Cuál es la mejor forma de ayudar a Tomás?',
+          options: [
+            { text: '🗣️ Hablar en privado con la maestra', correct: true },
+            { text: '📢 Decirle frente a todos que huele mal', correct: false },
+            { text: '🚶 Alejarse y no hablarle', correct: false }
+          ],
+          explanation: '¡Muy bien! Debemos cuidar los sentimientos de los demás. La maestra puede ayudar de forma respetuosa.'
+        },
+        {
+          category: 'Cuidado Personal',
+          icon: '🛁',
+          character: '👧',
+          scenario: 'Valentina se siente muy cansada en la escuela. Anoche se quedó viendo videos hasta muy tarde y no durmió bien.',
+          question: '¿Qué debe cambiar Valentina para sentirse mejor?',
+          options: [
+            { text: '😴 Dormir temprano y suficientes horas', correct: true },
+            { text: '☕ Tomar café para despertar', correct: false },
+            { text: '📱 Ver más videos para distraerse', correct: false }
+          ],
+          explanation: '¡Excelente! Dormir bien es muy importante para nuestro cuerpo y nuestra mente.'
+        },
+        // Identidad
+        {
+          category: 'Identidad',
+          icon: '🪞',
+          character: '🧒',
+          scenario: 'En clase de arte, todos deben pintar su autorretrato. Martín no sabe qué poner porque siente que no tiene nada especial.',
+          question: '¿Qué puede incluir Martín en su autorretrato?',
+          options: [
+            { text: '💫 Sus gustos, sueños y lo que lo hace único', correct: true },
+            { text: '🖼️ Copiar el dibujo de otro compañero', correct: false },
+            { text: '❌ No hacer nada porque no es especial', correct: false }
+          ],
+          explanation: '¡Correcto! Todos tenemos cosas que nos hacen únicos: nuestros gustos, sueños, familia y personalidad.'
+        },
+        {
+          category: 'Identidad',
+          icon: '🪞',
+          character: '👧',
+          scenario: 'Isabella se compara con su hermana mayor que saca mejores calificaciones. Siente que nunca será tan inteligente.',
+          question: '¿Qué consejo le darías a Isabella?',
+          options: [
+            { text: '🌱 Cada persona aprende a su ritmo y tiene sus fortalezas', correct: true },
+            { text: '📚 Debe estudiar día y noche sin descansar', correct: false },
+            { text: '😞 Es verdad, su hermana es mejor', correct: false }
+          ],
+          explanation: '¡Muy bien! No debemos compararnos con otros. Cada uno tiene su propio camino y talentos.'
+        },
+        // Emociones
+        {
+          category: 'Emociones',
+          icon: '💖',
+          character: '👦',
+          scenario: 'Sebastián estudió mucho para el examen pero sacó mala nota. Siente calor en la cara, aprieta los puños y quiere gritar.',
+          question: '¿Qué emoción está sintiendo y qué puede hacer?',
+          options: [
+            { text: '😤 Frustración - Respirar profundo y calmarse', correct: true },
+            { text: '😊 Alegría - Celebrar su esfuerzo', correct: false },
+            { text: '😱 Miedo - Esconderse', correct: false }
+          ],
+          explanation: '¡Correcto! La frustración es normal. Respirar profundo nos ayuda a pensar mejor.'
+        },
+        {
+          category: 'Emociones',
+          icon: '💖',
+          character: '👧',
+          scenario: 'Camila tiene que presentar un trabajo frente a toda la clase. Le tiemblan las manos y siente mariposas en el estómago.',
+          question: '¿Qué está sintiendo Camila?',
+          options: [
+            { text: '😰 Nervios o ansiedad', correct: true },
+            { text: '😴 Aburrimiento', correct: false },
+            { text: '🤢 Está enferma', correct: false }
+          ],
+          explanation: '¡Muy bien! Los nervios son normales. Practicar y respirar nos ayuda a sentirnos más seguros.'
+        },
+        // Relaciones Sociales
+        {
+          category: 'Relaciones Sociales',
+          icon: '🤝',
+          character: '🧒',
+          scenario: 'Emilio escucha que sus amigos están planeando excluir a Roberto del grupo porque "es raro" y no le gustan los mismos juegos.',
+          question: '¿Qué debería hacer Emilio?',
+          options: [
+            { text: '🛡️ Defender a Roberto y decir que todos merecen respeto', correct: true },
+            { text: '🤐 Quedarse callado para no perder amigos', correct: false },
+            { text: '👥 Unirse y también excluir a Roberto', correct: false }
+          ],
+          explanation: '¡Excelente! Defender a los demás es muy valiente. Todos merecemos ser incluidos.'
+        },
+        {
+          category: 'Relaciones Sociales',
+          icon: '🤝',
+          character: '👧',
+          scenario: 'Regina tuvo un malentendido con su mejor amiga Sara. Ahora Sara no le habla y Regina se siente muy mal.',
+          question: '¿Cuál es la mejor manera de resolver este problema?',
+          options: [
+            { text: '💬 Hablar con Sara, escucharla y disculparse si es necesario', correct: true },
+            { text: '😤 Ignorar a Sara y buscar nuevos amigos', correct: false },
+            { text: '📱 Hablar mal de Sara en redes sociales', correct: false }
+          ],
+          explanation: '¡Correcto! Comunicarnos con respeto y escuchar nos ayuda a resolver los problemas.'
+        }
+      ]
+    };
+
+    // Funciones del juego
+    function startGame(level) {
+      currentLevel = level;
+      currentQuestion = 0;
+      score = 0;
+      questions = [...questionBank[level]].sort(() => Math.random() - 0.5).slice(0, 5);
+      
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      document.getElementById('results-screen').classList.add('hidden');
+      
+      updateScore();
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      
+      // Actualizar UI
+      document.getElementById('question-counter').textContent = `${currentQuestion + 1}/5`;
+      document.getElementById('progress-bar').style.width = `${(currentQuestion / 5) * 100}%`;
+      document.getElementById('category-icon').textContent = q.icon;
+      document.getElementById('category-name').textContent = q.category;
+      document.getElementById('character-display').textContent = q.character;
+      document.getElementById('scenario-text').textContent = q.scenario;
+      document.getElementById('question-text').textContent = q.question;
+      
+      // Crear opciones
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+      
+      q.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = `option-btn bg-white hover:bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 text-left font-semibold text-gray-700 text-lg shadow-md slide-up`;
+        button.style.animationDelay = `${index * 0.1}s`;
+        button.textContent = option.text;
+        button.onclick = () => checkAnswer(option.correct, q.explanation);
+        optionsContainer.appendChild(button);
+      });
+    }
+
+    function checkAnswer(isCorrect, explanation) {
+      const feedbackContainer = document.getElementById('feedback-container');
+      const feedbackBox = document.getElementById('feedback-box');
+      const feedbackEmoji = document.getElementById('feedback-emoji');
+      const feedbackText = document.getElementById('feedback-text');
+      const feedbackExplanation = document.getElementById('feedback-explanation');
+      
+      if (isCorrect) {
+        score += 10;
+        updateScore();
+        feedbackEmoji.textContent = '🎉';
+        feedbackText.textContent = '¡Muy bien!';
+        feedbackText.className = 'text-xl font-bold mb-4 text-green-600';
+        feedbackBox.className = 'bg-white rounded-3xl p-8 text-center max-w-sm mx-4 shadow-2xl border-4 border-green-400';
+      } else {
+        feedbackEmoji.textContent = '💪';
+        feedbackText.textContent = '¡Sigue intentando!';
+        feedbackText.className = 'text-xl font-bold mb-4 text-orange-600';
+        feedbackBox.className = 'bg-white rounded-3xl p-8 text-center max-w-sm mx-4 shadow-2xl border-4 border-orange-400';
+      }
+      
+      feedbackExplanation.textContent = explanation;
+      feedbackContainer.classList.remove('hidden');
+      feedbackBox.classList.add('bounce-in');
+    }
+
+    function nextQuestion() {
+      document.getElementById('feedback-container').classList.add('hidden');
+      currentQuestion++;
+      
+      if (currentQuestion >= 5) {
+        showResults();
+      } else {
+        showQuestion();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+      document.getElementById('final-score').textContent = score;
+      
+      const achievementEl = document.getElementById('achievement-message').querySelector('p');
+      if (score >= 50) {
+        achievementEl.textContent = '🌟 ¡Increíble! ¡Eres un experto en emociones!';
+      } else if (score >= 30) {
+        achievementEl.textContent = '👏 ¡Muy bien! Estás aprendiendo mucho.';
+      } else {
+        achievementEl.textContent = '💪 ¡Buen intento! Sigue practicando.';
+      }
+    }
+
+    function updateScore() {
+      document.getElementById('score').textContent = score;
+    }
+
+    function goToMenu() {
+      document.getElementById('main-menu').classList.remove('hidden');
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.add('hidden');
+    }
+
+    function restartGame() {
+      startGame(currentLevel);
+    }
+
+    // Element SDK Implementation
+    async function onConfigChange(config) {
+      const title = config.game_title || defaultConfig.game_title;
+      const credit = config.teacher_credit || defaultConfig.teacher_credit;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const fontSize = config.font_size || defaultConfig.font_size;
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      
+      document.getElementById('title-text').textContent = title;
+      document.getElementById('credit-text').textContent = `📚 Material creado por ${credit}`;
+      
+      // Apply font
+      document.body.style.fontFamily = `${fontFamily}, sans-serif`;
+      document.getElementById('title-text').style.fontFamily = `${fontFamily}, sans-serif`;
+      
+      // Apply font size scaling
+      document.getElementById('title-text').style.fontSize = `${fontSize * 2}px`;
+      document.getElementById('credit-text').style.fontSize = `${fontSize * 0.875}px`;
+      
+      // Apply colors
+      document.getElementById('title-text').style.color = primaryColor;
+      document.getElementById('credit-text').style.color = textColor;
+    }
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); }
+            },
+            {
+              get: () => config.secondary_color || defaultConfig.secondary_color,
+              set: (value) => { config.secondary_color = value; window.elementSdk.setConfig({ secondary_color: value }); }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+            },
+            {
+              get: () => config.accent_color || defaultConfig.accent_color,
+              set: (value) => { config.accent_color = value; window.elementSdk.setConfig({ accent_color: value }); }
+            },
+            {
+              get: () => config.button_color || defaultConfig.button_color,
+              set: (value) => { config.button_color = value; window.elementSdk.setConfig({ button_color: value }); }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => { config.font_family = value; window.elementSdk.setConfig({ font_family: value }); }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => { config.font_size = value; window.elementSdk.setConfig({ font_size: value }); }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['game_title', config.game_title || defaultConfig.game_title],
+          ['teacher_credit', config.teacher_credit || defaultConfig.teacher_credit]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d727da4c5f8ed83',t:'MTc3MjY0NDE4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
