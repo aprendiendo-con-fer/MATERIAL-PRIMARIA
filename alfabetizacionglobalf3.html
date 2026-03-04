@@ -1,98 +1,845 @@
 <!doctype html>
 <html lang="es" class="h-full">
-<head>
+ <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aprende a Leer - Método Global</title>
+  <title>Aprendo a Leer - Método Global</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
-  
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Fredoka', 'Comic Neue', cursive; box-sizing: border-box; }
-
-    @keyframes float { 0%,100%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-10px) rotate(2deg);} }
-    @keyframes bounce-in {0%{transform:scale(0);opacity:0;}50%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
-    @keyframes wiggle {0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
-    @keyframes sparkle {0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.2);}}
-    @keyframes slide-up {from{transform:translateY(30px);opacity:0;} to{transform:translateY(0);opacity:1;}}
-    @keyframes pulse-glow {0%,100%{box-shadow:0 0 20px rgba(251,191,36,0.4);}50%{box-shadow:0 0 40px rgba(251,191,36,0.8);}}
-
-    .float-animation{animation:float 3s ease-in-out infinite;}
-    .bounce-in{animation:bounce-in 0.5s ease-out forwards;}
-    .pulse-glow{animation:pulse-glow 2s ease-in-out infinite;}
-    .glass-card{background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);}
-    .rainbow-text{background:linear-gradient(90deg,#ff6b6b,#feca57,#48dbfb,#ff9ff3,#54a0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    * { font-family: 'Nunito', sans-serif; }
+    .title-font { font-family: 'Fredoka One', cursive; }
+    
+    @keyframes bounce-slow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    @keyframes pop-in {
+      0% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes star-spin {
+      0% { transform: rotate(0deg) scale(0); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100%) rotate(720deg); opacity: 0; }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 200, 0, 0.5); }
+      50% { box-shadow: 0 0 40px rgba(255, 200, 0, 0.8); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-5px) rotate(2deg); }
+      75% { transform: translateY(5px) rotate(-2deg); }
+    }
+    
+    .animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
+    .animate-wiggle { animation: wiggle 0.5s ease-in-out infinite; }
+    .animate-pop-in { animation: pop-in 0.5s ease-out forwards; }
+    .animate-star-spin { animation: star-spin 0.6s ease-out forwards; }
+    .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    
+    .category-card {
+      transition: all 0.3s ease;
+    }
+    .category-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+    .category-card:active {
+      transform: scale(0.98);
+    }
+    
+    .word-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .word-card:hover {
+      transform: scale(1.05);
+    }
+    .word-card.selected {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(74, 222, 128, 0.6);
+    }
+    .word-card.correct {
+      background: linear-gradient(135deg, #4ade80, #22c55e) !important;
+      animation: pulse-glow 0.5s ease-out;
+    }
+    .word-card.incorrect {
+      animation: wiggle 0.5s ease-out;
+    }
+    
+    .progress-fill {
+      transition: width 0.5s ease-out;
+    }
+    
+    .btn-game {
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-game:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .btn-game:active {
+      transform: translateY(0);
+    }
+    
+    .cloud {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.7;
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      animation: confetti-fall 3s linear forwards;
+    }
   </style>
-</head>
-
-<body class="h-full overflow-auto">
-
-<button onclick="window.location.href='index.html'"
-  class="fixed top-4 right-4 bg-white text-purple-600 w-12 h-12 rounded-full shadow-lg text-2xl flex items-center justify-center hover:scale-110 transition z-50">
-  🏠
-</button>
-
-<div id="app" class="min-h-full w-full" style="background: linear-gradient(180deg, #a855f7 0%, #6366f1 50%, #3b82f6 100%);">
-
-  <!-- PANTALLA DE BIENVENIDA (ya no pide nombre) -->
-  <div id="screen-welcome" class="hidden"></div>
-
-  <!-- PANTALLA DE CATEGORÍAS -->
-  <div id="screen-categories" class="min-h-full w-full p-6">
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 50%, #ffffff 100%);"><!-- Nubes decorativas -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden">
+   <div class="cloud animate-float" style="width: 100px; height: 40px; top: 10%; left: 5%; animation-delay: 0s;"></div>
+   <div class="cloud animate-float" style="width: 150px; height: 60px; top: 15%; right: 10%; animation-delay: 1s;"></div>
+   <div class="cloud animate-float" style="width: 80px; height: 32px; top: 25%; left: 20%; animation-delay: 2s;"></div>
+   <div class="cloud animate-float" style="width: 120px; height: 48px; top: 5%; right: 30%; animation-delay: 0.5s;"></div>
+  </div>
+  <div id="app" class="relative min-h-full w-full"><!-- PANTALLA DE INICIO -->
+   <div id="screen-home" class="min-h-full w-full flex flex-col items-center justify-center p-4">
+    <div class="text-center max-w-2xl mx-auto"><!-- Logo animado -->
+     <div class="mb-6 animate-bounce-slow"><span class="text-8xl">📚</span>
+     </div>
+     <h1 id="main-title" class="title-font text-4xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 mb-4 drop-shadow-lg">¡Aprendo a Leer!</h1>
+     <p class="text-xl md:text-2xl text-gray-600 mb-2">con el</p>
+     <p class="text-2xl md:text-3xl font-bold text-purple-600 mb-6">✨ Método Global ✨</p>
+     <div class="bg-white/80 backdrop-blur rounded-3xl p-6 shadow-xl mb-8">
+      <p class="text-lg text-gray-700 mb-2">Material creado por:</p>
+      <p id="teacher-credit" class="text-xl font-bold text-purple-700">Maestra María Fernanda Flores Valenzuela</p>
+     </div><button onclick="showCategories()" class="btn-game bg-gradient-to-r from-green-400 to-emerald-500 text-white text-2xl font-bold py-5 px-12 rounded-full shadow-lg hover:from-green-500 hover:to-emerald-600"> 🎮 ¡Empezar a Jugar! 🎮 </button> <button onclick="showTerms()" class="block mx-auto mt-6 text-gray-500 hover:text-purple-600 underline transition-colors"> 📋 Términos y Condiciones </button>
+    </div>
+   </div><!-- PANTALLA DE CATEGORÍAS -->
+   <div id="screen-categories" class="min-h-full w-full p-4 hidden">
+    <div class="max-w-6xl mx-auto">
+     <div class="flex items-center justify-between mb-6"><button onclick="showHome()" class="btn-game bg-white text-purple-600 font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2"> <span>←</span> Inicio </button>
+      <div class="flex items-center gap-2 bg-white/90 rounded-full py-2 px-4 shadow"><span class="text-2xl">⭐</span> <span id="total-stars" class="text-xl font-bold text-yellow-600">0</span>
+      </div>
+     </div>
+     <h2 class="title-font text-3xl md:text-4xl text-center text-purple-700 mb-8">🎯 Elige una Categoría 🎯</h2>
+     <div id="categories-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"><!-- Las categorías se generan dinámicamente -->
+     </div>
+    </div>
+   </div><!-- PANTALLA DE JUEGO -->
+   <div id="screen-game" class="min-h-full w-full p-4 hidden">
     <div class="max-w-4xl mx-auto">
+     <div class="flex items-center justify-between mb-4"><button onclick="showCategories()" class="btn-game bg-white text-purple-600 font-bold py-2 px-4 rounded-full shadow-lg flex items-center gap-2"> <span>←</span> Categorías </button>
+      <div class="flex items-center gap-4">
+       <div class="flex items-center gap-1 bg-white/90 rounded-full py-2 px-4 shadow"><span class="text-xl">❤️</span> <span id="lives" class="text-lg font-bold text-red-500">3</span>
+       </div>
+       <div class="flex items-center gap-1 bg-white/90 rounded-full py-2 px-4 shadow"><span class="text-xl">⭐</span> <span id="game-stars" class="text-lg font-bold text-yellow-600">0</span>
+       </div>
+      </div>
+     </div><!-- Barra de progreso -->
+     <div class="bg-white/50 rounded-full h-6 mb-6 overflow-hidden shadow-inner">
+      <div id="progress-bar" class="progress-fill bg-gradient-to-r from-green-400 to-emerald-500 h-full rounded-full" style="width: 0%"></div>
+     </div>
+     <div id="game-content" class="bg-white/90 backdrop-blur rounded-3xl p-6 md:p-8 shadow-2xl"><!-- Contenido del juego -->
+     </div>
+    </div>
+   </div><!-- PANTALLA DE VICTORIA -->
+   <div id="screen-victory" class="min-h-full w-full flex items-center justify-center p-4 hidden">
+    <div class="text-center bg-white/95 backdrop-blur rounded-3xl p-8 md:p-12 shadow-2xl max-w-lg mx-auto">
+     <div class="text-8xl mb-4 animate-bounce-slow">
+      🏆
+     </div>
+     <h2 class="title-font text-4xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-4">¡Felicidades!</h2>
+     <p class="text-xl text-gray-700 mb-2">Completaste la categoría</p>
+     <p id="victory-category" class="text-2xl font-bold text-purple-600 mb-6"></p>
+     <div class="flex justify-center gap-2 mb-6" id="victory-stars"><!-- Estrellas ganadas -->
+     </div>
+     <div class="flex flex-col gap-3"><button onclick="replayCategory()" class="btn-game bg-gradient-to-r from-blue-400 to-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-lg"> 🔄 Jugar de Nuevo </button> <button onclick="showCategories()" class="btn-game bg-gradient-to-r from-purple-400 to-purple-500 text-white font-bold py-3 px-8 rounded-full shadow-lg"> 📚 Más Categorías </button>
+     </div>
+    </div>
+   </div><!-- PANTALLA DE GAME OVER -->
+   <div id="screen-gameover" class="min-h-full w-full flex items-center justify-center p-4 hidden">
+    <div class="text-center bg-white/95 backdrop-blur rounded-3xl p-8 md:p-12 shadow-2xl max-w-lg mx-auto">
+     <div class="text-8xl mb-4">
+      😢
+     </div>
+     <h2 class="title-font text-4xl text-gray-700 mb-4">¡Ups! Sin vidas</h2>
+     <p class="text-xl text-gray-600 mb-6">¡No te preocupes! Puedes intentarlo de nuevo</p>
+     <div class="flex flex-col gap-3"><button onclick="replayCategory()" class="btn-game bg-gradient-to-r from-green-400 to-green-500 text-white font-bold py-3 px-8 rounded-full shadow-lg"> 🔄 Intentar de Nuevo </button> <button onclick="showCategories()" class="btn-game bg-gradient-to-r from-purple-400 to-purple-500 text-white font-bold py-3 px-8 rounded-full shadow-lg"> 📚 Otras Categorías </button>
+     </div>
+    </div>
+   </div><!-- MODAL DE TÉRMINOS -->
+   <div id="modal-terms" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 hidden z-50">
+    <div class="bg-white rounded-3xl p-6 md:p-8 max-w-2xl max-h-[80%] overflow-auto shadow-2xl">
+     <h3 class="title-font text-2xl text-purple-700 mb-4">📋 Términos y Condiciones</h3>
+     <div class="text-gray-700 space-y-4 text-sm md:text-base">
+      <div class="bg-purple-50 rounded-xl p-4">
+       <h4 class="font-bold text-purple-700 mb-2">👩‍🏫 Autoría del Material</h4>
+       <p>Este material educativo fue creado por la <strong>Maestra María Fernanda Flores Valenzuela</strong> con fines exclusivamente educativos.</p>
+      </div>
+      <div class="bg-green-50 rounded-xl p-4">
+       <h4 class="font-bold text-green-700 mb-2">✅ Usos Permitidos</h4>
+       <ul class="list-disc list-inside space-y-1">
+        <li>Uso personal del alumno para práctica de lectura</li>
+        <li>Proyección en el aula de clases</li>
+        <li>Compartir directamente con los alumnos</li>
+        <li>Uso exclusivo para fines educativos</li>
+       </ul>
+      </div>
+      <div class="bg-red-50 rounded-xl p-4">
+       <h4 class="font-bold text-red-700 mb-2">🚫 Usos NO Permitidos</h4>
+       <ul class="list-disc list-inside space-y-1">
+        <li>Compartir con colegas sin autorización</li>
+        <li>Distribución en redes sociales o internet</li>
+        <li>Modificación del material sin permiso</li>
+        <li>Uso comercial de cualquier tipo</li>
+        <li>Atribuirse la autoría del material</li>
+       </ul>
+      </div>
+      <div class="bg-yellow-50 rounded-xl p-4">
+       <h4 class="font-bold text-yellow-700 mb-2">⚠️ Importante</h4>
+       <p>El uso de este material implica la aceptación de estos términos. Si desea compartir este recurso con otros docentes, por favor contacte a la autora para obtener autorización.</p>
+      </div>
+     </div><button onclick="hideTerms()" class="btn-game w-full mt-6 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold py-3 px-6 rounded-full shadow-lg"> ✓ Entendido </button>
+    </div>
+   </div>
+  </div>
+  <script>
+    // ========== CONFIGURACIÓN Y DATOS ==========
+    const defaultConfig = {
+      welcome_title: '¡Aprendo a Leer!',
+      teacher_name: 'Maestra María Fernanda Flores Valenzuela'
+    };
 
-      <div class="glass-card rounded-3xl p-6 mb-6 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-2xl shadow-lg">👤</div>
-          <div>
-            <p class="text-gray-500 text-sm">Jugador</p>
-            <p id="player-name-display" class="text-xl font-bold text-purple-700">Jugador</p>
+    // 10 Categorías del Método Global
+    const categories = [
+      {
+        id: 'familia',
+        name: 'Mi Familia',
+        emoji: '👨‍👩‍👧‍👦',
+        color: 'from-pink-400 to-rose-500',
+        words: [
+          { word: 'MAMÁ', image: '👩', sentence: 'Mi mamá me quiere mucho' },
+          { word: 'PAPÁ', image: '👨', sentence: 'Papá juega conmigo' },
+          { word: 'HERMANO', image: '👦', sentence: 'Mi hermano es divertido' },
+          { word: 'HERMANA', image: '👧', sentence: 'Hermana me ayuda' },
+          { word: 'ABUELO', image: '👴', sentence: 'El abuelo cuenta historias' },
+          { word: 'ABUELA', image: '👵', sentence: 'Abuela cocina rico' }
+        ]
+      },
+      {
+        id: 'animales',
+        name: 'Animales',
+        emoji: '🐾',
+        color: 'from-orange-400 to-amber-500',
+        words: [
+          { word: 'PERRO', image: '🐕', sentence: 'El perro ladra fuerte' },
+          { word: 'GATO', image: '🐱', sentence: 'Mi gato duerme mucho' },
+          { word: 'PÁJARO', image: '🐦', sentence: 'El pájaro vuela alto' },
+          { word: 'PEZ', image: '🐟', sentence: 'El pez nada en el agua' },
+          { word: 'CONEJO', image: '🐰', sentence: 'El conejo salta feliz' },
+          { word: 'TORTUGA', image: '🐢', sentence: 'La tortuga camina lento' }
+        ]
+      },
+      {
+        id: 'frutas',
+        name: 'Frutas',
+        emoji: '🍎',
+        color: 'from-red-400 to-red-500',
+        words: [
+          { word: 'MANZANA', image: '🍎', sentence: 'La manzana es roja' },
+          { word: 'PLÁTANO', image: '🍌', sentence: 'El plátano es amarillo' },
+          { word: 'NARANJA', image: '🍊', sentence: 'La naranja tiene jugo' },
+          { word: 'UVA', image: '🍇', sentence: 'Las uvas son dulces' },
+          { word: 'FRESA', image: '🍓', sentence: 'La fresa es pequeña' },
+          { word: 'SANDÍA', image: '🍉', sentence: 'La sandía es grande' }
+        ]
+      },
+      {
+        id: 'cuerpo',
+        name: 'Mi Cuerpo',
+        emoji: '🧍',
+        color: 'from-teal-400 to-cyan-500',
+        words: [
+          { word: 'MANO', image: '✋', sentence: 'Tengo dos manos' },
+          { word: 'OJO', image: '👁️', sentence: 'Mis ojos pueden ver' },
+          { word: 'BOCA', image: '👄', sentence: 'La boca sirve para hablar' },
+          { word: 'NARIZ', image: '👃', sentence: 'Mi nariz puede oler' },
+          { word: 'OREJA', image: '👂', sentence: 'Las orejas escuchan' },
+          { word: 'PIE', image: '🦶', sentence: 'Camino con mis pies' }
+        ]
+      },
+      {
+        id: 'escuela',
+        name: 'La Escuela',
+        emoji: '🏫',
+        color: 'from-blue-400 to-blue-500',
+        words: [
+          { word: 'LIBRO', image: '📖', sentence: 'Leo mi libro favorito' },
+          { word: 'LÁPIZ', image: '✏️', sentence: 'Escribo con el lápiz' },
+          { word: 'MESA', image: '🪑', sentence: 'La mesa es para estudiar' },
+          { word: 'MAESTRA', image: '👩‍🏫', sentence: 'Mi maestra enseña bien' },
+          { word: 'PIZARRA', image: '📋', sentence: 'La pizarra es verde' },
+          { word: 'MOCHILA', image: '🎒', sentence: 'Mi mochila tiene libros' }
+        ]
+      },
+      {
+        id: 'colores',
+        name: 'Colores',
+        emoji: '🎨',
+        color: 'from-violet-400 to-purple-500',
+        words: [
+          { word: 'ROJO', image: '🔴', sentence: 'El rojo es muy bonito' },
+          { word: 'AZUL', image: '🔵', sentence: 'El cielo es azul' },
+          { word: 'VERDE', image: '🟢', sentence: 'El pasto es verde' },
+          { word: 'AMARILLO', image: '🟡', sentence: 'El sol es amarillo' },
+          { word: 'ROSA', image: '🩷', sentence: 'Las flores son rosas' },
+          { word: 'NARANJA', image: '🟠', sentence: 'La naranja es naranja' }
+        ]
+      },
+      {
+        id: 'casa',
+        name: 'Mi Casa',
+        emoji: '🏠',
+        color: 'from-emerald-400 to-green-500',
+        words: [
+          { word: 'PUERTA', image: '🚪', sentence: 'Abro la puerta de casa' },
+          { word: 'VENTANA', image: '🪟', sentence: 'La ventana tiene luz' },
+          { word: 'CAMA', image: '🛏️', sentence: 'Duermo en mi cama' },
+          { word: 'SILLA', image: '🪑', sentence: 'Me siento en la silla' },
+          { word: 'COCINA', image: '🍳', sentence: 'Mamá cocina rico' },
+          { word: 'BAÑO', image: '🚿', sentence: 'Me baño todos los días' }
+        ]
+      },
+      {
+        id: 'naturaleza',
+        name: 'Naturaleza',
+        emoji: '🌳',
+        color: 'from-lime-400 to-green-500',
+        words: [
+          { word: 'SOL', image: '☀️', sentence: 'El sol brilla mucho' },
+          { word: 'LUNA', image: '🌙', sentence: 'La luna sale de noche' },
+          { word: 'ÁRBOL', image: '🌳', sentence: 'El árbol es muy alto' },
+          { word: 'FLOR', image: '🌸', sentence: 'La flor huele bonito' },
+          { word: 'AGUA', image: '💧', sentence: 'El agua es importante' },
+          { word: 'NUBE', image: '☁️', sentence: 'Las nubes son blancas' }
+        ]
+      },
+      {
+        id: 'comida',
+        name: 'Comida',
+        emoji: '🍽️',
+        color: 'from-yellow-400 to-orange-500',
+        words: [
+          { word: 'PAN', image: '🍞', sentence: 'El pan está calientito' },
+          { word: 'LECHE', image: '🥛', sentence: 'Tomo leche por la mañana' },
+          { word: 'SOPA', image: '🍲', sentence: 'La sopa está caliente' },
+          { word: 'ARROZ', image: '🍚', sentence: 'El arroz es blanco' },
+          { word: 'POLLO', image: '🍗', sentence: 'El pollo es sabroso' },
+          { word: 'HUEVO', image: '🥚', sentence: 'Como huevo en el desayuno' }
+        ]
+      },
+      {
+        id: 'acciones',
+        name: 'Acciones',
+        emoji: '🏃',
+        color: 'from-indigo-400 to-blue-500',
+        words: [
+          { word: 'CORRER', image: '🏃', sentence: 'Me gusta correr rápido' },
+          { word: 'SALTAR', image: '🤸', sentence: 'Puedo saltar muy alto' },
+          { word: 'COMER', image: '😋', sentence: 'Voy a comer mi comida' },
+          { word: 'DORMIR', image: '😴', sentence: 'Es hora de dormir' },
+          { word: 'JUGAR', image: '🎮', sentence: 'Me encanta jugar' },
+          { word: 'LEER', image: '📚', sentence: 'Aprendo a leer cada día' }
+        ]
+      }
+    ];
+
+    // Estado del juego
+    let gameState = {
+      currentCategory: null,
+      currentWordIndex: 0,
+      lives: 3,
+      stars: 0,
+      gamePhase: 'recognize', // recognize, match, complete, sentence
+      selectedWord: null,
+      progress: []
+    };
+
+    let progressData = [];
+    let isLoading = false;
+
+    // ========== SDK INITIALIZATION ==========
+    const dataHandler = {
+      onDataChanged(data) {
+        progressData = data;
+        updateTotalStars();
+        renderCategoriesProgress();
+      }
+    };
+
+    async function initSDKs() {
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            const title = document.getElementById('main-title');
+            const teacher = document.getElementById('teacher-credit');
+            if (title) title.textContent = config.welcome_title || defaultConfig.welcome_title;
+            if (teacher) teacher.textContent = config.teacher_name || defaultConfig.teacher_name;
+          },
+          mapToCapabilities: (config) => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ['welcome_title', config.welcome_title || defaultConfig.welcome_title],
+            ['teacher_name', config.teacher_name || defaultConfig.teacher_name]
+          ])
+        });
+      }
+
+      // Initialize Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize data SDK');
+        }
+      }
+    }
+
+    initSDKs();
+
+    // ========== NAVEGACIÓN ==========
+    function hideAllScreens() {
+      document.querySelectorAll('[id^="screen-"]').forEach(s => s.classList.add('hidden'));
+    }
+
+    function showHome() {
+      hideAllScreens();
+      document.getElementById('screen-home').classList.remove('hidden');
+    }
+
+    function showCategories() {
+      hideAllScreens();
+      document.getElementById('screen-categories').classList.remove('hidden');
+      renderCategories();
+    }
+
+    function showTerms() {
+      document.getElementById('modal-terms').classList.remove('hidden');
+    }
+
+    function hideTerms() {
+      document.getElementById('modal-terms').classList.add('hidden');
+    }
+
+    // ========== RENDERIZADO DE CATEGORÍAS ==========
+    function renderCategories() {
+      const grid = document.getElementById('categories-grid');
+      grid.innerHTML = categories.map((cat, index) => {
+        const progress = progressData.find(p => p.category_id === cat.id);
+        const stars = progress ? progress.stars_earned : 0;
+        const completed = progress ? progress.completed_words : 0;
+        const total = cat.words.length;
+        const percentage = Math.round((completed / total) * 100);
+        
+        return `
+          <button onclick="startCategory('${cat.id}')" 
+                  class="category-card bg-gradient-to-br ${cat.color} rounded-3xl p-4 md:p-6 shadow-xl text-white text-center"
+                  style="animation: pop-in 0.5s ease-out ${index * 0.1}s both;">
+            <div class="text-5xl md:text-6xl mb-3">${cat.emoji}</div>
+            <h3 class="font-bold text-lg md:text-xl mb-2">${cat.name}</h3>
+            <div class="bg-white/30 rounded-full h-3 mb-2 overflow-hidden">
+              <div class="bg-white h-full rounded-full transition-all" style="width: ${percentage}%"></div>
+            </div>
+            <div class="flex justify-center gap-1">
+              ${[1,2,3].map(i => `<span class="text-xl ${i <= stars ? '' : 'opacity-40'}">${i <= stars ? '⭐' : '☆'}</span>`).join('')}
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderCategoriesProgress() {
+      if (document.getElementById('screen-categories').classList.contains('hidden')) return;
+      renderCategories();
+    }
+
+    function updateTotalStars() {
+      const total = progressData.reduce((sum, p) => sum + (p.stars_earned || 0), 0);
+      const el = document.getElementById('total-stars');
+      if (el) el.textContent = total;
+    }
+
+    // ========== LÓGICA DEL JUEGO ==========
+    function startCategory(categoryId) {
+      const category = categories.find(c => c.id === categoryId);
+      if (!category) return;
+
+      gameState = {
+        currentCategory: category,
+        currentWordIndex: 0,
+        lives: 3,
+        stars: 0,
+        gamePhase: 'recognize',
+        selectedWord: null,
+        progress: []
+      };
+
+      hideAllScreens();
+      document.getElementById('screen-game').classList.remove('hidden');
+      updateGameUI();
+      renderGamePhase();
+    }
+
+    function replayCategory() {
+      if (gameState.currentCategory) {
+        startCategory(gameState.currentCategory.id);
+      }
+    }
+
+    function updateGameUI() {
+      document.getElementById('lives').textContent = gameState.lives;
+      document.getElementById('game-stars').textContent = gameState.stars;
+      
+      const progress = ((gameState.currentWordIndex * 4 + getPhaseIndex()) / (gameState.currentCategory.words.length * 4)) * 100;
+      document.getElementById('progress-bar').style.width = `${Math.min(progress, 100)}%`;
+    }
+
+    function getPhaseIndex() {
+      const phases = ['recognize', 'match', 'complete', 'sentence'];
+      return phases.indexOf(gameState.gamePhase);
+    }
+
+    function renderGamePhase() {
+      const word = gameState.currentCategory.words[gameState.currentWordIndex];
+      const content = document.getElementById('game-content');
+      
+      switch(gameState.gamePhase) {
+        case 'recognize':
+          renderRecognizePhase(word, content);
+          break;
+        case 'match':
+          renderMatchPhase(word, content);
+          break;
+        case 'complete':
+          renderCompletePhase(word, content);
+          break;
+        case 'sentence':
+          renderSentencePhase(word, content);
+          break;
+      }
+    }
+
+    // Fase 1: Reconocimiento de palabra completa (Método Global)
+    function renderRecognizePhase(word, content) {
+      content.innerHTML = `
+        <div class="text-center animate-pop-in">
+          <p class="text-lg text-gray-600 mb-4">👀 Observa y aprende esta palabra:</p>
+          
+          <div class="text-8xl mb-6 animate-bounce-slow">${word.image}</div>
+          
+          <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-6 mb-6 inline-block">
+            <h2 class="title-font text-5xl md:text-7xl text-purple-700 tracking-wider">${word.word}</h2>
+          </div>
+          
+          <p class="text-xl text-gray-700 mb-6 italic">"${word.sentence}"</p>
+          
+          <div class="bg-yellow-50 rounded-xl p-4 mb-6">
+            <p class="text-gray-600">🔊 Lee en voz alta: <strong class="text-purple-700 text-2xl">${word.word}</strong></p>
+          </div>
+          
+          <button onclick="nextPhase()" class="btn-game bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold text-xl py-4 px-10 rounded-full shadow-lg">
+            ¡Ya lo aprendí! ✓
+          </button>
+        </div>
+      `;
+    }
+
+    // Fase 2: Emparejar palabra con imagen
+    function renderMatchPhase(word, content) {
+      const otherWords = gameState.currentCategory.words.filter(w => w.word !== word.word);
+      const shuffledOthers = otherWords.sort(() => Math.random() - 0.5).slice(0, 3);
+      const options = [...shuffledOthers, word].sort(() => Math.random() - 0.5);
+      
+      content.innerHTML = `
+        <div class="text-center animate-pop-in">
+          <p class="text-lg text-gray-600 mb-4">🎯 ¿Cuál es esta palabra?</p>
+          
+          <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-6 mb-8 inline-block">
+            <h2 class="title-font text-4xl md:text-6xl text-purple-700">${word.word}</h2>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+            ${options.map((opt, i) => `
+              <button onclick="checkMatch('${opt.word}', '${word.word}', this)" 
+                      class="word-card bg-white border-4 border-gray-200 rounded-2xl p-6 hover:border-purple-400 transition-all"
+                      style="animation: pop-in 0.4s ease-out ${i * 0.1}s both;">
+                <span class="text-6xl">${opt.image}</span>
+              </button>
+            `).join('')}
           </div>
         </div>
-        <div>
-          <p id="total-stars" class="text-2xl font-bold text-amber-500">⭐ 0</p>
+      `;
+    }
+
+    // Fase 3: Completar la palabra
+    function renderCompletePhase(word, content) {
+      const positions = [];
+      for (let i = 0; i < word.word.length; i++) {
+        if (Math.random() > 0.5 || positions.length === 0) {
+          positions.push(i);
+        }
+      }
+      const hiddenPos = positions[Math.floor(Math.random() * positions.length)];
+      const hiddenLetter = word.word[hiddenPos];
+      
+      const otherLetters = 'AEIOULMNSTRPBCDFGH'.split('').filter(l => l !== hiddenLetter);
+      const shuffledLetters = otherLetters.sort(() => Math.random() - 0.5).slice(0, 3);
+      const letterOptions = [...shuffledLetters, hiddenLetter].sort(() => Math.random() - 0.5);
+      
+      const displayWord = word.word.split('').map((l, i) => 
+        i === hiddenPos ? `<span class="inline-block w-12 h-16 border-b-4 border-purple-400 mx-1" id="blank-letter"></span>` : `<span class="mx-1">${l}</span>`
+      ).join('');
+      
+      content.innerHTML = `
+        <div class="text-center animate-pop-in">
+          <p class="text-lg text-gray-600 mb-4">✏️ Completa la palabra:</p>
+          
+          <div class="text-6xl mb-6">${word.image}</div>
+          
+          <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-6 mb-8 inline-block">
+            <h2 class="title-font text-4xl md:text-5xl text-purple-700">${displayWord}</h2>
+          </div>
+          
+          <div class="flex justify-center gap-3 flex-wrap">
+            ${letterOptions.map((letter, i) => `
+              <button onclick="checkLetter('${letter}', '${hiddenLetter}', this)" 
+                      class="word-card bg-gradient-to-br from-blue-400 to-blue-500 text-white font-bold text-3xl w-16 h-16 rounded-xl shadow-lg"
+                      style="animation: pop-in 0.4s ease-out ${i * 0.1}s both;">
+                ${letter}
+              </button>
+            `).join('')}
+          </div>
         </div>
-      </div>
+      `;
+    }
 
-      <h2 class="text-3xl font-bold text-white text-center mb-8 drop-shadow-lg">
-        🎯 Elige una Categoría
-      </h2>
+    // Fase 4: Leer la oración completa
+    function renderSentencePhase(word, content) {
+      const words = word.sentence.split(' ');
+      const targetWordIndex = words.findIndex(w => 
+        w.toUpperCase().replace(/[^A-ZÁÉÍÓÚÑ]/g, '') === word.word
+      );
+      
+      content.innerHTML = `
+        <div class="text-center animate-pop-in">
+          <p class="text-lg text-gray-600 mb-4">📖 Lee la oración y toca la palabra "${word.word}":</p>
+          
+          <div class="text-6xl mb-6">${word.image}</div>
+          
+          <div class="bg-white rounded-2xl p-6 mb-6 shadow-inner">
+            <p class="text-2xl md:text-3xl leading-relaxed">
+              ${words.map((w, i) => `
+                <button onclick="checkSentenceWord(${i}, ${targetWordIndex}, this)" 
+                        class="word-card inline-block px-2 py-1 mx-1 my-1 rounded-lg hover:bg-purple-100 transition-all ${
+                          w.toUpperCase().replace(/[^A-ZÁÉÍÓÚÑ]/g, '') === word.word ? 'font-bold text-purple-700' : 'text-gray-700'
+                        }">
+                  ${w}
+                </button>
+              `).join('')}
+            </p>
+          </div>
+          
+          <p class="text-gray-500 text-sm">💡 Pista: Busca la palabra que aprendiste</p>
+        </div>
+      `;
+    }
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <button class="bg-white rounded-2xl p-6 text-xl font-bold shadow-lg hover:scale-105 transition">
-          🐶 Animales
-        </button>
+    // ========== VERIFICACIONES ==========
+    function checkMatch(selected, correct, element) {
+      const allCards = document.querySelectorAll('.word-card');
+      
+      if (selected === correct) {
+        element.classList.add('correct');
+        playCorrectAnimation();
+        setTimeout(() => nextPhase(), 800);
+      } else {
+        element.classList.add('incorrect');
+        loseLife();
+        setTimeout(() => element.classList.remove('incorrect'), 500);
+      }
+    }
 
-        <button class="bg-white rounded-2xl p-6 text-xl font-bold shadow-lg hover:scale-105 transition">
-          🍎 Frutas
-        </button>
+    function checkLetter(selected, correct, element) {
+      if (selected === correct) {
+        element.classList.add('correct');
+        document.getElementById('blank-letter').innerHTML = `<span class="text-green-500">${correct}</span>`;
+        playCorrectAnimation();
+        setTimeout(() => nextPhase(), 800);
+      } else {
+        element.classList.add('incorrect');
+        loseLife();
+        setTimeout(() => element.classList.remove('incorrect'), 500);
+      }
+    }
 
-        <button class="bg-white rounded-2xl p-6 text-xl font-bold shadow-lg hover:scale-105 transition">
-          👨‍👩‍👧 Familia
-        </button>
+    function checkSentenceWord(selectedIndex, correctIndex, element) {
+      if (selectedIndex === correctIndex) {
+        element.classList.add('correct');
+        element.classList.add('selected');
+        playCorrectAnimation();
+        setTimeout(() => nextPhase(), 800);
+      } else {
+        element.classList.add('incorrect');
+        loseLife();
+        setTimeout(() => element.classList.remove('incorrect'), 500);
+      }
+    }
 
-        <button class="bg-white rounded-2xl p-6 text-xl font-bold shadow-lg hover:scale-105 transition">
-          🚗 Objetos
-        </button>
-      </div>
+    function loseLife() {
+      gameState.lives--;
+      updateGameUI();
+      
+      if (gameState.lives <= 0) {
+        setTimeout(() => showGameOver(), 500);
+      }
+    }
 
-    </div>
-  </div>
+    function playCorrectAnimation() {
+      gameState.stars++;
+      updateGameUI();
+      
+      // Crear confeti
+      for (let i = 0; i < 10; i++) {
+        createConfetti();
+      }
+    }
 
-  <!-- PANTALLA DE JUEGO -->
-  <div id="screen-game" class="hidden"></div>
+    function createConfetti() {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random() * 100 + '%';
+      confetti.style.background = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9'][Math.floor(Math.random() * 6)];
+      confetti.style.animationDelay = Math.random() * 0.5 + 's';
+      document.body.appendChild(confetti);
+      
+      setTimeout(() => confetti.remove(), 3000);
+    }
 
-  <!-- PANTALLA DE RESULTADOS -->
-  <div id="screen-results" class="hidden"></div>
+    // ========== PROGRESIÓN ==========
+    function nextPhase() {
+      const phases = ['recognize', 'match', 'complete', 'sentence'];
+      const currentPhaseIndex = phases.indexOf(gameState.gamePhase);
+      
+      if (currentPhaseIndex < phases.length - 1) {
+        gameState.gamePhase = phases[currentPhaseIndex + 1];
+      } else {
+        // Completó todas las fases de esta palabra
+        gameState.currentWordIndex++;
+        gameState.gamePhase = 'recognize';
+        
+        if (gameState.currentWordIndex >= gameState.currentCategory.words.length) {
+          // Completó todas las palabras
+          finishCategory();
+          return;
+        }
+      }
+      
+      updateGameUI();
+      renderGamePhase();
+    }
 
-</div>
+    async function finishCategory() {
+      const starsEarned = Math.min(3, Math.ceil(gameState.stars / (gameState.currentCategory.words.length * 2)));
+      
+      // Guardar progreso
+      if (window.dataSdk) {
+        const existingProgress = progressData.find(p => p.category_id === gameState.currentCategory.id);
+        
+        if (progressData.length >= 999 && !existingProgress) {
+          console.warn('Data limit reached');
+        } else {
+          isLoading = true;
+          
+          if (existingProgress) {
+            if (starsEarned > existingProgress.stars_earned) {
+              const result = await window.dataSdk.update({
+                ...existingProgress,
+                completed_words: gameState.currentCategory.words.length,
+                stars_earned: starsEarned,
+                last_played: new Date().toISOString()
+              });
+              if (!result.isOk) {
+                console.error('Error updating progress');
+              }
+            }
+          } else {
+            const result = await window.dataSdk.create({
+              category_id: gameState.currentCategory.id,
+              completed_words: gameState.currentCategory.words.length,
+              stars_earned: starsEarned,
+              last_played: new Date().toISOString()
+            });
+            if (!result.isOk) {
+              console.error('Error saving progress');
+            }
+          }
+          
+          isLoading = false;
+        }
+      }
+      
+      showVictory(starsEarned);
+    }
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  localStorage.setItem("sesionActiva","true");
-  localStorage.setItem("playerName","Jugador");
-});
-</script>
+    function showVictory(stars) {
+      hideAllScreens();
+      document.getElementById('screen-victory').classList.remove('hidden');
+      document.getElementById('victory-category').textContent = gameState.currentCategory.name;
+      
+      const starsContainer = document.getElementById('victory-stars');
+      starsContainer.innerHTML = [1, 2, 3].map((i, index) => `
+        <span class="text-5xl ${i <= stars ? 'animate-star-spin' : 'opacity-30'}" 
+              style="animation-delay: ${index * 0.2}s">
+          ${i <= stars ? '⭐' : '☆'}
+        </span>
+      `).join('');
+      
+      // Celebración con confeti
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => createConfetti(), i * 100);
+      }
+    }
 
-</body>
+    function showGameOver() {
+      hideAllScreens();
+      document.getElementById('screen-gameover').classList.remove('hidden');
+    }
+
+    // Inicializar
+    showHome();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6e2707f0c9e873',t:'MTc3MjU5ODY5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
