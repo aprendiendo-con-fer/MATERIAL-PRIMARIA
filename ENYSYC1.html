@@ -1,0 +1,2430 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juegos Educativos - Primer Grado</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&amp;family=Nunito:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; }
+    .title-font { font-family: 'Baloo 2', cursive; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,200,0,0.3); }
+      50% { box-shadow: 0 0 40px rgba(255,200,0,0.6); }
+    }
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes confetti {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100px) rotate(720deg); opacity: 0; }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .bounce-in { animation: bounce-in 0.5s ease-out; }
+    .wiggle { animation: wiggle 0.5s ease-in-out; }
+    
+    .game-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+    
+    .btn-game {
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-game:hover {
+      transform: scale(1.05);
+    }
+    .btn-game:active {
+      transform: scale(0.95);
+    }
+    
+    .learning-box {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 3px dashed #f59e0b;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .drag-item {
+      cursor: grab;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .drag-item:active {
+      cursor: grabbing;
+      transform: scale(1.1);
+    }
+    .drag-item.dragging {
+      opacity: 0.5;
+    }
+    
+    .drop-zone {
+      transition: all 0.3s ease;
+      border: 3px dashed #cbd5e1;
+    }
+    .drop-zone.drag-over {
+      border-color: #22c55e;
+      background-color: rgba(34, 197, 94, 0.1);
+      transform: scale(1.02);
+    }
+    
+    .star {
+      color: #fbbf24;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #22c55e, #84cc16);
+      border-radius: 9999px;
+      transition: width 0.5s ease;
+    }
+    
+    .clickable-item {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .clickable-item:hover {
+      transform: scale(1.1);
+    }
+    .clickable-item:active {
+      transform: scale(0.9);
+    }
+    
+    .semaforo-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 4px solid #374151;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .semaforo-btn:hover {
+      transform: scale(1.1);
+    }
+    .semaforo-btn.active {
+      box-shadow: 0 0 30px currentColor;
+    }
+    
+    .character-option {
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 12px;
+      border: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .character-option:hover {
+      border-color: #8b5cf6;
+      background-color: rgba(139, 92, 246, 0.1);
+    }
+    .character-option.selected {
+      border-color: #8b5cf6;
+      background-color: rgba(139, 92, 246, 0.2);
+    }
+    
+    .task-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .task-card:hover {
+      transform: translateY(-4px);
+    }
+    .task-card.assigned {
+      opacity: 0.6;
+      transform: scale(0.95);
+    }
+    
+    .bubble-option {
+      cursor: pointer;
+      padding: 12px 20px;
+      background: white;
+      border-radius: 20px;
+      border: 3px solid #e5e7eb;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .bubble-option:hover {
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+    }
+    .bubble-option.correct {
+      border-color: #22c55e;
+      background-color: #dcfce7;
+    }
+    .bubble-option.incorrect {
+      border-color: #ef4444;
+      background-color: #fee2e2;
+    }
+    
+    .map-item {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .map-item:hover {
+      transform: scale(1.2);
+      z-index: 10;
+    }
+    .map-item.placed {
+      animation: bounce-in 0.5s ease-out;
+    }
+    
+    .wagon {
+      cursor: grab;
+      transition: all 0.3s ease;
+    }
+    .wagon:hover {
+      transform: scale(1.05);
+    }
+    .wagon.correct-position {
+      border-color: #22c55e !important;
+    }
+    
+    .hobby-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
+    }
+    .hobby-card:hover {
+      transform: scale(1.05);
+    }
+    .hobby-card.selected {
+      border-color: #8b5cf6;
+      background-color: rgba(139, 92, 246, 0.1);
+    }
+    
+    .rule-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
+    }
+    .rule-card:hover {
+      transform: scale(1.02);
+    }
+    .rule-card.selected {
+      border-color: #f59e0b;
+      background-color: rgba(245, 158, 11, 0.1);
+    }
+    
+    .simon-btn {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .simon-btn:hover {
+      transform: scale(1.05);
+    }
+    .simon-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .bath-item {
+      cursor: grab;
+      transition: all 0.3s ease;
+    }
+    .bath-item:hover {
+      transform: scale(1.1);
+    }
+    .bath-item.used {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    
+    .toy-item {
+      cursor: grab;
+      transition: all 0.3s ease;
+    }
+    .toy-item:hover {
+      transform: scale(1.1);
+    }
+    
+    .shared-box {
+      border: 4px dashed #8b5cf6;
+      border-radius: 16px;
+      min-height: 100px;
+      transition: all 0.3s ease;
+    }
+    .shared-box.drag-over {
+      background-color: rgba(139, 92, 246, 0.1);
+      border-color: #7c3aed;
+    }
+    
+    .path-step {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .path-step:hover {
+      transform: scale(1.1);
+    }
+    .path-step.visited {
+      background-color: #22c55e !important;
+    }
+    .path-step.current {
+      animation: pulse-glow 1s ease-in-out infinite;
+    }
+    
+    .region-btn {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
+    }
+    .region-btn:hover {
+      transform: scale(1.05);
+    }
+    .region-btn.selected {
+      border-color: #f59e0b;
+    }
+    
+    .time-item {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
+    }
+    .time-item:hover {
+      transform: scale(1.05);
+    }
+    .time-item.selected {
+      border-color: #3b82f6;
+    }
+    .time-item.correct {
+      border-color: #22c55e;
+      background-color: rgba(34, 197, 94, 0.1);
+    }
+
+    .covid-item {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .covid-item:hover {
+      transform: scale(1.1);
+    }
+    .covid-item.caught {
+      animation: bounce-in 0.3s ease-out;
+    }
+
+    .plate-item {
+      cursor: grab;
+      transition: all 0.3s ease;
+    }
+    .plate-item:hover {
+      transform: scale(1.1);
+    }
+    
+    .person-slot {
+      border: 3px dashed #94a3b8;
+      border-radius: 12px;
+      min-height: 60px;
+      transition: all 0.3s ease;
+    }
+    .person-slot.drag-over {
+      border-color: #22c55e;
+      background-color: rgba(34, 197, 94, 0.1);
+    }
+    .person-slot.has-plate {
+      border-style: solid;
+      border-color: #22c55e;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 overflow-auto">
+  <div id="app" class="h-full w-full"><!-- Main Menu -->
+   <div id="main-menu" class="min-h-full p-4 md:p-6"><!-- Header -->
+    <header class="text-center mb-6">
+     <h1 id="main-title" class="title-font text-3xl md:text-5xl font-bold text-white drop-shadow-lg float-animation">🎮 Juegos Educativos 🎮</h1>
+     <p class="text-lg md:text-xl text-white/90 mt-2">Primer Grado de Primaria</p>
+     <p id="author-credit" class="text-sm md:text-base text-white/80 mt-1 font-semibold">Creado por Mtra. María Fernanda Flores Valenzuela</p>
+    </header><!-- Category Tabs -->
+    <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6"><button onclick="showCategory('etica')" class="category-tab px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-sm md:text-base transition-all bg-green-500 text-white hover:bg-green-600 shadow-lg" data-category="etica"> 🌿 Ética, Naturaleza y Sociedades </button> <button onclick="showCategory('humano')" class="category-tab px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-sm md:text-base transition-all bg-orange-500 text-white hover:bg-orange-600 shadow-lg" data-category="humano"> 🤝 De lo Humano y lo Comunitario </button>
+    </div><!-- Games Grid - Ética -->
+    <div id="games-etica" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto"><!-- Game 1: Mi Barrio -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('miBarrio')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🏘️
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Mi Barrio</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Coloca tu casa y escuela en el mapa</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: Contextos sociales</p>
+      </div>
+     </div><!-- Game 2: Amigo de la Tierra -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('amigoTierra')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🌱
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Amigo de la Tierra</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Cuida plantas y animales</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: Respeto a la naturaleza</p>
+      </div>
+     </div><!-- Game 3: Eco-Casa -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('ecoCasa')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🏠
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Eco-Casa</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Apaga luces y cierra llaves</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: Impacto ambiental</p>
+      </div>
+     </div><!-- Game 4: Mundo de Colores -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('mundoColores')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🌈
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Mundo de Colores</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Crea personajes únicos</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: Diversidad humana</p>
+      </div>
+     </div><!-- Game 5: Derechos en Acción -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('derechosAccion')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       ❤️
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Derechos en Acción</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Ayuda a niños que lo necesitan</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: Necesidades básicas</p>
+      </div>
+     </div><!-- Game 6: Escudo del Respeto -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('escudoRespeto')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🛡️
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Escudo del Respeto</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Detén las burlas con amabilidad</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: No a la discriminación</p>
+      </div>
+     </div><!-- Game 7: Semáforo del Cuerpo -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('semaforoCuerpo')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🚦
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Semáforo del Cuerpo</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Aprende sobre límites corporales</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: Límites corporales</p>
+      </div>
+     </div><!-- Game 8: Equipo Escolar -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('equipoEscolar')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🧹
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Equipo Escolar</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Asigna tareas de limpieza</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: Responsabilidad compartida</p>
+      </div>
+     </div><!-- Game 9: Tren de mi Vida -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('trenVida')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🚂
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Tren de mi Vida</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Ordena tu historia personal</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: Historia familiar</p>
+      </div>
+     </div><!-- Game 10: Burbuja de Diálogo -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('burbujaDialogo')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       💬
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Burbuja de Diálogo</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Resuelve conflictos hablando</p>
+      <div class="mt-3 bg-green-100 rounded-lg p-2">
+       <p class="text-xs text-green-800 font-semibold">📚 Aprenderás: Paz y diálogo</p>
+      </div>
+     </div>
+    </div><!-- Games Grid - Humano y Comunitario -->
+    <div id="games-humano" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto"><!-- Game 11: Camino Seguro -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('caminoSeguro')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🗺️
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Camino Seguro</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Guía al personaje por la comunidad</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Ubicación comunitaria</p>
+      </div>
+     </div><!-- Game 12: Hogar para Todos -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('hogarTodos')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🍽️
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Hogar para Todos</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Reparte tareas en familia</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Equidad en el hogar</p>
+      </div>
+     </div><!-- Game 13: Burbujas de Jabón -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('bubblesJabon')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🧼
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Burbujas de Jabón</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Atrapa jabón para limpiar manos</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Higiene COVID-19</p>
+      </div>
+     </div><!-- Game 14: Cápsula del Tiempo -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('capsulaTiempo')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       ⏰
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Cápsula del Tiempo</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Ordena objetos viejos y nuevos</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Antes y ahora</p>
+      </div>
+     </div><!-- Game 15: Fiesta del Pueblo -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('fiestaPueblo')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🎉
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Fiesta del Pueblo</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Elige música y comida típica</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Sentido de pertenencia</p>
+      </div>
+     </div><!-- Game 16: Todo sobre Mí -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('todoSobreMi')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       ⭐
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Todo sobre Mí</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Selecciona tus hobbies favoritos</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Identidad personal</p>
+      </div>
+     </div><!-- Game 17: Reglas de Oro -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('reglasOro')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       📜
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Reglas de Oro</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Elige normas para el salón</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Convivencia escolar</p>
+      </div>
+     </div><!-- Game 18: Juegos sin Género -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('juegosSinGenero')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🎮
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Juegos sin Género</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Todos pueden jugar con todo</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Igualdad de género</p>
+      </div>
+     </div><!-- Game 19: Simón Dice Virtual -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('simonDice')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🤸
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">Simón Dice Virtual</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Haz que el avatar se mueva</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Motricidad básica</p>
+      </div>
+     </div><!-- Game 20: ¡A Bañarse! -->
+     <div class="game-card bg-white rounded-2xl p-4 shadow-xl" onclick="startGame('aBanarse')">
+      <div class="text-4xl md:text-5xl text-center mb-3">
+       🛁
+      </div>
+      <h3 class="title-font text-lg md:text-xl font-bold text-gray-800 text-center">¡A Bañarse!</h3>
+      <p class="text-xs md:text-sm text-gray-600 text-center mt-2">Asea al personaje</p>
+      <div class="mt-3 bg-orange-100 rounded-lg p-2">
+       <p class="text-xs text-orange-800 font-semibold">📚 Aprenderás: Higiene personal</p>
+      </div>
+     </div>
+    </div><!-- Footer -->
+    <footer class="text-center mt-8 pb-4">
+     <p class="text-white/80 text-sm">Compatible con GitHub Pages • Primer Grado de Primaria</p>
+     <p id="footer-author" class="text-white font-bold mt-1">© 2024 Mtra. María Fernanda Flores Valenzuela</p>
+    </footer>
+   </div><!-- Game Container (Hidden by default) -->
+   <div id="game-container" class="hidden min-h-full p-4 md:p-6">
+    <div class="max-w-4xl mx-auto"><!-- Game Header -->
+     <div class="flex items-center justify-between mb-4"><button onclick="backToMenu()" class="btn-game bg-white/90 hover:bg-white text-gray-800 px-4 py-2 rounded-full font-bold shadow-lg flex items-center gap-2"> <span>←</span> Volver </button>
+      <div id="game-stars" class="flex gap-1"><!-- Stars will be added here -->
+      </div>
+     </div><!-- Learning Box -->
+     <div id="learning-box" class="learning-box">
+      <p id="learning-content" class="text-sm md:text-base font-semibold text-amber-800"><!-- Learning content will be inserted here --></p>
+     </div><!-- Game Title -->
+     <h2 id="game-title" class="title-font text-2xl md:text-4xl font-bold text-white text-center mb-4 drop-shadow-lg"><!-- Game title will be inserted here --></h2><!-- Game Content -->
+     <div id="game-content" class="bg-white rounded-3xl p-4 md:p-6 shadow-2xl"><!-- Game specific content will be inserted here -->
+     </div><!-- Game Footer -->
+     <p class="text-center text-white/80 text-xs mt-4">Creado por Mtra. María Fernanda Flores Valenzuela</p>
+    </div>
+   </div><!-- Success Modal -->
+   <div id="success-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full text-center bounce-in">
+     <div class="text-6xl md:text-8xl mb-4">
+      🎉
+     </div>
+     <h3 class="title-font text-2xl md:text-3xl font-bold text-gray-800 mb-2">¡Excelente!</h3>
+     <p id="success-message" class="text-gray-600 mb-4">¡Lo hiciste muy bien!</p>
+     <div id="earned-stars" class="flex justify-center gap-2 mb-6"><span class="text-4xl star">⭐</span> <span class="text-4xl star">⭐</span> <span class="text-4xl star">⭐</span>
+     </div><button onclick="closeSuccessModal()" class="btn-game bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg"> ¡Continuar! </button>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      main_title: 'Juegos Educativos',
+      author_name: 'Mtra. María Fernanda Flores Valenzuela',
+      background_color: '#818cf8',
+      surface_color: '#ffffff',
+      text_color: '#1f2937',
+      primary_action_color: '#22c55e',
+      secondary_action_color: '#f59e0b'
+    };
+
+    let config = { ...defaultConfig };
+    let currentCategory = 'etica';
+    let gameState = {};
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = { ...defaultConfig, ...newConfig };
+          applyConfig();
+        },
+        mapToCapabilities: (cfg) => ({
+          recolorables: [
+            {
+              get: () => cfg.background_color || defaultConfig.background_color,
+              set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+            },
+            {
+              get: () => cfg.surface_color || defaultConfig.surface_color,
+              set: (v) => { cfg.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+            },
+            {
+              get: () => cfg.text_color || defaultConfig.text_color,
+              set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+            },
+            {
+              get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
+              set: (v) => { cfg.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }
+            },
+            {
+              get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
+              set: (v) => { cfg.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['main_title', cfg.main_title || defaultConfig.main_title],
+          ['author_name', cfg.author_name || defaultConfig.author_name]
+        ])
+      });
+    }
+
+    function applyConfig() {
+      document.getElementById('main-title').innerHTML = `🎮 ${config.main_title || defaultConfig.main_title} 🎮`;
+      const authorName = config.author_name || defaultConfig.author_name;
+      document.getElementById('author-credit').textContent = `Creado por ${authorName}`;
+      document.getElementById('footer-author').textContent = `© 2024 ${authorName}`;
+      
+      // Apply colors
+      document.body.style.background = `linear-gradient(135deg, ${config.background_color || defaultConfig.background_color}, #a855f7, #ec4899)`;
+      
+      document.querySelectorAll('.game-card').forEach(card => {
+        card.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+      });
+    }
+
+    function showCategory(category) {
+      currentCategory = category;
+      document.getElementById('games-etica').classList.toggle('hidden', category !== 'etica');
+      document.getElementById('games-humano').classList.toggle('hidden', category !== 'humano');
+      
+      document.querySelectorAll('.category-tab').forEach(tab => {
+        const isActive = tab.dataset.category === category;
+        tab.classList.toggle('ring-4', isActive);
+        tab.classList.toggle('ring-white', isActive);
+      });
+    }
+
+    function startGame(gameId) {
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('game-container').classList.remove('hidden');
+      
+      gameState = { score: 0, maxScore: 3 };
+      updateStars();
+      
+      const games = {
+        miBarrio: {
+          title: '🏘️ Mi Barrio',
+          learning: '📚 Aprenderás a identificar que eres parte de un barrio o comunidad, reconociendo los lugares importantes que te rodean.',
+          content: renderMiBarrio
+        },
+        amigoTierra: {
+          title: '🌱 Amigo de la Tierra',
+          learning: '📚 Aprenderás a describir seres vivos presentes en el lugar donde vives y a cuidarlos.',
+          content: renderAmigoTierra
+        },
+        ecoCasa: {
+          title: '🏠 Eco-Casa',
+          learning: '📚 Aprenderás la relación entre las actividades de casa y el cuidado de la naturaleza.',
+          content: renderEcoCasa
+        },
+        mundoColores: {
+          title: '🌈 Mundo de Colores',
+          learning: '📚 Aprenderás que todas las personas son únicas y valiosas, sin importar cómo se vean.',
+          content: renderMundoColores
+        },
+        derechosAccion: {
+          title: '❤️ Derechos en Acción',
+          learning: '📚 Aprenderás sobre los derechos humanos básicos: alimentación y salud para todos.',
+          content: renderDerechosAccion
+        },
+        escudoRespeto: {
+          title: '🛡️ Escudo del Respeto',
+          learning: '📚 Aprenderás a reconocer actos de injusticia y a responder con amabilidad.',
+          content: renderEscudoRespeto
+        },
+        semaforoCuerpo: {
+          title: '🚦 Semáforo del Cuerpo',
+          learning: '📚 Aprenderás a diferenciar contactos físicos sanos de los que causan incomodidad.',
+          content: renderSemaforoCuerpo
+        },
+        equipoEscolar: {
+          title: '🧹 Equipo Escolar',
+          learning: '📚 Aprenderás sobre la responsabilidad compartida para el bienestar de todos.',
+          content: renderEquipoEscolar
+        },
+        trenVida: {
+          title: '🚂 Tren de mi Vida',
+          learning: '📚 Aprenderás a construir tu historia personal ordenando eventos importantes.',
+          content: renderTrenVida
+        },
+        burbujaDialogo: {
+          title: '💬 Burbuja de Diálogo',
+          learning: '📚 Aprenderás a identificar conflictos y usar el diálogo para resolverlos.',
+          content: renderBurbujaDialogo
+        },
+        caminoSeguro: {
+          title: '🗺️ Camino Seguro',
+          learning: '📚 Aprenderás a ubicar los lugares importantes de tu comunidad.',
+          content: renderCaminoSeguro
+        },
+        hogarTodos: {
+          title: '🍽️ Hogar para Todos',
+          learning: '📚 Aprenderás sobre la organización equitativa de tareas en familia.',
+          content: renderHogarTodos
+        },
+        bubblesJabon: {
+          title: '🧼 Burbujas de Jabón',
+          learning: '📚 Aprenderás sobre los hábitos de higiene que nos protegen de enfermedades.',
+          content: renderBubblesJabon
+        },
+        capsulaTiempo: {
+          title: '⏰ Cápsula del Tiempo',
+          learning: '📚 Aprenderás a ordenar sucesos cronológicamente, del pasado al presente.',
+          content: renderCapsulaTiempo
+        },
+        fiestaPueblo: {
+          title: '🎉 Fiesta del Pueblo',
+          learning: '📚 Aprenderás sobre los valores y tradiciones compartidos con tu comunidad.',
+          content: renderFiestaPueblo
+        },
+        todoSobreMi: {
+          title: '⭐ Todo sobre Mí',
+          learning: '📚 Aprenderás a reconocer las características que te hacen único y especial.',
+          content: renderTodoSobreMi
+        },
+        reglasOro: {
+          title: '📜 Reglas de Oro',
+          learning: '📚 Aprenderás a proponer acuerdos para una mejor convivencia escolar.',
+          content: renderReglasOro
+        },
+        juegosSinGenero: {
+          title: '🎮 Juegos sin Género',
+          learning: '📚 Aprenderás que todos podemos jugar con cualquier juguete sin importar el género.',
+          content: renderJuegosSinGenero
+        },
+        simonDice: {
+          title: '🤸 Simón Dice Virtual',
+          learning: '📚 Aprenderás patrones básicos de movimiento como saltar, correr y agacharte.',
+          content: renderSimonDice
+        },
+        aBanarse: {
+          title: '🛁 ¡A Bañarse!',
+          learning: '📚 Aprenderás sobre la importancia de los hábitos de limpieza personal.',
+          content: renderABanarse
+        }
+      };
+
+      const game = games[gameId];
+      if (game) {
+        document.getElementById('game-title').innerHTML = game.title;
+        document.getElementById('learning-content').innerHTML = game.learning;
+        document.getElementById('game-content').innerHTML = game.content();
+      }
+    }
+
+    function backToMenu() {
+      document.getElementById('main-menu').classList.remove('hidden');
+      document.getElementById('game-container').classList.add('hidden');
+    }
+
+    function updateStars() {
+      const starsContainer = document.getElementById('game-stars');
+      starsContainer.innerHTML = '';
+      for (let i = 0; i < gameState.maxScore; i++) {
+        const star = document.createElement('span');
+        star.className = `text-2xl ${i < gameState.score ? 'star' : 'text-gray-300'}`;
+        star.textContent = '⭐';
+        starsContainer.appendChild(star);
+      }
+    }
+
+    function addStar() {
+      if (gameState.score < gameState.maxScore) {
+        gameState.score++;
+        updateStars();
+      }
+    }
+
+    function showSuccess(message) {
+      document.getElementById('success-message').textContent = message;
+      document.getElementById('success-modal').classList.remove('hidden');
+      
+      const earnedStars = document.getElementById('earned-stars');
+      earnedStars.innerHTML = '';
+      for (let i = 0; i < gameState.score; i++) {
+        const star = document.createElement('span');
+        star.className = 'text-4xl star';
+        star.textContent = '⭐';
+        star.style.animationDelay = `${i * 0.2}s`;
+        earnedStars.appendChild(star);
+      }
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('success-modal').classList.add('hidden');
+      backToMenu();
+    }
+
+    // Game 1: Mi Barrio
+    function renderMiBarrio() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🏠 Arrastra tu casa y escuela al mapa de tu barrio</p>
+        </div>
+        <div class="relative bg-gradient-to-b from-green-200 to-green-300 rounded-2xl p-4 min-h-64" id="map-area">
+          <!-- Map background elements -->
+          <div class="absolute top-4 left-4 text-2xl">🌳</div>
+          <div class="absolute top-4 right-4 text-2xl">🌳</div>
+          <div class="absolute bottom-4 left-1/4 text-2xl">🏪</div>
+          <div class="absolute top-1/2 right-8 text-2xl">⛪</div>
+          <div class="absolute bottom-8 right-1/4 text-2xl">🏥</div>
+          
+          <!-- Drop zones -->
+          <div id="house-zone" class="drop-zone absolute top-1/3 left-8 w-20 h-20 rounded-xl flex items-center justify-center text-gray-400 bg-white/50" 
+               ondragover="handleDragOver(event)" ondrop="handleMapDrop(event, 'house')">
+            <span class="text-xs text-center">Tu Casa</span>
+          </div>
+          <div id="school-zone" class="drop-zone absolute top-1/3 right-8 w-20 h-20 rounded-xl flex items-center justify-center text-gray-400 bg-white/50"
+               ondragover="handleDragOver(event)" ondrop="handleMapDrop(event, 'school')">
+            <span class="text-xs text-center">Tu Escuela</span>
+          </div>
+        </div>
+        
+        <div class="flex justify-center gap-8 mt-6">
+          <div id="house-item" class="drag-item text-5xl" draggable="true" ondragstart="handleDragStart(event, 'house')">🏠</div>
+          <div id="school-item" class="drag-item text-5xl" draggable="true" ondragstart="handleDragStart(event, 'school')">🏫</div>
+        </div>
+        
+        <div id="barrio-message" class="mt-4 text-center text-gray-600"></div>
+      `;
+    }
+
+    let barrioState = { house: false, school: false };
+
+    function handleDragStart(e, type) {
+      e.dataTransfer.setData('text/plain', type);
+      e.target.classList.add('dragging');
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('drag-over');
+    }
+
+    function handleMapDrop(e, zone) {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('text/plain');
+      e.currentTarget.classList.remove('drag-over');
+      
+      if (type === zone && !barrioState[zone]) {
+        const emoji = zone === 'house' ? '🏠' : '🏫';
+        e.currentTarget.innerHTML = `<span class="text-4xl bounce-in">${emoji}</span>`;
+        e.currentTarget.classList.add('bg-green-100');
+        document.getElementById(`${zone}-item`).style.visibility = 'hidden';
+        barrioState[zone] = true;
+        addStar();
+        
+        if (barrioState.house && barrioState.school) {
+          setTimeout(() => {
+            addStar();
+            showSuccess('¡Identificaste los lugares de tu barrio!');
+          }, 500);
+        }
+      }
+      
+      document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+    }
+
+    // Game 2: Amigo de la Tierra
+    function renderAmigoTierra() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🌿 ¡Cuida a las plantas y al ave!</p>
+        </div>
+        
+        <div class="flex justify-around items-end min-h-48 bg-gradient-to-b from-sky-200 to-green-200 rounded-2xl p-4">
+          <div class="text-center">
+            <div id="plant1" class="text-5xl mb-2 transition-all duration-500">🥀</div>
+            <button onclick="waterPlant(1)" class="btn-game bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+              💧 Regar
+            </button>
+          </div>
+          
+          <div class="text-center">
+            <div id="bird" class="text-5xl mb-2 transition-all duration-500">🐦</div>
+            <button onclick="feedBird()" class="btn-game bg-amber-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+              🌾 Alimentar
+            </button>
+          </div>
+          
+          <div class="text-center">
+            <div id="plant2" class="text-5xl mb-2 transition-all duration-500">🥀</div>
+            <button onclick="waterPlant(2)" class="btn-game bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+              💧 Regar
+            </button>
+          </div>
+        </div>
+        
+        <div id="tierra-message" class="mt-4 text-center text-green-600 font-semibold"></div>
+      `;
+    }
+
+    let tierraState = { plant1: false, plant2: false, bird: false };
+
+    function waterPlant(num) {
+      if (!tierraState[`plant${num}`]) {
+        const plant = document.getElementById(`plant${num}`);
+        plant.textContent = '🌻';
+        plant.classList.add('wiggle');
+        tierraState[`plant${num}`] = true;
+        addStar();
+        checkTierraComplete();
+      }
+    }
+
+    function feedBird() {
+      if (!tierraState.bird) {
+        const bird = document.getElementById('bird');
+        bird.textContent = '🐦';
+        bird.classList.add('float-animation');
+        document.getElementById('tierra-message').textContent = '¡El pajarito está feliz y canta! 🎵';
+        tierraState.bird = true;
+        checkTierraComplete();
+      }
+    }
+
+    function checkTierraComplete() {
+      if (tierraState.plant1 && tierraState.plant2 && tierraState.bird) {
+        setTimeout(() => showSuccess('¡Cuidaste muy bien a los seres vivos!'), 500);
+      }
+    }
+
+    // Game 3: Eco-Casa
+    function renderEcoCasa() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">💡 ¡Apaga las luces y cierra las llaves para ahorrar!</p>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-yellow-100 rounded-2xl p-4 text-center">
+            <div id="light1" class="text-5xl mb-2">💡</div>
+            <p class="text-sm text-gray-600 mb-2">Luz de la sala</p>
+            <button onclick="toggleLight(1)" class="btn-game bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+              Apagar
+            </button>
+          </div>
+          
+          <div class="bg-blue-100 rounded-2xl p-4 text-center">
+            <div id="faucet1" class="text-5xl mb-2">🚿</div>
+            <p class="text-sm text-gray-600 mb-2">Llave del baño</p>
+            <button onclick="toggleFaucet(1)" class="btn-game bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+              Cerrar
+            </button>
+          </div>
+          
+          <div class="bg-yellow-100 rounded-2xl p-4 text-center">
+            <div id="light2" class="text-5xl mb-2">💡</div>
+            <p class="text-sm text-gray-600 mb-2">Luz del cuarto</p>
+            <button onclick="toggleLight(2)" class="btn-game bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+              Apagar
+            </button>
+          </div>
+          
+          <div class="bg-blue-100 rounded-2xl p-4 text-center">
+            <div id="faucet2" class="text-5xl mb-2">🚰</div>
+            <p class="text-sm text-gray-600 mb-2">Llave de cocina</p>
+            <button onclick="toggleFaucet(2)" class="btn-game bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+              Cerrar
+            </button>
+          </div>
+        </div>
+        
+        <div id="eco-progress" class="mt-4">
+          <div class="flex justify-between text-sm text-gray-600 mb-1">
+            <span>Ahorro de energía</span>
+            <span id="eco-percent">0%</span>
+          </div>
+          <div class="bg-gray-200 rounded-full h-4">
+            <div id="eco-bar" class="progress-bar h-4" style="width: 0%"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    let ecoState = { light1: true, light2: true, faucet1: true, faucet2: true };
+
+    function toggleLight(num) {
+      if (ecoState[`light${num}`]) {
+        document.getElementById(`light${num}`).textContent = '🔌';
+        ecoState[`light${num}`] = false;
+        updateEcoProgress();
+      }
+    }
+
+    function toggleFaucet(num) {
+      if (ecoState[`faucet${num}`]) {
+        document.getElementById(`faucet${num}`).textContent = '✅';
+        ecoState[`faucet${num}`] = false;
+        updateEcoProgress();
+      }
+    }
+
+    function updateEcoProgress() {
+      const total = Object.values(ecoState).filter(v => !v).length;
+      const percent = (total / 4) * 100;
+      document.getElementById('eco-bar').style.width = `${percent}%`;
+      document.getElementById('eco-percent').textContent = `${percent}%`;
+      
+      if (total === 2) addStar();
+      if (total === 4) {
+        gameState.score = 3;
+        updateStars();
+        setTimeout(() => showSuccess('¡Excelente! Ayudaste a cuidar el planeta'), 500);
+      }
+    }
+
+    // Game 4: Mundo de Colores
+    function renderMundoColores() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">👤 ¡Crea un personaje único y especial!</p>
+        </div>
+        
+        <div class="flex flex-col md:flex-row gap-6">
+          <div class="flex-1">
+            <div id="character-display" class="bg-gradient-to-b from-purple-100 to-pink-100 rounded-2xl p-6 text-center min-h-48 flex flex-col items-center justify-center">
+              <div id="char-hair" class="text-4xl">👱</div>
+              <div id="char-face" class="text-5xl">😊</div>
+              <div id="char-body" class="text-4xl">👕</div>
+            </div>
+          </div>
+          
+          <div class="flex-1 space-y-4">
+            <div>
+              <p class="text-sm font-semibold text-gray-700 mb-2">Cabello:</p>
+              <div class="flex gap-2 flex-wrap">
+                <span class="character-option text-2xl" onclick="selectHair('👱')">👱</span>
+                <span class="character-option text-2xl" onclick="selectHair('👩')">👩</span>
+                <span class="character-option text-2xl" onclick="selectHair('👨')">👨</span>
+                <span class="character-option text-2xl" onclick="selectHair('👧')">👧</span>
+                <span class="character-option text-2xl" onclick="selectHair('🧒')">🧒</span>
+              </div>
+            </div>
+            
+            <div>
+              <p class="text-sm font-semibold text-gray-700 mb-2">Expresión:</p>
+              <div class="flex gap-2 flex-wrap">
+                <span class="character-option text-2xl" onclick="selectFace('😊')">😊</span>
+                <span class="character-option text-2xl" onclick="selectFace('😄')">😄</span>
+                <span class="character-option text-2xl" onclick="selectFace('🥰')">🥰</span>
+                <span class="character-option text-2xl" onclick="selectFace('😎')">😎</span>
+                <span class="character-option text-2xl" onclick="selectFace('🤗')">🤗</span>
+              </div>
+            </div>
+            
+            <div>
+              <p class="text-sm font-semibold text-gray-700 mb-2">Ropa:</p>
+              <div class="flex gap-2 flex-wrap">
+                <span class="character-option text-2xl" onclick="selectBody('👕')">👕</span>
+                <span class="character-option text-2xl" onclick="selectBody('👗')">👗</span>
+                <span class="character-option text-2xl" onclick="selectBody('🥋')">🥋</span>
+                <span class="character-option text-2xl" onclick="selectBody('👔')">👔</span>
+                <span class="character-option text-2xl" onclick="selectBody('🥼')">🥼</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <button onclick="finishCharacter()" class="btn-game w-full mt-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-full font-bold text-lg">
+          ¡Mi personaje es especial! ⭐
+        </button>
+      `;
+    }
+
+    let characterState = { hair: false, face: false, body: false };
+
+    function selectHair(emoji) {
+      document.getElementById('char-hair').textContent = emoji;
+      characterState.hair = true;
+      if (!characterState.hairStar) {
+        addStar();
+        characterState.hairStar = true;
+      }
+    }
+
+    function selectFace(emoji) {
+      document.getElementById('char-face').textContent = emoji;
+      characterState.face = true;
+    }
+
+    function selectBody(emoji) {
+      document.getElementById('char-body').textContent = emoji;
+      characterState.body = true;
+      if (!characterState.bodyStar) {
+        addStar();
+        characterState.bodyStar = true;
+      }
+    }
+
+    function finishCharacter() {
+      if (characterState.hair && characterState.face && characterState.body) {
+        showSuccess('¡Tu personaje es único y valioso, igual que tú!');
+      }
+    }
+
+    // Game 5: Derechos en Acción
+    function renderDerechosAccion() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">❤️ ¡Ayuda a los niños entregándoles lo que necesitan!</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="bg-red-50 rounded-2xl p-4 text-center" id="child1">
+            <div class="text-4xl mb-2">😢</div>
+            <p class="text-sm text-gray-600">Tiene hambre</p>
+            <div id="child1-need" class="mt-2 text-2xl">🍽️</div>
+          </div>
+          
+          <div class="bg-blue-50 rounded-2xl p-4 text-center" id="child2">
+            <div class="text-4xl mb-2">🤒</div>
+            <p class="text-sm text-gray-600">Está enfermo</p>
+            <div id="child2-need" class="mt-2 text-2xl">💊</div>
+          </div>
+          
+          <div class="bg-green-50 rounded-2xl p-4 text-center" id="child3">
+            <div class="text-4xl mb-2">😟</div>
+            <p class="text-sm text-gray-600">Tiene sed</p>
+            <div id="child3-need" class="mt-2 text-2xl">💧</div>
+          </div>
+        </div>
+        
+        <div class="flex justify-center gap-6">
+          <div class="drag-item text-4xl p-2 bg-white rounded-xl shadow-lg cursor-pointer" draggable="true" ondragstart="dragItem(event, 'food')" onclick="giveItem('food')">🍎</div>
+          <div class="drag-item text-4xl p-2 bg-white rounded-xl shadow-lg cursor-pointer" draggable="true" ondragstart="dragItem(event, 'medicine')" onclick="giveItem('medicine')">💊</div>
+          <div class="drag-item text-4xl p-2 bg-white rounded-xl shadow-lg cursor-pointer" draggable="true" ondragstart="dragItem(event, 'water')" onclick="giveItem('water')">🥤</div>
+        </div>
+        
+        <p class="text-center text-sm text-gray-500 mt-4">Haz clic en los objetos para entregarlos</p>
+      `;
+    }
+
+    let derechosState = { food: false, medicine: false, water: false };
+
+    function giveItem(item) {
+      if (item === 'food' && !derechosState.food) {
+        document.querySelector('#child1 div:first-child').textContent = '😊';
+        document.getElementById('child1-need').textContent = '✅';
+        derechosState.food = true;
+        addStar();
+      } else if (item === 'medicine' && !derechosState.medicine) {
+        document.querySelector('#child2 div:first-child').textContent = '😊';
+        document.getElementById('child2-need').textContent = '✅';
+        derechosState.medicine = true;
+        addStar();
+      } else if (item === 'water' && !derechosState.water) {
+        document.querySelector('#child3 div:first-child').textContent = '😊';
+        document.getElementById('child3-need').textContent = '✅';
+        derechosState.water = true;
+        addStar();
+      }
+      
+      if (derechosState.food && derechosState.medicine && derechosState.water) {
+        setTimeout(() => showSuccess('¡Todos los niños tienen sus derechos cubiertos!'), 500);
+      }
+    }
+
+    function dragItem(e, type) {
+      e.dataTransfer.setData('text/plain', type);
+    }
+
+    // Game 6: Escudo del Respeto
+    function renderEscudoRespeto() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🛡️ Un niño está molestando a otro. ¡Elige la frase correcta!</p>
+        </div>
+        
+        <div class="bg-gray-100 rounded-2xl p-4 mb-6">
+          <div class="flex justify-center items-center gap-4">
+            <div class="text-center">
+              <div class="text-4xl">😢</div>
+              <p class="text-xs text-gray-600">Ana</p>
+            </div>
+            <div class="bg-white rounded-xl p-2 text-sm">
+              <span id="bully-text">"¡Tu dibujo está feo!"</span>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl">😠</div>
+              <p class="text-xs text-gray-600">Pedro</p>
+            </div>
+          </div>
+        </div>
+        
+        <p class="text-center text-gray-600 mb-4">¿Qué frase usarías para detener esto?</p>
+        
+        <div class="space-y-3" id="phrase-options">
+          <div class="bubble-option" onclick="selectPhrase(this, false)">
+            <p>"¡Tú eres más feo!"</p>
+          </div>
+          <div class="bubble-option" onclick="selectPhrase(this, true)">
+            <p>"Todos los dibujos son especiales. No está bien burlarse."</p>
+          </div>
+          <div class="bubble-option" onclick="selectPhrase(this, false)">
+            <p>"No me importa, no es mi problema."</p>
+          </div>
+        </div>
+        
+        <div id="escudo-result" class="mt-4 text-center"></div>
+      `;
+    }
+
+    function selectPhrase(element, isCorrect) {
+      document.querySelectorAll('.bubble-option').forEach(el => {
+        el.classList.remove('correct', 'incorrect');
+        el.style.pointerEvents = 'none';
+      });
+      
+      if (isCorrect) {
+        element.classList.add('correct');
+        document.getElementById('escudo-result').innerHTML = '<p class="text-green-600 font-bold">¡Excelente! Esa es una respuesta respetuosa 💚</p>';
+        gameState.score = 3;
+        updateStars();
+        setTimeout(() => showSuccess('¡Usaste el escudo del respeto correctamente!'), 1000);
+      } else {
+        element.classList.add('incorrect');
+        document.getElementById('escudo-result').innerHTML = '<p class="text-red-600 font-bold">Esa respuesta no ayuda. Intenta ser amable. 💭</p>';
+        setTimeout(() => {
+          document.querySelectorAll('.bubble-option').forEach(el => {
+            el.classList.remove('incorrect');
+            el.style.pointerEvents = 'auto';
+          });
+        }, 1500);
+      }
+    }
+
+    // Game 7: Semáforo del Cuerpo
+    function renderSemaforoCuerpo() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🚦 ¿Este contacto es apropiado? ¡Usa el semáforo!</p>
+        </div>
+        
+        <div class="bg-gray-800 rounded-2xl p-4 w-32 mx-auto mb-6">
+          <div class="flex flex-col items-center gap-2">
+            <button class="semaforo-btn bg-red-500" style="color: #ef4444" onclick="selectSemaforo('red')"></button>
+            <button class="semaforo-btn bg-yellow-500" style="color: #eab308" onclick="selectSemaforo('yellow')"></button>
+            <button class="semaforo-btn bg-green-500" style="color: #22c55e" onclick="selectSemaforo('green')"></button>
+          </div>
+        </div>
+        
+        <div id="semaforo-scenario" class="bg-blue-50 rounded-2xl p-4 text-center mb-4">
+          <p class="text-lg" id="scenario-text">Un abrazo de tu mamá cuando llegas de la escuela</p>
+          <p class="text-4xl mt-2" id="scenario-emoji">🤗</p>
+        </div>
+        
+        <div class="flex justify-center gap-4 text-sm">
+          <div class="text-center">
+            <div class="w-6 h-6 rounded-full bg-green-500 mx-auto mb-1"></div>
+            <p class="text-gray-600">Está bien</p>
+          </div>
+          <div class="text-center">
+            <div class="w-6 h-6 rounded-full bg-yellow-500 mx-auto mb-1"></div>
+            <p class="text-gray-600">No estoy seguro</p>
+          </div>
+          <div class="text-center">
+            <div class="w-6 h-6 rounded-full bg-red-500 mx-auto mb-1"></div>
+            <p class="text-gray-600">No está bien</p>
+          </div>
+        </div>
+        
+        <div id="semaforo-result" class="mt-4 text-center"></div>
+      `;
+    }
+
+    const semaforoScenarios = [
+      { text: 'Un abrazo de tu mamá cuando llegas de la escuela', emoji: '🤗', answer: 'green' },
+      { text: 'Un desconocido quiere darte un beso', emoji: '👤', answer: 'red' },
+      { text: 'Tu doctor te revisa con tu mamá presente', emoji: '👨‍⚕️', answer: 'green' },
+      { text: 'Alguien quiere tocarte y te dice que es un secreto', emoji: '🤫', answer: 'red' },
+      { text: 'Un apretón de manos al conocer a alguien', emoji: '🤝', answer: 'green' }
+    ];
+
+    let semaforoIndex = 0;
+
+    function selectSemaforo(color) {
+      const scenario = semaforoScenarios[semaforoIndex];
+      const resultDiv = document.getElementById('semaforo-result');
+      
+      document.querySelectorAll('.semaforo-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      if (color === scenario.answer) {
+        resultDiv.innerHTML = '<p class="text-green-600 font-bold">¡Correcto! 🌟</p>';
+        addStar();
+        
+        semaforoIndex++;
+        if (semaforoIndex >= 3) {
+          setTimeout(() => showSuccess('¡Aprendiste sobre los límites de tu cuerpo!'), 1000);
+        } else {
+          setTimeout(() => {
+            const next = semaforoScenarios[semaforoIndex];
+            document.getElementById('scenario-text').textContent = next.text;
+            document.getElementById('scenario-emoji').textContent = next.emoji;
+            resultDiv.innerHTML = '';
+            document.querySelectorAll('.semaforo-btn').forEach(btn => btn.classList.remove('active'));
+          }, 1000);
+        }
+      } else {
+        resultDiv.innerHTML = '<p class="text-orange-600 font-bold">Piénsalo otra vez... 🤔</p>';
+      }
+    }
+
+    // Game 8: Equipo Escolar
+    function renderEquipoEscolar() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🧹 ¡Asigna una tarea de limpieza a cada niño!</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div class="text-center">
+            <div class="text-4xl mb-2">👧</div>
+            <p class="text-sm font-semibold">María</p>
+            <div id="task-maria" class="task-slot bg-gray-100 rounded-lg p-2 mt-2 min-h-12 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="assignTask(event, 'maria')">
+              <span class="text-gray-400 text-xs">Tarea</span>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl mb-2">👦</div>
+            <p class="text-sm font-semibold">Carlos</p>
+            <div id="task-carlos" class="task-slot bg-gray-100 rounded-lg p-2 mt-2 min-h-12 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="assignTask(event, 'carlos')">
+              <span class="text-gray-400 text-xs">Tarea</span>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl mb-2">👧</div>
+            <p class="text-sm font-semibold">Ana</p>
+            <div id="task-ana" class="task-slot bg-gray-100 rounded-lg p-2 mt-2 min-h-12 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="assignTask(event, 'ana')">
+              <span class="text-gray-400 text-xs">Tarea</span>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl mb-2">👦</div>
+            <p class="text-sm font-semibold">Luis</p>
+            <div id="task-luis" class="task-slot bg-gray-100 rounded-lg p-2 mt-2 min-h-12 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="assignTask(event, 'luis')">
+              <span class="text-gray-400 text-xs">Tarea</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex justify-center gap-4 flex-wrap">
+          <div id="task-barrer" class="task-card bg-yellow-100 rounded-xl p-3 text-center" draggable="true" ondragstart="dragTask(event, 'barrer')" onclick="selectTask('barrer')">
+            <div class="text-2xl">🧹</div>
+            <p class="text-xs">Barrer</p>
+          </div>
+          <div id="task-borrar" class="task-card bg-green-100 rounded-xl p-3 text-center" draggable="true" ondragstart="dragTask(event, 'borrar')" onclick="selectTask('borrar')">
+            <div class="text-2xl">🧽</div>
+            <p class="text-xs">Borrar pizarra</p>
+          </div>
+          <div id="task-ordenar" class="task-card bg-blue-100 rounded-xl p-3 text-center" draggable="true" ondragstart="dragTask(event, 'ordenar')" onclick="selectTask('ordenar')">
+            <div class="text-2xl">📚</div>
+            <p class="text-xs">Ordenar libros</p>
+          </div>
+          <div id="task-regar" class="task-card bg-pink-100 rounded-xl p-3 text-center" draggable="true" ondragstart="dragTask(event, 'regar')" onclick="selectTask('regar')">
+            <div class="text-2xl">🌱</div>
+            <p class="text-xs">Regar plantas</p>
+          </div>
+        </div>
+        
+        <p class="text-center text-sm text-gray-500 mt-4">Haz clic en una tarea y luego en un niño para asignarla</p>
+      `;
+    }
+
+    let equipoState = { maria: null, carlos: null, ana: null, luis: null };
+    let selectedTask = null;
+
+    function dragTask(e, task) {
+      e.dataTransfer.setData('text/plain', task);
+    }
+
+    function selectTask(task) {
+      selectedTask = task;
+      document.querySelectorAll('.task-card').forEach(card => card.classList.remove('ring-2', 'ring-purple-500'));
+      document.getElementById(`task-${task}`).classList.add('ring-2', 'ring-purple-500');
+    }
+
+    function assignTask(e, child) {
+      e.preventDefault();
+      const task = e.dataTransfer ? e.dataTransfer.getData('text/plain') : selectedTask;
+      
+      if (!task || equipoState[child]) return;
+      
+      const taskEmojis = { barrer: '🧹', borrar: '🧽', ordenar: '📚', regar: '🌱' };
+      document.getElementById(`task-${child}`).innerHTML = `<span class="text-2xl">${taskEmojis[task]}</span>`;
+      document.getElementById(`task-${task}`).style.opacity = '0.3';
+      document.getElementById(`task-${task}`).style.pointerEvents = 'none';
+      equipoState[child] = task;
+      
+      const assigned = Object.values(equipoState).filter(v => v).length;
+      if (assigned === 2) addStar();
+      if (assigned === 4) {
+        gameState.score = 3;
+        updateStars();
+        setTimeout(() => showSuccess('¡Todos colaboraron en la limpieza!'), 500);
+      }
+      
+      selectedTask = null;
+      document.querySelectorAll('.task-card').forEach(card => card.classList.remove('ring-2', 'ring-purple-500'));
+    }
+
+    // Game 9: Tren de mi Vida
+    function renderTrenVida() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🚂 ¡Ordena los vagones de tu vida del más antiguo al más reciente!</p>
+        </div>
+        
+        <div class="flex items-end justify-center gap-2 mb-6">
+          <div class="text-4xl">🚂</div>
+          <div id="wagon-slots" class="flex gap-2">
+            <div class="wagon-slot w-16 h-20 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="dropWagon(event, 0)">1</div>
+            <div class="wagon-slot w-16 h-20 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="dropWagon(event, 1)">2</div>
+            <div class="wagon-slot w-16 h-20 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="dropWagon(event, 2)">3</div>
+            <div class="wagon-slot w-16 h-20 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="dropWagon(event, 3)">4</div>
+          </div>
+        </div>
+        
+        <p class="text-center text-sm text-gray-500 mb-4">Arrastra los vagones en orden: del más viejo al más nuevo</p>
+        
+        <div id="wagon-options" class="flex justify-center gap-4 flex-wrap">
+          <div class="wagon bg-yellow-200 rounded-lg p-3 text-center cursor-move" draggable="true" ondragstart="dragWagon(event, 'school')" data-order="3">
+            <div class="text-3xl">🎒</div>
+            <p class="text-xs">Entré a la escuela</p>
+          </div>
+          <div class="wagon bg-pink-200 rounded-lg p-3 text-center cursor-move" draggable="true" ondragstart="dragWagon(event, 'baby')" data-order="0">
+            <div class="text-3xl">👶</div>
+            <p class="text-xs">Nací</p>
+          </div>
+          <div class="wagon bg-green-200 rounded-lg p-3 text-center cursor-move" draggable="true" ondragstart="dragWagon(event, 'walk')" data-order="1">
+            <div class="text-3xl">🚶</div>
+            <p class="text-xs">Aprendí a caminar</p>
+          </div>
+          <div class="wagon bg-blue-200 rounded-lg p-3 text-center cursor-move" draggable="true" ondragstart="dragWagon(event, 'talk')" data-order="2">
+            <div class="text-3xl">🗣️</div>
+            <p class="text-xs">Aprendí a hablar</p>
+          </div>
+        </div>
+        
+        <button onclick="checkTrenOrder()" class="btn-game w-full mt-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-full font-bold">
+          ¡Verificar orden! ✓
+        </button>
+      `;
+    }
+
+    let trenState = [null, null, null, null];
+    const correctOrder = ['baby', 'walk', 'talk', 'school'];
+
+    function dragWagon(e, wagon) {
+      e.dataTransfer.setData('text/plain', wagon);
+    }
+
+    function dropWagon(e, slot) {
+      e.preventDefault();
+      const wagon = e.dataTransfer.getData('text/plain');
+      
+      const wagonEmojis = { baby: '👶', walk: '🚶', talk: '🗣️', school: '🎒' };
+      const slotEl = document.querySelectorAll('.wagon-slot')[slot];
+      slotEl.innerHTML = `<span class="text-3xl">${wagonEmojis[wagon]}</span>`;
+      slotEl.classList.add('bg-amber-100');
+      trenState[slot] = wagon;
+      
+      // Hide the dragged wagon
+      document.querySelectorAll('.wagon').forEach(w => {
+        if (w.querySelector('div').textContent === wagonEmojis[wagon]) {
+          w.style.opacity = '0.3';
+          w.draggable = false;
+        }
+      });
+    }
+
+    function checkTrenOrder() {
+      let correct = 0;
+      trenState.forEach((wagon, i) => {
+        const slotEl = document.querySelectorAll('.wagon-slot')[i];
+        if (wagon === correctOrder[i]) {
+          slotEl.classList.add('border-green-500', 'bg-green-100');
+          correct++;
+        } else if (wagon) {
+          slotEl.classList.add('border-red-500', 'bg-red-100');
+        }
+      });
+      
+      gameState.score = correct;
+      updateStars();
+      
+      if (correct === 4) {
+        setTimeout(() => showSuccess('¡Ordenaste tu historia de vida correctamente!'), 500);
+      }
+    }
+
+    // Game 10: Burbuja de Diálogo
+    function renderBurbujaDialogo() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">💬 Dos amigos se pelearon por un juguete. ¡Ayúdalos a resolver el conflicto!</p>
+        </div>
+        
+        <div class="bg-amber-50 rounded-2xl p-4 mb-6">
+          <div class="flex justify-around items-center">
+            <div class="text-center">
+              <div class="text-4xl">😠</div>
+              <p class="text-sm">Sofía</p>
+            </div>
+            <div class="text-4xl">🧸</div>
+            <div class="text-center">
+              <div class="text-4xl">😤</div>
+              <p class="text-sm">Diego</p>
+            </div>
+          </div>
+          <p class="text-center text-sm text-gray-600 mt-2">"¡Es mío!" - "¡No, es mío!"</p>
+        </div>
+        
+        <p class="text-center text-gray-600 mb-4">¿Qué frase ayudaría a resolver este conflicto?</p>
+        
+        <div class="space-y-3" id="dialog-options">
+          <div class="bubble-option" onclick="selectDialog(this, false)">
+            <p>"Vamos a quitárselo a uno de los dos"</p>
+          </div>
+          <div class="bubble-option" onclick="selectDialog(this, true)">
+            <p>"¿Qué tal si juegan juntos o se turnan?"</p>
+          </div>
+          <div class="bubble-option" onclick="selectDialog(this, false)">
+            <p>"Que se peleen hasta que uno gane"</p>
+          </div>
+        </div>
+        
+        <div id="dialog-result" class="mt-4 text-center"></div>
+      `;
+    }
+
+    function selectDialog(element, isCorrect) {
+      document.querySelectorAll('#dialog-options .bubble-option').forEach(el => {
+        el.classList.remove('correct', 'incorrect');
+        el.style.pointerEvents = 'none';
+      });
+      
+      if (isCorrect) {
+        element.classList.add('correct');
+        document.getElementById('dialog-result').innerHTML = '<p class="text-green-600 font-bold">¡Perfecto! El diálogo resuelve conflictos 🕊️</p>';
+        gameState.score = 3;
+        updateStars();
+        setTimeout(() => showSuccess('¡Usaste el diálogo para crear paz!'), 1000);
+      } else {
+        element.classList.add('incorrect');
+        document.getElementById('dialog-result').innerHTML = '<p class="text-red-600 font-bold">Esa opción no ayuda. Busca una solución pacífica. 💭</p>';
+        setTimeout(() => {
+          document.querySelectorAll('#dialog-options .bubble-option').forEach(el => {
+            el.classList.remove('incorrect');
+            el.style.pointerEvents = 'auto';
+          });
+        }, 1500);
+      }
+    }
+
+    // Game 11: Camino Seguro
+    function renderCaminoSeguro() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🗺️ ¡Guía a Pepito a la escuela pasando por los lugares correctos!</p>
+        </div>
+        
+        <div class="relative bg-gradient-to-b from-green-100 to-green-200 rounded-2xl p-4 min-h-64">
+          <div class="grid grid-cols-5 gap-2">
+            <!-- Row 1 -->
+            <div class="path-step bg-blue-300 rounded-lg p-2 text-center text-2xl current" id="pos-0" onclick="moveTo(0)">🏠</div>
+            <div class="path-step bg-gray-200 rounded-lg p-2 text-center text-2xl" id="pos-1" onclick="moveTo(1)">🌳</div>
+            <div class="path-step bg-yellow-200 rounded-lg p-2 text-center text-2xl" id="pos-2" onclick="moveTo(2)">🏪</div>
+            <div class="path-step bg-gray-200 rounded-lg p-2 text-center text-2xl" id="pos-3" onclick="moveTo(3)">🌳</div>
+            <div class="path-step bg-gray-200 rounded-lg p-2 text-center text-2xl" id="pos-4" onclick="moveTo(4)">🌳</div>
+            
+            <!-- Row 2 -->
+            <div class="path-step bg-gray-200 rounded-lg p-2 text-center text-2xl" id="pos-5" onclick="moveTo(5)">🌳</div>
+            <div class="path-step bg-gray-200 rounded-lg p-2 text-center text-2xl" id="pos-6" onclick="moveTo(6)">🚗</div>
+            <div class="path-step bg-purple-200 rounded-lg p-2 text-center text-2xl" id="pos-7" onclick="moveTo(7)">⛪</div>
+            <div class="path-step bg-gray-200 rounded-lg p-2 text-center text-2xl" id="pos-8" onclick="moveTo(8)">🌳</div>
+            <div class="path-step bg-orange-200 rounded-lg p-2 text-center text-2xl" id="pos-9" onclick="moveTo(9)">🏛️</div>
+            
+            <!-- Row 3 -->
+            <div class="path-step bg-gray-200 rounded-lg p-2 text-center text-2xl" id="pos-10" onclick="moveTo(10)">🌳</div>
+            <div class="path-step bg-pink-200 rounded-lg p-2 text-center text-2xl" id="pos-11" onclick="moveTo(11)">🏥</div>
+            <div class="path-step bg-gray-200 rounded-lg p-2 text-center text-2xl" id="pos-12" onclick="moveTo(12)">🌳</div>
+            <div class="path-step bg-cyan-200 rounded-lg p-2 text-center text-2xl" id="pos-13" onclick="moveTo(13)">🛝</div>
+            <div class="path-step bg-red-300 rounded-lg p-2 text-center text-2xl" id="pos-14" onclick="moveTo(14)">🏫</div>
+          </div>
+          
+          <div id="character-pos" class="absolute text-3xl transition-all duration-300" style="top: 16px; left: 16px;">🧒</div>
+        </div>
+        
+        <div class="mt-4 bg-white rounded-lg p-3">
+          <p class="text-sm text-gray-600">Ruta: Casa → <span id="route-progress">...</span> → Escuela</p>
+          <p class="text-xs text-gray-500 mt-1">Pasa por: Tienda 🏪, Plaza 🛝</p>
+        </div>
+      `;
+    }
+
+    let caminoState = { pos: 0, visited: [0], checkpoints: { store: false, plaza: false } };
+    const requiredPath = [2, 13]; // Store and plaza positions
+
+    function moveTo(pos) {
+      const currentPos = caminoState.pos;
+      const validMoves = getValidMoves(currentPos);
+      
+      if (validMoves.includes(pos) && !caminoState.visited.includes(pos)) {
+        caminoState.pos = pos;
+        caminoState.visited.push(pos);
+        
+        document.getElementById(`pos-${pos}`).classList.add('visited');
+        
+        // Check checkpoints
+        if (pos === 2) { caminoState.checkpoints.store = true; addStar(); }
+        if (pos === 13) { caminoState.checkpoints.plaza = true; addStar(); }
+        
+        // Update route display
+        updateRouteProgress();
+        
+        // Check if reached school
+        if (pos === 14 && caminoState.checkpoints.store && caminoState.checkpoints.plaza) {
+          addStar();
+          setTimeout(() => showSuccess('¡Llegaste a la escuela por el camino correcto!'), 500);
+        } else if (pos === 14) {
+          document.getElementById('route-progress').innerHTML += ' <span class="text-red-500">¡Te faltó pasar por algunos lugares!</span>';
+        }
+      }
+    }
+
+    function getValidMoves(pos) {
+      const moves = {
+        0: [1, 5], 1: [0, 2, 6], 2: [1, 3, 7], 3: [2, 4, 8], 4: [3, 9],
+        5: [0, 6, 10], 6: [1, 5, 7, 11], 7: [2, 6, 8, 12], 8: [3, 7, 9, 13], 9: [4, 8, 14],
+        10: [5, 11], 11: [6, 10, 12], 12: [7, 11, 13], 13: [8, 12, 14], 14: [9, 13]
+      };
+      return moves[pos] || [];
+    }
+
+    function updateRouteProgress() {
+      let progress = '';
+      if (caminoState.checkpoints.store) progress += '🏪 ';
+      if (caminoState.checkpoints.plaza) progress += '🛝 ';
+      document.getElementById('route-progress').textContent = progress || '...';
+    }
+
+    // Game 12: Hogar para Todos
+    function renderHogarTodos() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🍽️ ¡Reparte los platos para que todos ayuden a lavar!</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div class="text-center">
+            <div class="text-4xl mb-2">👨</div>
+            <p class="text-sm font-semibold">Papá</p>
+            <div id="slot-papa" class="person-slot mt-2 p-2 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="dropPlate(event, 'papa')">
+              <span class="text-gray-400 text-xs">Plato</span>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl mb-2">👩</div>
+            <p class="text-sm font-semibold">Mamá</p>
+            <div id="slot-mama" class="person-slot mt-2 p-2 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="dropPlate(event, 'mama')">
+              <span class="text-gray-400 text-xs">Plato</span>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl mb-2">👧</div>
+            <p class="text-sm font-semibold">Hermana</p>
+            <div id="slot-hermana" class="person-slot mt-2 p-2 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="dropPlate(event, 'hermana')">
+              <span class="text-gray-400 text-xs">Plato</span>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl mb-2">👦</div>
+            <p class="text-sm font-semibold">Tú</p>
+            <div id="slot-tu" class="person-slot mt-2 p-2 flex items-center justify-center"
+                 ondragover="handleDragOver(event)" ondrop="dropPlate(event, 'tu')">
+              <span class="text-gray-400 text-xs">Plato</span>
+            </div>
+          </div>
+        </div>
+        
+        <div id="plates-container" class="flex justify-center gap-4 flex-wrap">
+          <div class="plate-item text-4xl p-2 bg-white rounded-xl shadow cursor-move" draggable="true" ondragstart="dragPlate(event)">🍽️</div>
+          <div class="plate-item text-4xl p-2 bg-white rounded-xl shadow cursor-move" draggable="true" ondragstart="dragPlate(event)">🍽️</div>
+          <div class="plate-item text-4xl p-2 bg-white rounded-xl shadow cursor-move" draggable="true" ondragstart="dragPlate(event)">🍽️</div>
+          <div class="plate-item text-4xl p-2 bg-white rounded-xl shadow cursor-move" draggable="true" ondragstart="dragPlate(event)">🍽️</div>
+        </div>
+        
+        <p class="text-center text-sm text-gray-500 mt-4">Arrastra un plato a cada persona</p>
+      `;
+    }
+
+    let hogarState = { papa: false, mama: false, hermana: false, tu: false };
+
+    function dragPlate(e) {
+      e.dataTransfer.setData('text/plain', 'plate');
+      e.target.classList.add('opacity-50');
+    }
+
+    function dropPlate(e, person) {
+      e.preventDefault();
+      if (hogarState[person]) return;
+      
+      const slot = document.getElementById(`slot-${person}`);
+      slot.innerHTML = '<span class="text-3xl">🍽️✅</span>';
+      slot.classList.add('has-plate');
+      hogarState[person] = true;
+      
+      // Remove one plate
+      const plates = document.querySelectorAll('.plate-item:not(.opacity-50)');
+      if (plates.length > 0) {
+        plates[0].remove();
+      }
+      document.querySelectorAll('.plate-item.opacity-50').forEach(p => p.remove());
+      
+      const assigned = Object.values(hogarState).filter(v => v).length;
+      if (assigned === 2) addStar();
+      if (assigned === 4) {
+        gameState.score = 3;
+        updateStars();
+        setTimeout(() => showSuccess('¡Todos ayudaron! La equidad hace un hogar feliz.'), 500);
+      }
+    }
+
+    // Game 13: Burbujas de Jabón
+    function renderBubblesJabon() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🧼 ¡Atrapa las burbujas de jabón para lavar tus manos!</p>
+        </div>
+        
+        <div id="bubble-game" class="relative bg-gradient-to-b from-blue-100 to-blue-200 rounded-2xl min-h-64 overflow-hidden">
+          <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+            <div class="text-5xl" id="hands-display">🙌</div>
+            <div id="soap-bar" class="h-3 bg-gray-200 rounded-full w-48 mt-2">
+              <div id="soap-progress" class="h-3 bg-blue-500 rounded-full transition-all" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex justify-center gap-4 mt-4">
+          <button onclick="catchBubble()" class="btn-game bg-blue-500 text-white px-8 py-4 rounded-full font-bold text-xl shadow-lg">
+            🧼 ¡Atrapar!
+          </button>
+        </div>
+        
+        <div class="text-center mt-4">
+          <p class="text-lg font-bold text-blue-600">Jabón: <span id="soap-count">0</span>/5</p>
+        </div>
+      `;
+    }
+
+    let bubbleState = { soap: 0, maxSoap: 5 };
+
+    function catchBubble() {
+      if (bubbleState.soap < bubbleState.maxSoap) {
+        bubbleState.soap++;
+        
+        // Create bubble animation
+        const game = document.getElementById('bubble-game');
+        const bubble = document.createElement('div');
+        bubble.className = 'absolute text-4xl';
+        bubble.textContent = '🧼';
+        bubble.style.left = `${Math.random() * 80 + 10}%`;
+        bubble.style.top = '20%';
+        bubble.style.animation = 'confetti 0.5s ease-out forwards';
+        game.appendChild(bubble);
+        setTimeout(() => bubble.remove(), 500);
+        
+        // Update progress
+        document.getElementById('soap-count').textContent = bubbleState.soap;
+        document.getElementById('soap-progress').style.width = `${(bubbleState.soap / bubbleState.maxSoap) * 100}%`;
+        
+        if (bubbleState.soap === 2) addStar();
+        if (bubbleState.soap === 4) addStar();
+        
+        if (bubbleState.soap === bubbleState.maxSoap) {
+          document.getElementById('hands-display').textContent = '🧴👐✨';
+          addStar();
+          setTimeout(() => showSuccess('¡Manos limpias! La higiene nos protege.'), 500);
+        }
+      }
+    }
+
+    // Game 14: Cápsula del Tiempo
+    function renderCapsulaTiempo() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">⏰ ¡Ordena los objetos del más antiguo al más nuevo!</p>
+        </div>
+        
+        <div class="flex justify-center gap-2 mb-6">
+          <div class="time-slot w-20 h-24 bg-amber-50 rounded-lg border-2 border-amber-300 flex flex-col items-center justify-center"
+               onclick="placeTimeItem(0)">
+            <span class="text-xs text-gray-500">Antiguo</span>
+            <span id="time-0" class="text-3xl"></span>
+          </div>
+          <div class="text-2xl self-center">→</div>
+          <div class="time-slot w-20 h-24 bg-amber-50 rounded-lg border-2 border-amber-300 flex flex-col items-center justify-center"
+               onclick="placeTimeItem(1)">
+            <span id="time-1" class="text-3xl"></span>
+          </div>
+          <div class="text-2xl self-center">→</div>
+          <div class="time-slot w-20 h-24 bg-amber-50 rounded-lg border-2 border-amber-300 flex flex-col items-center justify-center"
+               onclick="placeTimeItem(2)">
+            <span id="time-2" class="text-3xl"></span>
+          </div>
+          <div class="text-2xl self-center">→</div>
+          <div class="time-slot w-20 h-24 bg-amber-50 rounded-lg border-2 border-amber-300 flex flex-col items-center justify-center"
+               onclick="placeTimeItem(3)">
+            <span class="text-xs text-gray-500">Nuevo</span>
+            <span id="time-3" class="text-3xl"></span>
+          </div>
+        </div>
+        
+        <div id="time-items" class="flex justify-center gap-4 flex-wrap">
+          <div class="time-item bg-white rounded-xl p-3 shadow cursor-pointer" onclick="selectTimeItem('phone', '📱')" data-order="3">
+            <div class="text-3xl">📱</div>
+            <p class="text-xs">Teléfono</p>
+          </div>
+          <div class="time-item bg-white rounded-xl p-3 shadow cursor-pointer" onclick="selectTimeItem('radio', '📻')" data-order="1">
+            <div class="text-3xl">📻</div>
+            <p class="text-xs">Radio viejo</p>
+          </div>
+          <div class="time-item bg-white rounded-xl p-3 shadow cursor-pointer" onclick="selectTimeItem('tv', '📺')" data-order="2">
+            <div class="text-3xl">📺</div>
+            <p class="text-xs">Televisión</p>
+          </div>
+          <div class="time-item bg-white rounded-xl p-3 shadow cursor-pointer" onclick="selectTimeItem('scroll', '📜')" data-order="0">
+            <div class="text-3xl">📜</div>
+            <p class="text-xs">Pergamino</p>
+          </div>
+        </div>
+        
+        <button onclick="checkTimeOrder()" class="btn-game w-full mt-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white py-3 rounded-full font-bold">
+          ¡Verificar! ✓
+        </button>
+      `;
+    }
+
+    let timeState = { selected: null, placed: [null, null, null, null] };
+    const timeCorrect = ['scroll', 'radio', 'tv', 'phone'];
+    const timeEmojis = { scroll: '📜', radio: '📻', tv: '📺', phone: '📱' };
+
+    function selectTimeItem(item, emoji) {
+      timeState.selected = { item, emoji };
+      document.querySelectorAll('.time-item').forEach(el => el.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+    }
+
+    function placeTimeItem(slot) {
+      if (timeState.selected && !timeState.placed[slot]) {
+        timeState.placed[slot] = timeState.selected.item;
+        document.getElementById(`time-${slot}`).textContent = timeState.selected.emoji;
+        
+        // Hide selected item
+        document.querySelectorAll('.time-item.selected').forEach(el => {
+          el.style.opacity = '0.3';
+          el.style.pointerEvents = 'none';
+        });
+        
+        timeState.selected = null;
+      }
+    }
+
+    function checkTimeOrder() {
+      let correct = 0;
+      timeState.placed.forEach((item, i) => {
+        const slotEl = document.querySelectorAll('.time-slot')[i];
+        if (item === timeCorrect[i]) {
+          slotEl.classList.add('border-green-500', 'bg-green-50');
+          correct++;
+        } else if (item) {
+          slotEl.classList.add('border-red-500', 'bg-red-50');
+        }
+      });
+      
+      gameState.score = Math.min(3, correct);
+      updateStars();
+      
+      if (correct === 4) {
+        setTimeout(() => showSuccess('¡Ordenaste la historia correctamente!'), 500);
+      }
+    }
+
+    // Game 15: Fiesta del Pueblo
+    function renderFiestaPueblo() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🎉 ¡Elige la música y comida típica de tu región!</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-lg font-bold text-center mb-3">🎵 Música</h3>
+            <div class="space-y-2">
+              <div class="region-btn bg-red-100 rounded-xl p-3 flex items-center gap-3" onclick="selectMusic(this, 'mariachi')">
+                <span class="text-2xl">🎺</span>
+                <span>Mariachi</span>
+              </div>
+              <div class="region-btn bg-yellow-100 rounded-xl p-3 flex items-center gap-3" onclick="selectMusic(this, 'banda')">
+                <span class="text-2xl">🥁</span>
+                <span>Banda</span>
+              </div>
+              <div class="region-btn bg-green-100 rounded-xl p-3 flex items-center gap-3" onclick="selectMusic(this, 'huapango')">
+                <span class="text-2xl">🎸</span>
+                <span>Huapango</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-bold text-center mb-3">🍽️ Comida</h3>
+            <div class="space-y-2">
+              <div class="region-btn bg-orange-100 rounded-xl p-3 flex items-center gap-3" onclick="selectFood(this, 'tacos')">
+                <span class="text-2xl">🌮</span>
+                <span>Tacos</span>
+              </div>
+              <div class="region-btn bg-pink-100 rounded-xl p-3 flex items-center gap-3" onclick="selectFood(this, 'tamales')">
+                <span class="text-2xl">🫔</span>
+                <span>Tamales</span>
+              </div>
+              <div class="region-btn bg-purple-100 rounded-xl p-3 flex items-center gap-3" onclick="selectFood(this, 'mole')">
+                <span class="text-2xl">🍲</span>
+                <span>Mole</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="fiesta-preview" class="mt-6 bg-gradient-to-r from-green-100 via-white to-red-100 rounded-2xl p-4 text-center">
+          <p class="text-gray-600">Tu fiesta tendrá:</p>
+          <div class="flex justify-center gap-4 mt-2">
+            <span id="fiesta-music" class="text-3xl">❓</span>
+            <span id="fiesta-food" class="text-3xl">❓</span>
+          </div>
+        </div>
+        
+        <button onclick="startFiesta()" class="btn-game w-full mt-4 bg-gradient-to-r from-green-500 via-white to-red-500 text-gray-800 py-3 rounded-full font-bold">
+          ¡Celebrar! 🎊
+        </button>
+      `;
+    }
+
+    let fiestaState = { music: null, food: null };
+    const musicEmojis = { mariachi: '🎺', banda: '🥁', huapango: '🎸' };
+    const foodEmojis = { tacos: '🌮', tamales: '🫔', mole: '🍲' };
+
+    function selectMusic(el, type) {
+      document.querySelectorAll('.region-btn').forEach(btn => {
+        if (btn.querySelector('span:last-child').textContent.toLowerCase().includes('mariachi') ||
+            btn.querySelector('span:last-child').textContent.toLowerCase().includes('banda') ||
+            btn.querySelector('span:last-child').textContent.toLowerCase().includes('huapango')) {
+          btn.classList.remove('selected');
+        }
+      });
+      el.classList.add('selected');
+      fiestaState.music = type;
+      document.getElementById('fiesta-music').textContent = musicEmojis[type];
+      if (!fiestaState.musicStar) { addStar(); fiestaState.musicStar = true; }
+    }
+
+    function selectFood(el, type) {
+      document.querySelectorAll('.region-btn').forEach(btn => {
+        if (btn.querySelector('span:last-child').textContent.toLowerCase().includes('tacos') ||
+            btn.querySelector('span:last-child').textContent.toLowerCase().includes('tamales') ||
+            btn.querySelector('span:last-child').textContent.toLowerCase().includes('mole')) {
+          btn.classList.remove('selected');
+        }
+      });
+      el.classList.add('selected');
+      fiestaState.food = type;
+      document.getElementById('fiesta-food').textContent = foodEmojis[type];
+      if (!fiestaState.foodStar) { addStar(); fiestaState.foodStar = true; }
+    }
+
+    function startFiesta() {
+      if (fiestaState.music && fiestaState.food) {
+        showSuccess('¡Celebraste con las tradiciones de tu comunidad!');
+      }
+    }
+
+    // Game 16: Todo sobre Mí
+    function renderTodoSobreMi() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">⭐ ¡Selecciona 3 hobbies que te gusten!</p>
+        </div>
+        
+        <div class="grid grid-cols-3 md:grid-cols-4 gap-3" id="hobbies-grid">
+          <div class="hobby-card bg-blue-50 rounded-xl p-3 text-center" onclick="toggleHobby(this)">
+            <div class="text-3xl">⚽</div>
+            <p class="text-xs">Fútbol</p>
+          </div>
+          <div class="hobby-card bg-pink-50 rounded-xl p-3 text-center" onclick="toggleHobby(this)">
+            <div class="text-3xl">🎨</div>
+            <p class="text-xs">Dibujar</p>
+          </div>
+          <div class="hobby-card bg-green-50 rounded-xl p-3 text-center" onclick="toggleHobby(this)">
+            <div class="text-3xl">📚</div>
+            <p class="text-xs">Leer</p>
+          </div>
+          <div class="hobby-card bg-yellow-50 rounded-xl p-3 text-center" onclick="toggleHobby(this)">
+            <div class="text-3xl">🎮</div>
+            <p class="text-xs">Videojuegos</p>
+          </div>
+          <div class="hobby-card bg-purple-50 rounded-xl p-3 text-center" onclick="toggleHobby(this)">
+            <div class="text-3xl">🎵</div>
+            <p class="text-xs">Música</p>
+          </div>
+          <div class="hobby-card bg-orange-50 rounded-xl p-3 text-center" onclick="toggleHobby(this)">
+            <div class="text-3xl">🏊</div>
+            <p class="text-xs">Nadar</p>
+          </div>
+          <div class="hobby-card bg-cyan-50 rounded-xl p-3 text-center" onclick="toggleHobby(this)">
+            <div class="text-3xl">🐕</div>
+            <p class="text-xs">Mascotas</p>
+          </div>
+          <div class="hobby-card bg-red-50 rounded-xl p-3 text-center" onclick="toggleHobby(this)">
+            <div class="text-3xl">🍳</div>
+            <p class="text-xs">Cocinar</p>
+          </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+          <p class="text-gray-600">Seleccionados: <span id="hobby-count">0</span>/3</p>
+          <div id="selected-hobbies" class="flex justify-center gap-2 mt-2 min-h-12"></div>
+        </div>
+        
+        <button onclick="finishHobbies()" class="btn-game w-full mt-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-full font-bold">
+          ¡Este soy yo! ⭐
+        </button>
+      `;
+    }
+
+    let hobbyState = { selected: [] };
+
+    function toggleHobby(el) {
+      const emoji = el.querySelector('div').textContent;
+      
+      if (el.classList.contains('selected')) {
+        el.classList.remove('selected');
+        hobbyState.selected = hobbyState.selected.filter(h => h !== emoji);
+      } else if (hobbyState.selected.length < 3) {
+        el.classList.add('selected');
+        hobbyState.selected.push(emoji);
+      }
+      
+      document.getElementById('hobby-count').textContent = hobbyState.selected.length;
+      document.getElementById('selected-hobbies').innerHTML = hobbyState.selected.map(h => `<span class="text-3xl">${h}</span>`).join('');
+      
+      if (hobbyState.selected.length === 1) addStar();
+      if (hobbyState.selected.length === 2) addStar();
+    }
+
+    function finishHobbies() {
+      if (hobbyState.selected.length === 3) {
+        addStar();
+        showSuccess('¡Eres único y especial con tus gustos!');
+      }
+    }
+
+    // Game 17: Reglas de Oro
+    function renderReglasOro() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">📜 ¡Elige 3 reglas para que el salón esté feliz!</p>
+        </div>
+        
+        <div class="space-y-3" id="rules-list">
+          <div class="rule-card bg-green-50 rounded-xl p-3 flex items-center gap-3" onclick="toggleRule(this, true)">
+            <span class="text-2xl">🤝</span>
+            <span>Respetar a todos los compañeros</span>
+          </div>
+          <div class="rule-card bg-red-50 rounded-xl p-3 flex items-center gap-3" onclick="toggleRule(this, false)">
+            <span class="text-2xl">😠</span>
+            <span>Gritar cuando quiera hablar</span>
+          </div>
+          <div class="rule-card bg-green-50 rounded-xl p-3 flex items-center gap-3" onclick="toggleRule(this, true)">
+            <span class="text-2xl">✋</span>
+            <span>Levantar la mano para participar</span>
+          </div>
+          <div class="rule-card bg-red-50 rounded-xl p-3 flex items-center gap-3" onclick="toggleRule(this, false)">
+            <span class="text-2xl">🗑️</span>
+            <span>Tirar basura en el piso</span>
+          </div>
+          <div class="rule-card bg-green-50 rounded-xl p-3 flex items-center gap-3" onclick="toggleRule(this, true)">
+            <span class="text-2xl">🤗</span>
+            <span>Ayudar a quien lo necesite</span>
+          </div>
+          <div class="rule-card bg-green-50 rounded-xl p-3 flex items-center gap-3" onclick="toggleRule(this, true)">
+            <span class="text-2xl">📖</span>
+            <span>Escuchar cuando otros hablan</span>
+          </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+          <p class="text-gray-600">Reglas elegidas: <span id="rules-count">0</span>/3</p>
+        </div>
+        
+        <button onclick="finishRules()" class="btn-game w-full mt-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white py-3 rounded-full font-bold">
+          ¡Aplicar reglas! ✓
+        </button>
+      `;
+    }
+
+    let rulesState = { selected: 0, good: 0 };
+
+    function toggleRule(el, isGood) {
+      if (el.classList.contains('selected')) {
+        el.classList.remove('selected');
+        rulesState.selected--;
+        if (isGood) rulesState.good--;
+      } else if (rulesState.selected < 3) {
+        el.classList.add('selected');
+        rulesState.selected++;
+        if (isGood) rulesState.good++;
+      }
+      
+      document.getElementById('rules-count').textContent = rulesState.selected;
+      
+      if (rulesState.good === 1 && gameState.score === 0) addStar();
+      if (rulesState.good === 2 && gameState.score === 1) addStar();
+    }
+
+    function finishRules() {
+      if (rulesState.selected === 3 && rulesState.good === 3) {
+        addStar();
+        showSuccess('¡Excelentes reglas para una buena convivencia!');
+      } else if (rulesState.selected === 3) {
+        document.getElementById('rules-count').innerHTML = '<span class="text-red-500">Algunas reglas no son buenas</span>';
+      }
+    }
+
+    // Game 18: Juegos sin Género
+    function renderJuegosSinGenero() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🎮 ¡Todos los juguetes son para todos! Arrastra los juguetes a la caja compartida.</p>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-blue-100 rounded-xl p-3">
+            <p class="text-center text-sm font-semibold mb-2">Juguetes "de niños"</p>
+            <div class="flex flex-wrap gap-2 justify-center" id="boys-toys">
+              <span class="toy-item text-3xl cursor-grab" draggable="true" ondragstart="dragToy(event)">⚽</span>
+              <span class="toy-item text-3xl cursor-grab" draggable="true" ondragstart="dragToy(event)">🚗</span>
+              <span class="toy-item text-3xl cursor-grab" draggable="true" ondragstart="dragToy(event)">🦖</span>
+            </div>
+          </div>
+          
+          <div class="bg-pink-100 rounded-xl p-3">
+            <p class="text-center text-sm font-semibold mb-2">Juguetes "de niñas"</p>
+            <div class="flex flex-wrap gap-2 justify-center" id="girls-toys">
+              <span class="toy-item text-3xl cursor-grab" draggable="true" ondragstart="dragToy(event)">🎀</span>
+              <span class="toy-item text-3xl cursor-grab" draggable="true" ondragstart="dragToy(event)">🧸</span>
+              <span class="toy-item text-3xl cursor-grab" draggable="true" ondragstart="dragToy(event)">👑</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="shared-box bg-purple-50 p-4 text-center" id="shared-toys"
+             ondragover="handleDragOver(event)" ondrop="dropToy(event)">
+          <p class="text-purple-600 font-semibold mb-2">🌈 Caja de TODOS</p>
+          <p class="text-xs text-gray-500">Arrastra los juguetes aquí</p>
+          <div id="shared-toys-display" class="flex flex-wrap gap-2 justify-center mt-2"></div>
+        </div>
+        
+        <p class="text-center text-sm text-gray-600 mt-4">Juguetes compartidos: <span id="toy-count">0</span>/6</p>
+      `;
+    }
+
+    let toyState = { count: 0 };
+
+    function dragToy(e) {
+      e.dataTransfer.setData('text/plain', e.target.textContent);
+      e.target.classList.add('opacity-50');
+    }
+
+    function dropToy(e) {
+      e.preventDefault();
+      const toy = e.dataTransfer.getData('text/plain');
+      
+      const display = document.getElementById('shared-toys-display');
+      const span = document.createElement('span');
+      span.className = 'text-3xl bounce-in';
+      span.textContent = toy;
+      display.appendChild(span);
+      
+      // Remove dragged toy
+      document.querySelectorAll('.toy-item.opacity-50').forEach(el => el.remove());
+      
+      toyState.count++;
+      document.getElementById('toy-count').textContent = toyState.count;
+      
+      if (toyState.count === 2) addStar();
+      if (toyState.count === 4) addStar();
+      if (toyState.count === 6) {
+        addStar();
+        setTimeout(() => showSuccess('¡Todos pueden jugar con cualquier juguete!'), 500);
+      }
+    }
+
+    // Game 19: Simón Dice Virtual
+    function renderSimonDice() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🤸 ¡Haz que el avatar haga lo que Simón dice!</p>
+        </div>
+        
+        <div class="bg-gradient-to-b from-sky-100 to-green-100 rounded-2xl p-6 text-center mb-6">
+          <div id="avatar" class="text-8xl transition-all duration-300">🧍</div>
+          <p id="simon-instruction" class="mt-4 text-xl font-bold text-gray-700">Simón dice: ¡Salta!</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <button onclick="doAction('jump')" class="simon-btn bg-yellow-400 hover:bg-yellow-500 rounded-xl p-4 text-center">
+            <div class="text-3xl">⬆️</div>
+            <p class="text-sm font-bold">Saltar</p>
+          </button>
+          <button onclick="doAction('crouch')" class="simon-btn bg-blue-400 hover:bg-blue-500 rounded-xl p-4 text-center">
+            <div class="text-3xl">⬇️</div>
+            <p class="text-sm font-bold">Agacharse</p>
+          </button>
+          <button onclick="doAction('wave')" class="simon-btn bg-green-400 hover:bg-green-500 rounded-xl p-4 text-center">
+            <div class="text-3xl">👋</div>
+            <p class="text-sm font-bold">Saludar</p>
+          </button>
+          <button onclick="doAction('spin')" class="simon-btn bg-pink-400 hover:bg-pink-500 rounded-xl p-4 text-center">
+            <div class="text-3xl">🔄</div>
+            <p class="text-sm font-bold">Girar</p>
+          </button>
+        </div>
+        
+        <div class="mt-4 text-center">
+          <p class="text-gray-600">Movimientos correctos: <span id="simon-score">0</span>/3</p>
+        </div>
+      `;
+    }
+
+    const simonActions = [
+      { action: 'jump', text: 'Simón dice: ¡Salta!', avatar: '🧗' },
+      { action: 'crouch', text: 'Simón dice: ¡Agáchate!', avatar: '🧎' },
+      { action: 'wave', text: 'Simón dice: ¡Saluda!', avatar: '🙋' }
+    ];
+    let simonState = { current: 0, score: 0 };
+
+    function doAction(action) {
+      const expected = simonActions[simonState.current];
+      const avatar = document.getElementById('avatar');
+      
+      if (action === expected.action) {
+        avatar.textContent = expected.avatar;
+        avatar.classList.add('wiggle');
+        setTimeout(() => avatar.classList.remove('wiggle'), 500);
+        
+        simonState.score++;
+        addStar();
+        document.getElementById('simon-score').textContent = simonState.score;
+        
+        if (simonState.score >= 3) {
+          setTimeout(() => showSuccess('¡Excelente! Moviste tu cuerpo como Simón dijo.'), 500);
+        } else {
+          simonState.current++;
+          setTimeout(() => {
+            avatar.textContent = '🧍';
+            document.getElementById('simon-instruction').textContent = simonActions[simonState.current].text;
+          }, 1000);
+        }
+      } else {
+        avatar.textContent = '❌';
+        setTimeout(() => {
+          avatar.textContent = '🧍';
+        }, 500);
+      }
+    }
+
+    // Game 20: ¡A Bañarse!
+    function renderABanarse() {
+      return `
+        <div class="text-center mb-4">
+          <p class="text-gray-700 font-semibold">🛁 ¡Arrastra los objetos para asear al personaje!</p>
+        </div>
+        
+        <div class="flex flex-col md:flex-row gap-6">
+          <div class="flex-1 bg-blue-100 rounded-2xl p-4 text-center">
+            <div id="bath-character" class="text-6xl mb-4">😅</div>
+            <div class="flex justify-center gap-2" id="bath-progress">
+              <div id="bath-soap" class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-xl"
+                   ondragover="handleDragOver(event)" ondrop="useBathItem(event, 'soap')">🧼</div>
+              <div id="bath-water" class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-xl"
+                   ondragover="handleDragOver(event)" ondrop="useBathItem(event, 'water')">💧</div>
+              <div id="bath-towel" class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-xl"
+                   ondragover="handleDragOver(event)" ondrop="useBathItem(event, 'towel')">🛁</div>
+            </div>
+          </div>
+          
+          <div class="flex-1">
+            <p class="text-center text-sm font-semibold mb-3">Objetos de aseo:</p>
+            <div class="flex flex-wrap justify-center gap-4">
+              <div id="item-soap" class="bath-item text-4xl p-3 bg-white rounded-xl shadow cursor-grab" 
+                   draggable="true" ondragstart="dragBathItem(event, 'soap')">🧼</div>
+              <div id="item-water" class="bath-item text-4xl p-3 bg-white rounded-xl shadow cursor-grab"
+                   draggable="true" ondragstart="dragBathItem(event, 'water')">🚿</div>
+              <div id="item-towel" class="bath-item text-4xl p-3 bg-white rounded-xl shadow cursor-grab"
+                   draggable="true" ondragstart="dragBathItem(event, 'towel')">🧴</div>
+            </div>
+            <p class="text-xs text-gray-500 text-center mt-4">Orden: 1. Jabón 2. Agua 3. Secar</p>
+          </div>
+        </div>
+        
+        <div id="bath-message" class="mt-4 text-center text-gray-600"></div>
+      `;
+    }
+
+    let bathState = { step: 0, items: ['soap', 'water', 'towel'] };
+    const bathEmojis = { soap: '🧼', water: '💧', towel: '✨' };
+
+    function dragBathItem(e, item) {
+      e.dataTransfer.setData('text/plain', item);
+    }
+
+    function useBathItem(e, slot) {
+      e.preventDefault();
+      const item = e.dataTransfer.getData('text/plain');
+      const expected = bathState.items[bathState.step];
+      
+      if (item === expected) {
+        document.getElementById(`bath-${slot}`).classList.add('bg-green-300');
+        document.getElementById(`item-${item}`).classList.add('used');
+        
+        bathState.step++;
+        addStar();
+        
+        const messages = [
+          '¡Bien! Ahora el jabón limpia',
+          '¡Perfecto! El agua enjuaga',
+          '¡Excelente! Ya está limpio'
+        ];
+        const characters = ['🧴', '🚿', '😊'];
+        
+        document.getElementById('bath-character').textContent = characters[bathState.step - 1];
+        document.getElementById('bath-message').textContent = messages[bathState.step - 1];
+        
+        if (bathState.step >= 3) {
+          document.getElementById('bath-character').textContent = '😊✨';
+          setTimeout(() => showSuccess('¡El personaje está limpio y feliz!'), 500);
+        }
+      } else {
+        document.getElementById('bath-message').innerHTML = '<span class="text-red-500">¡Ups! Sigue el orden correcto</span>';
+      }
+    }
+
+    // Initialize
+    showCategory('etica');
+    applyConfig();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d72a448877eafbf',t:'MTc3MjY0NTc3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
