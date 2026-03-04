@@ -1,0 +1,1853 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juegos Educativos - 2do Grado</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    h1, h2, h3, .game-title { font-family: 'Fredoka', sans-serif; }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    }
+    
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    
+    .game-card {
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      border: 3px solid transparent;
+      background-clip: padding-box;
+    }
+    
+    .game-card::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: inherit;
+      padding: 3px;
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+    
+    .learning-box {
+      background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%);
+      border-left: 4px solid #667eea;
+    }
+    
+    .emoji-bounce {
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .pulse-ring {
+      animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 1; }
+      80%, 100% { transform: scale(1.3); opacity: 0; }
+    }
+    
+    .slide-up {
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .confetti {
+      position: fixed;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    
+    .tree-icon { color: #22c55e; }
+    .fire-icon { color: #ef4444; }
+    .water-icon { color: #3b82f6; }
+    
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(to right, #22c55e, #84cc16);
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #667eea;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    .drag-item {
+      cursor: grab;
+      user-select: none;
+    }
+    
+    .drag-item:active {
+      cursor: grabbing;
+    }
+    
+    .drop-zone {
+      border: 2px dashed #94a3b8;
+      transition: all 0.3s ease;
+    }
+    
+    .drop-zone.drag-over {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .modal-overlay {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+    }
+    
+    .success-animation {
+      animation: success 0.6s ease-out;
+    }
+    
+    @keyframes success {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .scroll-container {
+      scrollbar-width: thin;
+      scrollbar-color: #667eea #e0e7ff;
+    }
+    
+    .scroll-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .scroll-container::-webkit-scrollbar-track {
+      background: #e0e7ff;
+      border-radius: 4px;
+    }
+    
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 4px;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full overflow-auto scroll-container"><!-- Main Menu -->
+   <div id="main-menu" class="min-h-full gradient-bg p-4 md:p-8">
+    <div class="max-w-7xl mx-auto"><!-- Header -->
+     <header class="text-center mb-8 slide-up">
+      <div class="inline-block bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-4"><span class="text-white/90 text-sm font-medium">📚 Segundo Grado de Primaria</span>
+      </div>
+      <h1 id="main-title" class="text-3xl md:text-5xl font-bold text-white mb-3 drop-shadow-lg">🎮 Juegos Educativos</h1>
+      <p class="text-white/90 text-lg md:text-xl mb-2">Ética, Naturaleza y Sociedades • De lo Humano y lo Comunitario</p>
+      <p id="author-credit" class="text-white/80 text-sm bg-white/10 inline-block px-4 py-1 rounded-full">✨ Creado por Mtra. María Fernanda Flores Valenzuela ✨</p>
+     </header><!-- Category Tabs -->
+     <div class="flex flex-wrap justify-center gap-3 mb-8"><button onclick="filterGames('all')" class="category-btn bg-white text-purple-700 px-6 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all" data-category="all"> 🌟 Todos (20) </button> <button onclick="filterGames('etica')" class="category-btn bg-white/20 text-white px-6 py-2 rounded-full font-semibold hover:bg-white/30 transition-all" data-category="etica"> 🌿 Ética y Naturaleza (10) </button> <button onclick="filterGames('humano')" class="category-btn bg-white/20 text-white px-6 py-2 rounded-full font-semibold hover:bg-white/30 transition-all" data-category="humano"> 👨‍👩‍👧‍👦 Humano y Comunitario (10) </button>
+     </div><!-- Games Grid -->
+     <div id="games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"><!-- Games will be rendered here -->
+     </div><!-- Footer -->
+     <footer class="text-center mt-12 text-white/70 text-sm">
+      <p>🏫 Compatible con GitHub Pages • Educación SEP México 2024</p>
+     </footer>
+    </div>
+   </div><!-- Game Container (Hidden by default) -->
+   <div id="game-container" class="hidden min-h-full bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4">
+    <div class="max-w-4xl mx-auto"><!-- Game Header -->
+     <div class="flex items-center justify-between mb-4"><button onclick="backToMenu()" class="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg transition-all text-purple-700 font-semibold"> ← Volver al Menú </button>
+      <div id="game-score" class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-6 py-2 rounded-full font-bold shadow-md">
+       ⭐ Puntos: <span id="score-value">0</span>
+      </div>
+     </div><!-- Learning Objective Box -->
+     <div id="learning-box" class="learning-box rounded-xl p-4 mb-6 shadow-md">
+      <h3 class="font-bold text-purple-800 mb-1">📖 ¿Qué aprenderás?</h3>
+      <p id="learning-objective" class="text-purple-700"></p>
+     </div><!-- Game Title -->
+     <h2 id="game-title" class="game-title text-3xl font-bold text-center text-purple-800 mb-6"></h2><!-- Game Area -->
+     <div id="game-area" class="bg-white rounded-2xl shadow-xl p-6 min-h-[400px]"><!-- Game content will be loaded here -->
+     </div><!-- Game Instructions -->
+     <div id="game-instructions" class="mt-4 bg-white/80 rounded-xl p-4 text-center">
+      <p id="instructions-text" class="text-gray-700"></p>
+     </div>
+    </div>
+   </div><!-- Success Modal -->
+   <div id="success-modal" class="hidden fixed inset-0 modal-overlay flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl success-animation">
+     <div class="text-8xl mb-4">
+      🎉
+     </div>
+     <h3 class="text-2xl font-bold text-purple-800 mb-2">¡Excelente!</h3>
+     <p id="success-message" class="text-gray-600 mb-6">¡Has completado el juego!</p>
+     <div class="flex gap-4 justify-center"><button onclick="replayGame()" class="bg-gradient-to-r from-green-400 to-emerald-500 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition-all"> 🔄 Jugar Otra Vez </button> <button onclick="backToMenu()" class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition-all"> 📚 Ver Más Juegos </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      main_title: "🎮 Juegos Educativos",
+      author_name: "Mtra. María Fernanda Flores Valenzuela"
+    };
+
+    // Games data
+    const gamesData = [
+      // Campo: Ética, Naturaleza y Sociedades
+      {
+        id: 1,
+        title: "Antes y Después",
+        emoji: "🌲",
+        category: "etica",
+        objective: "Describe cambios y continuidades usando mapas y croquis para entender cómo cambia nuestro entorno con el tiempo.",
+        instructions: "Desliza la barra para ver cómo era el bosque hace 10 años y cómo es ahora.",
+        color: "from-green-400 to-emerald-500"
+      },
+      {
+        id: 2,
+        title: "Guardabosques",
+        emoji: "🧯",
+        category: "etica",
+        objective: "Propone acciones para cuidar seres vivos y proteger el medio ambiente en tu medida.",
+        instructions: "¡Apaga los incendios haciendo clic sobre ellos y planta árboles en los espacios vacíos!",
+        color: "from-orange-400 to-red-500"
+      },
+      {
+        id: 3,
+        title: "Balance Verde",
+        emoji: "⚖️",
+        category: "etica",
+        objective: "Relaciona actividades humanas con efectos negativos en el medio ambiente.",
+        instructions: "Haz clic en las fábricas contaminantes para cambiarlas por parques solares.",
+        color: "from-teal-400 to-cyan-500"
+      },
+      {
+        id: 4,
+        title: "Ciclo del Maíz",
+        emoji: "🌽",
+        category: "etica",
+        objective: "Usa 'antes, ahora y después' para entender los ciclos agrícolas y cómo llega la comida a tu mesa.",
+        instructions: "Ordena las etapas del maíz desde la siembra hasta convertirse en tamal.",
+        color: "from-yellow-400 to-amber-500"
+      },
+      {
+        id: 5,
+        title: "Muro de Voces",
+        emoji: "📢",
+        category: "etica",
+        objective: "Ejerce tu derecho a manifestar opiniones y necesidades sobre tu comunidad.",
+        instructions: "Escribe un deseo o idea para mejorar tu comunidad en el muro virtual.",
+        color: "from-blue-400 to-indigo-500"
+      },
+      {
+        id: 6,
+        title: "Llamada de Auxilio",
+        emoji: "📞",
+        category: "etica",
+        objective: "Conoce la responsabilidad de instituciones que protegen tus derechos.",
+        instructions: "Lee la emergencia y elige a qué institución debes llamar.",
+        color: "from-red-400 to-rose-500"
+      },
+      {
+        id: 7,
+        title: "Empatía Total",
+        emoji: "💝",
+        category: "etica",
+        objective: "Dialoga sobre efectos de discriminación por rasgos físicos y aprende a ser empático.",
+        instructions: "Elige la mejor acción para ayudar a un niño que se siente excluido.",
+        color: "from-pink-400 to-rose-500"
+      },
+      {
+        id: 8,
+        title: "Círculo de Confianza",
+        emoji: "🛡️",
+        category: "etica",
+        objective: "Identifica conductas nocivas y aprende a solicitar apoyo de adultos seguros.",
+        instructions: "Ayuda al niño a llegar con un adulto de confianza arrastrándolo.",
+        color: "from-violet-400 to-purple-500"
+      },
+      {
+        id: 9,
+        title: "Familias del Mundo",
+        emoji: "🏠",
+        category: "etica",
+        objective: "Valora la diversidad de familias y promueve el respeto hacia todas.",
+        instructions: "Une cada casa con su tipo de familia sin prejuicios.",
+        color: "from-amber-400 to-orange-500"
+      },
+      {
+        id: 10,
+        title: "Mediador de Paz",
+        emoji: "🕊️",
+        category: "etica",
+        objective: "Propone formas de solución a conflictos mediante negociación y diálogo.",
+        instructions: "Elige el trato que beneficie a las dos partes en la disputa.",
+        color: "from-sky-400 to-blue-500"
+      },
+      // Campo: De lo Humano y lo Comunitario
+      {
+        id: 11,
+        title: "Asamblea de Vecinos",
+        emoji: "🗳️",
+        category: "humano",
+        objective: "Reflexiona sobre problemas ambientales de tu comunidad y cómo solucionarlos juntos.",
+        instructions: "Lee las propuestas y vota por la mejor idea para limpiar la calle.",
+        color: "from-emerald-400 to-green-500"
+      },
+      {
+        id: 12,
+        title: "Trabajo de Todos",
+        emoji: "👷",
+        category: "humano",
+        objective: "Analiza la participación de hombres y mujeres en tareas familiares y profesiones.",
+        instructions: "Asigna profesiones a los avatares sin importar si son niños o niñas.",
+        color: "from-indigo-400 to-violet-500"
+      },
+      {
+        id: 13,
+        title: "Video-Llamada",
+        emoji: "📱",
+        category: "humano",
+        objective: "Reflexiona sobre el aprendizaje en línea y las nuevas tecnologías de comunicación.",
+        instructions: "Conecta los cables correctamente para hacer una videollamada con tu amigo.",
+        color: "from-cyan-400 to-teal-500"
+      },
+      {
+        id: 14,
+        title: "Cadena de Favores",
+        emoji: "🤝",
+        category: "humano",
+        objective: "Reconoce valores como solidaridad y reciprocidad en la comunidad.",
+        instructions: "Ayuda a un vecino para que él pueda ayudar a otro.",
+        color: "from-rose-400 to-pink-500"
+      },
+      {
+        id: 15,
+        title: "Puedo Solo",
+        emoji: "💪",
+        category: "humano",
+        objective: "Identifica logros para comparar cambios en tu independencia y autonomía.",
+        instructions: "Selecciona las tareas que ya puedes hacer sin ayuda de tus papás.",
+        color: "from-orange-400 to-amber-500"
+      },
+      {
+        id: 16,
+        title: "Caja de Sueños",
+        emoji: "✨",
+        category: "humano",
+        objective: "Diferencia prácticas que inciden en construcción de identidad sin etiquetas de género.",
+        instructions: "Elige qué quieres ser de grande, ¡todos los sueños son válidos!",
+        color: "from-purple-400 to-fuchsia-500"
+      },
+      {
+        id: 17,
+        title: "Inventor de Juegos",
+        emoji: "🎲",
+        category: "humano",
+        objective: "Propone soluciones ante retos en juegos y actividades para hacerlos más justos.",
+        instructions: "Cambia una regla del juego para que todos puedan participar.",
+        color: "from-blue-400 to-cyan-500"
+      },
+      {
+        id: 18,
+        title: "Mercadito Saludable",
+        emoji: "🥗",
+        category: "humano",
+        objective: "Compara alimentos frescos y ultraprocesados para cuidar tu salud.",
+        instructions: "Llena tu bolsa solo con alimentos que vengan de la tierra.",
+        color: "from-lime-400 to-green-500"
+      },
+      {
+        id: 19,
+        title: "Zonas Seguras",
+        emoji: "🗺️",
+        category: "humano",
+        objective: "Propone prácticas de autocuidado y convivencia pacífica en tu entorno.",
+        instructions: "Marca en el mapa los lugares donde te sientes protegido.",
+        color: "from-teal-400 to-emerald-500"
+      },
+      {
+        id: 20,
+        title: "Semáforo Emocional",
+        emoji: "🚦",
+        category: "humano",
+        objective: "Toma decisiones asertivas ante situaciones de la vida diaria.",
+        instructions: "Sigue los pasos: Para (Rojo), Piensa (Amarillo), Actúa (Verde).",
+        color: "from-red-400 via-yellow-400 to-green-500"
+      }
+    ];
+
+    let currentGame = null;
+    let score = 0;
+    let currentFilter = 'all';
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+          document.getElementById('author-credit').innerHTML = `✨ Creado por ${config.author_name || defaultConfig.author_name} ✨`;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["main_title", config.main_title || defaultConfig.main_title],
+          ["author_name", config.author_name || defaultConfig.author_name]
+        ])
+      });
+    }
+
+    // Render games grid
+    function renderGames() {
+      const grid = document.getElementById('games-grid');
+      const filteredGames = currentFilter === 'all' 
+        ? gamesData 
+        : gamesData.filter(g => g.category === currentFilter);
+      
+      grid.innerHTML = filteredGames.map((game, index) => `
+        <div class="game-card relative rounded-2xl p-5 card-hover cursor-pointer slide-up" 
+             style="animation-delay: ${index * 0.05}s"
+             onclick="startGame(${game.id})">
+          <div class="text-center mb-3">
+            <span class="text-5xl emoji-bounce inline-block">${game.emoji}</span>
+          </div>
+          <h3 class="game-title text-xl font-bold text-gray-800 text-center mb-2">${game.title}</h3>
+          <p class="text-gray-600 text-sm text-center mb-3 line-clamp-2">${game.objective.substring(0, 60)}...</p>
+          <div class="flex justify-center">
+            <span class="bg-gradient-to-r ${game.color} text-white text-xs px-3 py-1 rounded-full font-semibold">
+              ${game.category === 'etica' ? '🌿 Ética y Naturaleza' : '👨‍👩‍👧‍👦 Humano y Comunitario'}
+            </span>
+          </div>
+          <div class="absolute top-3 right-3 bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded-full font-bold">
+            #${game.id}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Filter games by category
+    function filterGames(category) {
+      currentFilter = category;
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        if (btn.dataset.category === category) {
+          btn.classList.remove('bg-white/20', 'text-white');
+          btn.classList.add('bg-white', 'text-purple-700', 'shadow-lg');
+        } else {
+          btn.classList.remove('bg-white', 'text-purple-700', 'shadow-lg');
+          btn.classList.add('bg-white/20', 'text-white');
+        }
+      });
+      renderGames();
+    }
+
+    // Start a game
+    function startGame(gameId) {
+      currentGame = gamesData.find(g => g.id === gameId);
+      score = 0;
+      updateScore();
+      
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('game-container').classList.remove('hidden');
+      document.getElementById('game-title').textContent = `${currentGame.emoji} ${currentGame.title}`;
+      document.getElementById('learning-objective').textContent = currentGame.objective;
+      document.getElementById('instructions-text').textContent = currentGame.instructions;
+      
+      loadGameContent(gameId);
+    }
+
+    // Update score display
+    function updateScore() {
+      document.getElementById('score-value').textContent = score;
+    }
+
+    // Add points with animation
+    function addPoints(points) {
+      score += points;
+      updateScore();
+      
+      const scoreElement = document.getElementById('game-score');
+      scoreElement.classList.add('scale-110');
+      setTimeout(() => scoreElement.classList.remove('scale-110'), 200);
+    }
+
+    // Back to main menu
+    function backToMenu() {
+      document.getElementById('success-modal').classList.add('hidden');
+      document.getElementById('game-container').classList.add('hidden');
+      document.getElementById('main-menu').classList.remove('hidden');
+    }
+
+    // Show success modal
+    function showSuccess(message) {
+      document.getElementById('success-message').textContent = message || '¡Has completado el juego!';
+      document.getElementById('success-modal').classList.remove('hidden');
+      createConfetti();
+    }
+
+    // Replay current game
+    function replayGame() {
+      document.getElementById('success-modal').classList.add('hidden');
+      if (currentGame) {
+        startGame(currentGame.id);
+      }
+    }
+
+    // Create confetti effect
+    function createConfetti() {
+      const colors = ['#667eea', '#764ba2', '#f093fb', '#22c55e', '#eab308'];
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.cssText = `
+          position: fixed;
+          width: 10px;
+          height: 10px;
+          background: ${colors[Math.floor(Math.random() * colors.length)]};
+          left: ${Math.random() * 100}%;
+          top: -10px;
+          border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+          animation: fall ${2 + Math.random() * 2}s linear forwards;
+        `;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 4000);
+      }
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes fall {
+          to {
+            transform: translateY(100vh) rotate(${Math.random() * 720}deg);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Load specific game content
+    function loadGameContent(gameId) {
+      const gameArea = document.getElementById('game-area');
+      
+      switch(gameId) {
+        case 1: // Antes y Después
+          gameArea.innerHTML = `
+            <div class="relative h-80 rounded-xl overflow-hidden">
+              <div id="forest-before" class="absolute inset-0 bg-gradient-to-b from-green-300 to-green-500 flex items-center justify-center transition-all duration-300">
+                <div class="text-center">
+                  <div class="text-6xl mb-4">🌳🌲🌳🌲🌳</div>
+                  <div class="text-6xl mb-4">🦌🐿️🦊🐇🦉</div>
+                  <div class="text-6xl">🌳🌲🌳🌲🌳</div>
+                  <p class="mt-4 text-white font-bold text-xl bg-green-600/50 px-4 py-2 rounded-full">Hace 10 años: Bosque lleno de vida</p>
+                </div>
+              </div>
+              <div id="forest-after" class="absolute inset-0 bg-gradient-to-b from-amber-200 to-amber-400 flex items-center justify-center transition-all duration-300" style="clip-path: inset(0 100% 0 0);">
+                <div class="text-center">
+                  <div class="text-6xl mb-4">🏗️🏠🏢🏠🏗️</div>
+                  <div class="text-6xl mb-4">🚗🚌🚗🚕🚗</div>
+                  <div class="text-6xl">🌳⬜⬜⬜🌳</div>
+                  <p class="mt-4 text-amber-800 font-bold text-xl bg-white/50 px-4 py-2 rounded-full">Ahora: Más construcciones, menos árboles</p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6">
+              <label class="block text-center font-bold text-purple-700 mb-2">Desliza para ver el cambio en el tiempo →</label>
+              <input type="range" id="time-slider" min="0" max="100" value="0" class="w-full h-3" oninput="updateForestView(this.value)">
+              <div class="flex justify-between text-sm text-gray-600 mt-2">
+                <span>🕐 Hace 10 años</span>
+                <span>📅 Ahora</span>
+              </div>
+            </div>
+            <div id="reflection-box" class="mt-4 p-4 bg-purple-50 rounded-xl hidden">
+              <p class="text-purple-800 font-semibold">💭 ¿Qué cambios observas? ¿Crees que estos cambios son buenos o malos para los animales?</p>
+              <button onclick="addPoints(100); showSuccess('¡Muy bien! Aprendiste a observar cambios en el entorno.')" class="mt-3 btn-primary text-white px-6 py-2 rounded-full">He terminado de reflexionar ✓</button>
+            </div>
+          `;
+          break;
+
+        case 2: // Guardabosques
+          gameArea.innerHTML = `
+            <div class="text-center mb-4">
+              <p class="text-lg font-semibold text-gray-700">🔥 Incendios activos: <span id="fire-count">5</span> | 🌳 Árboles plantados: <span id="tree-count">0</span>/5</p>
+            </div>
+            <div id="forest-map" class="grid grid-cols-5 gap-3 max-w-md mx-auto">
+              ${generateForestMap()}
+            </div>
+            <div class="mt-4 flex justify-center gap-4">
+              <button id="water-btn" onclick="selectTool('water')" class="bg-blue-500 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-600 transition-all ring-4 ring-blue-300">
+                💧 Apagar Fuego
+              </button>
+              <button id="tree-btn" onclick="selectTool('tree')" class="bg-green-500 text-white px-6 py-3 rounded-full font-bold hover:bg-green-600 transition-all">
+                🌱 Plantar Árbol
+              </button>
+            </div>
+          `;
+          window.currentTool = 'water';
+          break;
+
+        case 3: // Balance Verde
+          gameArea.innerHTML = `
+            <div class="text-center mb-4">
+              <p class="text-lg font-semibold text-gray-700">🌍 Nivel de contaminación: <span id="pollution-level" class="text-red-500">Alta</span></p>
+              <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
+                <div id="pollution-bar" class="bg-gradient-to-r from-red-500 to-red-600 h-4 rounded-full transition-all duration-500" style="width: 100%"></div>
+              </div>
+            </div>
+            <div id="city-grid" class="grid grid-cols-4 gap-4 max-w-lg mx-auto">
+              ${generateCityGrid()}
+            </div>
+            <p class="text-center mt-4 text-gray-600">Haz clic en las fábricas 🏭 para convertirlas en energía limpia ☀️</p>
+          `;
+          window.pollutionCount = 8;
+          break;
+
+        case 4: // Ciclo del Maíz
+          const stages = [
+            { emoji: '🌱', text: '1. Semilla', correct: 0 },
+            { emoji: '🌾', text: '2. Crece', correct: 1 },
+            { emoji: '🌽', text: '3. Mazorca', correct: 2 },
+            { emoji: '👨‍🌾', text: '4. Cosecha', correct: 3 },
+            { emoji: '🫓', text: '5. Masa', correct: 4 },
+            { emoji: '🫔', text: '6. Tamal', correct: 5 }
+          ];
+          const shuffled = [...stages].sort(() => Math.random() - 0.5);
+          
+          gameArea.innerHTML = `
+            <p class="text-center mb-4 font-semibold text-gray-700">Arrastra las etapas en el orden correcto:</p>
+            <div id="corn-stages" class="flex flex-wrap justify-center gap-3 mb-6">
+              ${shuffled.map((s, i) => `
+                <div class="drag-item bg-yellow-100 border-2 border-yellow-400 rounded-xl p-4 text-center cursor-grab" 
+                     draggable="true" 
+                     data-correct="${s.correct}"
+                     ondragstart="dragStart(event)" 
+                     ondragend="dragEnd(event)">
+                  <span class="text-4xl block">${s.emoji}</span>
+                  <span class="text-sm font-medium">${s.text}</span>
+                </div>
+              `).join('')}
+            </div>
+            <div id="corn-timeline" class="flex justify-center gap-2">
+              ${[0,1,2,3,4,5].map(i => `
+                <div class="drop-zone w-20 h-24 bg-amber-50 border-2 border-dashed border-amber-300 rounded-xl flex items-center justify-center"
+                     data-position="${i}"
+                     ondragover="dragOver(event)"
+                     ondragleave="dragLeave(event)"
+                     ondrop="dropCorn(event)">
+                  <span class="text-gray-400">${i+1}</span>
+                </div>
+              `).join('')}
+            </div>
+            <button onclick="checkCornOrder()" class="mt-6 btn-primary text-white px-8 py-3 rounded-full font-bold mx-auto block">Verificar Orden ✓</button>
+          `;
+          break;
+
+        case 5: // Muro de Voces
+          gameArea.innerHTML = `
+            <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-6">
+              <h3 class="text-xl font-bold text-purple-800 text-center mb-4">🧱 Muro de Deseos para mi Comunidad</h3>
+              <div id="wall-notes" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6 min-h-[200px]">
+                <div class="bg-yellow-200 p-3 rounded shadow-md transform -rotate-2">
+                  <p class="text-sm">🌳 "Más árboles en el parque" - Ana</p>
+                </div>
+                <div class="bg-pink-200 p-3 rounded shadow-md transform rotate-1">
+                  <p class="text-sm">🚸 "Semáforos para cruzar" - Pedro</p>
+                </div>
+                <div class="bg-blue-200 p-3 rounded shadow-md transform -rotate-1">
+                  <p class="text-sm">📚 "Una biblioteca" - María</p>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 shadow-inner">
+                <label class="block font-semibold text-purple-700 mb-2">✏️ Escribe tu deseo:</label>
+                <input type="text" id="wish-input" placeholder="Yo deseo que mi comunidad tenga..." 
+                       class="w-full px-4 py-3 rounded-lg border-2 border-purple-200 focus:border-purple-400 focus:outline-none">
+                <input type="text" id="name-input" placeholder="Tu nombre" 
+                       class="w-full px-4 py-3 rounded-lg border-2 border-purple-200 focus:border-purple-400 focus:outline-none mt-2">
+                <button onclick="addWish()" class="mt-3 btn-primary text-white px-6 py-2 rounded-full w-full font-semibold">
+                  📌 Pegar en el Muro
+                </button>
+              </div>
+            </div>
+          `;
+          break;
+
+        case 6: // Llamada de Auxilio
+          const emergencies = [
+            { text: "Un niño se lastimó en la escuela", correct: "doctor", options: ["doctor", "bomberos", "policía"] },
+            { text: "Hay humo saliendo de una casa", correct: "bomberos", options: ["doctor", "bomberos", "policía"] },
+            { text: "Alguien se llevó la bicicleta sin permiso", correct: "policía", options: ["doctor", "bomberos", "policía"] }
+          ];
+          window.emergencyIndex = 0;
+          window.emergencies = emergencies;
+          
+          gameArea.innerHTML = `
+            <div class="text-center">
+              <div class="bg-red-100 rounded-xl p-6 mb-6">
+                <p class="text-xl font-bold text-red-700">🚨 EMERGENCIA</p>
+                <p id="emergency-text" class="text-lg mt-2">${emergencies[0].text}</p>
+              </div>
+              <p class="font-semibold mb-4">¿A quién debes llamar?</p>
+              <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="checkEmergency('doctor')" class="bg-green-100 hover:bg-green-200 p-6 rounded-xl transition-all">
+                  <span class="text-5xl block mb-2">👨‍⚕️</span>
+                  <span class="font-semibold">Doctor / Cruz Roja</span>
+                </button>
+                <button onclick="checkEmergency('bomberos')" class="bg-orange-100 hover:bg-orange-200 p-6 rounded-xl transition-all">
+                  <span class="text-5xl block mb-2">🚒</span>
+                  <span class="font-semibold">Bomberos</span>
+                </button>
+                <button onclick="checkEmergency('policía')" class="bg-blue-100 hover:bg-blue-200 p-6 rounded-xl transition-all">
+                  <span class="text-5xl block mb-2">👮</span>
+                  <span class="font-semibold">Policía</span>
+                </button>
+              </div>
+              <div id="emergency-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+            </div>
+          `;
+          break;
+
+        case 7: // Empatía Total
+          gameArea.innerHTML = `
+            <div class="text-center">
+              <div class="bg-blue-50 rounded-xl p-6 mb-6">
+                <span class="text-6xl">😢</span>
+                <p class="text-lg mt-4 font-medium text-gray-700">Carlos está triste porque otros niños no lo dejaron jugar con ellos porque usa lentes.</p>
+              </div>
+              <p class="font-bold text-purple-700 mb-4">¿Qué harías tú para ayudar a Carlos?</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg mx-auto">
+                <button onclick="empathyChoice('ignore')" class="bg-gray-100 hover:bg-gray-200 p-4 rounded-xl transition-all text-left">
+                  <span class="text-2xl">🚶</span>
+                  <p class="mt-2">Ignorar y seguir jugando</p>
+                </button>
+                <button onclick="empathyChoice('invite')" class="bg-green-100 hover:bg-green-200 p-4 rounded-xl transition-all text-left">
+                  <span class="text-2xl">🤗</span>
+                  <p class="mt-2">Invitarlo a jugar conmigo</p>
+                </button>
+                <button onclick="empathyChoice('laugh')" class="bg-gray-100 hover:bg-gray-200 p-4 rounded-xl transition-all text-left">
+                  <span class="text-2xl">😆</span>
+                  <p class="mt-2">Reírme también</p>
+                </button>
+                <button onclick="empathyChoice('comfort')" class="bg-green-100 hover:bg-green-200 p-4 rounded-xl transition-all text-left">
+                  <span class="text-2xl">💚</span>
+                  <p class="mt-2">Acercarme y preguntarle cómo está</p>
+                </button>
+              </div>
+              <div id="empathy-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+            </div>
+          `;
+          break;
+
+        case 8: // Círculo de Confianza
+          gameArea.innerHTML = `
+            <div class="relative h-96 bg-gradient-to-b from-sky-100 to-sky-200 rounded-xl overflow-hidden">
+              <p class="text-center py-2 font-semibold text-purple-700">Arrastra a Sofía hacia un adulto de confianza</p>
+              
+              <!-- Adultos de confianza -->
+              <div id="teacher-zone" class="absolute left-4 top-20 w-20 h-24 flex flex-col items-center drop-zone rounded-xl"
+                   ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropChild(event, 'maestro')">
+                <span class="text-4xl">👩‍🏫</span>
+                <span class="text-xs font-medium">Maestra</span>
+              </div>
+              
+              <div id="parent-zone" class="absolute right-4 top-20 w-20 h-24 flex flex-col items-center drop-zone rounded-xl"
+                   ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropChild(event, 'mamá')">
+                <span class="text-4xl">👩</span>
+                <span class="text-xs font-medium">Mamá</span>
+              </div>
+              
+              <div id="grandpa-zone" class="absolute left-4 bottom-20 w-20 h-24 flex flex-col items-center drop-zone rounded-xl"
+                   ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropChild(event, 'abuelo')">
+                <span class="text-4xl">👴</span>
+                <span class="text-xs font-medium">Abuelo</span>
+              </div>
+              
+              <div id="stranger-zone" class="absolute right-4 bottom-20 w-20 h-24 flex flex-col items-center bg-red-100 rounded-xl opacity-50"
+                   ondragover="event.preventDefault()" ondrop="dropChild(event, 'extraño')">
+                <span class="text-4xl">🧑</span>
+                <span class="text-xs font-medium text-red-600">Extraño</span>
+              </div>
+              
+              <!-- Niña -->
+              <div id="child-sofia" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                   bg-white p-4 rounded-full shadow-lg cursor-grab drag-item"
+                   draggable="true" ondragstart="dragStart(event)">
+                <span class="text-5xl">👧</span>
+                <p class="text-xs font-bold text-center mt-1">Sofía</p>
+              </div>
+            </div>
+            <div id="trust-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+          `;
+          break;
+
+        case 9: // Familias del Mundo
+          const families = [
+            { emoji: "👨‍👩‍👧‍👦", type: "Papá, mamá y dos hijos" },
+            { emoji: "👩‍👧", type: "Mamá e hija" },
+            { emoji: "👴👵👦", type: "Abuelos y nieto" },
+            { emoji: "👨‍👨‍👧", type: "Dos papás e hija" },
+            { emoji: "👩‍👩‍👦", type: "Dos mamás e hijo" },
+            { emoji: "👨‍👧‍👦", type: "Papá y dos hijos" }
+          ];
+          const shuffledFamilies = [...families].sort(() => Math.random() - 0.5);
+          window.matchedFamilies = 0;
+          
+          gameArea.innerHTML = `
+            <p class="text-center mb-4 font-semibold text-gray-700">Une cada casa con el tipo de familia que vive ahí:</p>
+            <div class="flex flex-wrap justify-center gap-6">
+              <div class="space-y-3">
+                <p class="font-bold text-center">🏠 Casas</p>
+                ${shuffledFamilies.slice(0, 3).map((f, i) => `
+                  <div class="family-house bg-amber-100 p-4 rounded-xl text-center cursor-pointer hover:bg-amber-200 transition-all"
+                       data-family="${f.type}" onclick="selectFamily(this, 'house')">
+                    <span class="text-4xl">🏠</span>
+                    <p class="text-xs mt-1 font-medium">${f.type}</p>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="flex items-center">
+                <span class="text-4xl">↔️</span>
+              </div>
+              <div class="space-y-3">
+                <p class="font-bold text-center">👨‍👩‍👧 Familias</p>
+                ${shuffledFamilies.slice(0, 3).sort(() => Math.random() - 0.5).map((f, i) => `
+                  <div class="family-emoji bg-purple-100 p-4 rounded-xl text-center cursor-pointer hover:bg-purple-200 transition-all"
+                       data-family="${f.type}" onclick="selectFamily(this, 'emoji')">
+                    <span class="text-4xl">${f.emoji}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <div id="family-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+          `;
+          window.selectedHouse = null;
+          window.selectedEmoji = null;
+          break;
+
+        case 10: // Mediador de Paz
+          const conflicts = [
+            {
+              situation: "Ana y Pedro quieren el mismo columpio en el recreo.",
+              options: [
+                { text: "Pedro siempre gana porque llegó primero", correct: false },
+                { text: "Se turnan: 5 minutos cada uno", correct: true },
+                { text: "Ninguno lo usa y se quedan enojados", correct: false }
+              ]
+            },
+            {
+              situation: "María tomó el lápiz de Luis sin pedir permiso.",
+              options: [
+                { text: "Luis le grita a María", correct: false },
+                { text: "María pide disculpas y lo devuelve", correct: true },
+                { text: "Luis toma algo de María sin permiso", correct: false }
+              ]
+            }
+          ];
+          window.conflictIndex = 0;
+          window.conflicts = conflicts;
+          
+          gameArea.innerHTML = `
+            <div class="text-center">
+              <div class="bg-orange-50 rounded-xl p-6 mb-6">
+                <span class="text-5xl">⚖️</span>
+                <p id="conflict-text" class="text-lg mt-4 font-medium">${conflicts[0].situation}</p>
+              </div>
+              <p class="font-bold text-purple-700 mb-4">¿Cuál es la mejor solución?</p>
+              <div id="conflict-options" class="space-y-3 max-w-md mx-auto">
+                ${conflicts[0].options.map((opt, i) => `
+                  <button onclick="checkMediation(${i}, ${opt.correct})" 
+                          class="w-full bg-white hover:bg-purple-50 p-4 rounded-xl transition-all text-left border-2 border-purple-100">
+                    ${opt.text}
+                  </button>
+                `).join('')}
+              </div>
+              <div id="mediation-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+            </div>
+          `;
+          break;
+
+        case 11: // Asamblea de Vecinos
+          gameArea.innerHTML = `
+            <div class="text-center">
+              <div class="bg-green-50 rounded-xl p-4 mb-6">
+                <span class="text-5xl">🏘️</span>
+                <p class="text-lg mt-2 font-medium">Problema: La calle de tu colonia está muy sucia</p>
+              </div>
+              <p class="font-bold text-purple-700 mb-4">🗳️ Vota por la mejor idea:</p>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button onclick="voteIdea(1)" class="vote-option bg-white hover:bg-green-50 p-4 rounded-xl transition-all border-2 border-green-200">
+                  <span class="text-4xl block mb-2">🗑️</span>
+                  <p class="font-medium">Poner más botes de basura</p>
+                  <p id="votes-1" class="text-green-600 font-bold mt-2">0 votos</p>
+                </button>
+                <button onclick="voteIdea(2)" class="vote-option bg-white hover:bg-green-50 p-4 rounded-xl transition-all border-2 border-green-200">
+                  <span class="text-4xl block mb-2">🧹</span>
+                  <p class="font-medium">Organizar jornada de limpieza</p>
+                  <p id="votes-2" class="text-green-600 font-bold mt-2">0 votos</p>
+                </button>
+                <button onclick="voteIdea(3)" class="vote-option bg-white hover:bg-green-50 p-4 rounded-xl transition-all border-2 border-green-200">
+                  <span class="text-4xl block mb-2">📢</span>
+                  <p class="font-medium">Campaña para no tirar basura</p>
+                  <p id="votes-3" class="text-green-600 font-bold mt-2">0 votos</p>
+                </button>
+              </div>
+              <div id="vote-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+            </div>
+          `;
+          window.votes = {1: 2, 2: 3, 3: 1};
+          window.hasVoted = false;
+          break;
+
+        case 12: // Trabajo de Todos
+          const jobs = ['👨‍🍳 Chef', '👩‍⚕️ Doctora', '👨‍🚒 Bombero', '👩‍🔬 Científica', '👨‍🏫 Maestro', '👩‍✈️ Piloto'];
+          gameArea.innerHTML = `
+            <p class="text-center mb-4 font-semibold text-gray-700">Arrastra las profesiones a cualquier persona. ¡Todos pueden ser lo que quieran!</p>
+            <div class="flex flex-wrap justify-center gap-3 mb-6" id="jobs-list">
+              ${jobs.map(job => `
+                <div class="drag-item bg-indigo-100 px-4 py-2 rounded-full font-medium cursor-grab"
+                     draggable="true" ondragstart="dragStart(event)" data-job="${job}">
+                  ${job}
+                </div>
+              `).join('')}
+            </div>
+            <div class="flex justify-center gap-8">
+              <div class="text-center">
+                <div class="text-6xl mb-2">👦</div>
+                <p class="font-medium mb-2">Carlos</p>
+                <div id="carlos-job" class="drop-zone w-32 h-12 rounded-xl flex items-center justify-center text-sm"
+                     ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropJob(event, 'carlos')">
+                  Arrastra aquí
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-6xl mb-2">👧</div>
+                <p class="font-medium mb-2">Sofía</p>
+                <div id="sofia-job" class="drop-zone w-32 h-12 rounded-xl flex items-center justify-center text-sm"
+                     ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropJob(event, 'sofia')">
+                  Arrastra aquí
+                </div>
+              </div>
+            </div>
+            <div id="jobs-feedback" class="mt-4 p-4 bg-green-100 rounded-xl text-center hidden">
+              <p class="text-green-700 font-bold">🌟 ¡Excelente! Todos pueden elegir la profesión que quieran.</p>
+            </div>
+          `;
+          window.jobsAssigned = 0;
+          break;
+
+        case 13: // Video-Llamada
+          gameArea.innerHTML = `
+            <div class="text-center">
+              <p class="mb-4 font-semibold text-gray-700">Conecta los cables en orden para hacer la videollamada:</p>
+              <div class="flex justify-center items-center gap-8 mb-6">
+                <div class="text-center">
+                  <span class="text-6xl">📱</span>
+                  <p class="text-sm mt-2">Tu tablet</p>
+                </div>
+                <div id="cables" class="flex flex-col gap-2">
+                  <button onclick="connectCable(1)" id="cable-1" class="cable bg-gray-300 w-24 h-4 rounded-full hover:bg-cyan-400 transition-all"></button>
+                  <button onclick="connectCable(2)" id="cable-2" class="cable bg-gray-300 w-24 h-4 rounded-full hover:bg-cyan-400 transition-all"></button>
+                  <button onclick="connectCable(3)" id="cable-3" class="cable bg-gray-300 w-24 h-4 rounded-full hover:bg-cyan-400 transition-all"></button>
+                </div>
+                <div class="text-center">
+                  <span class="text-6xl">🌐</span>
+                  <p class="text-sm mt-2">Internet</p>
+                </div>
+              </div>
+              <p class="text-sm text-gray-600 mb-4">Haz clic en los cables en orden: 1️⃣ 2️⃣ 3️⃣</p>
+              <div id="call-screen" class="hidden bg-gradient-to-br from-cyan-100 to-blue-100 rounded-xl p-6">
+                <div class="flex justify-center gap-8">
+                  <div class="text-center">
+                    <span class="text-6xl">👦</span>
+                    <p class="mt-2 font-medium">Tú</p>
+                  </div>
+                  <div class="text-center">
+                    <span class="text-6xl">👧</span>
+                    <p class="mt-2 font-medium">Tu amiga Ana</p>
+                  </div>
+                </div>
+                <p class="mt-4 text-cyan-700 font-bold">📞 ¡Conectados! "¡Hola, te extrañaba!"</p>
+              </div>
+            </div>
+          `;
+          window.cableOrder = [];
+          break;
+
+        case 14: // Cadena de Favores
+          gameArea.innerHTML = `
+            <div class="text-center">
+              <p class="mb-4 font-semibold text-gray-700">Haz clic en la persona para ayudarla y crear una cadena de favores:</p>
+              <div id="favor-chain" class="flex flex-wrap justify-center items-center gap-4">
+                <div class="favor-step text-center p-4 bg-pink-100 rounded-xl cursor-pointer hover:bg-pink-200 transition-all"
+                     onclick="doFavor(1)" id="favor-1">
+                  <span class="text-5xl">👵</span>
+                  <p class="text-sm mt-2">Doña Rosa necesita<br>ayuda con sus bolsas</p>
+                </div>
+                <span class="text-2xl">➡️</span>
+                <div class="favor-step text-center p-4 bg-gray-200 rounded-xl opacity-50" id="favor-2">
+                  <span class="text-5xl">👨</span>
+                  <p class="text-sm mt-2">Don Pedro necesita<br>que le cuiden su perro</p>
+                </div>
+                <span class="text-2xl">➡️</span>
+                <div class="favor-step text-center p-4 bg-gray-200 rounded-xl opacity-50" id="favor-3">
+                  <span class="text-5xl">👧</span>
+                  <p class="text-sm mt-2">Ana necesita ayuda<br>con su tarea</p>
+                </div>
+              </div>
+              <div id="favor-feedback" class="mt-6 p-4 rounded-xl hidden"></div>
+            </div>
+          `;
+          window.favorStep = 1;
+          break;
+
+        case 15: // Puedo Solo
+          const tasks = [
+            { task: "Vestirme solo", emoji: "👕", typical: true },
+            { task: "Tender mi cama", emoji: "🛏️", typical: true },
+            { task: "Lavarme los dientes", emoji: "🦷", typical: true },
+            { task: "Hacer mi tarea", emoji: "📚", typical: true },
+            { task: "Cocinar en la estufa", emoji: "🍳", typical: false },
+            { task: "Manejar un carro", emoji: "🚗", typical: false },
+            { task: "Guardar mis juguetes", emoji: "🧸", typical: true },
+            { task: "Bañarme solo", emoji: "🚿", typical: true }
+          ];
+          
+          gameArea.innerHTML = `
+            <p class="text-center mb-4 font-semibold text-gray-700">Selecciona las tareas que ya puedes hacer sin ayuda:</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="tasks-grid">
+              ${tasks.map((t, i) => `
+                <button onclick="toggleTask(${i})" id="task-${i}" 
+                        class="task-btn bg-white hover:bg-orange-50 p-4 rounded-xl transition-all border-2 border-gray-200 text-center"
+                        data-typical="${t.typical}">
+                  <span class="text-4xl block mb-2">${t.emoji}</span>
+                  <p class="text-sm font-medium">${t.task}</p>
+                </button>
+              `).join('')}
+            </div>
+            <button onclick="checkTasks()" class="mt-6 btn-primary text-white px-8 py-3 rounded-full font-bold mx-auto block">
+              Ver mis logros 🌟
+            </button>
+            <div id="tasks-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+          `;
+          window.selectedTasks = new Set();
+          break;
+
+        case 16: // Caja de Sueños
+          const dreams = [
+            { dream: "Astronauta", emoji: "🚀" },
+            { dream: "Artista", emoji: "🎨" },
+            { dream: "Veterinaria", emoji: "🐕" },
+            { dream: "Chef", emoji: "👨‍🍳" },
+            { dream: "Bombero", emoji: "🚒" },
+            { dream: "Científico", emoji: "🔬" },
+            { dream: "Deportista", emoji: "⚽" },
+            { dream: "Músico", emoji: "🎸" },
+            { dream: "Maestro", emoji: "📚" },
+            { dream: "Doctor", emoji: "🏥" },
+            { dream: "Ingeniero", emoji: "🔧" },
+            { dream: "Escritor", emoji: "✏️" }
+          ];
+          
+          gameArea.innerHTML = `
+            <div class="text-center">
+              <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 mb-6">
+                <span class="text-6xl">✨</span>
+                <p class="text-xl font-bold text-purple-800 mt-2">¿Qué quieres ser de grande?</p>
+                <p class="text-purple-600">¡Todos los sueños son válidos para todos!</p>
+              </div>
+              <div class="grid grid-cols-3 md:grid-cols-4 gap-3">
+                ${dreams.map((d, i) => `
+                  <button onclick="selectDream('${d.dream}', '${d.emoji}')" 
+                          class="dream-btn bg-white hover:bg-purple-50 p-3 rounded-xl transition-all border-2 border-purple-100 hover:border-purple-300">
+                    <span class="text-3xl block">${d.emoji}</span>
+                    <p class="text-xs font-medium mt-1">${d.dream}</p>
+                  </button>
+                `).join('')}
+              </div>
+              <div id="dream-result" class="mt-6 p-6 rounded-xl hidden"></div>
+            </div>
+          `;
+          break;
+
+        case 17: // Inventor de Juegos
+          gameArea.innerHTML = `
+            <div class="text-center">
+              <div class="bg-blue-50 rounded-xl p-4 mb-6">
+                <span class="text-5xl">🎮</span>
+                <p class="font-bold text-blue-800 mt-2">Juego: "Carrera de Obstáculos"</p>
+                <p class="text-blue-600">Regla actual: Solo pueden jugar los niños más rápidos</p>
+              </div>
+              <p class="font-bold text-purple-700 mb-4">¿Cómo cambiarías la regla para que sea más justo?</p>
+              <div class="grid grid-cols-1 gap-3 max-w-md mx-auto">
+                <button onclick="inventRule(1)" class="bg-white hover:bg-green-50 p-4 rounded-xl transition-all border-2 border-gray-200 text-left">
+                  <span class="text-2xl">🏃‍♂️</span>
+                  <p class="mt-1">Hacer equipos mixtos con niños rápidos y lentos</p>
+                </button>
+                <button onclick="inventRule(2)" class="bg-white hover:bg-gray-100 p-4 rounded-xl transition-all border-2 border-gray-200 text-left">
+                  <span class="text-2xl">🚫</span>
+                  <p class="mt-1">Solo dejar jugar a mis amigos</p>
+                </button>
+                <button onclick="inventRule(3)" class="bg-white hover:bg-green-50 p-4 rounded-xl transition-all border-2 border-gray-200 text-left">
+                  <span class="text-2xl">⏱️</span>
+                  <p class="mt-1">Que cada quien compita contra su propio tiempo</p>
+                </button>
+              </div>
+              <div id="rule-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+            </div>
+          `;
+          break;
+
+        case 18: // Mercadito Saludable
+          const foods = [
+            { name: "Manzana", emoji: "🍎", healthy: true },
+            { name: "Papas fritas", emoji: "🍟", healthy: false },
+            { name: "Zanahoria", emoji: "🥕", healthy: true },
+            { name: "Refresco", emoji: "🥤", healthy: false },
+            { name: "Brócoli", emoji: "🥦", healthy: true },
+            { name: "Dulces", emoji: "🍬", healthy: false },
+            { name: "Naranja", emoji: "🍊", healthy: true },
+            { name: "Nuggets", emoji: "🍗", healthy: false },
+            { name: "Elote", emoji: "🌽", healthy: true },
+            { name: "Galletas", emoji: "🍪", healthy: false }
+          ];
+          
+          gameArea.innerHTML = `
+            <div class="text-center mb-4">
+              <p class="font-semibold text-gray-700">Llena tu bolsa con alimentos frescos de la tierra 🥬</p>
+              <p class="text-sm text-gray-500">Tu bolsa: <span id="bag-count">0</span>/5 alimentos saludables</p>
+            </div>
+            <div class="grid grid-cols-5 gap-3 max-w-lg mx-auto">
+              ${foods.map((f, i) => `
+                <button onclick="addToBag(${i}, ${f.healthy})" id="food-${i}"
+                        class="food-btn bg-white hover:scale-110 p-3 rounded-xl transition-all border-2 border-gray-100"
+                        data-healthy="${f.healthy}">
+                  <span class="text-3xl block">${f.emoji}</span>
+                  <p class="text-xs mt-1">${f.name}</p>
+                </button>
+              `).join('')}
+            </div>
+            <div class="mt-6 text-center">
+              <div id="shopping-bag" class="inline-block bg-amber-100 rounded-xl p-4 min-w-[200px]">
+                <span class="text-4xl">🛒</span>
+                <p class="font-bold">Mi bolsa</p>
+                <div id="bag-items" class="flex justify-center gap-1 mt-2 min-h-[40px]"></div>
+              </div>
+            </div>
+            <div id="market-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+          `;
+          window.bagItems = [];
+          window.healthyCount = 0;
+          break;
+
+        case 19: // Zonas Seguras
+          gameArea.innerHTML = `
+            <p class="text-center mb-4 font-semibold text-gray-700">Haz clic en los lugares donde te sientes seguro:</p>
+            <div class="relative bg-gradient-to-b from-sky-200 to-green-200 rounded-xl p-4 h-80">
+              <!-- Mapa de la comunidad -->
+              <div class="grid grid-cols-4 gap-3 h-full">
+                <button onclick="markSafe('school')" id="zone-school" class="zone-btn bg-white/80 hover:bg-green-100 rounded-xl p-2 flex flex-col items-center justify-center transition-all">
+                  <span class="text-3xl">🏫</span>
+                  <span class="text-xs">Escuela</span>
+                </button>
+                <button onclick="markSafe('park')" id="zone-park" class="zone-btn bg-white/80 hover:bg-green-100 rounded-xl p-2 flex flex-col items-center justify-center transition-all">
+                  <span class="text-3xl">🌳</span>
+                  <span class="text-xs">Parque</span>
+                </button>
+                <button onclick="markSafe('home')" id="zone-home" class="zone-btn bg-white/80 hover:bg-green-100 rounded-xl p-2 flex flex-col items-center justify-center transition-all">
+                  <span class="text-3xl">🏠</span>
+                  <span class="text-xs">Mi casa</span>
+                </button>
+                <button onclick="markSafe('store')" id="zone-store" class="zone-btn bg-white/80 hover:bg-green-100 rounded-xl p-2 flex flex-col items-center justify-center transition-all">
+                  <span class="text-3xl">🏪</span>
+                  <span class="text-xs">Tienda</span>
+                </button>
+                <button onclick="markSafe('library')" id="zone-library" class="zone-btn bg-white/80 hover:bg-green-100 rounded-xl p-2 flex flex-col items-center justify-center transition-all">
+                  <span class="text-3xl">📚</span>
+                  <span class="text-xs">Biblioteca</span>
+                </button>
+                <button onclick="markSafe('church')" id="zone-church" class="zone-btn bg-white/80 hover:bg-green-100 rounded-xl p-2 flex flex-col items-center justify-center transition-all">
+                  <span class="text-3xl">⛪</span>
+                  <span class="text-xs">Iglesia</span>
+                </button>
+                <button onclick="markSafe('hospital')" id="zone-hospital" class="zone-btn bg-white/80 hover:bg-green-100 rounded-xl p-2 flex flex-col items-center justify-center transition-all">
+                  <span class="text-3xl">🏥</span>
+                  <span class="text-xs">Hospital</span>
+                </button>
+                <button onclick="markSafe('grandma')" id="zone-grandma" class="zone-btn bg-white/80 hover:bg-green-100 rounded-xl p-2 flex flex-col items-center justify-center transition-all">
+                  <span class="text-3xl">👵</span>
+                  <span class="text-xs">Casa abuela</span>
+                </button>
+              </div>
+            </div>
+            <p class="text-center mt-2 text-sm text-gray-600">Zonas seguras marcadas: <span id="safe-count">0</span></p>
+            <div id="safe-feedback" class="mt-4 p-4 rounded-xl hidden"></div>
+          `;
+          window.safeZones = new Set();
+          break;
+
+        case 20: // Semáforo Emocional
+          gameArea.innerHTML = `
+            <div class="text-center">
+              <div class="bg-gray-100 rounded-xl p-4 mb-6">
+                <p class="font-bold text-gray-800">Situación:</p>
+                <p id="situation-text" class="text-lg mt-2">Tu hermano tomó tu juguete favorito sin permiso y estás muy enojado.</p>
+              </div>
+              
+              <div class="flex justify-center gap-4 mb-6">
+                <div id="light-red" class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-3xl transition-all">🛑</div>
+                <div id="light-yellow" class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-3xl transition-all">🤔</div>
+                <div id="light-green" class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-3xl transition-all">✅</div>
+              </div>
+              
+              <div id="semaforo-steps">
+                <button onclick="semaforoStep(1)" id="step-btn-1" class="btn-primary text-white px-8 py-4 rounded-full font-bold text-lg">
+                  🛑 PARA - Detente y respira
+                </button>
+              </div>
+              
+              <div id="semaforo-feedback" class="mt-6 p-4 rounded-xl hidden"></div>
+            </div>
+          `;
+          window.semaforoState = 0;
+          break;
+      }
+    }
+
+    // Game-specific functions
+
+    // Game 1: Forest slider
+    function updateForestView(value) {
+      document.getElementById('forest-after').style.clipPath = `inset(0 ${100-value}% 0 0)`;
+      if (value >= 100) {
+        document.getElementById('reflection-box').classList.remove('hidden');
+      }
+    }
+
+    // Game 2: Guardabosques
+    function generateForestMap() {
+      const cells = [];
+      const firePositions = [2, 7, 12, 18, 21];
+      for (let i = 0; i < 25; i++) {
+        if (firePositions.includes(i)) {
+          cells.push(`<div id="cell-${i}" class="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-all" onclick="cellAction(${i})">🔥</div>`);
+        } else if (Math.random() > 0.5) {
+          cells.push(`<div id="cell-${i}" class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center">🌳</div>`);
+        } else {
+          cells.push(`<div id="cell-${i}" class="w-14 h-14 bg-amber-50 rounded-lg flex items-center justify-center cursor-pointer hover:bg-green-100 transition-all" onclick="cellAction(${i})">⬜</div>`);
+        }
+      }
+      return cells.join('');
+    }
+
+    function selectTool(tool) {
+      window.currentTool = tool;
+      document.getElementById('water-btn').classList.toggle('ring-4', tool === 'water');
+      document.getElementById('water-btn').classList.toggle('ring-blue-300', tool === 'water');
+      document.getElementById('tree-btn').classList.toggle('ring-4', tool === 'tree');
+      document.getElementById('tree-btn').classList.toggle('ring-green-300', tool === 'tree');
+    }
+
+    function cellAction(cellId) {
+      const cell = document.getElementById(`cell-${cellId}`);
+      const content = cell.innerHTML;
+      
+      if (window.currentTool === 'water' && content === '🔥') {
+        cell.innerHTML = '💨';
+        cell.className = 'w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center';
+        addPoints(20);
+        const fireCount = document.querySelectorAll('#forest-map div').length;
+        let fires = 0;
+        document.querySelectorAll('#forest-map > div').forEach(c => {
+          if (c.innerHTML === '🔥') fires++;
+        });
+        document.getElementById('fire-count').textContent = fires;
+        if (fires === 0) {
+          setTimeout(() => showSuccess('¡Apagaste todos los incendios! Eres un gran guardabosques.'), 500);
+        }
+      } else if (window.currentTool === 'tree' && content === '⬜') {
+        cell.innerHTML = '🌱';
+        cell.className = 'w-14 h-14 bg-green-200 rounded-lg flex items-center justify-center';
+        cell.onclick = null;
+        addPoints(15);
+        const treeCount = parseInt(document.getElementById('tree-count').textContent) + 1;
+        document.getElementById('tree-count').textContent = treeCount;
+        if (treeCount >= 5) {
+          addPoints(50);
+        }
+      }
+    }
+
+    // Game 3: Balance Verde
+    function generateCityGrid() {
+      const cells = [];
+      for (let i = 0; i < 16; i++) {
+        if (i % 2 === 0) {
+          cells.push(`<div id="city-${i}" class="city-cell w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-all text-3xl" onclick="convertFactory(${i})">🏭</div>`);
+        } else {
+          cells.push(`<div id="city-${i}" class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center text-3xl">🏠</div>`);
+        }
+      }
+      return cells.join('');
+    }
+
+    function convertFactory(id) {
+      const cell = document.getElementById(`city-${id}`);
+      if (cell.innerHTML === '🏭') {
+        cell.innerHTML = '☀️';
+        cell.className = 'w-16 h-16 bg-yellow-100 rounded-lg flex items-center justify-center text-3xl';
+        addPoints(25);
+        window.pollutionCount--;
+        const percentage = (window.pollutionCount / 8) * 100;
+        document.getElementById('pollution-bar').style.width = percentage + '%';
+        
+        if (percentage <= 50) {
+          document.getElementById('pollution-level').textContent = 'Media';
+          document.getElementById('pollution-level').className = 'text-yellow-500';
+        }
+        if (percentage <= 25) {
+          document.getElementById('pollution-level').textContent = 'Baja';
+          document.getElementById('pollution-level').className = 'text-green-500';
+        }
+        if (window.pollutionCount === 0) {
+          showSuccess('¡Ciudad limpia! Cambiaste todas las fábricas por energía solar.');
+        }
+      }
+    }
+
+    // Game 4: Corn cycle drag and drop
+    let draggedElement = null;
+
+    function dragStart(e) {
+      draggedElement = e.target.closest('.drag-item');
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => {
+        if (draggedElement) draggedElement.style.opacity = '0.5';
+      }, 0);
+    }
+
+    function dragEnd(e) {
+      if (draggedElement) draggedElement.style.opacity = '1';
+      draggedElement = null;
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('drag-over');
+    }
+
+    function dragLeave(e) {
+      e.currentTarget.classList.remove('drag-over');
+    }
+
+    function dropCorn(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      if (draggedElement && e.currentTarget.children.length === 0) {
+        e.currentTarget.innerHTML = '';
+        e.currentTarget.appendChild(draggedElement.cloneNode(true));
+        draggedElement.remove();
+        addPoints(10);
+      }
+    }
+
+    function checkCornOrder() {
+      const timeline = document.getElementById('corn-timeline');
+      const slots = timeline.querySelectorAll('.drop-zone');
+      let correct = 0;
+      
+      slots.forEach((slot, i) => {
+        const item = slot.querySelector('.drag-item');
+        if (item && parseInt(item.dataset.correct) === i) {
+          correct++;
+          slot.classList.add('bg-green-100', 'border-green-400');
+        } else if (item) {
+          slot.classList.add('bg-red-100', 'border-red-400');
+        }
+      });
+      
+      if (correct === 6) {
+        addPoints(100);
+        showSuccess('¡Perfecto! Ordenaste correctamente el ciclo del maíz.');
+      } else {
+        const feedback = document.createElement('p');
+        feedback.className = 'text-center mt-4 text-orange-600 font-medium';
+        feedback.textContent = `Tienes ${correct} de 6 correctos. ¡Intenta de nuevo!`;
+        document.getElementById('game-area').appendChild(feedback);
+      }
+    }
+
+    // Game 5: Wall of voices
+    function addWish() {
+      const wish = document.getElementById('wish-input').value.trim();
+      const name = document.getElementById('name-input').value.trim() || 'Anónimo';
+      
+      if (wish) {
+        const colors = ['bg-yellow-200', 'bg-pink-200', 'bg-blue-200', 'bg-green-200', 'bg-purple-200'];
+        const rotations = ['-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const rotation = rotations[Math.floor(Math.random() * rotations.length)];
+        
+        const note = document.createElement('div');
+        note.className = `${color} p-3 rounded shadow-md transform ${rotation} slide-up`;
+        note.innerHTML = `<p class="text-sm">✨ "${wish}" - ${name}</p>`;
+        
+        document.getElementById('wall-notes').appendChild(note);
+        document.getElementById('wish-input').value = '';
+        document.getElementById('name-input').value = '';
+        
+        addPoints(50);
+        showSuccess('¡Tu voz importa! Tu deseo está en el muro de la comunidad.');
+      }
+    }
+
+    // Game 6: Emergency call
+    function checkEmergency(answer) {
+      const emergency = window.emergencies[window.emergencyIndex];
+      const feedback = document.getElementById('emergency-feedback');
+      
+      if (answer === emergency.correct) {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+        feedback.innerHTML = '<p class="text-green-700 font-bold">✅ ¡Correcto! Esa es la institución adecuada.</p>';
+        feedback.classList.remove('hidden');
+        addPoints(50);
+        
+        window.emergencyIndex++;
+        if (window.emergencyIndex < window.emergencies.length) {
+          setTimeout(() => {
+            document.getElementById('emergency-text').textContent = window.emergencies[window.emergencyIndex].text;
+            feedback.classList.add('hidden');
+          }, 1500);
+        } else {
+          setTimeout(() => showSuccess('¡Excelente! Sabes a quién llamar en cada emergencia.'), 1500);
+        }
+      } else {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-red-100';
+        feedback.innerHTML = '<p class="text-red-700 font-bold">❌ Piénsalo de nuevo. ¿Quién puede ayudar mejor?</p>';
+        feedback.classList.remove('hidden');
+      }
+    }
+
+    // Game 7: Empathy
+    function empathyChoice(choice) {
+      const feedback = document.getElementById('empathy-feedback');
+      
+      if (choice === 'invite' || choice === 'comfort') {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+        feedback.innerHTML = `
+          <p class="text-green-700 font-bold">💚 ¡Excelente elección!</p>
+          <p class="text-green-600 mt-2">${choice === 'invite' ? 'Invitar a jugar' : 'Preguntar cómo está'} es una forma de mostrar empatía y hacer sentir mejor a Carlos.</p>
+        `;
+        addPoints(100);
+        setTimeout(() => showSuccess('¡Eres muy empático! Ayudar a otros nos hace mejores personas.'), 2000);
+      } else {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-orange-100';
+        feedback.innerHTML = '<p class="text-orange-700 font-bold">🤔 Piensa: ¿Cómo te sentirías tú si estuvieras en el lugar de Carlos?</p>';
+      }
+      feedback.classList.remove('hidden');
+    }
+
+    // Game 8: Circle of trust
+    function dropChild(e, adult) {
+      e.preventDefault();
+      const feedback = document.getElementById('trust-feedback');
+      
+      if (adult === 'extraño') {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-red-100';
+        feedback.innerHTML = '<p class="text-red-700 font-bold">⚠️ Los extraños no son personas de confianza. Busca a alguien que conozcas bien.</p>';
+      } else {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+        feedback.innerHTML = `<p class="text-green-700 font-bold">✅ ¡Muy bien! ${adult.charAt(0).toUpperCase() + adult.slice(1)} es una persona de confianza que puede ayudarte.</p>`;
+        addPoints(100);
+        
+        const child = document.getElementById('child-sofia');
+        child.style.display = 'none';
+        
+        const zone = e.currentTarget;
+        const newChild = document.createElement('span');
+        newChild.className = 'text-3xl ml-2';
+        newChild.textContent = '👧';
+        zone.appendChild(newChild);
+        
+        setTimeout(() => showSuccess('¡Excelente! Siempre busca a un adulto de confianza cuando necesites ayuda.'), 1500);
+      }
+      feedback.classList.remove('hidden');
+    }
+
+    // Game 9: Families
+    function selectFamily(element, type) {
+      if (type === 'house') {
+        document.querySelectorAll('.family-house').forEach(h => h.classList.remove('ring-4', 'ring-purple-400'));
+        element.classList.add('ring-4', 'ring-purple-400');
+        window.selectedHouse = element;
+      } else {
+        document.querySelectorAll('.family-emoji').forEach(e => e.classList.remove('ring-4', 'ring-purple-400'));
+        element.classList.add('ring-4', 'ring-purple-400');
+        window.selectedEmoji = element;
+      }
+      
+      if (window.selectedHouse && window.selectedEmoji) {
+        checkFamilyMatch();
+      }
+    }
+
+    function checkFamilyMatch() {
+      const feedback = document.getElementById('family-feedback');
+      
+      if (window.selectedHouse.dataset.family === window.selectedEmoji.dataset.family) {
+        window.selectedHouse.classList.add('bg-green-200', 'opacity-50');
+        window.selectedEmoji.classList.add('bg-green-200', 'opacity-50');
+        window.selectedHouse.onclick = null;
+        window.selectedEmoji.onclick = null;
+        
+        addPoints(50);
+        window.matchedFamilies++;
+        
+        feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+        feedback.innerHTML = '<p class="text-green-700 font-bold">✅ ¡Correcto! Todas las familias merecen respeto.</p>';
+        
+        if (window.matchedFamilies >= 3) {
+          setTimeout(() => showSuccess('¡Excelente! Aprendiste que hay muchos tipos de familias y todas son valiosas.'), 1000);
+        }
+      } else {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-orange-100';
+        feedback.innerHTML = '<p class="text-orange-700 font-bold">🤔 Intenta de nuevo. Busca la familia correcta.</p>';
+      }
+      feedback.classList.remove('hidden');
+      
+      window.selectedHouse = null;
+      window.selectedEmoji = null;
+      document.querySelectorAll('.family-house, .family-emoji').forEach(e => e.classList.remove('ring-4', 'ring-purple-400'));
+    }
+
+    // Game 10: Mediator
+    function checkMediation(index, correct) {
+      const feedback = document.getElementById('mediation-feedback');
+      
+      if (correct) {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+        feedback.innerHTML = '<p class="text-green-700 font-bold">✅ ¡Excelente! Esa solución es justa para todos.</p>';
+        addPoints(50);
+        
+        window.conflictIndex++;
+        if (window.conflictIndex < window.conflicts.length) {
+          setTimeout(() => {
+            const conflict = window.conflicts[window.conflictIndex];
+            document.getElementById('conflict-text').textContent = conflict.situation;
+            document.getElementById('conflict-options').innerHTML = conflict.options.map((opt, i) => `
+              <button onclick="checkMediation(${i}, ${opt.correct})" 
+                      class="w-full bg-white hover:bg-purple-50 p-4 rounded-xl transition-all text-left border-2 border-purple-100">
+                ${opt.text}
+              </button>
+            `).join('');
+            feedback.classList.add('hidden');
+          }, 1500);
+        } else {
+          setTimeout(() => showSuccess('¡Eres un gran mediador! Sabes encontrar soluciones justas.'), 1500);
+        }
+      } else {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-orange-100';
+        feedback.innerHTML = '<p class="text-orange-700 font-bold">🤔 Piensa: ¿Esta solución es justa para TODOS?</p>';
+      }
+      feedback.classList.remove('hidden');
+    }
+
+    // Game 11: Assembly vote
+    function voteIdea(id) {
+      if (window.hasVoted) return;
+      
+      window.votes[id]++;
+      window.hasVoted = true;
+      
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`votes-${i}`).textContent = window.votes[i] + ' votos';
+      }
+      
+      document.querySelectorAll('.vote-option').forEach((btn, i) => {
+        if (i + 1 === id) {
+          btn.classList.add('ring-4', 'ring-green-400', 'bg-green-50');
+        }
+      });
+      
+      addPoints(50);
+      
+      const feedback = document.getElementById('vote-feedback');
+      feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+      feedback.innerHTML = '<p class="text-green-700 font-bold">🗳️ ¡Tu voto cuenta! Participar en las decisiones de tu comunidad es importante.</p>';
+      feedback.classList.remove('hidden');
+      
+      setTimeout(() => showSuccess('¡Bien hecho! Tu opinión ayuda a mejorar la comunidad.'), 2000);
+    }
+
+    // Game 12: Jobs
+    function dropJob(e, person) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      
+      if (draggedElement) {
+        const job = draggedElement.dataset.job;
+        e.currentTarget.innerHTML = job;
+        e.currentTarget.className = 'bg-indigo-200 w-32 h-12 rounded-xl flex items-center justify-center text-sm font-medium';
+        draggedElement.remove();
+        
+        window.jobsAssigned++;
+        addPoints(30);
+        
+        if (window.jobsAssigned >= 2) {
+          document.getElementById('jobs-feedback').classList.remove('hidden');
+          setTimeout(() => showSuccess('¡Correcto! Cualquier persona puede tener cualquier profesión.'), 1500);
+        }
+      }
+    }
+
+    // Game 13: Video call
+    function connectCable(num) {
+      if (window.cableOrder.length === num - 1) {
+        window.cableOrder.push(num);
+        document.getElementById(`cable-${num}`).className = 'cable bg-cyan-400 w-24 h-4 rounded-full';
+        addPoints(20);
+        
+        if (window.cableOrder.length === 3) {
+          document.getElementById('call-screen').classList.remove('hidden');
+          addPoints(50);
+          setTimeout(() => showSuccess('¡Conectado! La tecnología nos ayuda a comunicarnos.'), 1500);
+        }
+      }
+    }
+
+    // Game 14: Chain of favors
+    function doFavor(step) {
+      if (step === window.favorStep) {
+        const currentFavor = document.getElementById(`favor-${step}`);
+        currentFavor.classList.remove('cursor-pointer', 'hover:bg-pink-200');
+        currentFavor.classList.add('bg-green-200');
+        currentFavor.innerHTML = currentFavor.innerHTML.replace('necesita', '¡ayudado!');
+        
+        addPoints(30);
+        window.favorStep++;
+        
+        if (window.favorStep <= 3) {
+          const nextFavor = document.getElementById(`favor-${window.favorStep}`);
+          nextFavor.classList.remove('bg-gray-200', 'opacity-50');
+          nextFavor.classList.add('bg-pink-100', 'cursor-pointer', 'hover:bg-pink-200');
+          nextFavor.onclick = () => doFavor(window.favorStep);
+        } else {
+          const feedback = document.getElementById('favor-feedback');
+          feedback.className = 'mt-6 p-4 rounded-xl bg-green-100';
+          feedback.innerHTML = '<p class="text-green-700 font-bold">🎉 ¡Completaste la cadena! La solidaridad hace mejor a nuestra comunidad.</p>';
+          feedback.classList.remove('hidden');
+          setTimeout(() => showSuccess('¡Excelente! Cuando ayudamos, creamos una cadena de bondad.'), 1500);
+        }
+      }
+    }
+
+    // Game 15: I can do it
+    function toggleTask(id) {
+      const btn = document.getElementById(`task-${id}`);
+      
+      if (window.selectedTasks.has(id)) {
+        window.selectedTasks.delete(id);
+        btn.classList.remove('bg-orange-200', 'border-orange-400');
+        btn.classList.add('bg-white', 'border-gray-200');
+      } else {
+        window.selectedTasks.add(id);
+        btn.classList.remove('bg-white', 'border-gray-200');
+        btn.classList.add('bg-orange-200', 'border-orange-400');
+      }
+    }
+
+    function checkTasks() {
+      const feedback = document.getElementById('tasks-feedback');
+      const selectedCount = window.selectedTasks.size;
+      
+      feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+      feedback.innerHTML = `
+        <p class="text-green-700 font-bold">🌟 ¡Genial! Puedes hacer ${selectedCount} cosas por ti mismo.</p>
+        <p class="text-green-600 mt-2">Cada día aprendes algo nuevo y te vuelves más independiente.</p>
+      `;
+      feedback.classList.remove('hidden');
+      
+      addPoints(selectedCount * 10);
+      setTimeout(() => showSuccess('¡Felicidades por todo lo que ya puedes hacer solo!'), 2000);
+    }
+
+    // Game 16: Box of dreams
+    function selectDream(dream, emoji) {
+      const result = document.getElementById('dream-result');
+      result.className = 'mt-6 p-6 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100';
+      result.innerHTML = `
+        <span class="text-6xl block mb-4">${emoji}</span>
+        <p class="text-xl font-bold text-purple-800">¡Quieres ser ${dream}!</p>
+        <p class="text-purple-600 mt-2">¡Es un sueño maravilloso! Tú puedes lograr lo que te propongas.</p>
+        <p class="text-purple-500 text-sm mt-4">Recuerda: No importa si eres niño o niña, ¡todos pueden cumplir sus sueños!</p>
+      `;
+      result.classList.remove('hidden');
+      
+      addPoints(100);
+      setTimeout(() => showSuccess('¡Tu sueño es válido! Nunca dejes de soñar.'), 2000);
+    }
+
+    // Game 17: Game inventor
+    function inventRule(option) {
+      const feedback = document.getElementById('rule-feedback');
+      
+      if (option === 1 || option === 3) {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+        feedback.innerHTML = `
+          <p class="text-green-700 font-bold">✅ ¡Excelente idea!</p>
+          <p class="text-green-600 mt-2">${option === 1 ? 'Los equipos mixtos' : 'Competir contra uno mismo'} hace que TODOS puedan participar y divertirse.</p>
+        `;
+        addPoints(100);
+        setTimeout(() => showSuccess('¡Eres un gran inventor de reglas justas!'), 2000);
+      } else {
+        feedback.className = 'mt-4 p-4 rounded-xl bg-orange-100';
+        feedback.innerHTML = '<p class="text-orange-700 font-bold">🤔 ¿Esa regla es justa para todos? Piensa en incluir a más niños.</p>';
+      }
+      feedback.classList.remove('hidden');
+    }
+
+    // Game 18: Healthy market
+    function addToBag(id, healthy) {
+      const food = document.getElementById(`food-${id}`);
+      if (food.classList.contains('opacity-50')) return;
+      
+      const emoji = food.querySelector('span').textContent;
+      const bagItems = document.getElementById('bag-items');
+      
+      if (healthy) {
+        bagItems.innerHTML += `<span class="text-2xl">${emoji}</span>`;
+        food.classList.add('opacity-50', 'border-green-400');
+        window.bagItems.push(id);
+        window.healthyCount++;
+        document.getElementById('bag-count').textContent = window.healthyCount;
+        addPoints(20);
+        
+        if (window.healthyCount >= 5) {
+          const feedback = document.getElementById('market-feedback');
+          feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+          feedback.innerHTML = '<p class="text-green-700 font-bold">🥗 ¡Tu bolsa está llena de alimentos saludables!</p>';
+          feedback.classList.remove('hidden');
+          setTimeout(() => showSuccess('¡Excelente! Los alimentos frescos te dan más energía.'), 1500);
+        }
+      } else {
+        food.classList.add('shake');
+        const feedback = document.getElementById('market-feedback');
+        feedback.className = 'mt-4 p-4 rounded-xl bg-orange-100';
+        feedback.innerHTML = '<p class="text-orange-700">🤔 Ese alimento es ultraprocesado. Busca algo que venga de la tierra.</p>';
+        feedback.classList.remove('hidden');
+        setTimeout(() => {
+          food.classList.remove('shake');
+          feedback.classList.add('hidden');
+        }, 1500);
+      }
+    }
+
+    // Game 19: Safe zones
+    function markSafe(zone) {
+      const btn = document.getElementById(`zone-${zone}`);
+      
+      if (!window.safeZones.has(zone)) {
+        window.safeZones.add(zone);
+        btn.classList.remove('bg-white/80');
+        btn.classList.add('bg-green-300', 'ring-4', 'ring-green-500');
+        document.getElementById('safe-count').textContent = window.safeZones.size;
+        addPoints(15);
+        
+        if (window.safeZones.size >= 4) {
+          const feedback = document.getElementById('safe-feedback');
+          feedback.className = 'mt-4 p-4 rounded-xl bg-green-100';
+          feedback.innerHTML = '<p class="text-green-700 font-bold">🗺️ ¡Muy bien! Conoces lugares seguros en tu comunidad.</p>';
+          feedback.classList.remove('hidden');
+          setTimeout(() => showSuccess('¡Excelente! Saber dónde están los lugares seguros te protege.'), 1500);
+        }
+      }
+    }
+
+    // Game 20: Traffic light emotions
+    function semaforoStep(step) {
+      const stepsDiv = document.getElementById('semaforo-steps');
+      
+      if (step === 1) {
+        document.getElementById('light-red').classList.remove('bg-gray-300');
+        document.getElementById('light-red').classList.add('bg-red-500');
+        addPoints(20);
+        
+        stepsDiv.innerHTML = `
+          <p class="text-red-600 font-bold mb-4">🛑 PARA - Respira profundo 3 veces...</p>
+          <button onclick="semaforoStep(2)" class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-8 py-4 rounded-full font-bold text-lg transition-all">
+            🤔 PIENSA - ¿Qué opciones tengo?
+          </button>
+        `;
+      } else if (step === 2) {
+        document.getElementById('light-yellow').classList.remove('bg-gray-300');
+        document.getElementById('light-yellow').classList.add('bg-yellow-400');
+        addPoints(20);
+        
+        stepsDiv.innerHTML = `
+          <p class="text-yellow-600 font-bold mb-4">🤔 PIENSA - Mis opciones son:</p>
+          <div class="space-y-2 mb-4 text-left max-w-md mx-auto">
+            <p>1. Gritar y pelear 😠</p>
+            <p>2. Hablar con calma y pedir que me lo devuelva 😊</p>
+            <p>3. Contarle a un adulto 👨‍👩‍👧</p>
+          </div>
+          <button onclick="semaforoStep(3)" class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full font-bold text-lg transition-all">
+            ✅ ACTÚA - Elegir la mejor opción
+          </button>
+        `;
+      } else if (step === 3) {
+        document.getElementById('light-green').classList.remove('bg-gray-300');
+        document.getElementById('light-green').classList.add('bg-green-500');
+        addPoints(60);
+        
+        stepsDiv.innerHTML = `
+          <div class="bg-green-100 p-4 rounded-xl">
+            <p class="text-green-700 font-bold text-lg">✅ ¡Elegiste bien!</p>
+            <p class="text-green-600 mt-2">Hablar con calma o pedir ayuda a un adulto son las mejores opciones.</p>
+          </div>
+        `;
+        
+        setTimeout(() => showSuccess('¡Excelente! Aprendiste a manejar tus emociones con el semáforo.'), 1500);
+      }
+    }
+
+    // Initialize
+    renderGames();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d72a82fe303afbf',t:'MTc3MjY0NTkzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
