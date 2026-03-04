@@ -1,0 +1,1930 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juegos Educativos 2° Grado</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Fredoka', 'Comic Neue', sans-serif; }
+    .game-card { transition: all 0.3s ease; }
+    .game-card:hover { transform: translateY(-8px) scale(1.02); }
+    .bounce { animation: bounce 0.6s ease infinite; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.8); }
+    }
+    .star { animation: starSpin 3s linear infinite; }
+    @keyframes starSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .float { animation: float 3s ease-in-out infinite; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+    .shake { animation: shake 0.5s ease-in-out; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    .correct-flash { animation: correctFlash 0.5s ease; }
+    @keyframes correctFlash {
+      0%, 100% { background-color: inherit; }
+      50% { background-color: #86efac; }
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #f59e0b, #ef4444, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .pattern-bg {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23fbbf24' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 pattern-bg overflow-auto scrollbar-hide">
+  <div id="app" class="min-h-full w-full"><!-- Main Menu -->
+   <div id="main-menu" class="min-h-full w-full p-4 md:p-8"><!-- Header -->
+    <header class="text-center mb-8">
+     <div class="inline-block relative">
+      <h1 id="main-title" class="text-3xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">🎮 Juegos Educativos 2° Grado 🎮</h1>
+      <p id="welcome-msg" class="text-lg md:text-xl text-amber-300 font-medium">¡Aprende jugando!</p>
+     </div><!-- Learning Content Box -->
+     <div class="mt-6 bg-white/95 rounded-2xl p-4 md:p-6 max-w-4xl mx-auto shadow-2xl border-4 border-amber-400">
+      <h2 class="text-xl md:text-2xl font-bold text-purple-700 mb-3 flex items-center justify-center gap-2">📚 ¿Qué aprenderás?</h2>
+      <div class="grid md:grid-cols-2 gap-4 text-left text-sm md:text-base">
+       <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-3 rounded-xl border-2 border-blue-200">
+        <h3 class="font-bold text-blue-700 mb-2">📝 Campo: Lenguajes</h3>
+        <ul class="text-gray-700 space-y-1 text-xs md:text-sm">
+         <li>✏️ Escritura de nombres propios</li>
+         <li>📖 Lectura fluida de textos</li>
+         <li>🎭 Narración de eventos</li>
+         <li>✨ Escritura creativa y rimas</li>
+         <li>🔍 Descripción detallada</li>
+         <li>🔤 Uso correcto de mayúsculas</li>
+        </ul>
+       </div>
+       <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-3 rounded-xl border-2 border-green-200">
+        <h3 class="font-bold text-green-700 mb-2">🔬 Campo: Saberes Científicos</h3>
+        <ul class="text-gray-700 space-y-1 text-xs md:text-sm">
+         <li>👁️ Los cinco sentidos</li>
+         <li>🍎 Clasificación de alimentos</li>
+         <li>🌿 Ecosistemas de México</li>
+         <li>🌍 Cuidado del medio ambiente</li>
+         <li>🔢 Números hasta 1000</li>
+         <li>✖️ Introducción a la multiplicación</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </header><!-- Category Tabs -->
+    <div class="flex justify-center gap-2 md:gap-4 mb-6 flex-wrap"><button onclick="showCategory('lenguajes')" id="tab-lenguajes" class="px-4 md:px-6 py-2 md:py-3 rounded-full font-bold text-sm md:text-lg transition-all bg-blue-500 text-white shadow-lg hover:bg-blue-600"> 📝 Lenguajes </button> <button onclick="showCategory('ciencias')" id="tab-ciencias" class="px-4 md:px-6 py-2 md:py-3 rounded-full font-bold text-sm md:text-lg transition-all bg-white/20 text-white hover:bg-white/30"> 🔬 Ciencias </button> <button onclick="showCategory('progreso')" id="tab-progreso" class="px-4 md:px-6 py-2 md:py-3 rounded-full font-bold text-sm md:text-lg transition-all bg-white/20 text-white hover:bg-white/30"> ⭐ Mi Progreso </button>
+    </div><!-- Games Grid - Lenguajes -->
+    <div id="games-lenguajes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto"><!-- Game 1: Carnet Escolar -->
+     <div class="game-card bg-gradient-to-br from-pink-400 to-rose-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('carnet')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🎫
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Carnet Escolar</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Escribe tus datos completos para entrar a la biblioteca</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Nombres completos y pertenencia
+      </div>
+     </div><!-- Game 2: Pregonero -->
+     <div class="game-card bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('pregonero')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       📢
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Pregonero</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Lee el mensaje del cartel para que el pueblo lo oiga</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Lectura fluida de carteles
+      </div>
+     </div><!-- Game 3: Noticiero del Recreo -->
+     <div class="game-card bg-gradient-to-br from-red-400 to-pink-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('noticiero')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       📺
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Noticiero del Recreo</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Escribe una noticia de lo que pasó hoy</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Narración con orden temporal
+      </div>
+     </div><!-- Game 4: Rimas Locas -->
+     <div class="game-card bg-gradient-to-br from-purple-400 to-violet-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('rimas')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🎵
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Rimas Locas</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Elige la palabra que rima para completar el poema</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Escritura creativa y rimas
+      </div>
+     </div><!-- Game 5: Detective Científico -->
+     <div class="game-card bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('detective')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🔍
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Detective Científico</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Escribe 3 rasgos clave del animal que observas</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Descripción detallada
+      </div>
+     </div><!-- Game 6: Caza Mayúsculas -->
+     <div class="game-card bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('mayusculas')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🔤
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Caza Mayúsculas</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Clica en las letras que deben ir en grande</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Uso de mayúsculas
+      </div>
+     </div><!-- Game 7: Mapa de Ideas -->
+     <div class="game-card bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('mapa')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🗺️
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Mapa de Ideas</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Conecta dibujos con palabras sobre un tema</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Organización de información
+      </div>
+     </div><!-- Game 8: Constructor -->
+     <div class="game-card bg-gradient-to-br from-lime-400 to-green-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('constructor')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🔧
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Constructor</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Escribe los pasos para armar un juguete</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Instructivos escritos
+      </div>
+     </div><!-- Game 9: Vendedor de Jugos -->
+     <div class="game-card bg-gradient-to-br from-yellow-400 to-amber-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('vendedor')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🧃
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Vendedor de Jugos</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Diseña un cartel con precio y dibujo</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Avisos publicitarios
+      </div>
+     </div><!-- Game 10: Diccionario Viajero -->
+     <div class="game-card bg-gradient-to-br from-fuchsia-400 to-purple-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('diccionario')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🌎
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Diccionario Viajero</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Une palabras en lengua indígena con su significado</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Diversidad lingüística
+      </div>
+     </div>
+    </div><!-- Games Grid - Ciencias -->
+    <div id="games-ciencias" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto"><!-- Game 11: Súper Sentidos -->
+     <div class="game-card bg-gradient-to-br from-rose-400 to-red-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('sentidos')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       👁️
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Súper Sentidos</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Asocia olores y sonidos con el órgano correcto</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Los órganos de los sentidos
+      </div>
+     </div><!-- Game 12: Semáforo Nutritivo -->
+     <div class="game-card bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('semaforo')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🚦
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Semáforo Nutritivo</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Clasifica alimentos por su nivel de procesamiento</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Alimentos procesados
+      </div>
+     </div><!-- Game 13: Viajero de México -->
+     <div class="game-card bg-gradient-to-br from-amber-400 to-yellow-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('viajero')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🌵
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Viajero de México</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Elige la ropa adecuada según el ecosistema</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Ecosistemas de México
+      </div>
+     </div><!-- Game 14: Planta y Limpia -->
+     <div class="game-card bg-gradient-to-br from-teal-400 to-cyan-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('planta')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🌱
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Planta y Limpia</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Recoge plásticos del mar y planta árboles</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Cuidado ambiental
+      </div>
+     </div><!-- Game 15: Prueba de Materiales -->
+     <div class="game-card bg-gradient-to-br from-slate-400 to-gray-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('materiales')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🧪
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Prueba de Materiales</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Golpea o estira objetos para ver sus propiedades</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Propiedades físicas
+      </div>
+     </div><!-- Game 16: Empuja el Carrito -->
+     <div class="game-card bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('carrito')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🛒
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Empuja el Carrito</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Calcula la fuerza necesaria para mover objetos</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Reposo y movimiento
+      </div>
+     </div><!-- Game 17: Medidor de Ruido -->
+     <div class="game-card bg-gradient-to-br from-violet-400 to-purple-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('ruido')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🔊
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Medidor de Ruido</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Baja el volumen cuando la barra se ponga roja</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Salud auditiva
+      </div>
+     </div><!-- Game 18: Calendario Lunar -->
+     <div class="game-card bg-gradient-to-br from-indigo-400 to-blue-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('lunar')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🌙
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Calendario Lunar</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Aprende las fases de la luna</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Fases lunares
+      </div>
+     </div><!-- Game 19: Cosecha de Estrellas -->
+     <div class="game-card bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('estrellas')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       ⭐
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Cosecha de Estrellas</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Agrupa estrellas para llegar a 1000</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Números hasta 1000
+      </div>
+     </div><!-- Game 20: Huerto Rectangular -->
+     <div class="game-card bg-gradient-to-br from-lime-400 to-green-500 rounded-2xl p-4 shadow-xl cursor-pointer border-4 border-white/30" onclick="startGame('huerto')">
+      <div class="text-4xl md:text-5xl mb-3 text-center">
+       🌻
+      </div>
+      <h3 class="text-lg md:text-xl font-bold text-white text-center mb-2">Huerto Rectangular</h3>
+      <p class="text-white/90 text-xs md:text-sm text-center">Planta semillas en filas para aprender multiplicación</p>
+      <div class="mt-3 bg-white/20 rounded-lg p-2 text-xs text-white/80 text-center">
+       📌 Aprenderás: Multiplicación
+      </div>
+     </div>
+    </div><!-- Progress Section -->
+    <div id="games-progreso" class="hidden max-w-4xl mx-auto">
+     <div class="bg-white/95 rounded-2xl p-6 shadow-2xl">
+      <h2 class="text-2xl font-bold text-purple-700 mb-4 text-center">⭐ Mi Progreso ⭐</h2>
+      <div id="progress-list" class="space-y-3">
+       <p class="text-gray-500 text-center py-8">Completa juegos para ver tu progreso aquí</p>
+      </div>
+      <div class="mt-6 pt-4 border-t-2 border-purple-200">
+       <p class="text-center text-lg font-bold text-purple-700">Total de estrellas: <span id="total-stars" class="text-amber-500">0</span> ⭐</p>
+      </div>
+     </div>
+    </div><!-- Footer -->
+    <footer class="text-center mt-8 pb-6">
+     <div class="bg-white/90 rounded-xl p-3 inline-block shadow-lg">
+      <p class="text-purple-700 font-medium text-sm md:text-base">✨ Creado por <span class="font-bold text-pink-600">Mtra. María Fernanda Flores Valenzuela</span> ✨</p>
+      <p class="text-gray-500 text-xs mt-1">Segundo Grado de Primaria • Ciclo Escolar 2024-2025</p>
+     </div>
+    </footer>
+   </div><!-- Game Container (hidden by default) -->
+   <div id="game-container" class="hidden min-h-full w-full p-4 md:p-8">
+    <div id="game-content" class="max-w-4xl mx-auto"></div>
+   </div>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      main_title: '🎮 Juegos Educativos 2° Grado 🎮',
+      welcome_message: '¡Aprende jugando!',
+      background_color: '#312e81',
+      card_color: '#ffffff',
+      text_color: '#1e1b4b',
+      primary_action_color: '#f59e0b',
+      secondary_action_color: '#8b5cf6'
+    };
+
+    let config = { ...defaultConfig };
+    let progressData = [];
+    let currentRecordCount = 0;
+
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        progressData = data;
+        currentRecordCount = data.length;
+        updateProgressDisplay();
+      }
+    };
+
+    // Initialize SDKs
+    async function initApp() {
+      // Init Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (newConfig) => {
+            config = { ...defaultConfig, ...newConfig };
+            applyConfig();
+          },
+          mapToCapabilities: (cfg) => ({
+            recolorables: [
+              {
+                get: () => cfg.background_color || defaultConfig.background_color,
+                set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+              },
+              {
+                get: () => cfg.card_color || defaultConfig.card_color,
+                set: (v) => { cfg.card_color = v; window.elementSdk.setConfig({ card_color: v }); }
+              },
+              {
+                get: () => cfg.text_color || defaultConfig.text_color,
+                set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
+                set: (v) => { cfg.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }
+              },
+              {
+                get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
+                set: (v) => { cfg.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (cfg) => new Map([
+            ['main_title', cfg.main_title || defaultConfig.main_title],
+            ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message]
+          ])
+        });
+      }
+
+      // Init Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      applyConfig();
+    }
+
+    function applyConfig() {
+      const titleEl = document.getElementById('main-title');
+      const welcomeEl = document.getElementById('welcome-msg');
+      
+      if (titleEl) titleEl.textContent = config.main_title || defaultConfig.main_title;
+      if (welcomeEl) welcomeEl.textContent = config.welcome_message || defaultConfig.welcome_message;
+    }
+
+    function updateProgressDisplay() {
+      const progressList = document.getElementById('progress-list');
+      const totalStars = document.getElementById('total-stars');
+      
+      if (!progressList) return;
+
+      if (progressData.length === 0) {
+        progressList.innerHTML = '<p class="text-gray-500 text-center py-8">Completa juegos para ver tu progreso aquí</p>';
+        if (totalStars) totalStars.textContent = '0';
+        return;
+      }
+
+      const gameNames = {
+        'carnet': '🎫 Carnet Escolar',
+        'pregonero': '📢 Pregonero',
+        'noticiero': '📺 Noticiero del Recreo',
+        'rimas': '🎵 Rimas Locas',
+        'detective': '🔍 Detective Científico',
+        'mayusculas': '🔤 Caza Mayúsculas',
+        'mapa': '🗺️ Mapa de Ideas',
+        'constructor': '🔧 Constructor',
+        'vendedor': '🧃 Vendedor de Jugos',
+        'diccionario': '🌎 Diccionario Viajero',
+        'sentidos': '👁️ Súper Sentidos',
+        'semaforo': '🚦 Semáforo Nutritivo',
+        'viajero': '🌵 Viajero de México',
+        'planta': '🌱 Planta y Limpia',
+        'materiales': '🧪 Prueba de Materiales',
+        'carrito': '🛒 Empuja el Carrito',
+        'ruido': '🔊 Medidor de Ruido',
+        'lunar': '🌙 Calendario Lunar',
+        'estrellas': '⭐ Cosecha de Estrellas',
+        'huerto': '🌻 Huerto Rectangular'
+      };
+
+      let total = 0;
+      progressList.innerHTML = progressData.map(record => {
+        total += record.score || 0;
+        const date = new Date(record.completed_at).toLocaleDateString('es-MX');
+        return `
+          <div class="flex items-center justify-between bg-gradient-to-r from-purple-50 to-pink-50 p-3 rounded-xl border-2 border-purple-200">
+            <div>
+              <p class="font-bold text-purple-700">${gameNames[record.game_id] || record.game_id}</p>
+              <p class="text-sm text-gray-500">${record.student_name || 'Estudiante'} • ${date}</p>
+            </div>
+            <div class="text-2xl font-bold text-amber-500">${record.score} ⭐</div>
+          </div>
+        `;
+      }).join('');
+
+      if (totalStars) totalStars.textContent = total.toString();
+    }
+
+    // Category switching
+    function showCategory(category) {
+      const categories = ['lenguajes', 'ciencias', 'progreso'];
+      categories.forEach(cat => {
+        const games = document.getElementById(`games-${cat}`);
+        const tab = document.getElementById(`tab-${cat}`);
+        if (games && tab) {
+          if (cat === category) {
+            games.classList.remove('hidden');
+            tab.classList.remove('bg-white/20');
+            tab.classList.add('bg-blue-500', 'shadow-lg');
+          } else {
+            games.classList.add('hidden');
+            tab.classList.add('bg-white/20');
+            tab.classList.remove('bg-blue-500', 'shadow-lg');
+          }
+        }
+      });
+    }
+
+    // Game templates
+    const games = {
+      // ========== LENGUAJES GAMES ==========
+      carnet: {
+        title: '🎫 Carnet Escolar',
+        learning: 'Escribir tu nombre completo y apellidos correctamente',
+        render: () => `
+          <div class="bg-white rounded-2xl p-6 shadow-2xl">
+            <div class="bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl p-4 mb-6">
+              <h3 class="text-xl font-bold text-white text-center">📚 Biblioteca Escolar</h3>
+              <p class="text-white/80 text-center text-sm">Completa tu carnet para poder entrar</p>
+            </div>
+            <div class="bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl p-6 border-4 border-amber-400">
+              <div class="flex items-center gap-4 mb-4">
+                <div class="w-20 h-24 bg-gray-200 rounded-lg flex items-center justify-center text-4xl border-2 border-gray-300">📷</div>
+                <div class="flex-1">
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Nombre(s):</label>
+                  <input type="text" id="carnet-nombre" class="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Tu nombre">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Apellido Paterno:</label>
+                  <input type="text" id="carnet-paterno" class="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Primer apellido">
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Apellido Materno:</label>
+                  <input type="text" id="carnet-materno" class="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Segundo apellido">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Grado:</label>
+                  <select id="carnet-grado" class="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                    <option value="">Selecciona</option>
+                    <option value="2">2° Grado</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-1">Grupo:</label>
+                  <select id="carnet-grupo" class="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                    <option value="">Selecciona</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                  </select>
+                </div>
+              </div>
+              <button onclick="checkCarnet()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg">
+                ✅ Crear mi Carnet
+              </button>
+            </div>
+            <div id="carnet-result" class="mt-4 hidden"></div>
+          </div>
+        `
+      },
+
+      pregonero: {
+        title: '📢 Pregonero',
+        learning: 'Leer en voz alta carteles y mensajes con fluidez',
+        render: () => {
+          const messages = [
+            { text: '¡Atención! Mañana no hay clases por día festivo.', emoji: '🎉' },
+            { text: 'Se busca: Gatito perdido de color naranja. Si lo ves, avisa.', emoji: '🐱' },
+            { text: '¡Gran venta de libros! Este sábado en la plaza principal.', emoji: '📚' },
+            { text: 'Aviso: El agua estará cortada de 10am a 2pm.', emoji: '💧' },
+            { text: '¡Fiesta del pueblo! Todos invitados el domingo.', emoji: '🎊' }
+          ];
+          const msg = messages[Math.floor(Math.random() * messages.length)];
+          return `
+            <div class="bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">📢</div>
+                <h3 class="text-xl font-bold text-amber-800">¡Eres el Pregonero del Pueblo!</h3>
+                <p class="text-amber-700">Lee el cartel en voz alta para que todos te escuchen</p>
+              </div>
+              <div class="bg-amber-50 border-4 border-amber-600 rounded-xl p-6 mb-6 transform rotate-1 shadow-lg">
+                <div class="text-4xl text-center mb-3">${msg.emoji}</div>
+                <p id="pregonero-text" class="text-xl md:text-2xl font-bold text-center text-amber-900 leading-relaxed">${msg.text}</p>
+              </div>
+              <div class="bg-white rounded-xl p-4 mb-4">
+                <p class="font-bold text-gray-700 mb-2">Después de leer, responde:</p>
+                <p class="text-gray-600 mb-3">¿De qué trata el mensaje?</p>
+                <textarea id="pregonero-answer" rows="2" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none" placeholder="Escribe tu respuesta..."></textarea>
+              </div>
+              <button onclick="checkPregonero()" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-3 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg">
+                📣 ¡Ya lo leí!
+              </button>
+              <div id="pregonero-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      noticiero: {
+        title: '📺 Noticiero del Recreo',
+        learning: 'Narrar eventos con organización temporal y causal',
+        render: () => `
+          <div class="bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl p-6 shadow-2xl">
+            <div class="bg-black/80 rounded-xl p-4 mb-6">
+              <div class="flex items-center justify-between mb-2">
+                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">🔴 EN VIVO</span>
+                <span class="text-white/70 text-sm">Canal Escolar</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white text-center">📺 NOTICIERO DEL RECREO</h3>
+            </div>
+            <div class="bg-white rounded-xl p-4 space-y-4">
+              <div>
+                <label class="block font-bold text-gray-700 mb-2">📰 Titular de tu noticia:</label>
+                <input type="text" id="noticia-titulo" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-red-500 focus:outline-none" placeholder="Ej: ¡Gran partido en el recreo!">
+              </div>
+              <div>
+                <label class="block font-bold text-gray-700 mb-2">🕐 ¿Qué pasó PRIMERO?</label>
+                <textarea id="noticia-primero" rows="2" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-red-500 focus:outline-none" placeholder="Primero..."></textarea>
+              </div>
+              <div>
+                <label class="block font-bold text-gray-700 mb-2">🕑 ¿Qué pasó DESPUÉS?</label>
+                <textarea id="noticia-despues" rows="2" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-red-500 focus:outline-none" placeholder="Después..."></textarea>
+              </div>
+              <div>
+                <label class="block font-bold text-gray-700 mb-2">🕒 ¿Cómo TERMINÓ?</label>
+                <textarea id="noticia-final" rows="2" class="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-red-500 focus:outline-none" placeholder="Al final..."></textarea>
+              </div>
+              <button onclick="checkNoticiero()" class="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold py-3 rounded-xl hover:from-red-600 hover:to-pink-600 transition-all shadow-lg">
+                🎬 ¡Publicar Noticia!
+              </button>
+            </div>
+            <div id="noticiero-result" class="mt-4 hidden"></div>
+          </div>
+        `
+      },
+
+      rimas: {
+        title: '🎵 Rimas Locas',
+        learning: 'Completar versos rimados de forma creativa',
+        render: () => {
+          const poems = [
+            { line: 'El gatito juguetón, corre detrás del...', options: ['ratón', 'perro', 'árbol'], correct: 'ratón' },
+            { line: 'La luna en el cielo está, con las estrellas...', options: ['jugará', 'come', 'corre'], correct: 'jugará' },
+            { line: 'El sol brilla sin parar, y yo quiero...', options: ['jugar', 'correr', 'saltar'], correct: 'jugar' },
+            { line: 'La mariposa de colores, vuela entre las...', options: ['flores', 'nubes', 'casas'], correct: 'flores' },
+            { line: 'El pajarito cantó, y el día...', options: ['amaneció', 'terminó', 'siguió'], correct: 'amaneció' }
+          ];
+          const poem = poems[Math.floor(Math.random() * poems.length)];
+          const shuffled = [...poem.options].sort(() => Math.random() - 0.5);
+          return `
+            <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🎵</div>
+                <h3 class="text-xl font-bold text-purple-800">¡Completa la Rima!</h3>
+                <p class="text-purple-600">Elige la palabra que rima mejor</p>
+              </div>
+              <div class="bg-white rounded-xl p-6 mb-6 border-4 border-purple-300">
+                <p class="text-xl md:text-2xl font-bold text-center text-purple-900 leading-relaxed">
+                  "${poem.line}"
+                </p>
+              </div>
+              <div class="grid grid-cols-1 gap-3 mb-4" id="rimas-options" data-correct="${poem.correct}">
+                ${shuffled.map(opt => `
+                  <button onclick="selectRima(this, '${opt}')" class="p-4 bg-white rounded-xl border-3 border-purple-300 font-bold text-lg text-purple-700 hover:bg-purple-50 hover:border-purple-500 transition-all">
+                    ${opt}
+                  </button>
+                `).join('')}
+              </div>
+              <div id="rimas-result" class="hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      detective: {
+        title: '🔍 Detective Científico',
+        learning: 'Describir seres vivos con detalles específicos',
+        render: () => {
+          const animals = [
+            { name: 'Mariposa Monarca', emoji: '🦋', hints: ['Tiene alas', 'Es un insecto', 'Migra a México'] },
+            { name: 'Ajolote', emoji: '🦎', hints: ['Vive en el agua', 'Tiene branquias', 'Es mexicano'] },
+            { name: 'Colibrí', emoji: '🐦', hints: ['Es pequeño', 'Aletea muy rápido', 'Come néctar'] },
+            { name: 'Jaguar', emoji: '🐆', hints: ['Es felino', 'Tiene manchas', 'Vive en la selva'] }
+          ];
+          const animal = animals[Math.floor(Math.random() * animals.length)];
+          return `
+            <div class="bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🔍</div>
+                <h3 class="text-xl font-bold text-emerald-800">¡Sé un Detective Científico!</h3>
+                <p class="text-emerald-600">Observa al animal y describe 3 características</p>
+              </div>
+              <div class="bg-white rounded-xl p-6 mb-6 text-center border-4 border-emerald-300">
+                <div class="text-8xl mb-4">${animal.emoji}</div>
+                <h4 class="text-2xl font-bold text-emerald-800">${animal.name}</h4>
+              </div>
+              <div class="space-y-3">
+                <div>
+                  <label class="block font-bold text-emerald-700 mb-1">🔹 Característica 1:</label>
+                  <input type="text" id="detective-1" class="w-full p-3 border-2 border-emerald-300 rounded-lg focus:border-emerald-500 focus:outline-none" placeholder="¿Qué observas?">
+                </div>
+                <div>
+                  <label class="block font-bold text-emerald-700 mb-1">🔹 Característica 2:</label>
+                  <input type="text" id="detective-2" class="w-full p-3 border-2 border-emerald-300 rounded-lg focus:border-emerald-500 focus:outline-none" placeholder="¿Qué más notas?">
+                </div>
+                <div>
+                  <label class="block font-bold text-emerald-700 mb-1">🔹 Característica 3:</label>
+                  <input type="text" id="detective-3" class="w-full p-3 border-2 border-emerald-300 rounded-lg focus:border-emerald-500 focus:outline-none" placeholder="¿Algo especial?">
+                </div>
+              </div>
+              <button onclick="checkDetective()" class="w-full mt-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold py-3 rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg">
+                🔎 Enviar Informe
+              </button>
+              <div id="detective-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      mayusculas: {
+        title: '🔤 Caza Mayúsculas',
+        learning: 'Identificar palabras que inician con mayúscula',
+        render: () => {
+          const sentences = [
+            { text: ['maría', 'fue', 'a', 'guadalajara', 'con', 'pedro'], capitals: [0, 3, 5] },
+            { text: ['el', 'río', 'bravo', 'está', 'en', 'méxico'], capitals: [2, 5] },
+            { text: ['carlos', 'y', 'ana', 'viven', 'en', 'monterrey'], capitals: [0, 2, 5] },
+            { text: ['la', 'maestra', 'rosa', 'enseña', 'español'], capitals: [2] }
+          ];
+          const sentence = sentences[Math.floor(Math.random() * sentences.length)];
+          return `
+            <div class="bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🔤</div>
+                <h3 class="text-xl font-bold text-blue-800">¡Caza las Mayúsculas!</h3>
+                <p class="text-blue-600">Toca las palabras que deben empezar con mayúscula</p>
+              </div>
+              <div class="bg-white rounded-xl p-6 mb-4 border-4 border-blue-300">
+                <div class="flex flex-wrap gap-2 justify-center" id="mayusculas-words" data-capitals="${sentence.capitals.join(',')}">
+                  ${sentence.text.map((word, i) => `
+                    <button onclick="toggleMayuscula(this, ${i})" data-index="${i}" data-selected="false" class="px-4 py-2 bg-gray-100 rounded-lg font-bold text-lg text-gray-700 border-2 border-gray-300 hover:bg-blue-50 transition-all">
+                      ${word}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              <p class="text-center text-sm text-blue-600 mb-4">💡 Recuerda: Los nombres de personas y lugares llevan mayúscula</p>
+              <button onclick="checkMayusculas()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-3 rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all shadow-lg">
+                ✅ Comprobar
+              </button>
+              <div id="mayusculas-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      mapa: {
+        title: '🗺️ Mapa de Ideas',
+        learning: 'Organizar información con esquemas visuales',
+        render: () => `
+          <div class="bg-gradient-to-br from-cyan-100 to-blue-100 rounded-2xl p-6 shadow-2xl">
+            <div class="text-center mb-6">
+              <div class="text-6xl mb-2">🗺️</div>
+              <h3 class="text-xl font-bold text-cyan-800">¡Crea tu Mapa de Ideas!</h3>
+              <p class="text-cyan-600">Conecta las imágenes con las palabras correctas</p>
+            </div>
+            <div class="bg-white rounded-xl p-4 mb-4 border-4 border-cyan-300">
+              <h4 class="text-center font-bold text-lg text-cyan-800 mb-4">Tema: Los Animales de la Granja 🐄</h4>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <p class="font-bold text-cyan-700 text-center">Imágenes</p>
+                  <div class="text-4xl text-center p-3 bg-cyan-50 rounded-lg" data-animal="vaca">🐄</div>
+                  <div class="text-4xl text-center p-3 bg-cyan-50 rounded-lg" data-animal="gallina">🐔</div>
+                  <div class="text-4xl text-center p-3 bg-cyan-50 rounded-lg" data-animal="cerdo">🐷</div>
+                  <div class="text-4xl text-center p-3 bg-cyan-50 rounded-lg" data-animal="oveja">🐑</div>
+                </div>
+                <div class="space-y-2">
+                  <p class="font-bold text-cyan-700 text-center">Palabras</p>
+                  <select id="mapa-1" class="w-full p-3 bg-gray-50 rounded-lg border-2 border-cyan-200 text-center">
+                    <option value="">Selecciona...</option>
+                    <option value="vaca">Da leche</option>
+                    <option value="gallina">Pone huevos</option>
+                    <option value="cerdo">Come de todo</option>
+                    <option value="oveja">Da lana</option>
+                  </select>
+                  <select id="mapa-2" class="w-full p-3 bg-gray-50 rounded-lg border-2 border-cyan-200 text-center">
+                    <option value="">Selecciona...</option>
+                    <option value="vaca">Da leche</option>
+                    <option value="gallina">Pone huevos</option>
+                    <option value="cerdo">Come de todo</option>
+                    <option value="oveja">Da lana</option>
+                  </select>
+                  <select id="mapa-3" class="w-full p-3 bg-gray-50 rounded-lg border-2 border-cyan-200 text-center">
+                    <option value="">Selecciona...</option>
+                    <option value="vaca">Da leche</option>
+                    <option value="gallina">Pone huevos</option>
+                    <option value="cerdo">Come de todo</option>
+                    <option value="oveja">Da lana</option>
+                  </select>
+                  <select id="mapa-4" class="w-full p-3 bg-gray-50 rounded-lg border-2 border-cyan-200 text-center">
+                    <option value="">Selecciona...</option>
+                    <option value="vaca">Da leche</option>
+                    <option value="gallina">Pone huevos</option>
+                    <option value="cerdo">Come de todo</option>
+                    <option value="oveja">Da lana</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <button onclick="checkMapa()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 rounded-xl hover:from-cyan-600 hover:to-blue-600 transition-all shadow-lg">
+              🔗 Verificar Conexiones
+            </button>
+            <div id="mapa-result" class="mt-4 hidden"></div>
+          </div>
+        `
+      },
+
+      constructor: {
+        title: '🔧 Constructor',
+        learning: 'Escribir instrucciones paso a paso',
+        render: () => `
+          <div class="bg-gradient-to-br from-lime-100 to-green-100 rounded-2xl p-6 shadow-2xl">
+            <div class="text-center mb-6">
+              <div class="text-6xl mb-2">🔧</div>
+              <h3 class="text-xl font-bold text-green-800">¡Sé un Constructor!</h3>
+              <p class="text-green-600">Escribe los pasos para armar un avión de papel ✈️</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border-4 border-green-300">
+              <div class="flex justify-center mb-4">
+                <div class="text-6xl">📄 → ✈️</div>
+              </div>
+              <div class="space-y-4">
+                <div>
+                  <label class="block font-bold text-green-700 mb-1">Paso 1️⃣:</label>
+                  <input type="text" id="constructor-1" class="w-full p-3 border-2 border-green-300 rounded-lg focus:border-green-500 focus:outline-none" placeholder="Primero...">
+                </div>
+                <div>
+                  <label class="block font-bold text-green-700 mb-1">Paso 2️⃣:</label>
+                  <input type="text" id="constructor-2" class="w-full p-3 border-2 border-green-300 rounded-lg focus:border-green-500 focus:outline-none" placeholder="Después...">
+                </div>
+                <div>
+                  <label class="block font-bold text-green-700 mb-1">Paso 3️⃣:</label>
+                  <input type="text" id="constructor-3" class="w-full p-3 border-2 border-green-300 rounded-lg focus:border-green-500 focus:outline-none" placeholder="Finalmente...">
+                </div>
+              </div>
+              <button onclick="checkConstructor()" class="w-full mt-4 bg-gradient-to-r from-green-500 to-lime-500 text-white font-bold py-3 rounded-xl hover:from-green-600 hover:to-lime-600 transition-all shadow-lg">
+                📝 Guardar Instrucciones
+              </button>
+            </div>
+            <div id="constructor-result" class="mt-4 hidden"></div>
+          </div>
+        `
+      },
+
+      vendedor: {
+        title: '🧃 Vendedor de Jugos',
+        learning: 'Crear avisos publicitarios con propósito comunicativo',
+        render: () => `
+          <div class="bg-gradient-to-br from-yellow-100 to-amber-100 rounded-2xl p-6 shadow-2xl">
+            <div class="text-center mb-6">
+              <div class="text-6xl mb-2">🧃</div>
+              <h3 class="text-xl font-bold text-amber-800">¡Diseña tu Cartel!</h3>
+              <p class="text-amber-600">Crea un anuncio para vender jugos deliciosos</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border-4 border-amber-300">
+              <div class="space-y-4">
+                <div>
+                  <label class="block font-bold text-amber-700 mb-1">🍊 Nombre del jugo:</label>
+                  <input type="text" id="vendedor-nombre" class="w-full p-3 border-2 border-amber-300 rounded-lg focus:border-amber-500 focus:outline-none" placeholder="Ej: Jugo de Naranja Fresquito">
+                </div>
+                <div>
+                  <label class="block font-bold text-amber-700 mb-1">💰 Precio:</label>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl">$</span>
+                    <input type="number" id="vendedor-precio" class="flex-1 p-3 border-2 border-amber-300 rounded-lg focus:border-amber-500 focus:outline-none" placeholder="10" min="1" max="100">
+                    <span class="text-xl">pesos</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-bold text-amber-700 mb-1">🎨 Elige un dibujo:</label>
+                  <div class="grid grid-cols-4 gap-2" id="vendedor-frutas">
+                    <button onclick="selectFruta(this, '🍊')" class="p-3 text-3xl bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">🍊</button>
+                    <button onclick="selectFruta(this, '🍋')" class="p-3 text-3xl bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">🍋</button>
+                    <button onclick="selectFruta(this, '🍇')" class="p-3 text-3xl bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">🍇</button>
+                    <button onclick="selectFruta(this, '🍓')" class="p-3 text-3xl bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">🍓</button>
+                    <button onclick="selectFruta(this, '🥭')" class="p-3 text-3xl bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">🥭</button>
+                    <button onclick="selectFruta(this, '🍉')" class="p-3 text-3xl bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">🍉</button>
+                    <button onclick="selectFruta(this, '🥝')" class="p-3 text-3xl bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">🥝</button>
+                    <button onclick="selectFruta(this, '🍎')" class="p-3 text-3xl bg-amber-50 rounded-lg border-2 border-amber-200 hover:bg-amber-100">🍎</button>
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-bold text-amber-700 mb-1">✨ Frase atractiva:</label>
+                  <input type="text" id="vendedor-frase" class="w-full p-3 border-2 border-amber-300 rounded-lg focus:border-amber-500 focus:outline-none" placeholder="Ej: ¡El más rico del recreo!">
+                </div>
+              </div>
+              <button onclick="checkVendedor()" class="w-full mt-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold py-3 rounded-xl hover:from-amber-600 hover:to-yellow-600 transition-all shadow-lg">
+                🖼️ Ver mi Cartel
+              </button>
+            </div>
+            <div id="vendedor-result" class="mt-4 hidden"></div>
+          </div>
+        `
+      },
+
+      diccionario: {
+        title: '🌎 Diccionario Viajero',
+        learning: 'Conocer palabras en lenguas indígenas mexicanas',
+        render: () => {
+          const words = [
+            { nahuatl: 'Atl', spanish: 'Agua', hint: '💧' },
+            { nahuatl: 'Tonatiuh', spanish: 'Sol', hint: '☀️' },
+            { nahuatl: 'Metztli', spanish: 'Luna', hint: '🌙' },
+            { nahuatl: 'Xochitl', spanish: 'Flor', hint: '🌸' }
+          ];
+          const shuffledSpanish = [...words].sort(() => Math.random() - 0.5);
+          return `
+            <div class="bg-gradient-to-br from-fuchsia-100 to-purple-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🌎</div>
+                <h3 class="text-xl font-bold text-purple-800">¡Diccionario Viajero!</h3>
+                <p class="text-purple-600">Une las palabras en Náhuatl con su significado en Español</p>
+              </div>
+              <div class="bg-white rounded-xl p-4 mb-4 border-4 border-purple-300">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <p class="font-bold text-purple-700 text-center mb-2">Náhuatl 🏛️</p>
+                    ${words.map((w, i) => `
+                      <div class="p-3 bg-purple-50 rounded-lg mb-2 text-center">
+                        <span class="text-2xl">${w.hint}</span>
+                        <p class="font-bold text-purple-800">${w.nahuatl}</p>
+                      </div>
+                    `).join('')}
+                  </div>
+                  <div>
+                    <p class="font-bold text-purple-700 text-center mb-2">Español 🇲🇽</p>
+                    ${words.map((w, i) => `
+                      <select id="dicc-${i}" class="w-full p-3 bg-gray-50 rounded-lg mb-2 border-2 border-purple-200" data-correct="${w.spanish}">
+                        <option value="">Selecciona...</option>
+                        ${shuffledSpanish.map(s => `<option value="${s.spanish}">${s.spanish}</option>`).join('')}
+                      </select>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+              <button onclick="checkDiccionario()" class="w-full bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white font-bold py-3 rounded-xl hover:from-fuchsia-600 hover:to-purple-600 transition-all shadow-lg">
+                🔗 Verificar Traducciones
+              </button>
+              <div id="diccionario-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      // ========== CIENCIAS GAMES ==========
+      sentidos: {
+        title: '👁️ Súper Sentidos',
+        learning: 'Identificar los órganos de los sentidos y sus funciones',
+        render: () => {
+          const items = [
+            { stimulus: '🎵 Música', sense: 'oido', organ: '👂 Oído' },
+            { stimulus: '🌹 Perfume', sense: 'olfato', organ: '👃 Nariz' },
+            { stimulus: '🍕 Pizza', sense: 'gusto', organ: '👅 Lengua' },
+            { stimulus: '🌈 Arcoíris', sense: 'vista', organ: '👁️ Ojos' },
+            { stimulus: '🧸 Peluche suave', sense: 'tacto', organ: '✋ Piel' }
+          ];
+          const shuffled = [...items].sort(() => Math.random() - 0.5);
+          return `
+            <div class="bg-gradient-to-br from-rose-100 to-red-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">👁️</div>
+                <h3 class="text-xl font-bold text-rose-800">¡Súper Sentidos!</h3>
+                <p class="text-rose-600">Une cada estímulo con el sentido correcto</p>
+              </div>
+              <div class="bg-white rounded-xl p-4 border-4 border-rose-300">
+                ${shuffled.map((item, i) => `
+                  <div class="flex items-center justify-between p-3 ${i < shuffled.length - 1 ? 'border-b-2 border-rose-100' : ''}" data-correct="${item.sense}">
+                    <span class="text-xl font-bold">${item.stimulus}</span>
+                    <select id="sentido-${i}" class="p-2 border-2 border-rose-200 rounded-lg" data-correct="${item.sense}">
+                      <option value="">Selecciona...</option>
+                      <option value="vista">👁️ Vista</option>
+                      <option value="oido">👂 Oído</option>
+                      <option value="olfato">👃 Olfato</option>
+                      <option value="gusto">👅 Gusto</option>
+                      <option value="tacto">✋ Tacto</option>
+                    </select>
+                  </div>
+                `).join('')}
+              </div>
+              <button onclick="checkSentidos()" class="w-full mt-4 bg-gradient-to-r from-rose-500 to-red-500 text-white font-bold py-3 rounded-xl hover:from-rose-600 hover:to-red-600 transition-all shadow-lg">
+                ✅ Verificar Respuestas
+              </button>
+              <div id="sentidos-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      semaforo: {
+        title: '🚦 Semáforo Nutritivo',
+        learning: 'Clasificar alimentos según su nivel de procesamiento',
+        render: () => {
+          const foods = [
+            { name: '🍎 Manzana', type: 'natural' },
+            { name: '🥛 Leche', type: 'natural' },
+            { name: '🧀 Queso', type: 'procesado' },
+            { name: '🍞 Pan integral', type: 'procesado' },
+            { name: '🍟 Papas fritas', type: 'ultraprocesado' },
+            { name: '🍬 Dulces', type: 'ultraprocesado' },
+            { name: '🥕 Zanahoria', type: 'natural' },
+            { name: '🌭 Hot dog', type: 'ultraprocesado' }
+          ];
+          const shuffled = [...foods].sort(() => Math.random() - 0.5).slice(0, 6);
+          return `
+            <div class="bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🚦</div>
+                <h3 class="text-xl font-bold text-green-800">¡Semáforo Nutritivo!</h3>
+                <p class="text-green-600">Clasifica cada alimento en el color correcto</p>
+              </div>
+              <div class="flex justify-center gap-4 mb-4">
+                <div class="text-center">
+                  <div class="w-12 h-12 bg-green-500 rounded-full mb-1"></div>
+                  <p class="text-xs font-bold">Natural</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-12 h-12 bg-yellow-500 rounded-full mb-1"></div>
+                  <p class="text-xs font-bold">Procesado</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-12 h-12 bg-red-500 rounded-full mb-1"></div>
+                  <p class="text-xs font-bold">Ultraprocesado</p>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 border-4 border-green-300 space-y-3">
+                ${shuffled.map((food, i) => `
+                  <div class="flex items-center justify-between p-2 bg-gray-50 rounded-lg" data-correct="${food.type}">
+                    <span class="text-lg font-bold">${food.name}</span>
+                    <div class="flex gap-2">
+                      <button onclick="selectSemaforo(this, ${i}, 'natural')" class="w-10 h-10 bg-green-200 rounded-full border-2 border-green-400 hover:bg-green-400 transition-all" data-type="natural"></button>
+                      <button onclick="selectSemaforo(this, ${i}, 'procesado')" class="w-10 h-10 bg-yellow-200 rounded-full border-2 border-yellow-400 hover:bg-yellow-400 transition-all" data-type="procesado"></button>
+                      <button onclick="selectSemaforo(this, ${i}, 'ultraprocesado')" class="w-10 h-10 bg-red-200 rounded-full border-2 border-red-400 hover:bg-red-400 transition-all" data-type="ultraprocesado"></button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+              <button onclick="checkSemaforo()" class="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg">
+                ✅ Verificar Clasificación
+              </button>
+              <div id="semaforo-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      viajero: {
+        title: '🌵 Viajero de México',
+        learning: 'Conocer los ecosistemas de México y sus características',
+        render: () => {
+          const ecosystems = [
+            { name: 'Desierto', emoji: '🏜️', clothes: ['sombrero', 'ropa_ligera'], description: 'Hace mucho calor y hay poca agua' },
+            { name: 'Selva', emoji: '🌴', clothes: ['botas', 'manga_larga'], description: 'Hay muchos árboles y animales' },
+            { name: 'Playa', emoji: '🏖️', clothes: ['sandalias', 'traje_bano'], description: 'Hay arena y mar' }
+          ];
+          const eco = ecosystems[Math.floor(Math.random() * ecosystems.length)];
+          return `
+            <div class="bg-gradient-to-br from-amber-100 to-yellow-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🧳</div>
+                <h3 class="text-xl font-bold text-amber-800">¡Viajero de México!</h3>
+                <p class="text-amber-600">Vas a viajar al ${eco.name}. ¿Qué ropa llevas?</p>
+              </div>
+              <div class="bg-white rounded-xl p-6 mb-4 border-4 border-amber-300 text-center">
+                <div class="text-8xl mb-4">${eco.emoji}</div>
+                <h4 class="text-2xl font-bold text-amber-800">${eco.name}</h4>
+                <p class="text-amber-600">${eco.description}</p>
+              </div>
+              <div class="bg-white rounded-xl p-4 border-4 border-amber-300">
+                <p class="font-bold text-amber-700 mb-3 text-center">Selecciona la ropa adecuada:</p>
+                <div class="grid grid-cols-2 gap-2" id="viajero-clothes" data-correct="${eco.clothes.join(',')}">
+                  <button onclick="toggleClothes(this, 'sombrero')" class="p-3 bg-amber-50 rounded-lg border-2 border-amber-200 text-center hover:bg-amber-100">
+                    <div class="text-3xl">🎩</div>
+                    <p class="text-sm font-bold">Sombrero</p>
+                  </button>
+                  <button onclick="toggleClothes(this, 'botas')" class="p-3 bg-amber-50 rounded-lg border-2 border-amber-200 text-center hover:bg-amber-100">
+                    <div class="text-3xl">🥾</div>
+                    <p class="text-sm font-bold">Botas</p>
+                  </button>
+                  <button onclick="toggleClothes(this, 'ropa_ligera')" class="p-3 bg-amber-50 rounded-lg border-2 border-amber-200 text-center hover:bg-amber-100">
+                    <div class="text-3xl">👕</div>
+                    <p class="text-sm font-bold">Ropa ligera</p>
+                  </button>
+                  <button onclick="toggleClothes(this, 'manga_larga')" class="p-3 bg-amber-50 rounded-lg border-2 border-amber-200 text-center hover:bg-amber-100">
+                    <div class="text-3xl">🧥</div>
+                    <p class="text-sm font-bold">Manga larga</p>
+                  </button>
+                  <button onclick="toggleClothes(this, 'sandalias')" class="p-3 bg-amber-50 rounded-lg border-2 border-amber-200 text-center hover:bg-amber-100">
+                    <div class="text-3xl">🩴</div>
+                    <p class="text-sm font-bold">Sandalias</p>
+                  </button>
+                  <button onclick="toggleClothes(this, 'traje_bano')" class="p-3 bg-amber-50 rounded-lg border-2 border-amber-200 text-center hover:bg-amber-100">
+                    <div class="text-3xl">🩱</div>
+                    <p class="text-sm font-bold">Traje de baño</p>
+                  </button>
+                </div>
+              </div>
+              <button onclick="checkViajero()" class="w-full mt-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold py-3 rounded-xl hover:from-amber-600 hover:to-yellow-600 transition-all shadow-lg">
+                🧳 ¡Listo para viajar!
+              </button>
+              <div id="viajero-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      planta: {
+        title: '🌱 Planta y Limpia',
+        learning: 'Cuidar el medio ambiente con acciones concretas',
+        render: () => `
+          <div class="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-2xl p-6 shadow-2xl">
+            <div class="text-center mb-6">
+              <div class="text-6xl mb-2">🌱</div>
+              <h3 class="text-xl font-bold text-teal-800">¡Planta y Limpia!</h3>
+              <p class="text-teal-600">Haz clic en los plásticos para limpiar el mar</p>
+            </div>
+            <div class="bg-gradient-to-b from-cyan-400 to-blue-600 rounded-xl p-4 mb-4 relative h-48 overflow-hidden" id="ocean-container">
+              <div class="absolute inset-0 flex flex-wrap justify-around items-center" id="trash-area">
+                ${['🥤', '🛍️', '🥡', '🧴', '🥤', '🛍️'].map((trash, i) => `
+                  <button onclick="collectTrash(this)" class="text-3xl hover:scale-125 transition-transform cursor-pointer trash-item" data-collected="false">
+                    ${trash}
+                  </button>
+                `).join('')}
+              </div>
+              <div class="absolute bottom-2 left-2 text-4xl">🐠</div>
+              <div class="absolute bottom-4 right-4 text-4xl">🐙</div>
+              <div class="absolute top-2 right-2 text-2xl">🦀</div>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+              <div class="bg-white rounded-lg px-4 py-2">
+                <span class="font-bold text-teal-700">Basura recogida: </span>
+                <span id="trash-count" class="font-bold text-teal-600">0</span>/6
+              </div>
+              <div class="bg-white rounded-lg px-4 py-2">
+                <span class="font-bold text-green-700">Árboles: </span>
+                <span id="tree-count" class="font-bold text-green-600">0</span>
+              </div>
+            </div>
+            <button onclick="plantTree()" id="plant-btn" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg disabled:opacity-50" disabled>
+              🌳 Plantar un Árbol (Recoge toda la basura primero)
+            </button>
+            <div id="forest-area" class="mt-4 flex flex-wrap gap-2 justify-center"></div>
+            <div id="planta-result" class="mt-4 hidden"></div>
+          </div>
+        `
+      },
+
+      materiales: {
+        title: '🧪 Prueba de Materiales',
+        learning: 'Identificar propiedades físicas de los materiales',
+        render: () => {
+          const materials = [
+            { name: 'Goma', emoji: '🎈', property: 'elastico', desc: 'Se estira y vuelve a su forma' },
+            { name: 'Vidrio', emoji: '🥛', property: 'fragil', desc: 'Se rompe fácilmente' },
+            { name: 'Metal', emoji: '🔧', property: 'resistente', desc: 'Es muy fuerte y duro' },
+            { name: 'Esponja', emoji: '🧽', property: 'flexible', desc: 'Se dobla sin romperse' }
+          ];
+          const shuffled = [...materials].sort(() => Math.random() - 0.5);
+          return `
+            <div class="bg-gradient-to-br from-slate-100 to-gray-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🧪</div>
+                <h3 class="text-xl font-bold text-slate-800">¡Prueba de Materiales!</h3>
+                <p class="text-slate-600">Une cada material con su propiedad</p>
+              </div>
+              <div class="bg-white rounded-xl p-4 border-4 border-slate-300 space-y-3">
+                ${shuffled.map((mat, i) => `
+                  <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg" data-correct="${mat.property}">
+                    <div class="flex items-center gap-3">
+                      <span class="text-3xl">${mat.emoji}</span>
+                      <span class="font-bold text-slate-700">${mat.name}</span>
+                    </div>
+                    <select id="material-${i}" class="p-2 border-2 border-slate-300 rounded-lg" data-correct="${mat.property}">
+                      <option value="">Selecciona...</option>
+                      <option value="elastico">🔄 Elástico</option>
+                      <option value="fragil">💔 Frágil</option>
+                      <option value="resistente">💪 Resistente</option>
+                      <option value="flexible">🌊 Flexible</option>
+                    </select>
+                  </div>
+                `).join('')}
+              </div>
+              <button onclick="checkMateriales()" class="w-full mt-4 bg-gradient-to-r from-slate-500 to-gray-500 text-white font-bold py-3 rounded-xl hover:from-slate-600 hover:to-gray-600 transition-all shadow-lg">
+                🔬 Verificar Resultados
+              </button>
+              <div id="materiales-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      carrito: {
+        title: '🛒 Empuja el Carrito',
+        learning: 'Entender conceptos de fuerza, reposo y movimiento',
+        render: () => {
+          const targetForce = Math.floor(Math.random() * 5) + 3; // 3-7
+          return `
+            <div class="bg-gradient-to-br from-orange-100 to-red-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🛒</div>
+                <h3 class="text-xl font-bold text-orange-800">¡Empuja el Carrito!</h3>
+                <p class="text-orange-600">Aplica la fuerza correcta para mover la caja</p>
+              </div>
+              <div class="bg-white rounded-xl p-4 mb-4 border-4 border-orange-300">
+                <div class="relative h-32 bg-gradient-to-r from-green-200 to-green-300 rounded-lg overflow-hidden">
+                  <div id="cart" class="absolute bottom-2 left-4 text-5xl transition-all duration-1000" style="transform: translateX(0)">
+                    🛒
+                  </div>
+                  <div id="box" class="absolute bottom-2 left-20 text-4xl">
+                    📦
+                  </div>
+                  <div class="absolute right-4 bottom-2 text-3xl">🏁</div>
+                </div>
+                <div class="mt-4 text-center">
+                  <p class="font-bold text-orange-700 mb-2">La caja necesita una fuerza de: <span class="text-2xl text-orange-600">${targetForce}</span></p>
+                  <div class="flex items-center justify-center gap-2">
+                    <button onclick="adjustForce(-1)" class="w-12 h-12 bg-red-500 text-white rounded-full text-2xl font-bold hover:bg-red-600">-</button>
+                    <div class="w-24 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                      <span id="force-value" class="text-3xl font-bold text-orange-600">0</span>
+                    </div>
+                    <button onclick="adjustForce(1)" class="w-12 h-12 bg-green-500 text-white rounded-full text-2xl font-bold hover:bg-green-600">+</button>
+                  </div>
+                </div>
+              </div>
+              <button onclick="checkCarrito(${targetForce})" class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold py-3 rounded-xl hover:from-orange-600 hover:to-red-600 transition-all shadow-lg">
+                💪 ¡Empujar!
+              </button>
+              <div id="carrito-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      ruido: {
+        title: '🔊 Medidor de Ruido',
+        learning: 'Cuidar la salud auditiva controlando el volumen',
+        render: () => `
+          <div class="bg-gradient-to-br from-violet-100 to-purple-100 rounded-2xl p-6 shadow-2xl">
+            <div class="text-center mb-6">
+              <div class="text-6xl mb-2">🔊</div>
+              <h3 class="text-xl font-bold text-violet-800">¡Medidor de Ruido!</h3>
+              <p class="text-violet-600">Mantén el volumen en zona segura (verde)</p>
+            </div>
+            <div class="bg-white rounded-xl p-4 mb-4 border-4 border-violet-300">
+              <div class="relative h-8 bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 rounded-full mb-4">
+                <div id="volume-indicator" class="absolute top-1/2 -translate-y-1/2 w-4 h-10 bg-white border-2 border-gray-800 rounded transition-all" style="left: 20%"></div>
+              </div>
+              <div class="flex justify-between text-sm font-bold mb-4">
+                <span class="text-green-600">🤫 Bajo</span>
+                <span class="text-yellow-600">😐 Medio</span>
+                <span class="text-red-600">😖 Alto</span>
+              </div>
+              <div class="text-center">
+                <p class="font-bold text-violet-700 mb-2">Ajusta el volumen:</p>
+                <input type="range" id="volume-slider" min="0" max="100" value="20" class="w-full h-4 rounded-lg appearance-none bg-violet-200" oninput="updateVolume(this.value)">
+                <p class="mt-2 text-xl font-bold" id="volume-text">🟢 Volumen seguro</p>
+              </div>
+            </div>
+            <div class="bg-violet-50 rounded-xl p-4 mb-4">
+              <p class="font-bold text-violet-700 mb-2">💡 ¿Sabías que...?</p>
+              <p class="text-violet-600 text-sm">Escuchar música muy fuerte puede dañar tus oídos. ¡Mantén el volumen bajo para cuidar tu audición!</p>
+            </div>
+            <button onclick="checkRuido()" class="w-full bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold py-3 rounded-xl hover:from-violet-600 hover:to-purple-600 transition-all shadow-lg">
+              👂 Verificar mi elección
+            </button>
+            <div id="ruido-result" class="mt-4 hidden"></div>
+          </div>
+        `
+      },
+
+      lunar: {
+        title: '🌙 Calendario Lunar',
+        learning: 'Conocer las fases de la luna',
+        render: () => {
+          const phases = [
+            { name: 'Luna Nueva', emoji: '🌑', desc: 'No se ve la luna' },
+            { name: 'Cuarto Creciente', emoji: '🌓', desc: 'Se ve la mitad derecha' },
+            { name: 'Luna Llena', emoji: '🌕', desc: 'Se ve toda redonda' },
+            { name: 'Cuarto Menguante', emoji: '🌗', desc: 'Se ve la mitad izquierda' }
+          ];
+          const shuffledPhases = [...phases].sort(() => Math.random() - 0.5);
+          return `
+            <div class="bg-gradient-to-br from-indigo-900 to-purple-900 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🌙</div>
+                <h3 class="text-xl font-bold text-white">¡Calendario Lunar!</h3>
+                <p class="text-indigo-200">Ordena las fases de la luna correctamente</p>
+              </div>
+              <div class="bg-indigo-800/50 rounded-xl p-4 mb-4 border-4 border-indigo-400">
+                <p class="text-white font-bold text-center mb-3">Arrastra para ordenar (1 = primera fase):</p>
+                <div class="space-y-2" id="lunar-phases">
+                  ${shuffledPhases.map((phase, i) => `
+                    <div class="flex items-center gap-3 bg-indigo-700/50 p-3 rounded-lg cursor-move" data-phase="${phase.name}">
+                      <select class="bg-indigo-600 text-white p-2 rounded-lg border-2 border-indigo-400" id="order-${i}">
+                        <option value="">?</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                      </select>
+                      <span class="text-4xl">${phase.emoji}</span>
+                      <div>
+                        <p class="font-bold text-white">${phase.name}</p>
+                        <p class="text-indigo-200 text-sm">${phase.desc}</p>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              <div class="bg-indigo-800/30 rounded-xl p-3 mb-4">
+                <p class="text-indigo-200 text-sm text-center">
+                  💡 Pista: La luna "crece" de derecha a izquierda en el cielo de México
+                </p>
+              </div>
+              <button onclick="checkLunar()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold py-3 rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all shadow-lg">
+                🌙 Verificar Orden
+              </button>
+              <div id="lunar-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      estrellas: {
+        title: '⭐ Cosecha de Estrellas',
+        learning: 'Contar y agrupar números hasta 1000',
+        render: () => {
+          const target = (Math.floor(Math.random() * 5) + 3) * 100; // 300-700
+          return `
+            <div class="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">⭐</div>
+                <h3 class="text-xl font-bold text-yellow-800">¡Cosecha de Estrellas!</h3>
+                <p class="text-yellow-600">Junta estrellas hasta llegar a <span class="font-bold text-2xl">${target}</span></p>
+              </div>
+              <div class="bg-gradient-to-b from-indigo-900 to-purple-900 rounded-xl p-4 mb-4 min-h-32" id="star-sky">
+                <div class="flex flex-wrap gap-1 justify-center" id="stars-container">
+                  ${Array(20).fill().map(() => `
+                    <button onclick="collectStar(this)" class="text-2xl hover:scale-125 transition-transform cursor-pointer">⭐</button>
+                  `).join('')}
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 border-4 border-yellow-300">
+                <div class="flex justify-between items-center mb-3">
+                  <div>
+                    <p class="font-bold text-yellow-700">Estrellas sueltas:</p>
+                    <p id="loose-stars" class="text-3xl font-bold text-yellow-600">0</p>
+                  </div>
+                  <div>
+                    <p class="font-bold text-orange-700">Bolsas de 100:</p>
+                    <p id="bags-count" class="text-3xl font-bold text-orange-600">0</p>
+                  </div>
+                  <div>
+                    <p class="font-bold text-red-700">Total:</p>
+                    <p id="total-stars-game" class="text-3xl font-bold text-red-600">0</p>
+                  </div>
+                </div>
+                <div class="flex gap-2 justify-center" id="bags-display"></div>
+              </div>
+              <button onclick="checkEstrellas(${target})" class="w-full mt-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold py-3 rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all shadow-lg">
+                🎯 ¡Verificar Meta!
+              </button>
+              <div id="estrellas-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      },
+
+      huerto: {
+        title: '🌻 Huerto Rectangular',
+        learning: 'Introducción a la multiplicación con arreglos',
+        render: () => {
+          const rows = Math.floor(Math.random() * 3) + 2; // 2-4
+          const cols = Math.floor(Math.random() * 4) + 3; // 3-6
+          const total = rows * cols;
+          return `
+            <div class="bg-gradient-to-br from-lime-100 to-green-100 rounded-2xl p-6 shadow-2xl">
+              <div class="text-center mb-6">
+                <div class="text-6xl mb-2">🌻</div>
+                <h3 class="text-xl font-bold text-green-800">¡Huerto Rectangular!</h3>
+                <p class="text-green-600">Planta semillas en ${rows} filas de ${cols} cada una</p>
+              </div>
+              <div class="bg-gradient-to-b from-amber-700 to-amber-800 rounded-xl p-4 mb-4">
+                <div id="garden-grid" class="grid gap-2 justify-center" style="grid-template-columns: repeat(${cols}, 1fr)">
+                  ${Array(total).fill().map((_, i) => `
+                    <button onclick="plantSeed(this)" class="w-10 h-10 md:w-12 md:h-12 bg-amber-600 rounded-lg border-2 border-amber-500 hover:bg-amber-500 transition-all flex items-center justify-center text-2xl" data-planted="false">
+                      
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              <div class="bg-white rounded-xl p-4 border-4 border-green-300">
+                <div class="text-center mb-3">
+                  <p class="font-bold text-green-700">Completa la multiplicación:</p>
+                  <div class="flex items-center justify-center gap-2 text-2xl font-bold mt-2">
+                    <span class="text-green-600">${rows}</span>
+                    <span>×</span>
+                    <span class="text-green-600">${cols}</span>
+                    <span>=</span>
+                    <input type="number" id="mult-answer" class="w-16 p-2 border-2 border-green-300 rounded-lg text-center text-green-700" min="0" max="100">
+                  </div>
+                </div>
+                <p class="text-center text-green-600 text-sm">
+                  💡 "${rows} filas de ${cols}" es lo mismo que ${rows} + ${Array(rows - 1).fill(rows).join(' + ')} = ?
+                </p>
+              </div>
+              <button onclick="checkHuerto(${total})" class="w-full mt-4 bg-gradient-to-r from-green-500 to-lime-500 text-white font-bold py-3 rounded-xl hover:from-green-600 hover:to-lime-600 transition-all shadow-lg">
+                🌱 Verificar Cosecha
+              </button>
+              <div id="huerto-result" class="mt-4 hidden"></div>
+            </div>
+          `;
+        }
+      }
+    };
+
+    // Game state variables
+    let selectedFruta = '';
+    let trashCollected = 0;
+    let treesPlanted = 0;
+    let currentForce = 0;
+    let looseStars = 0;
+    let bagsOf100 = 0;
+    let selectedClothes = [];
+    let semaforoSelections = {};
+
+    // Start game
+    function startGame(gameId) {
+      const game = games[gameId];
+      if (!game) return;
+
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('game-container').classList.remove('hidden');
+
+      const gameContent = document.getElementById('game-content');
+      gameContent.innerHTML = `
+        <button onclick="backToMenu()" class="mb-4 px-4 py-2 bg-white/90 rounded-xl font-bold text-purple-700 hover:bg-white transition-all shadow-lg flex items-center gap-2">
+          ← Volver al menú
+        </button>
+        <div class="mb-4 bg-white/95 rounded-xl p-3 shadow-lg">
+          <h2 class="text-xl font-bold text-purple-700">${game.title}</h2>
+          <p class="text-purple-600 text-sm">📌 Aprenderás: ${game.learning}</p>
+        </div>
+        ${game.render()}
+        <div class="mt-4 text-center">
+          <p class="text-white/80 text-sm">Creado por Mtra. María Fernanda Flores Valenzuela</p>
+        </div>
+      `;
+
+      // Reset game states
+      selectedFruta = '';
+      trashCollected = 0;
+      treesPlanted = 0;
+      currentForce = 0;
+      looseStars = 0;
+      bagsOf100 = 0;
+      selectedClothes = [];
+      semaforoSelections = {};
+
+      window.currentGameId = gameId;
+    }
+
+    function backToMenu() {
+      document.getElementById('game-container').classList.add('hidden');
+      document.getElementById('main-menu').classList.remove('hidden');
+    }
+
+    // Game check functions
+    async function saveProgress(gameId, score, studentName = 'Estudiante') {
+      if (currentRecordCount >= 999) {
+        console.log('Progress limit reached');
+        return;
+      }
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: studentName,
+          game_id: gameId,
+          score: score,
+          completed_at: new Date().toISOString()
+        });
+        if (!result.isOk) {
+          console.error('Failed to save progress');
+        }
+      }
+    }
+
+    function showResult(elementId, success, message, score = 0) {
+      const resultDiv = document.getElementById(elementId);
+      if (!resultDiv) return;
+      
+      resultDiv.classList.remove('hidden');
+      resultDiv.innerHTML = `
+        <div class="p-4 rounded-xl ${success ? 'bg-green-100 border-2 border-green-400' : 'bg-red-100 border-2 border-red-400'}">
+          <p class="text-lg font-bold ${success ? 'text-green-700' : 'text-red-700'}">
+            ${success ? '🎉 ¡Excelente!' : '😅 ¡Inténtalo de nuevo!'}
+          </p>
+          <p class="${success ? 'text-green-600' : 'text-red-600'}">${message}</p>
+          ${success && score > 0 ? `<p class="mt-2 text-amber-600 font-bold">+${score} ⭐</p>` : ''}
+        </div>
+      `;
+
+      if (success && score > 0 && window.currentGameId) {
+        saveProgress(window.currentGameId, score);
+      }
+    }
+
+    // Individual game checks
+    function checkCarnet() {
+      const nombre = document.getElementById('carnet-nombre').value.trim();
+      const paterno = document.getElementById('carnet-paterno').value.trim();
+      const materno = document.getElementById('carnet-materno').value.trim();
+      const grado = document.getElementById('carnet-grado').value;
+      const grupo = document.getElementById('carnet-grupo').value;
+
+      if (nombre && paterno && materno && grado && grupo) {
+        showResult('carnet-result', true, `¡Bienvenido/a ${nombre} ${paterno} ${materno} del ${grado}° "${grupo}"!`, 3);
+      } else {
+        showResult('carnet-result', false, 'Completa todos los campos de tu carnet');
+      }
+    }
+
+    function checkPregonero() {
+      const answer = document.getElementById('pregonero-answer').value.trim();
+      if (answer.length > 10) {
+        showResult('pregonero-result', true, '¡Muy bien! Has leído y comprendido el mensaje', 3);
+      } else {
+        showResult('pregonero-result', false, 'Escribe una respuesta más completa sobre el mensaje');
+      }
+    }
+
+    function checkNoticiero() {
+      const titulo = document.getElementById('noticia-titulo').value.trim();
+      const primero = document.getElementById('noticia-primero').value.trim();
+      const despues = document.getElementById('noticia-despues').value.trim();
+      const final = document.getElementById('noticia-final').value.trim();
+
+      if (titulo && primero && despues && final) {
+        showResult('noticiero-result', true, '¡Excelente noticia! Has narrado los eventos en orden', 4);
+      } else {
+        showResult('noticiero-result', false, 'Completa todas las partes de tu noticia');
+      }
+    }
+
+    function selectRima(btn, word) {
+      const container = document.getElementById('rimas-options');
+      const correct = container.dataset.correct;
+      
+      container.querySelectorAll('button').forEach(b => {
+        b.classList.remove('bg-green-200', 'border-green-500', 'bg-red-200', 'border-red-500');
+      });
+
+      if (word === correct) {
+        btn.classList.add('bg-green-200', 'border-green-500');
+        showResult('rimas-result', true, `¡"${word}" es la rima perfecta!`, 3);
+      } else {
+        btn.classList.add('bg-red-200', 'border-red-500');
+        showResult('rimas-result', false, `"${word}" no rima bien. ¡Intenta otra!`);
+      }
+    }
+
+    function checkDetective() {
+      const char1 = document.getElementById('detective-1').value.trim();
+      const char2 = document.getElementById('detective-2').value.trim();
+      const char3 = document.getElementById('detective-3').value.trim();
+
+      if (char1 && char2 && char3) {
+        showResult('detective-result', true, '¡Excelente informe detective! Has descrito muy bien al animal', 4);
+      } else {
+        showResult('detective-result', false, 'Escribe las 3 características del animal');
+      }
+    }
+
+    function toggleMayuscula(btn, index) {
+      const isSelected = btn.dataset.selected === 'true';
+      btn.dataset.selected = (!isSelected).toString();
+      
+      if (!isSelected) {
+        btn.classList.add('bg-blue-500', 'text-white');
+        btn.classList.remove('bg-gray-100', 'text-gray-700');
+        btn.textContent = btn.textContent.charAt(0).toUpperCase() + btn.textContent.slice(1);
+      } else {
+        btn.classList.remove('bg-blue-500', 'text-white');
+        btn.classList.add('bg-gray-100', 'text-gray-700');
+        btn.textContent = btn.textContent.toLowerCase();
+      }
+    }
+
+    function checkMayusculas() {
+      const container = document.getElementById('mayusculas-words');
+      const correctIndices = container.dataset.capitals.split(',').map(Number);
+      const buttons = container.querySelectorAll('button');
+      
+      let allCorrect = true;
+      buttons.forEach((btn, i) => {
+        const shouldBeCapital = correctIndices.includes(i);
+        const isSelected = btn.dataset.selected === 'true';
+        
+        if (shouldBeCapital !== isSelected) {
+          allCorrect = false;
+        }
+      });
+
+      if (allCorrect) {
+        showResult('mayusculas-result', true, '¡Perfecto! Has identificado todas las mayúsculas correctamente', 3);
+      } else {
+        showResult('mayusculas-result', false, 'Revisa: los nombres de personas y lugares llevan mayúscula');
+      }
+    }
+
+    function checkMapa() {
+      const answers = ['vaca', 'gallina', 'cerdo', 'oveja'];
+      let correct = 0;
+      
+      for (let i = 1; i <= 4; i++) {
+        const select = document.getElementById(`mapa-${i}`);
+        if (select.value === answers[i - 1]) correct++;
+      }
+
+      if (correct === 4) {
+        showResult('mapa-result', true, '¡Excelente! Has conectado todas las ideas correctamente', 4);
+      } else {
+        showResult('mapa-result', false, `Tienes ${correct} de 4 correctas. ¡Intenta de nuevo!`);
+      }
+    }
+
+    function checkConstructor() {
+      const paso1 = document.getElementById('constructor-1').value.trim();
+      const paso2 = document.getElementById('constructor-2').value.trim();
+      const paso3 = document.getElementById('constructor-3').value.trim();
+
+      if (paso1 && paso2 && paso3) {
+        showResult('constructor-result', true, '¡Instrucciones perfectas! Ahora cualquiera puede hacer un avión de papel', 4);
+      } else {
+        showResult('constructor-result', false, 'Escribe los 3 pasos para armar el avión');
+      }
+    }
+
+    function selectFruta(btn, fruta) {
+      document.querySelectorAll('#vendedor-frutas button').forEach(b => {
+        b.classList.remove('ring-4', 'ring-amber-500');
+      });
+      btn.classList.add('ring-4', 'ring-amber-500');
+      selectedFruta = fruta;
+    }
+
+    function checkVendedor() {
+      const nombre = document.getElementById('vendedor-nombre').value.trim();
+      const precio = document.getElementById('vendedor-precio').value;
+      const frase = document.getElementById('vendedor-frase').value.trim();
+
+      if (nombre && precio && selectedFruta && frase) {
+        document.getElementById('vendedor-result').classList.remove('hidden');
+        document.getElementById('vendedor-result').innerHTML = `
+          <div class="bg-gradient-to-br from-amber-200 to-yellow-200 rounded-xl p-6 border-4 border-amber-400 text-center">
+            <div class="text-6xl mb-2">${selectedFruta}</div>
+            <h3 class="text-2xl font-bold text-amber-800">${nombre}</h3>
+            <p class="text-3xl font-bold text-green-600 my-2">$${precio}</p>
+            <p class="text-amber-700 italic">"${frase}"</p>
+            <p class="mt-4 text-green-600 font-bold">🎉 ¡Excelente cartel! +4 ⭐</p>
+          </div>
+        `;
+        saveProgress('vendedor', 4);
+      } else {
+        showResult('vendedor-result', false, 'Completa todos los campos y elige una fruta');
+      }
+    }
+
+    function checkDiccionario() {
+      let correct = 0;
+      for (let i = 0; i < 4; i++) {
+        const select = document.getElementById(`dicc-${i}`);
+        if (select.value === select.dataset.correct) correct++;
+      }
+
+      if (correct === 4) {
+        showResult('diccionario-result', true, '¡Increíble! Conoces las palabras en Náhuatl', 4);
+      } else {
+        showResult('diccionario-result', false, `Tienes ${correct} de 4 correctas. ¡Sigue intentando!`);
+      }
+    }
+
+    function checkSentidos() {
+      let correct = 0;
+      for (let i = 0; i < 5; i++) {
+        const select = document.getElementById(`sentido-${i}`);
+        if (select && select.value === select.dataset.correct) correct++;
+      }
+
+      if (correct >= 4) {
+        showResult('sentidos-result', true, `¡Excelente! Identificaste ${correct} de 5 sentidos correctamente`, 4);
+      } else {
+        showResult('sentidos-result', false, `Tienes ${correct} de 5 correctas. ¡Intenta de nuevo!`);
+      }
+    }
+
+    function selectSemaforo(btn, foodIndex, type) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('button').forEach(b => {
+        b.classList.remove('ring-4', 'ring-black');
+        if (b.dataset.type === 'natural') b.className = 'w-10 h-10 bg-green-200 rounded-full border-2 border-green-400 hover:bg-green-400 transition-all';
+        if (b.dataset.type === 'procesado') b.className = 'w-10 h-10 bg-yellow-200 rounded-full border-2 border-yellow-400 hover:bg-yellow-400 transition-all';
+        if (b.dataset.type === 'ultraprocesado') b.className = 'w-10 h-10 bg-red-200 rounded-full border-2 border-red-400 hover:bg-red-400 transition-all';
+      });
+      btn.classList.add('ring-4', 'ring-black');
+      
+      if (type === 'natural') btn.classList.add('bg-green-500');
+      if (type === 'procesado') btn.classList.add('bg-yellow-500');
+      if (type === 'ultraprocesado') btn.classList.add('bg-red-500');
+      
+      semaforoSelections[foodIndex] = type;
+    }
+
+    function checkSemaforo() {
+      const foodDivs = document.querySelectorAll('[data-correct]');
+      let correct = 0;
+      let total = 0;
+      
+      foodDivs.forEach((div, i) => {
+        if (div.dataset.correct && semaforoSelections[i] !== undefined) {
+          total++;
+          if (semaforoSelections[i] === div.dataset.correct) correct++;
+        }
+      });
+
+      if (correct >= 5) {
+        showResult('semaforo-result', true, `¡Muy bien! Clasificaste ${correct} alimentos correctamente`, 4);
+      } else {
+        showResult('semaforo-result', false, `Tienes ${correct} de ${total} correctas. Recuerda: verde=natural, amarillo=procesado, rojo=ultraprocesado`);
+      }
+    }
+
+    function toggleClothes(btn, cloth) {
+      const index = selectedClothes.indexOf(cloth);
+      if (index === -1) {
+        selectedClothes.push(cloth);
+        btn.classList.add('ring-4', 'ring-amber-500', 'bg-amber-200');
+      } else {
+        selectedClothes.splice(index, 1);
+        btn.classList.remove('ring-4', 'ring-amber-500', 'bg-amber-200');
+      }
+    }
+
+    function checkViajero() {
+      const container = document.getElementById('viajero-clothes');
+      const correctClothes = container.dataset.correct.split(',');
+      
+      const allCorrect = correctClothes.every(c => selectedClothes.includes(c)) &&
+                         selectedClothes.every(c => correctClothes.includes(c));
+
+      if (allCorrect) {
+        showResult('viajero-result', true, '¡Perfecto! Elegiste la ropa adecuada para el viaje', 4);
+      } else {
+        showResult('viajero-result', false, 'Piensa en el clima del ecosistema. ¿Hace calor o frío?');
+      }
+    }
+
+    function collectTrash(btn) {
+      if (btn.dataset.collected === 'true') return;
+      
+      btn.dataset.collected = 'true';
+      btn.textContent = '✓';
+      btn.classList.add('text-green-400');
+      trashCollected++;
+      
+      document.getElementById('trash-count').textContent = trashCollected;
+      
+      if (trashCollected >= 6) {
+        document.getElementById('plant-btn').disabled = false;
+        document.getElementById('plant-btn').textContent = '🌳 ¡Plantar un Árbol!';
+      }
+    }
+
+    function plantTree() {
+      if (trashCollected < 6) return;
+      
+      treesPlanted++;
+      document.getElementById('tree-count').textContent = treesPlanted;
+      
+      const forestArea = document.getElementById('forest-area');
+      forestArea.innerHTML += '<span class="text-4xl">🌳</span>';
+      
+      if (treesPlanted >= 3) {
+        showResult('planta-result', true, '¡Maravilloso! Has limpiado el mar y plantado un bosque', 5);
+      }
+    }
+
+    function checkMateriales() {
+      let correct = 0;
+      for (let i = 0; i < 4; i++) {
+        const select = document.getElementById(`material-${i}`);
+        if (select && select.value === select.dataset.correct) correct++;
+      }
+
+      if (correct >= 3) {
+        showResult('materiales-result', true, `¡Científico experto! ${correct} de 4 correctas`, 4);
+      } else {
+        showResult('materiales-result', false, `Tienes ${correct} de 4. Piensa: ¿se estira? ¿se rompe?`);
+      }
+    }
+
+    function adjustForce(change) {
+      currentForce = Math.max(0, Math.min(10, currentForce + change));
+      document.getElementById('force-value').textContent = currentForce;
+    }
+
+    function checkCarrito(target) {
+      const cart = document.getElementById('cart');
+      const box = document.getElementById('box');
+      
+      if (currentForce === target) {
+        cart.style.transform = 'translateX(200px)';
+        box.style.transform = 'translateX(200px)';
+        setTimeout(() => {
+          showResult('carrito-result', true, '¡Fuerza perfecta! La caja llegó a la meta', 4);
+        }, 1000);
+      } else if (currentForce < target) {
+        cart.classList.add('shake');
+        setTimeout(() => cart.classList.remove('shake'), 500);
+        showResult('carrito-result', false, 'Muy poca fuerza. ¡La caja no se movió!');
+      } else {
+        cart.style.transform = 'translateX(100px)';
+        showResult('carrito-result', false, '¡Demasiada fuerza! La caja se pasó de la meta');
+      }
+    }
+
+    function updateVolume(value) {
+      const indicator = document.getElementById('volume-indicator');
+      const text = document.getElementById('volume-text');
+      
+      indicator.style.left = `${value}%`;
+      
+      if (value <= 40) {
+        text.textContent = '🟢 Volumen seguro';
+        text.className = 'mt-2 text-xl font-bold text-green-600';
+      } else if (value <= 70) {
+        text.textContent = '🟡 Volumen medio';
+        text.className = 'mt-2 text-xl font-bold text-yellow-600';
+      } else {
+        text.textContent = '🔴 ¡Volumen peligroso!';
+        text.className = 'mt-2 text-xl font-bold text-red-600';
+      }
+    }
+
+    function checkRuido() {
+      const value = parseInt(document.getElementById('volume-slider').value);
+      
+      if (value <= 40) {
+        showResult('ruido-result', true, '¡Excelente! Cuidas muy bien tus oídos', 3);
+      } else {
+        showResult('ruido-result', false, 'Recuerda: el volumen alto daña tu audición');
+      }
+    }
+
+    function checkLunar() {
+      const correctOrder = ['Luna Nueva', 'Cuarto Creciente', 'Luna Llena', 'Cuarto Menguante'];
+      const phases = document.querySelectorAll('#lunar-phases > div');
+      
+      let userOrder = [];
+      phases.forEach((phase, i) => {
+        const select = document.getElementById(`order-${i}`);
+        const orderNum = parseInt(select.value) || 0;
+        userOrder.push({ name: phase.dataset.phase, order: orderNum });
+      });
+      
+      userOrder.sort((a, b) => a.order - b.order);
+      
+      let correct = 0;
+      userOrder.forEach((item, i) => {
+        if (item.name === correctOrder[i]) correct++;
+      });
+
+      if (correct === 4) {
+        showResult('lunar-result', true, '¡Perfecto! Conoces las fases de la luna', 4);
+      } else {
+        showResult('lunar-result', false, `Tienes ${correct} de 4 en orden correcto. La luna nueva es la primera fase.`);
+      }
+    }
+
+    function collectStar(btn) {
+      btn.style.opacity = '0.3';
+      btn.disabled = true;
+      looseStars++;
+      
+      if (looseStars >= 10) {
+        looseStars -= 10;
+        bagsOf100++;
+        
+        const bagsDisplay = document.getElementById('bags-display');
+        bagsDisplay.innerHTML += '<span class="text-3xl">🎒</span>';
+        
+        // Reset some stars
+        const buttons = document.querySelectorAll('#stars-container button');
+        buttons.forEach(b => {
+          if (Math.random() > 0.5) {
+            b.style.opacity = '1';
+            b.disabled = false;
+          }
+        });
+      }
+      
+      document.getElementById('loose-stars').textContent = looseStars;
+      document.getElementById('bags-count').textContent = bagsOf100;
+      document.getElementById('total-stars-game').textContent = (bagsOf100 * 100) + looseStars;
+    }
+
+    function checkEstrellas(target) {
+      const total = (bagsOf100 * 100) + looseStars;
+      
+      if (total >= target) {
+        showResult('estrellas-result', true, `¡Increíble! Juntaste ${total} estrellas (meta: ${target})`, 5);
+      } else {
+        showResult('estrellas-result', false, `Tienes ${total} estrellas. ¡Necesitas ${target - total} más!`);
+      }
+    }
+
+    function plantSeed(btn) {
+      if (btn.dataset.planted === 'true') return;
+      
+      btn.dataset.planted = 'true';
+      btn.textContent = '🌱';
+      btn.classList.add('bg-green-500');
+    }
+
+    function checkHuerto(target) {
+      const answer = parseInt(document.getElementById('mult-answer').value);
+      const planted = document.querySelectorAll('[data-planted="true"]').length;
+      
+      if (answer === target && planted === target) {
+        showResult('huerto-result', true, `¡Perfecto! ${target} semillas plantadas. ¡Excelente multiplicación!`, 5);
+      } else if (answer !== target) {
+        showResult('huerto-result', false, `El resultado no es correcto. Cuenta las semillas en el huerto.`);
+      } else {
+        showResult('huerto-result', false, `Planta todas las semillas: ${planted}/${target}`);
+      }
+    }
+
+    // Initialize
+    initApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d72a82bf1d4afbf',t:'MTc3MjY0NTkzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
