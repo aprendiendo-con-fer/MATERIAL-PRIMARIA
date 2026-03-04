@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ciencias Naturales Primaria</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    
+    .btn-bounce:hover {
+      animation: bounce 0.5s ease;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes sway {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    
+    .floating { animation: float 3s ease-in-out infinite; }
+    .swaying { animation: sway 2s ease-in-out infinite; }
+    
+    .scene-plants {
+      background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 50%, #8B4513 80%, #654321 100%);
+    }
+    
+    .scene-body {
+      background: linear-gradient(180deg, #FFE4E1 0%, #FFC0CB 50%, #FFB6C1 100%);
+    }
+    
+    .scene-animals {
+      background: linear-gradient(180deg, #87CEEB 0%, #90EE90 40%, #228B22 70%, #006400 100%);
+    }
+    
+    .scene-water {
+      background: linear-gradient(180deg, #87CEEB 0%, #00BFFF 30%, #1E90FF 60%, #0066CC 100%);
+    }
+    
+    .scene-seasons {
+      background: linear-gradient(90deg, #FFB347 0%, #98D8C8 33%, #87CEEB 66%, #E8E8E8 100%);
+    }
+    
+    .scene-senses {
+      background: linear-gradient(180deg, #DDA0DD 0%, #BA55D3 50%, #9932CC 100%);
+    }
+    
+    .scene-food {
+      background: linear-gradient(180deg, #FFECD2 0%, #FCB69F 50%, #FF8A65 100%);
+    }
+    
+    .scene-day-night {
+      background: linear-gradient(180deg, #FFD700 0%, #FF8C00 25%, #4B0082 75%, #191970 100%);
+    }
+    
+    .scene-hygiene {
+      background: linear-gradient(180deg, #E0FFFF 0%, #AFEEEE 50%, #48D1CC 100%);
+    }
+    
+    .scene-environment {
+      background: linear-gradient(180deg, #98FB98 0%, #32CD32 50%, #228B22 100%);
+    }
+    
+    .correct-answer {
+      animation: correctPulse 0.5s ease;
+    }
+    
+    @keyframes correctPulse {
+      0% { transform: scale(1); background-color: #22c55e; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .wrong-answer {
+      animation: shake 0.5s ease;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+    
+    .tree {
+      position: absolute;
+      bottom: 20%;
+    }
+    
+    .cloud {
+      position: absolute;
+      background: white;
+      border-radius: 50px;
+      opacity: 0.9;
+    }
+    
+    .sun {
+      position: absolute;
+      top: 10%;
+      right: 10%;
+      width: 60px;
+      height: 60px;
+      background: #FFD700;
+      border-radius: 50%;
+      box-shadow: 0 0 30px #FFD700;
+    }
+    
+    .grass {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 25%;
+      background: linear-gradient(180deg, #90EE90 0%, #228B22 100%);
+    }
+    
+    .water-wave {
+      position: absolute;
+      bottom: 0;
+      width: 200%;
+      height: 30%;
+      background: linear-gradient(180deg, rgba(30,144,255,0.5) 0%, #1E90FF 100%);
+      animation: wave 3s ease-in-out infinite;
+    }
+    
+    @keyframes wave {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-25%); }
+    }
+
+    .content-box {
+      background: rgba(255,255,255,0.95);
+      border: 4px solid #FF6B6B;
+      border-radius: 20px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #E8F4FC 0%, #D4EDFC 100%);">
+  <div id="app" class="min-h-full w-full"><!-- Pantalla Principal -->
+   <div id="main-menu" class="min-h-full flex flex-col items-center justify-center p-6">
+    <div class="text-center mb-8">
+     <h1 id="main-title" class="text-4xl md:text-5xl font-extrabold text-blue-600 mb-4 drop-shadow-lg">🌿 Ciencias Naturales 🌿</h1>
+     <p class="text-xl text-gray-600 font-semibold">¡Aprende jugando!</p>
+     <div class="mt-4 floating"><span class="text-6xl">🔬</span>
+     </div>
+    </div>
+    <div class="flex flex-col md:flex-row gap-6 mb-8"><button onclick="showGradeMenu(1)" class="btn-bounce bg-gradient-to-r from-green-400 to-green-600 text-white font-bold text-2xl py-6 px-12 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"> 🌱 Primer Grado 
+      <div class="text-sm font-normal mt-1">
+       Nivel Fácil
+      </div></button> <button onclick="showGradeMenu(2)" class="btn-bounce bg-gradient-to-r from-orange-400 to-orange-600 text-white font-bold text-2xl py-6 px-12 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"> 🌻 Segundo Grado 
+      <div class="text-sm font-normal mt-1">
+       Nivel Medio
+      </div></button>
+    </div>
+    <footer id="author-credit" class="text-center text-gray-600 font-semibold mt-auto pt-8">
+     Material creado por Maestra María Fernanda Flores Valenzuela
+    </footer>
+   </div><!-- Menú de Grado -->
+   <div id="grade-menu" class="hidden min-h-full p-6"><button onclick="showMainMenu()" class="mb-6 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-2xl shadow-lg transition-all"> ← Volver al inicio </button>
+    <h2 id="grade-title" class="text-3xl font-bold text-center text-blue-600 mb-6"></h2>
+    <div id="games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto"><!-- Los juegos se generan dinámicamente -->
+    </div>
+    <footer class="text-center text-gray-600 font-semibold mt-8 pt-4">
+     Material creado por Maestra María Fernanda Flores Valenzuela
+    </footer>
+   </div><!-- Pantalla de Juego -->
+   <div id="game-screen" class="hidden min-h-full relative overflow-hidden"><!-- Escenario dinámico -->
+    <div id="scene-background" class="absolute inset-0 transition-all duration-500"></div><!-- Elementos decorativos del escenario -->
+    <div id="scene-elements" class="absolute inset-0 pointer-events-none overflow-hidden"></div><!-- Contenido del juego -->
+    <div class="relative z-10 p-4 md:p-6 flex flex-col min-h-full">
+     <div class="flex justify-between items-start mb-4"><button onclick="backToGradeMenu()" class="bg-white/90 hover:bg-white text-gray-700 font-bold py-2 px-4 rounded-xl shadow-lg transition-all text-sm"> ← Volver </button>
+      <div id="score-display" class="bg-white/90 text-gray-700 font-bold py-2 px-4 rounded-xl shadow-lg">
+       ⭐ Puntos: <span id="score">0</span>
+      </div>
+     </div><!-- Cuadro de contenido a aprender -->
+     <div id="learning-content-box" class="content-box max-w-2xl mx-auto w-full">
+      <div class="flex items-center gap-2 mb-2"><span class="text-2xl">📚</span>
+       <h3 class="font-bold text-lg text-purple-600">Contenido que aprenderás:</h3>
+      </div>
+      <p id="learning-content-text" class="text-gray-700"></p>
+     </div>
+     <h3 id="game-title" class="text-2xl md:text-3xl font-bold text-center text-white drop-shadow-lg mb-4"></h3>
+     <div id="question-container" class="bg-white/95 rounded-3xl p-6 shadow-2xl max-w-2xl mx-auto w-full mb-4">
+      <p id="question-text" class="text-xl font-bold text-gray-800 text-center mb-6"></p>
+      <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"><!-- Opciones generadas dinámicamente -->
+      </div>
+     </div>
+     <div id="feedback-container" class="hidden text-center py-4">
+      <p id="feedback-text" class="text-2xl font-bold drop-shadow-lg"></p>
+     </div>
+     <div id="game-complete" class="hidden bg-white/95 rounded-3xl p-8 shadow-2xl max-w-md mx-auto text-center">
+      <h3 class="text-3xl font-bold text-green-600 mb-4">🎉 ¡Felicidades! 🎉</h3>
+      <p class="text-xl text-gray-700 mb-4">Has completado el juego</p>
+      <p class="text-2xl font-bold text-purple-600 mb-6">Puntuación: <span id="final-score">0</span>/100</p><button onclick="backToGradeMenu()" class="bg-gradient-to-r from-blue-400 to-blue-600 text-white font-bold py-3 px-8 rounded-2xl shadow-lg hover:shadow-xl transition-all"> Jugar otro juego </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Configuración inicial
+    const defaultConfig = {
+      main_title: 'Ciencias Naturales',
+      author_name: 'Maestra María Fernanda Flores Valenzuela'
+    };
+
+    let config = { ...defaultConfig };
+    let currentGrade = 1;
+    let currentGame = null;
+    let score = 0;
+    let currentQuestionIndex = 0;
+    let questions = [];
+
+    // Datos de los juegos
+    const gamesData = {
+      1: [ // Primer Grado - Nivel Fácil
+        {
+          id: 'plants1',
+          title: '🌱 Las Plantas y sus Partes',
+          icon: '🌿',
+          scene: 'plants',
+          color: 'from-green-400 to-green-600',
+          content: 'Identificar las partes principales de las plantas: raíz, tallo, hojas y flores. Comprender la función básica de cada parte.',
+          questions: [
+            { q: '¿Qué parte de la planta está bajo la tierra?', options: ['Raíz', 'Hoja', 'Flor', 'Tallo'], correct: 0 },
+            { q: '¿Qué parte de la planta es verde y hace la comida?', options: ['Raíz', 'Hoja', 'Flor', 'Semilla'], correct: 1 },
+            { q: '¿De qué color son muchas flores?', options: ['Negro', 'Colores bonitos', 'Gris', 'Invisible'], correct: 1 },
+            { q: '¿Qué sostiene a la planta derecha?', options: ['La hoja', 'La flor', 'El tallo', 'La semilla'], correct: 2 },
+            { q: '¿Las plantas necesitan agua para vivir?', options: ['Sí', 'No', 'Solo de noche', 'Nunca'], correct: 0 },
+            { q: '¿Dónde crecen las semillas?', options: ['En el agua', 'En la tierra', 'En el aire', 'En el hielo'], correct: 1 },
+            { q: '¿Qué necesitan las plantas del sol?', options: ['Oscuridad', 'Luz', 'Frío', 'Ruido'], correct: 1 },
+            { q: '¿La raíz absorbe agua?', options: ['Sí', 'No', 'Solo sal', 'Solo aire'], correct: 0 },
+            { q: '¿Las hojas pueden ser de diferentes formas?', options: ['Sí', 'No', 'Solo redondas', 'Solo cuadradas'], correct: 0 },
+            { q: '¿Las flores pueden tener perfume?', options: ['Sí', 'No', 'Solo de noche', 'Nunca'], correct: 0 }
+          ]
+        },
+        {
+          id: 'body1',
+          title: '👤 Mi Cuerpo',
+          icon: '🧒',
+          scene: 'body',
+          color: 'from-pink-400 to-pink-600',
+          content: 'Conocer las partes externas del cuerpo humano: cabeza, tronco y extremidades. Identificar ojos, nariz, boca, orejas y manos.',
+          questions: [
+            { q: '¿Con qué parte del cuerpo vemos?', options: ['Oídos', 'Ojos', 'Nariz', 'Boca'], correct: 1 },
+            { q: '¿Cuántas manos tenemos?', options: ['Una', 'Dos', 'Tres', 'Cuatro'], correct: 1 },
+            { q: '¿Con qué escuchamos?', options: ['Ojos', 'Nariz', 'Oídos', 'Manos'], correct: 2 },
+            { q: '¿Dónde está la cabeza?', options: ['Abajo', 'Arriba', 'En medio', 'Atrás'], correct: 1 },
+            { q: '¿Con qué respiramos?', options: ['Ojos', 'Nariz', 'Orejas', 'Pies'], correct: 1 },
+            { q: '¿Cuántos pies tenemos?', options: ['Uno', 'Dos', 'Tres', 'Ninguno'], correct: 1 },
+            { q: '¿La boca sirve para comer?', options: ['Sí', 'No', 'Solo agua', 'Nunca'], correct: 0 },
+            { q: '¿Los brazos están en el tronco?', options: ['Sí', 'No', 'En la cabeza', 'En los pies'], correct: 0 },
+            { q: '¿Tenemos dedos en las manos?', options: ['Sí', 'No', 'Solo uno', 'Ninguno'], correct: 0 },
+            { q: '¿El corazón está dentro del cuerpo?', options: ['Sí', 'No', 'Afuera', 'En la mano'], correct: 0 }
+          ]
+        },
+        {
+          id: 'animals1',
+          title: '🐾 Animales Domésticos',
+          icon: '🐕',
+          scene: 'animals',
+          color: 'from-yellow-400 to-yellow-600',
+          content: 'Identificar animales domésticos comunes: perro, gato, gallina, vaca. Conocer sus características básicas y sonidos.',
+          questions: [
+            { q: '¿Qué animal dice "guau guau"?', options: ['Gato', 'Perro', 'Vaca', 'Gallina'], correct: 1 },
+            { q: '¿Qué animal nos da leche?', options: ['Perro', 'Gato', 'Vaca', 'Gallina'], correct: 2 },
+            { q: '¿El gato dice "miau"?', options: ['Sí', 'No', 'Dice guau', 'No habla'], correct: 0 },
+            { q: '¿Qué animal pone huevos?', options: ['Perro', 'Gato', 'Vaca', 'Gallina'], correct: 3 },
+            { q: '¿Los perros tienen cola?', options: ['Sí', 'No', 'Solo algunos', 'Nunca'], correct: 0 },
+            { q: '¿El gato tiene bigotes?', options: ['Sí', 'No', 'Solo la nariz', 'Nunca'], correct: 0 },
+            { q: '¿La vaca come pasto?', options: ['Sí', 'No', 'Come carne', 'Come piedras'], correct: 0 },
+            { q: '¿Los pollitos son hijos de la gallina?', options: ['Sí', 'No', 'Del perro', 'Del gato'], correct: 0 },
+            { q: '¿Qué animal cuida la casa?', options: ['Gallina', 'Vaca', 'Perro', 'Pez'], correct: 2 },
+            { q: '¿Los gatos tienen garras?', options: ['Sí', 'No', 'Solo patas', 'Alas'], correct: 0 }
+          ]
+        },
+        {
+          id: 'water1',
+          title: '💧 El Agua',
+          icon: '🌊',
+          scene: 'water',
+          color: 'from-blue-400 to-blue-600',
+          content: 'Comprender la importancia del agua para la vida. Identificar usos del agua: beber, bañarse, regar plantas.',
+          questions: [
+            { q: '¿De qué color es el agua limpia?', options: ['Roja', 'Verde', 'Transparente', 'Negra'], correct: 2 },
+            { q: '¿Necesitamos agua para vivir?', options: ['Sí', 'No', 'Solo de noche', 'Nunca'], correct: 0 },
+            { q: '¿Dónde encontramos agua?', options: ['En el cielo', 'En los ríos', 'En el fuego', 'En las piedras'], correct: 1 },
+            { q: '¿Las plantas necesitan agua?', options: ['Sí', 'No', 'Solo sol', 'Solo tierra'], correct: 0 },
+            { q: '¿Con qué nos bañamos?', options: ['Tierra', 'Agua', 'Aire', 'Fuego'], correct: 1 },
+            { q: '¿El agua cae del cielo como...?', options: ['Fuego', 'Lluvia', 'Sol', 'Viento'], correct: 1 },
+            { q: '¿Debemos desperdiciar el agua?', options: ['Sí', 'No', 'Siempre', 'A veces'], correct: 1 },
+            { q: '¿Los peces viven en el agua?', options: ['Sí', 'No', 'En el aire', 'En la tierra'], correct: 0 },
+            { q: '¿El mar tiene agua?', options: ['Sí', 'No', 'Solo arena', 'Solo sal'], correct: 0 },
+            { q: '¿Tomamos agua cuando tenemos sed?', options: ['Sí', 'No', 'Solo refrescos', 'Nunca'], correct: 0 }
+          ]
+        },
+        {
+          id: 'senses1',
+          title: '👁️ Los Cinco Sentidos',
+          icon: '👂',
+          scene: 'senses',
+          color: 'from-purple-400 to-purple-600',
+          content: 'Conocer los cinco sentidos: vista, oído, olfato, gusto y tacto. Identificar qué órgano corresponde a cada sentido.',
+          questions: [
+            { q: '¿Con qué sentido vemos los colores?', options: ['Oído', 'Vista', 'Gusto', 'Tacto'], correct: 1 },
+            { q: '¿Qué órgano usamos para oler?', options: ['Ojos', 'Orejas', 'Nariz', 'Boca'], correct: 2 },
+            { q: '¿Con qué probamos la comida?', options: ['Nariz', 'Ojos', 'Lengua', 'Manos'], correct: 2 },
+            { q: '¿Cuántos sentidos tenemos?', options: ['Tres', 'Cuatro', 'Cinco', 'Diez'], correct: 2 },
+            { q: '¿Las manos sirven para tocar?', options: ['Sí', 'No', 'Solo para ver', 'Solo para oler'], correct: 0 },
+            { q: '¿Con los oídos escuchamos música?', options: ['Sí', 'No', 'Con los ojos', 'Con la nariz'], correct: 0 },
+            { q: '¿Qué sentido usamos para ver un arcoíris?', options: ['Tacto', 'Gusto', 'Vista', 'Oído'], correct: 2 },
+            { q: '¿Sentimos frío o calor con el tacto?', options: ['Sí', 'No', 'Con la vista', 'Con el gusto'], correct: 0 },
+            { q: '¿La lengua tiene papilas gustativas?', options: ['Sí', 'No', 'Solo dientes', 'Solo labios'], correct: 0 },
+            { q: '¿Olemos las flores con la nariz?', options: ['Sí', 'No', 'Con los ojos', 'Con las manos'], correct: 0 }
+          ]
+        },
+        {
+          id: 'food1',
+          title: '🍎 Alimentos Saludables',
+          icon: '🥕',
+          scene: 'food',
+          color: 'from-red-400 to-red-600',
+          content: 'Identificar alimentos saludables: frutas, verduras, cereales. Comprender la importancia de una buena alimentación.',
+          questions: [
+            { q: '¿La manzana es una fruta?', options: ['Sí', 'No', 'Es verdura', 'Es carne'], correct: 0 },
+            { q: '¿De qué color es la zanahoria?', options: ['Verde', 'Naranja', 'Azul', 'Morada'], correct: 1 },
+            { q: '¿Las verduras son buenas para la salud?', options: ['Sí', 'No', 'Solo dulces', 'Nunca'], correct: 0 },
+            { q: '¿El plátano es amarillo?', options: ['Sí', 'No', 'Es rojo', 'Es azul'], correct: 0 },
+            { q: '¿Debemos comer frutas todos los días?', options: ['Sí', 'No', 'Solo domingo', 'Nunca'], correct: 0 },
+            { q: '¿La leche viene de la vaca?', options: ['Sí', 'No', 'Del pollo', 'Del pez'], correct: 0 },
+            { q: '¿El brócoli es verde?', options: ['Sí', 'No', 'Es rosa', 'Es negro'], correct: 0 },
+            { q: '¿Las frutas tienen vitaminas?', options: ['Sí', 'No', 'Solo agua', 'Solo azúcar'], correct: 0 },
+            { q: '¿Es bueno tomar mucha agua?', options: ['Sí', 'No', 'Solo refresco', 'Nunca'], correct: 0 },
+            { q: '¿Los huevos son nutritivos?', options: ['Sí', 'No', 'Solo la cáscara', 'Nunca'], correct: 0 }
+          ]
+        },
+        {
+          id: 'daynight1',
+          title: '🌞 El Día y la Noche',
+          icon: '🌙',
+          scene: 'day-night',
+          color: 'from-indigo-400 to-indigo-600',
+          content: 'Diferenciar el día de la noche. Identificar actividades que hacemos de día y de noche. Conocer el sol y la luna.',
+          questions: [
+            { q: '¿Qué vemos en el cielo de día?', options: ['Luna', 'Sol', 'Estrellas', 'Nada'], correct: 1 },
+            { q: '¿De noche vemos la luna?', options: ['Sí', 'No', 'Solo el sol', 'Nunca'], correct: 0 },
+            { q: '¿Cuándo dormimos normalmente?', options: ['De día', 'De noche', 'Nunca', 'Siempre'], correct: 1 },
+            { q: '¿El sol nos da luz?', options: ['Sí', 'No', 'Solo calor', 'Solo oscuridad'], correct: 0 },
+            { q: '¿Vamos a la escuela de día?', options: ['Sí', 'No', 'De noche', 'Nunca'], correct: 0 },
+            { q: '¿Las estrellas brillan de noche?', options: ['Sí', 'No', 'De día', 'Nunca'], correct: 0 },
+            { q: '¿El cielo de día es azul?', options: ['Sí', 'No', 'Es negro', 'Es rojo'], correct: 0 },
+            { q: '¿De noche está oscuro?', options: ['Sí', 'No', 'Hay mucha luz', 'Es igual'], correct: 0 },
+            { q: '¿Desayunamos en la mañana?', options: ['Sí', 'No', 'De noche', 'Nunca'], correct: 0 },
+            { q: '¿La luna sale de noche?', options: ['Sí', 'No', 'De día', 'Al mediodía'], correct: 0 }
+          ]
+        },
+        {
+          id: 'seasons1',
+          title: '🍂 Las Estaciones',
+          icon: '❄️',
+          scene: 'seasons',
+          color: 'from-teal-400 to-teal-600',
+          content: 'Conocer las cuatro estaciones del año: primavera, verano, otoño e invierno. Identificar características de cada una.',
+          questions: [
+            { q: '¿Cuántas estaciones del año hay?', options: ['Dos', 'Tres', 'Cuatro', 'Cinco'], correct: 2 },
+            { q: '¿En qué estación hace mucho frío?', options: ['Verano', 'Invierno', 'Primavera', 'Otoño'], correct: 1 },
+            { q: '¿Cuándo hace mucho calor?', options: ['Invierno', 'Verano', 'Otoño', 'Primavera'], correct: 1 },
+            { q: '¿En primavera florecen las plantas?', options: ['Sí', 'No', 'En invierno', 'Nunca'], correct: 0 },
+            { q: '¿En otoño caen las hojas?', options: ['Sí', 'No', 'En verano', 'En primavera'], correct: 0 },
+            { q: '¿Nieva en invierno?', options: ['Sí', 'No', 'En verano', 'Nunca'], correct: 0 },
+            { q: '¿En verano vamos a la playa?', options: ['Sí', 'No', 'En invierno', 'Nunca'], correct: 0 },
+            { q: '¿Las hojas son de colores en otoño?', options: ['Sí', 'No', 'Solo verdes', 'Son azules'], correct: 0 },
+            { q: '¿En primavera nacen animalitos?', options: ['Sí', 'No', 'En invierno', 'Nunca'], correct: 0 },
+            { q: '¿Usamos abrigo en invierno?', options: ['Sí', 'No', 'En verano', 'Nunca'], correct: 0 }
+          ]
+        },
+        {
+          id: 'hygiene1',
+          title: '🧼 Higiene Personal',
+          icon: '🪥',
+          scene: 'hygiene',
+          color: 'from-cyan-400 to-cyan-600',
+          content: 'Aprender hábitos de higiene: lavarse las manos, cepillarse los dientes, bañarse. Comprender su importancia para la salud.',
+          questions: [
+            { q: '¿Debemos lavarnos las manos antes de comer?', options: ['Sí', 'No', 'A veces', 'Nunca'], correct: 0 },
+            { q: '¿Con qué nos cepillamos los dientes?', options: ['Peine', 'Cepillo de dientes', 'Toalla', 'Jabón'], correct: 1 },
+            { q: '¿Es importante bañarse?', options: ['Sí', 'No', 'Solo en verano', 'Nunca'], correct: 0 },
+            { q: '¿Cuántas veces al día cepillamos los dientes?', options: ['Ninguna', 'Una', 'Tres', 'Diez'], correct: 2 },
+            { q: '¿El jabón mata los gérmenes?', options: ['Sí', 'No', 'Los alimenta', 'Nunca'], correct: 0 },
+            { q: '¿Debemos cortarnos las uñas?', options: ['Sí', 'No', 'Nunca', 'Solo los pies'], correct: 0 },
+            { q: '¿Peinamos el cabello para estar limpios?', options: ['Sí', 'No', 'Solo mojado', 'Nunca'], correct: 0 },
+            { q: '¿Es bueno cambiar la ropa sucia?', options: ['Sí', 'No', 'Nunca', 'Solo zapatos'], correct: 0 },
+            { q: '¿Lavamos las manos después del baño?', options: ['Sí', 'No', 'Solo antes', 'Nunca'], correct: 0 },
+            { q: '¿Los gérmenes nos pueden enfermar?', options: ['Sí', 'No', 'Nos ayudan', 'Nunca'], correct: 0 }
+          ]
+        },
+        {
+          id: 'environment1',
+          title: '🌍 Cuidemos el Medio Ambiente',
+          icon: '♻️',
+          scene: 'environment',
+          color: 'from-emerald-400 to-emerald-600',
+          content: 'Aprender a cuidar el medio ambiente: no tirar basura, cuidar plantas y animales, ahorrar agua.',
+          questions: [
+            { q: '¿Debemos tirar basura en la calle?', options: ['Sí', 'No', 'A veces', 'Siempre'], correct: 1 },
+            { q: '¿Es bueno cuidar las plantas?', options: ['Sí', 'No', 'Hay que pisarlas', 'Nunca'], correct: 0 },
+            { q: '¿Dónde tiramos la basura?', options: ['En el piso', 'En el bote de basura', 'En el agua', 'Donde sea'], correct: 1 },
+            { q: '¿Debemos cerrar la llave del agua?', options: ['Sí', 'No', 'Dejarla abierta', 'Nunca'], correct: 0 },
+            { q: '¿Los árboles nos dan oxígeno?', options: ['Sí', 'No', 'Solo sombra', 'Nunca'], correct: 0 },
+            { q: '¿Es bueno reciclar?', options: ['Sí', 'No', 'A veces', 'Nunca'], correct: 0 },
+            { q: '¿Debemos cuidar a los animales?', options: ['Sí', 'No', 'Solo perros', 'Nunca'], correct: 0 },
+            { q: '¿Apagamos la luz al salir?', options: ['Sí', 'No', 'La dejamos', 'Nunca'], correct: 0 },
+            { q: '¿Las plantas limpian el aire?', options: ['Sí', 'No', 'Lo ensucian', 'Nunca'], correct: 0 },
+            { q: '¿Regar las plantas es cuidarlas?', options: ['Sí', 'No', 'Las daña', 'Nunca'], correct: 0 }
+          ]
+        }
+      ],
+      2: [ // Segundo Grado - Nivel Medio
+        {
+          id: 'plants2',
+          title: '🌳 Ciclo de Vida de las Plantas',
+          icon: '🌻',
+          scene: 'plants',
+          color: 'from-green-500 to-green-700',
+          content: 'Comprender el ciclo de vida de las plantas: semilla, germinación, crecimiento, floración y producción de semillas.',
+          questions: [
+            { q: '¿Qué es lo primero en el ciclo de vida de una planta?', options: ['Flor', 'Semilla', 'Hoja', 'Fruto'], correct: 1 },
+            { q: '¿Cómo se llama cuando la semilla empieza a crecer?', options: ['Floración', 'Germinación', 'Marchitación', 'Cosecha'], correct: 1 },
+            { q: '¿Qué produce la flor después de ser polinizada?', options: ['Raíz', 'Tallo', 'Fruto con semillas', 'Más flores'], correct: 2 },
+            { q: '¿Qué necesita una semilla para germinar?', options: ['Solo luz', 'Agua y calor', 'Solo tierra', 'Nada'], correct: 1 },
+            { q: '¿Las plantas producen su propio alimento?', options: ['Sí, con fotosíntesis', 'No, comen tierra', 'Solo de noche', 'Nunca'], correct: 0 },
+            { q: '¿Qué gas absorben las plantas?', options: ['Oxígeno', 'Dióxido de carbono', 'Nitrógeno', 'Helio'], correct: 1 },
+            { q: '¿Qué gas liberan las plantas?', options: ['Dióxido de carbono', 'Oxígeno', 'Metano', 'Ninguno'], correct: 1 },
+            { q: '¿Las abejas ayudan a las plantas?', options: ['Sí, las polinizan', 'No, las dañan', 'Solo les quitan néctar', 'Nunca'], correct: 0 },
+            { q: '¿El tallo transporta agua y nutrientes?', options: ['Sí', 'No', 'Solo la raíz', 'Solo las hojas'], correct: 0 },
+            { q: '¿Las hojas realizan la fotosíntesis?', options: ['Sí', 'No', 'Solo las flores', 'Solo el tallo'], correct: 0 }
+          ]
+        },
+        {
+          id: 'body2',
+          title: '🫀 Sistemas del Cuerpo',
+          icon: '🦴',
+          scene: 'body',
+          color: 'from-pink-500 to-pink-700',
+          content: 'Conocer los sistemas básicos del cuerpo: esquelético, muscular, digestivo y respiratorio. Entender sus funciones principales.',
+          questions: [
+            { q: '¿Qué sistema está formado por huesos?', options: ['Muscular', 'Esquelético', 'Digestivo', 'Respiratorio'], correct: 1 },
+            { q: '¿Qué órgano bombea la sangre?', options: ['Pulmones', 'Estómago', 'Corazón', 'Cerebro'], correct: 2 },
+            { q: '¿Dónde se digiere la comida?', options: ['Pulmones', 'Estómago', 'Corazón', 'Músculos'], correct: 1 },
+            { q: '¿Con qué órganos respiramos?', options: ['Riñones', 'Pulmones', 'Hígado', 'Intestinos'], correct: 1 },
+            { q: '¿Los músculos ayudan a movernos?', options: ['Sí', 'No', 'Solo los huesos', 'Nunca'], correct: 0 },
+            { q: '¿El esqueleto protege órganos importantes?', options: ['Sí', 'No', 'Solo da forma', 'Nunca'], correct: 0 },
+            { q: '¿Cuántos huesos tiene un adulto aproximadamente?', options: ['50', '106', '206', '500'], correct: 2 },
+            { q: '¿El cerebro controla todo el cuerpo?', options: ['Sí', 'No', 'Solo las piernas', 'Solo los brazos'], correct: 0 },
+            { q: '¿La sangre transporta oxígeno?', options: ['Sí', 'No', 'Solo comida', 'Nunca'], correct: 0 },
+            { q: '¿Los pulmones intercambian gases?', options: ['Sí', 'No', 'Solo agua', 'Solo aire'], correct: 0 }
+          ]
+        },
+        {
+          id: 'animals2',
+          title: '🦋 Animales Vertebrados e Invertebrados',
+          icon: '🐸',
+          scene: 'animals',
+          color: 'from-yellow-500 to-yellow-700',
+          content: 'Clasificar animales en vertebrados e invertebrados. Conocer ejemplos de cada grupo y sus características.',
+          questions: [
+            { q: '¿Los vertebrados tienen columna vertebral?', options: ['Sí', 'No', 'Solo algunos', 'Nunca'], correct: 0 },
+            { q: '¿Qué animal es invertebrado?', options: ['Perro', 'Gato', 'Mariposa', 'Caballo'], correct: 2 },
+            { q: '¿El ser humano es vertebrado?', options: ['Sí', 'No', 'A veces', 'Nunca'], correct: 0 },
+            { q: '¿Los peces son vertebrados?', options: ['Sí', 'No', 'Solo algunos', 'Nunca'], correct: 0 },
+            { q: '¿Las lombrices tienen huesos?', options: ['Sí', 'No', 'Solo uno', 'Muchos'], correct: 1 },
+            { q: '¿Los insectos son vertebrados?', options: ['Sí', 'No', 'Algunos', 'Todos'], correct: 1 },
+            { q: '¿Las aves tienen columna vertebral?', options: ['Sí', 'No', 'Solo las grandes', 'Nunca'], correct: 0 },
+            { q: '¿Los caracoles son invertebrados?', options: ['Sí', 'No', 'Tienen huesos', 'Nunca'], correct: 0 },
+            { q: '¿Los reptiles son vertebrados?', options: ['Sí', 'No', 'Solo las serpientes', 'Nunca'], correct: 0 },
+            { q: '¿Las medusas tienen esqueleto?', options: ['Sí', 'No', 'De cartílago', 'De hueso'], correct: 1 }
+          ]
+        },
+        {
+          id: 'water2',
+          title: '💦 El Ciclo del Agua',
+          icon: '☁️',
+          scene: 'water',
+          color: 'from-blue-500 to-blue-700',
+          content: 'Comprender el ciclo del agua: evaporación, condensación, precipitación y recolección. Conocer los estados del agua.',
+          questions: [
+            { q: '¿Cómo se llama cuando el agua se convierte en vapor?', options: ['Condensación', 'Evaporación', 'Precipitación', 'Congelación'], correct: 1 },
+            { q: '¿Qué forma el vapor al enfriarse en las nubes?', options: ['Más vapor', 'Gotas de agua', 'Hielo', 'Nieve'], correct: 1 },
+            { q: '¿Cómo se llama la lluvia, nieve o granizo?', options: ['Evaporación', 'Condensación', 'Precipitación', 'Filtración'], correct: 2 },
+            { q: '¿Cuántos estados tiene el agua?', options: ['Uno', 'Dos', 'Tres', 'Cuatro'], correct: 2 },
+            { q: '¿El hielo es agua en estado...?', options: ['Líquido', 'Gaseoso', 'Sólido', 'Plasma'], correct: 2 },
+            { q: '¿El vapor es agua en estado...?', options: ['Líquido', 'Gaseoso', 'Sólido', 'Todos'], correct: 1 },
+            { q: '¿El sol ayuda en la evaporación?', options: ['Sí', 'No', 'Solo la luna', 'Nunca'], correct: 0 },
+            { q: '¿Las nubes están formadas por...?', options: ['Aire', 'Gotitas de agua', 'Polvo', 'Humo'], correct: 1 },
+            { q: '¿El ciclo del agua se repite?', options: ['Sí, siempre', 'No', 'Solo en verano', 'Una vez'], correct: 0 },
+            { q: '¿Los ríos llevan agua al mar?', options: ['Sí', 'No', 'Solo algunos', 'Nunca'], correct: 0 }
+          ]
+        },
+        {
+          id: 'senses2',
+          title: '🧠 El Sistema Nervioso',
+          icon: '⚡',
+          scene: 'senses',
+          color: 'from-purple-500 to-purple-700',
+          content: 'Conocer el sistema nervioso: cerebro, médula espinal y nervios. Entender cómo procesan la información sensorial.',
+          questions: [
+            { q: '¿Qué órgano es el centro del sistema nervioso?', options: ['Corazón', 'Cerebro', 'Estómago', 'Pulmones'], correct: 1 },
+            { q: '¿Los nervios transmiten mensajes?', options: ['Sí', 'No', 'Solo de noche', 'Nunca'], correct: 0 },
+            { q: '¿La médula espinal está en la columna?', options: ['Sí', 'No', 'En la cabeza', 'En el brazo'], correct: 0 },
+            { q: '¿El cerebro controla los movimientos?', options: ['Sí', 'No', 'Solo el corazón', 'Nunca'], correct: 0 },
+            { q: '¿Los reflejos son respuestas rápidas?', options: ['Sí', 'No', 'Son lentos', 'No existen'], correct: 0 },
+            { q: '¿El cerebro procesa lo que vemos?', options: ['Sí', 'No', 'Solo los ojos', 'Nunca'], correct: 0 },
+            { q: '¿Las neuronas son células nerviosas?', options: ['Sí', 'No', 'Son músculos', 'Son huesos'], correct: 0 },
+            { q: '¿El dolor es una señal del sistema nervioso?', options: ['Sí', 'No', 'Es imaginación', 'Nunca'], correct: 0 },
+            { q: '¿El cerebro necesita descanso?', options: ['Sí', 'No', 'Nunca duerme', 'Solo de día'], correct: 0 },
+            { q: '¿El sistema nervioso es importante?', options: ['Sí, muy importante', 'No', 'Poco', 'Nada'], correct: 0 }
+          ]
+        },
+        {
+          id: 'food2',
+          title: '🥗 El Plato del Buen Comer',
+          icon: '🍽️',
+          scene: 'food',
+          color: 'from-red-500 to-red-700',
+          content: 'Conocer los grupos alimenticios: frutas y verduras, cereales y tubérculos, leguminosas y alimentos de origen animal.',
+          questions: [
+            { q: '¿Cuántos grupos tiene el Plato del Buen Comer?', options: ['Dos', 'Tres', 'Cuatro', 'Cinco'], correct: 1 },
+            { q: '¿Las frutas y verduras dan vitaminas?', options: ['Sí', 'No', 'Solo las frutas', 'Nunca'], correct: 0 },
+            { q: '¿El arroz es un cereal?', options: ['Sí', 'No', 'Es fruta', 'Es verdura'], correct: 0 },
+            { q: '¿Los frijoles son leguminosas?', options: ['Sí', 'No', 'Son cereales', 'Son frutas'], correct: 0 },
+            { q: '¿La carne es de origen animal?', options: ['Sí', 'No', 'Es vegetal', 'Es cereal'], correct: 0 },
+            { q: '¿Debemos comer de todos los grupos?', options: ['Sí', 'No', 'Solo uno', 'Solo dos'], correct: 0 },
+            { q: '¿Los cereales dan energía?', options: ['Sí', 'No', 'Solo proteínas', 'Nada'], correct: 0 },
+            { q: '¿El huevo tiene proteína?', options: ['Sí', 'No', 'Solo grasa', 'Solo agua'], correct: 0 },
+            { q: '¿Las verduras se deben comer más que los cereales?', options: ['Sí', 'No', 'Igual', 'Menos'], correct: 0 },
+            { q: '¿Es bueno variar nuestra alimentación?', options: ['Sí', 'No', 'Comer lo mismo', 'Nunca'], correct: 0 }
+          ]
+        },
+        {
+          id: 'daynight2',
+          title: '🌍 El Sistema Solar',
+          icon: '🪐',
+          scene: 'day-night',
+          color: 'from-indigo-500 to-indigo-700',
+          content: 'Conocer el Sistema Solar: el Sol, los planetas y sus características. Entender por qué hay día y noche.',
+          questions: [
+            { q: '¿Cuántos planetas tiene el Sistema Solar?', options: ['5', '7', '8', '10'], correct: 2 },
+            { q: '¿Qué está en el centro del Sistema Solar?', options: ['La Tierra', 'La Luna', 'El Sol', 'Marte'], correct: 2 },
+            { q: '¿La Tierra gira alrededor del Sol?', options: ['Sí', 'No', 'El Sol gira', 'Nunca'], correct: 0 },
+            { q: '¿Por qué hay día y noche?', options: ['El sol se apaga', 'La Tierra rota', 'La luna tapa', 'Magia'], correct: 1 },
+            { q: '¿Cuál es el planeta más cercano al Sol?', options: ['Venus', 'Mercurio', 'Marte', 'Tierra'], correct: 1 },
+            { q: '¿Cuál es el planeta más grande?', options: ['Tierra', 'Saturno', 'Júpiter', 'Neptuno'], correct: 2 },
+            { q: '¿Saturno tiene anillos?', options: ['Sí', 'No', 'Solo uno', 'Son lunas'], correct: 0 },
+            { q: '¿La Luna es un planeta?', options: ['Sí', 'No, es satélite', 'Es estrella', 'Es cometa'], correct: 1 },
+            { q: '¿El Sol es una estrella?', options: ['Sí', 'No', 'Es planeta', 'Es luna'], correct: 0 },
+            { q: '¿Marte es el planeta rojo?', options: ['Sí', 'No', 'Es azul', 'Es verde'], correct: 0 }
+          ]
+        },
+        {
+          id: 'seasons2',
+          title: '🌡️ El Clima y el Tiempo',
+          icon: '⛈️',
+          scene: 'seasons',
+          color: 'from-teal-500 to-teal-700',
+          content: 'Diferenciar clima y tiempo atmosférico. Conocer fenómenos meteorológicos: lluvia, viento, tormentas, sequías.',
+          questions: [
+            { q: '¿El clima es el tiempo de un día?', options: ['Sí', 'No, es de muchos años', 'Es lo mismo', 'Nunca'], correct: 1 },
+            { q: '¿Qué instrumento mide la temperatura?', options: ['Barómetro', 'Termómetro', 'Pluviómetro', 'Anemómetro'], correct: 1 },
+            { q: '¿El anemómetro mide el viento?', options: ['Sí', 'No', 'Mide lluvia', 'Mide calor'], correct: 0 },
+            { q: '¿La lluvia es precipitación?', options: ['Sí', 'No', 'Es evaporación', 'Es nube'], correct: 0 },
+            { q: '¿Los huracanes son peligrosos?', options: ['Sí', 'No', 'Son divertidos', 'Son pequeños'], correct: 0 },
+            { q: '¿La sequía es falta de agua?', options: ['Sí', 'No', 'Es mucha agua', 'Es frío'], correct: 0 },
+            { q: '¿Las nubes pueden predecir el tiempo?', options: ['Sí', 'No', 'Nunca', 'Solo de noche'], correct: 0 },
+            { q: '¿El granizo es hielo que cae?', options: ['Sí', 'No', 'Es nieve', 'Es lluvia'], correct: 0 },
+            { q: '¿Los tornados giran muy rápido?', options: ['Sí', 'No', 'Son lentos', 'No giran'], correct: 0 },
+            { q: '¿El arcoíris aparece después de la lluvia?', options: ['Sí', 'No', 'Antes', 'De noche'], correct: 0 }
+          ]
+        },
+        {
+          id: 'hygiene2',
+          title: '🦠 Los Microorganismos',
+          icon: '🔬',
+          scene: 'hygiene',
+          color: 'from-cyan-500 to-cyan-700',
+          content: 'Conocer los microorganismos: bacterias, virus y hongos. Entender cómo algunos causan enfermedades y otros son beneficiosos.',
+          questions: [
+            { q: '¿Los microorganismos son muy pequeños?', options: ['Sí', 'No', 'Son grandes', 'Se ven fácil'], correct: 0 },
+            { q: '¿Todos los microorganismos son malos?', options: ['Sí', 'No, algunos ayudan', 'Todos', 'Ninguno'], correct: 1 },
+            { q: '¿Las bacterias del yogur son beneficiosas?', options: ['Sí', 'No', 'Son malas', 'No hay'], correct: 0 },
+            { q: '¿Los virus causan gripe?', options: ['Sí', 'No', 'Las bacterias', 'El frío solo'], correct: 0 },
+            { q: '¿Lavarse las manos elimina gérmenes?', options: ['Sí', 'No', 'Los multiplica', 'Nunca'], correct: 0 },
+            { q: '¿Los hongos son microorganismos?', options: ['Sí', 'No', 'Son plantas', 'Son animales'], correct: 0 },
+            { q: '¿Las vacunas nos protegen de virus?', options: ['Sí', 'No', 'Nos enferman', 'Nunca'], correct: 0 },
+            { q: '¿El microscopio sirve para ver microorganismos?', options: ['Sí', 'No', 'Para ver estrellas', 'Para leer'], correct: 0 },
+            { q: '¿Algunos hongos se comen?', options: ['Sí, los champiñones', 'No, todos son malos', 'Nunca', 'Son venenosos'], correct: 0 },
+            { q: '¿Los antibióticos matan bacterias?', options: ['Sí', 'No', 'Matan virus', 'Matan hongos'], correct: 0 }
+          ]
+        },
+        {
+          id: 'environment2',
+          title: '🌱 Ecosistemas',
+          icon: '🏔️',
+          scene: 'environment',
+          color: 'from-emerald-500 to-emerald-700',
+          content: 'Conocer diferentes ecosistemas: bosque, desierto, océano, selva. Entender las cadenas alimenticias.',
+          questions: [
+            { q: '¿Un ecosistema incluye seres vivos y no vivos?', options: ['Sí', 'No', 'Solo vivos', 'Solo rocas'], correct: 0 },
+            { q: '¿El desierto tiene poca agua?', options: ['Sí', 'No', 'Tiene mucha', 'Es igual'], correct: 0 },
+            { q: '¿En la selva hay muchas plantas?', options: ['Sí', 'No', 'Pocas', 'Ninguna'], correct: 0 },
+            { q: '¿Las cadenas alimenticias comienzan con plantas?', options: ['Sí', 'No', 'Con animales', 'Con rocas'], correct: 0 },
+            { q: '¿Los depredadores cazan otros animales?', options: ['Sí', 'No', 'Comen plantas', 'Nada'], correct: 0 },
+            { q: '¿El océano es un ecosistema?', options: ['Sí', 'No', 'Solo agua', 'No hay vida'], correct: 0 },
+            { q: '¿Los herbívoros comen plantas?', options: ['Sí', 'No', 'Comen carne', 'Comen todo'], correct: 0 },
+            { q: '¿Los carnívoros comen carne?', options: ['Sí', 'No', 'Comen plantas', 'Comen piedras'], correct: 0 },
+            { q: '¿El bosque tiene muchos árboles?', options: ['Sí', 'No', 'Solo pasto', 'Solo arena'], correct: 0 },
+            { q: '¿Los ecosistemas pueden dañarse?', options: ['Sí', 'No', 'Son eternos', 'Nunca'], correct: 0 }
+          ]
+        }
+      ]
+    };
+
+    // Funciones de navegación
+    function showMainMenu() {
+      document.getElementById('main-menu').classList.remove('hidden');
+      document.getElementById('grade-menu').classList.add('hidden');
+      document.getElementById('game-screen').classList.add('hidden');
+    }
+
+    function showGradeMenu(grade) {
+      currentGrade = grade;
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('grade-menu').classList.remove('hidden');
+      document.getElementById('game-screen').classList.add('hidden');
+      
+      const gradeTitle = document.getElementById('grade-title');
+      gradeTitle.textContent = grade === 1 ? '🌱 Primer Grado - Nivel Fácil' : '🌻 Segundo Grado - Nivel Medio';
+      
+      renderGamesGrid(grade);
+    }
+
+    function renderGamesGrid(grade) {
+      const container = document.getElementById('games-grid');
+      const games = gamesData[grade];
+      
+      container.innerHTML = games.map((game, index) => `
+        <button onclick="startGame(${grade}, ${index})" 
+                class="btn-bounce bg-gradient-to-r ${game.color} text-white font-bold p-6 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 text-left">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-4xl">${game.icon}</span>
+            <span class="text-xl">${game.title}</span>
+          </div>
+          <div class="bg-white/20 rounded-xl p-3 text-sm">
+            <div class="flex items-center gap-2 mb-1">
+              <span>📚</span>
+              <span class="font-semibold">Contenido:</span>
+            </div>
+            <p class="text-white/90 text-xs leading-relaxed">${game.content.substring(0, 100)}...</p>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function startGame(grade, gameIndex) {
+      currentGame = gamesData[grade][gameIndex];
+      score = 0;
+      currentQuestionIndex = 0;
+      questions = [...currentGame.questions].sort(() => Math.random() - 0.5).slice(0, 10);
+      
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('grade-menu').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      document.getElementById('game-complete').classList.add('hidden');
+      document.getElementById('question-container').classList.remove('hidden');
+      
+      // Configurar escenario
+      setScene(currentGame.scene);
+      
+      // Configurar título y contenido
+      document.getElementById('game-title').textContent = currentGame.title;
+      document.getElementById('learning-content-text').textContent = currentGame.content;
+      document.getElementById('score').textContent = score;
+      
+      showQuestion();
+    }
+
+    function setScene(sceneName) {
+      const bg = document.getElementById('scene-background');
+      const elements = document.getElementById('scene-elements');
+      
+      bg.className = 'absolute inset-0 transition-all duration-500 scene-' + sceneName;
+      
+      // Elementos decorativos según el escenario
+      let decorations = '';
+      
+      switch(sceneName) {
+        case 'plants':
+          decorations = `
+            <div class="sun"></div>
+            <div class="cloud" style="top: 15%; left: 10%; width: 80px; height: 30px;"></div>
+            <div class="cloud floating" style="top: 20%; left: 60%; width: 100px; height: 40px;"></div>
+            <div class="grass"></div>
+            <div class="tree swaying" style="left: 10%;">
+              <svg width="60" height="100" viewBox="0 0 60 100">
+                <rect x="25" y="50" width="10" height="50" fill="#8B4513"/>
+                <circle cx="30" cy="35" r="25" fill="#228B22"/>
+                <circle cx="15" cy="45" r="20" fill="#2E8B2E"/>
+                <circle cx="45" cy="45" r="20" fill="#2E8B2E"/>
+              </svg>
+            </div>
+            <div class="tree swaying" style="left: 80%; animation-delay: 0.5s;">
+              <svg width="50" height="80" viewBox="0 0 50 80">
+                <rect x="20" y="40" width="10" height="40" fill="#8B4513"/>
+                <circle cx="25" cy="28" r="22" fill="#32CD32"/>
+              </svg>
+            </div>
+            <div style="position: absolute; bottom: 30%; left: 30%;" class="floating">🌻</div>
+            <div style="position: absolute; bottom: 32%; left: 50%; font-size: 2rem;" class="floating" style="animation-delay: 1s;">🌷</div>
+          `;
+          break;
+        case 'body':
+          decorations = `
+            <div style="position: absolute; top: 20%; left: 50%; transform: translateX(-50%); font-size: 4rem;" class="floating">❤️</div>
+            <div style="position: absolute; top: 40%; left: 20%; font-size: 2rem;" class="floating">🫁</div>
+            <div style="position: absolute; top: 40%; right: 20%; font-size: 2rem;" class="floating" style="animation-delay: 0.5s;">🧠</div>
+            <div style="position: absolute; bottom: 30%; left: 30%; font-size: 2rem;">🦴</div>
+            <div style="position: absolute; bottom: 30%; right: 30%; font-size: 2rem;">💪</div>
+          `;
+          break;
+        case 'animals':
+          decorations = `
+            <div class="sun"></div>
+            <div class="grass"></div>
+            <div class="cloud floating" style="top: 10%; left: 20%; width: 70px; height: 25px;"></div>
+            <div style="position: absolute; bottom: 28%; left: 15%; font-size: 3rem;" class="floating">🐕</div>
+            <div style="position: absolute; bottom: 30%; left: 40%; font-size: 2.5rem;" class="floating" style="animation-delay: 0.3s;">🐈</div>
+            <div style="position: absolute; bottom: 32%; right: 20%; font-size: 3rem;" class="floating" style="animation-delay: 0.6s;">🐄</div>
+            <div style="position: absolute; bottom: 35%; right: 40%; font-size: 2rem;">🐓</div>
+            <div style="position: absolute; top: 30%; left: 60%; font-size: 2rem;" class="floating">🦋</div>
+          `;
+          break;
+        case 'water':
+          decorations = `
+            <div class="water-wave"></div>
+            <div class="cloud floating" style="top: 10%; left: 15%; width: 90px; height: 35px;"></div>
+            <div class="cloud floating" style="top: 15%; right: 20%; width: 70px; height: 28px; animation-delay: 1s;"></div>
+            <div style="position: absolute; bottom: 35%; left: 20%; font-size: 2.5rem;" class="floating">🐟</div>
+            <div style="position: absolute; bottom: 25%; left: 50%; font-size: 2rem;" class="floating" style="animation-delay: 0.4s;">🐠</div>
+            <div style="position: absolute; bottom: 30%; right: 25%; font-size: 3rem;" class="floating" style="animation-delay: 0.8s;">🐳</div>
+            <div style="position: absolute; top: 25%; left: 30%; font-size: 2rem;">💧</div>
+            <div style="position: absolute; top: 30%; right: 35%; font-size: 1.5rem;">💧</div>
+          `;
+          break;
+        case 'senses':
+          decorations = `
+            <div style="position: absolute; top: 20%; left: 50%; transform: translateX(-50%); font-size: 4rem;" class="floating">🧠</div>
+            <div style="position: absolute; top: 45%; left: 15%; font-size: 2.5rem;">👁️</div>
+            <div style="position: absolute; top: 45%; right: 15%; font-size: 2.5rem;">👂</div>
+            <div style="position: absolute; bottom: 40%; left: 25%; font-size: 2.5rem;">👃</div>
+            <div style="position: absolute; bottom: 40%; right: 25%; font-size: 2.5rem;">👅</div>
+            <div style="position: absolute; bottom: 30%; left: 50%; transform: translateX(-50%); font-size: 2.5rem;">✋</div>
+          `;
+          break;
+        case 'food':
+          decorations = `
+            <div style="position: absolute; top: 15%; left: 20%; font-size: 3rem;" class="floating">🍎</div>
+            <div style="position: absolute; top: 20%; right: 25%; font-size: 2.5rem;" class="floating" style="animation-delay: 0.3s;">🥕</div>
+            <div style="position: absolute; top: 40%; left: 15%; font-size: 2.5rem;" class="floating" style="animation-delay: 0.6s;">🥦</div>
+            <div style="position: absolute; top: 35%; right: 15%; font-size: 2.5rem;">🍌</div>
+            <div style="position: absolute; bottom: 35%; left: 25%; font-size: 2rem;">🥛</div>
+            <div style="position: absolute; bottom: 30%; right: 30%; font-size: 2.5rem;">🥚</div>
+            <div style="position: absolute; bottom: 40%; left: 50%; transform: translateX(-50%); font-size: 3rem;" class="floating">🍽️</div>
+          `;
+          break;
+        case 'day-night':
+          decorations = `
+            <div style="position: absolute; top: 10%; left: 15%; font-size: 4rem;">☀️</div>
+            <div style="position: absolute; top: 15%; right: 15%; font-size: 3rem;">🌙</div>
+            <div style="position: absolute; top: 25%; right: 25%; font-size: 1.5rem;">⭐</div>
+            <div style="position: absolute; top: 30%; right: 35%; font-size: 1rem;">⭐</div>
+            <div style="position: absolute; top: 35%; right: 20%; font-size: 1.2rem;">⭐</div>
+            <div style="position: absolute; bottom: 30%; left: 50%; transform: translateX(-50%); font-size: 4rem;" class="floating">🌍</div>
+            <div style="position: absolute; bottom: 35%; left: 30%; font-size: 2rem;">🪐</div>
+            <div style="position: absolute; bottom: 38%; right: 30%; font-size: 1.5rem;">🚀</div>
+          `;
+          break;
+        case 'seasons':
+          decorations = `
+            <div style="position: absolute; top: 20%; left: 10%; font-size: 3rem;">🌸</div>
+            <div style="position: absolute; top: 25%; left: 30%; font-size: 3rem;">☀️</div>
+            <div style="position: absolute; top: 20%; right: 30%; font-size: 3rem;">🍂</div>
+            <div style="position: absolute; top: 25%; right: 10%; font-size: 3rem;">❄️</div>
+            <div style="position: absolute; bottom: 35%; left: 15%; font-size: 2rem;" class="floating">🌷</div>
+            <div style="position: absolute; bottom: 30%; left: 35%; font-size: 2rem;">🏖️</div>
+            <div style="position: absolute; bottom: 32%; right: 35%; font-size: 2rem;">🍁</div>
+            <div style="position: absolute; bottom: 35%; right: 15%; font-size: 2rem;" class="floating">⛄</div>
+          `;
+          break;
+        case 'hygiene':
+          decorations = `
+            <div style="position: absolute; top: 15%; left: 50%; transform: translateX(-50%); font-size: 4rem;" class="floating">🧼</div>
+            <div style="position: absolute; top: 35%; left: 20%; font-size: 2.5rem;">🪥</div>
+            <div style="position: absolute; top: 35%; right: 20%; font-size: 2.5rem;">🚿</div>
+            <div style="position: absolute; bottom: 35%; left: 30%; font-size: 2rem;">💧</div>
+            <div style="position: absolute; bottom: 35%; right: 30%; font-size: 2rem;">✨</div>
+            <div style="position: absolute; bottom: 30%; left: 50%; transform: translateX(-50%); font-size: 2.5rem;" class="floating">🔬</div>
+          `;
+          break;
+        case 'environment':
+          decorations = `
+            <div class="sun"></div>
+            <div class="cloud floating" style="top: 10%; left: 30%; width: 80px; height: 30px;"></div>
+            <div style="position: absolute; bottom: 25%; left: 10%; font-size: 3rem;" class="swaying">🌳</div>
+            <div style="position: absolute; bottom: 28%; left: 30%; font-size: 2.5rem;" class="swaying" style="animation-delay: 0.3s;">🌲</div>
+            <div style="position: absolute; bottom: 25%; right: 30%; font-size: 3rem;" class="swaying" style="animation-delay: 0.6s;">🌴</div>
+            <div style="position: absolute; bottom: 30%; right: 10%; font-size: 2.5rem;">🏔️</div>
+            <div style="position: absolute; top: 40%; left: 50%; transform: translateX(-50%); font-size: 3rem;" class="floating">♻️</div>
+            <div style="position: absolute; bottom: 35%; left: 50%; font-size: 2rem;">🦋</div>
+          `;
+          break;
+      }
+      
+      elements.innerHTML = decorations;
+    }
+
+    function showQuestion() {
+      if (currentQuestionIndex >= questions.length) {
+        showGameComplete();
+        return;
+      }
+      
+      const question = questions[currentQuestionIndex];
+      document.getElementById('question-text').textContent = question.q;
+      
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = question.options.map((option, index) => `
+        <button onclick="checkAnswer(${index}, ${question.correct})" 
+                class="option-btn bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg">
+          ${option}
+        </button>
+      `).join('');
+      
+      document.getElementById('feedback-container').classList.add('hidden');
+    }
+
+    function checkAnswer(selected, correct) {
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach(btn => btn.disabled = true);
+      
+      const feedbackContainer = document.getElementById('feedback-container');
+      const feedbackText = document.getElementById('feedback-text');
+      
+      if (selected === correct) {
+        score += 10;
+        document.getElementById('score').textContent = score;
+        buttons[selected].classList.add('correct-answer');
+        buttons[selected].classList.remove('from-blue-400', 'to-blue-500');
+        buttons[selected].classList.add('bg-green-500');
+        feedbackText.textContent = '🎉 ¡Correcto! ¡Muy bien!';
+        feedbackText.className = 'text-2xl font-bold text-green-400 drop-shadow-lg';
+      } else {
+        buttons[selected].classList.add('wrong-answer');
+        buttons[selected].classList.remove('from-blue-400', 'to-blue-500');
+        buttons[selected].classList.add('bg-red-500');
+        buttons[correct].classList.remove('from-blue-400', 'to-blue-500');
+        buttons[correct].classList.add('bg-green-500');
+        feedbackText.textContent = '😅 ¡Casi! La respuesta correcta está en verde';
+        feedbackText.className = 'text-2xl font-bold text-yellow-300 drop-shadow-lg';
+      }
+      
+      feedbackContainer.classList.remove('hidden');
+      
+      setTimeout(() => {
+        currentQuestionIndex++;
+        showQuestion();
+      }, 2000);
+    }
+
+    function showGameComplete() {
+      document.getElementById('question-container').classList.add('hidden');
+      document.getElementById('feedback-container').classList.add('hidden');
+      document.getElementById('game-complete').classList.remove('hidden');
+      document.getElementById('final-score').textContent = score;
+    }
+
+    function backToGradeMenu() {
+      showGradeMenu(currentGrade);
+    }
+
+    // SDK Integration
+    async function onConfigChange(newConfig) {
+      config = { ...defaultConfig, ...newConfig };
+      
+      const mainTitle = document.getElementById('main-title');
+      if (mainTitle) {
+        mainTitle.innerHTML = `🌿 ${config.main_title || defaultConfig.main_title} 🌿`;
+      }
+      
+      const authorCredits = document.querySelectorAll('#author-credit, footer');
+      authorCredits.forEach(el => {
+        if (el.id === 'author-credit' || el.textContent.includes('Material creado')) {
+          el.textContent = `Material creado por ${config.author_name || defaultConfig.author_name}`;
+        }
+      });
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (cfg) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['main_title', cfg.main_title || defaultConfig.main_title],
+          ['author_name', cfg.author_name || defaultConfig.author_name]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d6e3788c6f4aee6',t:'MTc3MjU5OTM3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
