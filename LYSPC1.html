@@ -1,0 +1,2381 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juegos Educativos - Primer Grado</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Comic+Neue:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Fredoka', 'Comic Neue', cursive; }
+    
+    .game-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+    
+    .bounce-in {
+      animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .floating { animation: float 3s ease-in-out infinite; }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    
+    .sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    
+    .draggable { cursor: grab; user-select: none; }
+    .draggable:active { cursor: grabbing; }
+    
+    .drop-zone {
+      transition: all 0.3s ease;
+    }
+    .drop-zone.drag-over {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+    }
+    
+    .learning-box {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 3px dashed #f59e0b;
+    }
+    
+    .progress-fill {
+      transition: width 0.5s ease-out;
+    }
+    
+    .star-earned {
+      animation: starPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    @keyframes starPop {
+      0% { transform: scale(0) rotate(-180deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    
+    .correct-answer {
+      animation: correctPulse 0.5s ease;
+    }
+    
+    @keyframes correctPulse {
+      0%, 100% { background-color: inherit; }
+      50% { background-color: #86efac; }
+    }
+    
+    .wrong-answer {
+      animation: shake 0.5s ease;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      animation: confettiFall 3s linear forwards;
+    }
+    
+    @keyframes confettiFall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100%) rotate(720deg); opacity: 0; }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full overflow-auto">
+  <div id="app" class="min-h-full w-full bg-gradient-to-br from-purple-400 via-pink-300 to-yellow-200"><!-- Main Menu -->
+   <div id="main-menu" class="min-h-full p-4 md:p-8"><!-- Header -->
+    <header class="text-center mb-8">
+     <div class="inline-block relative">
+      <h1 id="main-title" class="text-3xl md:text-5xl font-bold text-purple-800 drop-shadow-lg bounce-in">🎮 Juegos Educativos 🎮</h1>
+      <p class="text-lg md:text-xl text-purple-600 mt-2">Primer Grado de Primaria</p>
+      <p id="welcome-msg" class="text-purple-500 mt-1">¡Aprende jugando!</p>
+     </div><!-- Student Name Input -->
+     <div class="mt-6 max-w-md mx-auto">
+      <div class="bg-white/80 backdrop-blur rounded-2xl p-4 shadow-lg"><label class="block text-purple-700 font-semibold mb-2">👤 Tu Nombre:</label> <input type="text" id="student-name" placeholder="Escribe tu nombre aquí..." class="w-full px-4 py-3 rounded-xl border-2 border-purple-300 focus:border-purple-500 focus:outline-none text-lg text-center">
+      </div>
+     </div>
+    </header><!-- Learning Fields -->
+    <div class="max-w-6xl mx-auto space-y-8"><!-- Campo: Lenguajes -->
+     <section class="bounce-in" style="animation-delay: 0.1s;">
+      <div class="bg-gradient-to-r from-blue-500 to-cyan-400 rounded-t-2xl p-4">
+       <h2 class="text-2xl font-bold text-white flex items-center gap-2">📚 Campo: Lenguajes</h2>
+      </div>
+      <div class="bg-white/90 backdrop-blur rounded-b-2xl p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+       <div class="game-card bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('etiquetador')">
+        <div class="text-4xl text-center mb-2 floating">
+         🏷️
+        </div>
+        <h3 class="font-bold text-blue-800 text-center">Etiquetador</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Escribir tu nombre para indicar autoría en tus trabajos.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('sigue-el-dedo')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.2s;">
+         👆
+        </div>
+        <h3 class="font-bold text-cyan-800 text-center">Sigue el Dedo</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Seguir la lectura en voz alta de cuentos y poemas.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('palabra-perdida')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.3s;">
+         🔤
+        </div>
+        <h3 class="font-bold text-indigo-800 text-center">Palabra Perdida</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Colaborar en el dictado de textos eligiendo la palabra correcta.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-violet-100 to-violet-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('adivina-quien')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.4s;">
+         🐾
+        </div>
+        <h3 class="font-bold text-violet-800 text-center">Adivina Quién</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Describir oralmente animales usando adjetivos.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('clasificador')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.5s;">
+         📦
+        </div>
+        <h3 class="font-bold text-purple-800 text-center">Clasificador</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Distinguir letras de números y otros signos.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-pink-100 to-pink-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('chef-junior')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.6s;">
+         👨‍🍳
+        </div>
+        <h3 class="font-bold text-pink-800 text-center">Chef Junior</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Seguir instrucciones para preparar alimentos paso a paso.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-rose-100 to-rose-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('explorador-letreros')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.7s;">
+         🚏
+        </div>
+        <h3 class="font-bold text-rose-800 text-center">Explorador de Letreros</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Identificar características de letreros en tu entorno.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-fuchsia-100 to-fuchsia-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('pintor-emojis')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.8s;">
+         🎨
+        </div>
+        <h3 class="font-bold text-fuchsia-800 text-center">Pintor de Emojis</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Experimentar con colores para expresar emociones.
+        </div>
+       </div>
+      </div>
+     </section><!-- Campo: Saberes y Pensamiento Científico -->
+     <section class="bounce-in" style="animation-delay: 0.3s;">
+      <div class="bg-gradient-to-r from-green-500 to-emerald-400 rounded-t-2xl p-4">
+       <h2 class="text-2xl font-bold text-white flex items-center gap-2">🔬 Campo: Saberes y Pensamiento Científico</h2>
+      </div>
+      <div class="bg-white/90 backdrop-blur rounded-b-2xl p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+       <div class="game-card bg-gradient-to-br from-green-100 to-green-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('cuerpo-puzzle')">
+        <div class="text-4xl text-center mb-2 floating">
+         🧩
+        </div>
+        <h3 class="font-bold text-green-800 text-center">Cuerpo-Puzzle</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Comparar y representar las partes externas del cuerpo.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-lime-100 to-lime-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('plato-del-bien')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.2s;">
+         🥗
+        </div>
+        <h3 class="font-bold text-lime-800 text-center">Plato del Bien</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Identificar alimentos saludables como frutas y verduras.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('explorador-jardin')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.3s;">
+         🌿
+        </div>
+        <h3 class="font-bold text-emerald-800 text-center">Explorador de Jardín</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Distinguir plantas, animales y elementos de tu localidad.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-teal-100 to-teal-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('heroe-ambiental')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.4s;">
+         🦸
+        </div>
+        <h3 class="font-bold text-teal-800 text-center">Héroe Ambiental</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Clasificar acciones positivas o negativas para la naturaleza.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('caja-tesoros')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.5s;">
+         💎
+        </div>
+        <h3 class="font-bold text-cyan-800 text-center">Caja de Tesoros</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Clasificar objetos por color, tamaño y textura.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-sky-100 to-sky-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('carrera-hormigas')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.6s;">
+         🐜
+        </div>
+        <h3 class="font-bold text-sky-800 text-center">Carrera de Hormigas</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Observar trayectorias (recta, curva) de animales.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('oido-atento')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.7s;">
+         👂
+        </div>
+        <h3 class="font-bold text-blue-800 text-center">Oído Atento</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Identificar la fuente sonora de instrumentos.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('reloj-sol')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.8s;">
+         🌅
+        </div>
+        <h3 class="font-bold text-amber-800 text-center">Reloj de Sol</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Reconocer actividades según el día o la noche.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('une-puntos')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 0.9s;">
+         ✏️
+        </div>
+        <h3 class="font-bold text-orange-800 text-center">Une los Puntos</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Contar y representar colecciones del 1 al 10.
+        </div>
+       </div>
+       <div class="game-card bg-gradient-to-br from-red-100 to-red-200 rounded-xl p-4 cursor-pointer shadow-md" onclick="startGame('tiendita-frutas')">
+        <div class="text-4xl text-center mb-2 floating" style="animation-delay: 1s;">
+         🍎
+        </div>
+        <h3 class="font-bold text-red-800 text-center">Tiendita de Frutas</h3>
+        <div class="learning-box rounded-lg p-2 mt-2 text-xs text-amber-800"><strong>Aprenderás:</strong> Resolver situaciones de suma y resta con elementos.
+        </div>
+       </div>
+      </div>
+     </section>
+    </div><!-- Footer -->
+    <footer class="text-center mt-8 pb-4">
+     <div class="bg-white/60 backdrop-blur inline-block px-6 py-3 rounded-full">
+      <p class="text-purple-700 font-semibold">✨ Creado por <span class="text-pink-600">Mtra. María Fernanda Flores Valenzuela</span> ✨</p>
+     </div>
+    </footer>
+   </div><!-- Game Container (hidden by default) -->
+   <div id="game-container" class="hidden min-h-full p-4"><!-- Games will be loaded here dynamically -->
+   </div>
+  </div>
+  <script>
+    // Configuration
+    const defaultConfig = {
+      primary_color: '#9333ea',
+      secondary_color: '#ec4899',
+      background_color: '#c084fc',
+      text_color: '#581c87',
+      accent_color: '#fbbf24',
+      font_family: 'Fredoka',
+      font_size: 16,
+      main_title: 'Juegos Educativos',
+      welcome_message: '¡Aprende jugando!'
+    };
+
+    let config = { ...defaultConfig };
+    let currentGame = null;
+    let gameScore = 0;
+    let studentName = '';
+    let gameRecords = [];
+
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        gameRecords = data;
+        updateScoreDisplay();
+      }
+    };
+
+    // Initialize SDKs
+    async function initializeApp() {
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (newConfig) => {
+            config = { ...config, ...newConfig };
+            applyConfig();
+          },
+          mapToCapabilities: (cfg) => ({
+            recolorables: [
+              {
+                get: () => cfg.background_color || defaultConfig.background_color,
+                set: (v) => { cfg.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+              },
+              {
+                get: () => cfg.primary_color || defaultConfig.primary_color,
+                set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+              },
+              {
+                get: () => cfg.text_color || defaultConfig.text_color,
+                set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+              },
+              {
+                get: () => cfg.secondary_color || defaultConfig.secondary_color,
+                set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
+              },
+              {
+                get: () => cfg.accent_color || defaultConfig.accent_color,
+                set: (v) => { cfg.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => cfg.font_family || defaultConfig.font_family,
+              set: (v) => { cfg.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+            },
+            fontSizeable: {
+              get: () => cfg.font_size || defaultConfig.font_size,
+              set: (v) => { cfg.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+            }
+          }),
+          mapToEditPanelValues: (cfg) => new Map([
+            ['main_title', cfg.main_title || defaultConfig.main_title],
+            ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message]
+          ])
+        });
+      }
+
+      // Initialize Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      applyConfig();
+    }
+
+    function applyConfig() {
+      const app = document.getElementById('app');
+      const title = document.getElementById('main-title');
+      const welcomeMsg = document.getElementById('welcome-msg');
+      
+      // Apply background
+      app.style.background = `linear-gradient(135deg, ${config.background_color || defaultConfig.background_color}, ${config.secondary_color || defaultConfig.secondary_color}, ${config.accent_color || defaultConfig.accent_color})`;
+      
+      // Apply text
+      if (title) {
+        title.innerHTML = `🎮 ${config.main_title || defaultConfig.main_title} 🎮`;
+        title.style.color = config.text_color || defaultConfig.text_color;
+      }
+      if (welcomeMsg) {
+        welcomeMsg.textContent = config.welcome_message || defaultConfig.welcome_message;
+      }
+
+      // Apply font
+      document.body.style.fontFamily = `${config.font_family || defaultConfig.font_family}, Comic Neue, cursive`;
+      
+      // Apply font size scaling
+      const baseSize = config.font_size || defaultConfig.font_size;
+      document.body.style.fontSize = `${baseSize}px`;
+    }
+
+    function updateScoreDisplay() {
+      const scoreEl = document.getElementById('total-score');
+      if (scoreEl) {
+        const totalScore = gameRecords.reduce((sum, r) => sum + (r.score || 0), 0);
+        scoreEl.textContent = totalScore;
+      }
+    }
+
+    // Save game progress
+    async function saveGameProgress(gameId, score) {
+      if (!window.dataSdk) return;
+      
+      if (gameRecords.length >= 999) {
+        showToast('¡Has alcanzado el límite de registros!', 'warning');
+        return;
+      }
+
+      const result = await window.dataSdk.create({
+        student_name: studentName || 'Anónimo',
+        game_id: gameId,
+        score: score,
+        completed_at: new Date().toISOString()
+      });
+
+      if (!result.isOk) {
+        console.error('Error saving progress');
+      }
+    }
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `fixed top-4 right-4 px-6 py-3 rounded-xl shadow-lg z-50 bounce-in ${
+        type === 'success' ? 'bg-green-500' : type === 'warning' ? 'bg-amber-500' : 'bg-red-500'
+      } text-white font-bold`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Confetti effect
+    function createConfetti() {
+      const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd'];
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 3000);
+        }, i * 50);
+      }
+    }
+
+    // Start game function
+    function startGame(gameId) {
+      studentName = document.getElementById('student-name').value.trim();
+      currentGame = gameId;
+      gameScore = 0;
+      
+      document.getElementById('main-menu').classList.add('hidden');
+      const container = document.getElementById('game-container');
+      container.classList.remove('hidden');
+      
+      // Load specific game
+      switch(gameId) {
+        case 'etiquetador': loadEtiquetadorGame(); break;
+        case 'sigue-el-dedo': loadSigueElDedoGame(); break;
+        case 'palabra-perdida': loadPalabraPerdidaGame(); break;
+        case 'adivina-quien': loadAdivinaQuienGame(); break;
+        case 'clasificador': loadClasificadorGame(); break;
+        case 'chef-junior': loadChefJuniorGame(); break;
+        case 'explorador-letreros': loadExploradorLetrerosGame(); break;
+        case 'pintor-emojis': loadPintorEmojisGame(); break;
+        case 'cuerpo-puzzle': loadCuerpoPuzzleGame(); break;
+        case 'plato-del-bien': loadPlatoDelBienGame(); break;
+        case 'explorador-jardin': loadExploradorJardinGame(); break;
+        case 'heroe-ambiental': loadHeroeAmbientalGame(); break;
+        case 'caja-tesoros': loadCajaTesorosGame(); break;
+        case 'carrera-hormigas': loadCarreraHormigasGame(); break;
+        case 'oido-atento': loadOidoAtentoGame(); break;
+        case 'reloj-sol': loadRelojSolGame(); break;
+        case 'une-puntos': loadUnePuntosGame(); break;
+        case 'tiendita-frutas': loadTienditaFrutasGame(); break;
+        default: backToMenu();
+      }
+    }
+
+    function backToMenu() {
+      document.getElementById('game-container').classList.add('hidden');
+      document.getElementById('game-container').innerHTML = '';
+      document.getElementById('main-menu').classList.remove('hidden');
+    }
+
+    function completeGame(score) {
+      gameScore = score;
+      saveGameProgress(currentGame, score);
+      createConfetti();
+      showToast(`¡Excelente! Ganaste ${score} estrellas ⭐`, 'success');
+    }
+
+    // Game template
+    function createGameTemplate(title, learningContent, gameContent) {
+      return `
+        <div class="min-h-full bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-300 p-4">
+          <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-4">
+              <button onclick="backToMenu()" class="bg-white/80 hover:bg-white px-4 py-2 rounded-full font-bold text-purple-700 shadow-lg transition-all hover:scale-105">
+                ← Volver
+              </button>
+              <div class="bg-white/80 px-4 py-2 rounded-full font-bold text-purple-700">
+                ⭐ <span id="game-score">0</span>
+              </div>
+            </div>
+            
+            <!-- Game Title -->
+            <div class="text-center mb-4">
+              <h2 class="text-3xl font-bold text-white drop-shadow-lg bounce-in">${title}</h2>
+              ${studentName ? `<p class="text-white/80 mt-1">Jugador: ${studentName}</p>` : ''}
+            </div>
+            
+            <!-- Learning Box -->
+            <div class="learning-box rounded-xl p-4 mb-6 text-center">
+              <p class="text-amber-800 font-semibold">
+                <span class="text-lg">📖 Aprenderás:</span><br>
+                ${learningContent}
+              </p>
+            </div>
+            
+            <!-- Game Content -->
+            <div class="bg-white/90 backdrop-blur rounded-2xl p-6 shadow-xl">
+              ${gameContent}
+            </div>
+            
+            <!-- Footer -->
+            <div class="text-center mt-4">
+              <p class="text-white/80 text-sm">Creado por Mtra. María Fernanda Flores Valenzuela</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ============ GAME 1: ETIQUETADOR ============
+    function loadEtiquetadorGame() {
+      const container = document.getElementById('game-container');
+      const playerName = studentName || 'Mi Nombre';
+      
+      container.innerHTML = createGameTemplate(
+        '🏷️ Etiquetador',
+        'Escribir tu nombre para indicar autoría en tus trabajos.',
+        `
+          <div class="text-center mb-6">
+            <p class="text-lg text-purple-700 mb-4">¡Arrastra tu nombre a los objetos para marcarlos como tuyos!</p>
+          </div>
+          
+          <!-- Name Tag to Drag -->
+          <div class="flex justify-center mb-8">
+            <div id="name-tag" draggable="true" class="draggable bg-gradient-to-r from-yellow-400 to-orange-400 px-6 py-3 rounded-xl text-white font-bold text-xl shadow-lg cursor-grab hover:scale-110 transition-transform">
+              ${playerName}
+            </div>
+          </div>
+          
+          <!-- Items to Label -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="drop-zone flex flex-col items-center p-4 bg-blue-50 rounded-xl border-2 border-dashed border-blue-300" data-item="mochila">
+              <div class="text-6xl mb-2">🎒</div>
+              <p class="text-blue-700 font-semibold">Mi Mochila</p>
+              <div class="label-spot h-8 mt-2 text-sm text-green-600 font-bold"></div>
+            </div>
+            
+            <div class="drop-zone flex flex-col items-center p-4 bg-pink-50 rounded-xl border-2 border-dashed border-pink-300" data-item="cuaderno">
+              <div class="text-6xl mb-2">📓</div>
+              <p class="text-pink-700 font-semibold">Mi Cuaderno</p>
+              <div class="label-spot h-8 mt-2 text-sm text-green-600 font-bold"></div>
+            </div>
+            
+            <div class="drop-zone flex flex-col items-center p-4 bg-green-50 rounded-xl border-2 border-dashed border-green-300" data-item="dibujo">
+              <div class="text-6xl mb-2">🖼️</div>
+              <p class="text-green-700 font-semibold">Mi Dibujo</p>
+              <div class="label-spot h-8 mt-2 text-sm text-green-600 font-bold"></div>
+            </div>
+            
+            <div class="drop-zone flex flex-col items-center p-4 bg-purple-50 rounded-xl border-2 border-dashed border-purple-300" data-item="lonchera">
+              <div class="text-6xl mb-2">🍱</div>
+              <p class="text-purple-700 font-semibold">Mi Lonchera</p>
+              <div class="label-spot h-8 mt-2 text-sm text-green-600 font-bold"></div>
+            </div>
+          </div>
+          
+          <div id="etiquetador-result" class="mt-6 text-center hidden">
+            <p class="text-2xl text-green-600 font-bold">🎉 ¡Excelente! ¡Etiquetaste todos tus objetos!</p>
+          </div>
+        `
+      );
+
+      // Setup drag and drop
+      const nameTag = document.getElementById('name-tag');
+      const dropZones = document.querySelectorAll('.drop-zone');
+      let labeledCount = 0;
+
+      nameTag.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', playerName);
+        nameTag.classList.add('opacity-50');
+      });
+
+      nameTag.addEventListener('dragend', () => {
+        nameTag.classList.remove('opacity-50');
+      });
+
+      dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          zone.classList.add('drag-over');
+        });
+
+        zone.addEventListener('dragleave', () => {
+          zone.classList.remove('drag-over');
+        });
+
+        zone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          zone.classList.remove('drag-over');
+          
+          const labelSpot = zone.querySelector('.label-spot');
+          if (!labelSpot.textContent) {
+            labelSpot.textContent = `✓ ${playerName}`;
+            zone.classList.add('correct-answer');
+            zone.style.borderColor = '#22c55e';
+            zone.style.backgroundColor = '#dcfce7';
+            labeledCount++;
+            
+            document.getElementById('game-score').textContent = labeledCount * 25;
+
+            if (labeledCount === 4) {
+              document.getElementById('etiquetador-result').classList.remove('hidden');
+              completeGame(100);
+            }
+          }
+        });
+      });
+    }
+
+    // ============ GAME 2: SIGUE EL DEDO ============
+    function loadSigueElDedoGame() {
+      const container = document.getElementById('game-container');
+      
+      const stories = [
+        {
+          title: "El Sol y la Luna",
+          lines: [
+            "El sol brilla en el cielo azul.",
+            "Las flores abren sus pétalos.",
+            "Los pájaros cantan felices.",
+            "Cuando llega la noche,",
+            "la luna sale a brillar.",
+            "Las estrellas la acompañan.",
+            "Todo el mundo va a dormir.",
+            "Buenas noches, amiguitos."
+          ]
+        }
+      ];
+
+      const story = stories[0];
+      let currentLine = 0;
+      let isReading = false;
+
+      container.innerHTML = createGameTemplate(
+        '👆 Sigue el Dedo',
+        'Seguir la lectura en voz alta de cuentos y poemas.',
+        `
+          <div class="text-center mb-4">
+            <h3 class="text-2xl font-bold text-purple-700">${story.title}</h3>
+          </div>
+          
+          <div id="story-container" class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 min-h-64">
+            ${story.lines.map((line, i) => `
+              <p class="story-line text-xl leading-relaxed py-2 px-4 rounded-lg transition-all duration-300 ${i === 0 ? 'bg-yellow-200 font-bold scale-105' : 'text-gray-600'}" data-line="${i}">
+                ${i === 0 ? '👉 ' : ''}${line}
+              </p>
+            `).join('')}
+          </div>
+          
+          <div class="flex justify-center gap-4 mt-6">
+            <button id="read-btn" onclick="nextLine()" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-all hover:scale-105">
+              ▶️ Siguiente Línea
+            </button>
+          </div>
+          
+          <div class="text-center mt-4">
+            <p class="text-purple-600">Línea <span id="line-counter">1</span> de ${story.lines.length}</p>
+          </div>
+        `
+      );
+
+      window.nextLine = function() {
+        const lines = document.querySelectorAll('.story-line');
+        
+        // Remove highlight from current line
+        lines[currentLine].classList.remove('bg-yellow-200', 'font-bold', 'scale-105');
+        lines[currentLine].classList.add('text-gray-400');
+        lines[currentLine].innerHTML = story.lines[currentLine];
+        
+        currentLine++;
+        
+        if (currentLine < story.lines.length) {
+          // Highlight next line
+          lines[currentLine].classList.remove('text-gray-600');
+          lines[currentLine].classList.add('bg-yellow-200', 'font-bold', 'scale-105');
+          lines[currentLine].innerHTML = '👉 ' + story.lines[currentLine];
+          
+          document.getElementById('line-counter').textContent = currentLine + 1;
+          document.getElementById('game-score').textContent = Math.floor((currentLine / story.lines.length) * 100);
+        } else {
+          // Finished!
+          document.getElementById('read-btn').textContent = '🎉 ¡Terminaste!';
+          document.getElementById('read-btn').disabled = true;
+          document.getElementById('read-btn').classList.add('opacity-50');
+          completeGame(100);
+        }
+      };
+    }
+
+    // ============ GAME 3: PALABRA PERDIDA ============
+    function loadPalabraPerdidaGame() {
+      const container = document.getElementById('game-container');
+      
+      const sentences = [
+        { text: "El ____ brilla en el cielo.", options: ["sol", "pan", "lápiz"], answer: "sol", emoji: "☀️" },
+        { text: "Mi ____ es de color rojo.", options: ["mochila", "nube", "agua"], answer: "mochila", emoji: "🎒" },
+        { text: "Los ____ vuelan alto.", options: ["libros", "pájaros", "zapatos"], answer: "pájaros", emoji: "🐦" },
+        { text: "Me gusta comer ____.", options: ["piedras", "frutas", "nubes"], answer: "frutas", emoji: "🍎" },
+        { text: "El ____ ladra fuerte.", options: ["gato", "perro", "pez"], answer: "perro", emoji: "🐕" }
+      ];
+
+      let currentQ = 0;
+      let score = 0;
+
+      container.innerHTML = createGameTemplate(
+        '🔤 Palabra Perdida',
+        'Colaborar en el dictado de textos eligiendo la palabra correcta.',
+        `
+          <div id="palabra-game">
+            <div class="text-center mb-6">
+              <span id="sentence-emoji" class="text-6xl">${sentences[0].emoji}</span>
+            </div>
+            
+            <div class="bg-purple-100 rounded-xl p-6 mb-6">
+              <p id="sentence" class="text-2xl text-center text-purple-800 font-semibold">
+                ${sentences[0].text}
+              </p>
+            </div>
+            
+            <div id="options" class="grid grid-cols-3 gap-4">
+              ${sentences[0].options.map(opt => `
+                <button class="word-option bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-xl text-xl shadow-lg transition-all hover:scale-105" data-word="${opt}">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+            
+            <div class="text-center mt-6">
+              <p class="text-purple-600">Pregunta <span id="q-counter">1</span> de ${sentences.length}</p>
+            </div>
+          </div>
+          
+          <div id="palabra-complete" class="hidden text-center">
+            <div class="text-6xl mb-4">🎉</div>
+            <p class="text-2xl text-green-600 font-bold">¡Excelente trabajo!</p>
+            <p class="text-lg text-purple-600 mt-2">Completaste todas las oraciones</p>
+          </div>
+        `
+      );
+
+      function setupOptions() {
+        document.querySelectorAll('.word-option').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const word = btn.dataset.word;
+            const correct = sentences[currentQ].answer;
+            
+            if (word === correct) {
+              btn.classList.add('correct-answer');
+              btn.classList.remove('from-blue-400', 'to-blue-500');
+              btn.classList.add('from-green-400', 'to-green-500');
+              score += 20;
+              document.getElementById('game-score').textContent = score;
+              
+              setTimeout(() => {
+                currentQ++;
+                if (currentQ < sentences.length) {
+                  updateQuestion();
+                } else {
+                  document.getElementById('palabra-game').classList.add('hidden');
+                  document.getElementById('palabra-complete').classList.remove('hidden');
+                  completeGame(100);
+                }
+              }, 800);
+            } else {
+              btn.classList.add('wrong-answer');
+              btn.classList.remove('from-blue-400', 'to-blue-500');
+              btn.classList.add('from-red-400', 'to-red-500');
+            }
+          });
+        });
+      }
+
+      function updateQuestion() {
+        document.getElementById('sentence').textContent = sentences[currentQ].text;
+        document.getElementById('sentence-emoji').textContent = sentences[currentQ].emoji;
+        document.getElementById('q-counter').textContent = currentQ + 1;
+        
+        const optionsContainer = document.getElementById('options');
+        optionsContainer.innerHTML = sentences[currentQ].options.map(opt => `
+          <button class="word-option bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-xl text-xl shadow-lg transition-all hover:scale-105" data-word="${opt}">
+            ${opt}
+          </button>
+        `).join('');
+        
+        setupOptions();
+      }
+
+      setupOptions();
+    }
+
+    // ============ GAME 4: ADIVINA QUIÉN ============
+    function loadAdivinaQuienGame() {
+      const container = document.getElementById('game-container');
+      
+      const animals = [
+        { name: "Perro", emoji: "🐕", adjectives: ["peludo", "fiel", "ladra"] },
+        { name: "Gato", emoji: "🐱", adjectives: ["bigotes", "maúlla", "suave"] },
+        { name: "Elefante", emoji: "🐘", adjectives: ["grande", "trompa", "gris"] },
+        { name: "Pez", emoji: "🐟", adjectives: ["nada", "escamas", "agua"] },
+        { name: "Pájaro", emoji: "🐦", adjectives: ["vuela", "plumas", "pico"] }
+      ];
+
+      let currentAnimal = 0;
+      let selectedAdj = [];
+      let score = 0;
+
+      container.innerHTML = createGameTemplate(
+        '🐾 Adivina Quién',
+        'Describir oralmente animales usando adjetivos.',
+        `
+          <div id="adivina-game">
+            <div class="text-center mb-4">
+              <p class="text-lg text-purple-700">Selecciona las 3 características del animal oculto:</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl p-8 mb-6 text-center">
+              <div id="hidden-animal" class="text-8xl filter blur-lg transition-all duration-500">
+                ${animals[0].emoji}
+              </div>
+              <p id="animal-name" class="text-2xl font-bold text-amber-700 mt-4 opacity-0">
+                ${animals[0].name}
+              </p>
+            </div>
+            
+            <div class="mb-4">
+              <p class="text-center text-purple-600 mb-2">Seleccionados: <span id="selected-count">0</span>/3</p>
+              <div id="selected-adj" class="flex justify-center gap-2 min-h-10"></div>
+            </div>
+            
+            <div id="adjectives" class="grid grid-cols-3 md:grid-cols-6 gap-3">
+              ${generateAdjectives(animals[0])}
+            </div>
+            
+            <div class="text-center mt-4">
+              <p class="text-purple-600">Animal <span id="animal-counter">1</span> de ${animals.length}</p>
+            </div>
+          </div>
+        `
+      );
+
+      function generateAdjectives(animal) {
+        const allAdj = ["peludo", "fiel", "ladra", "bigotes", "maúlla", "suave", "grande", "trompa", "gris", "nada", "escamas", "agua", "vuela", "plumas", "pico"];
+        const shuffled = allAdj.sort(() => Math.random() - 0.5).slice(0, 9);
+        // Ensure correct adjectives are included
+        animal.adjectives.forEach((adj, i) => {
+          if (!shuffled.includes(adj)) {
+            shuffled[i] = adj;
+          }
+        });
+        return shuffled.sort(() => Math.random() - 0.5).map(adj => `
+          <button class="adj-btn bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white font-semibold py-2 px-4 rounded-lg transition-all hover:scale-105" data-adj="${adj}">
+            ${adj}
+          </button>
+        `).join('');
+      }
+
+      function setupAdjButtons() {
+        document.querySelectorAll('.adj-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const adj = btn.dataset.adj;
+            
+            if (selectedAdj.includes(adj)) {
+              selectedAdj = selectedAdj.filter(a => a !== adj);
+              btn.classList.remove('from-green-400', 'to-green-500');
+              btn.classList.add('from-purple-400', 'to-pink-400');
+            } else if (selectedAdj.length < 3) {
+              selectedAdj.push(adj);
+              btn.classList.remove('from-purple-400', 'to-pink-400');
+              btn.classList.add('from-green-400', 'to-green-500');
+            }
+            
+            document.getElementById('selected-count').textContent = selectedAdj.length;
+            document.getElementById('selected-adj').innerHTML = selectedAdj.map(a => 
+              `<span class="bg-green-200 text-green-800 px-3 py-1 rounded-full">${a}</span>`
+            ).join('');
+
+            if (selectedAdj.length === 3) {
+              checkAnswer();
+            }
+          });
+        });
+      }
+
+      function checkAnswer() {
+        const animal = animals[currentAnimal];
+        const correct = animal.adjectives.every(adj => selectedAdj.includes(adj));
+        
+        if (correct) {
+          score += 20;
+          document.getElementById('game-score').textContent = score;
+          document.getElementById('hidden-animal').classList.remove('blur-lg');
+          document.getElementById('animal-name').classList.remove('opacity-0');
+          
+          setTimeout(() => {
+            currentAnimal++;
+            selectedAdj = [];
+            
+            if (currentAnimal < animals.length) {
+              updateAnimal();
+            } else {
+              completeGame(100);
+            }
+          }, 1500);
+        } else {
+          selectedAdj = [];
+          document.getElementById('selected-count').textContent = 0;
+          document.getElementById('selected-adj').innerHTML = '';
+          document.querySelectorAll('.adj-btn').forEach(btn => {
+            btn.classList.remove('from-green-400', 'to-green-500');
+            btn.classList.add('from-purple-400', 'to-pink-400');
+          });
+        }
+      }
+
+      function updateAnimal() {
+        const animal = animals[currentAnimal];
+        document.getElementById('hidden-animal').innerHTML = animal.emoji;
+        document.getElementById('hidden-animal').classList.add('blur-lg');
+        document.getElementById('animal-name').textContent = animal.name;
+        document.getElementById('animal-name').classList.add('opacity-0');
+        document.getElementById('animal-counter').textContent = currentAnimal + 1;
+        document.getElementById('selected-count').textContent = 0;
+        document.getElementById('selected-adj').innerHTML = '';
+        document.getElementById('adjectives').innerHTML = generateAdjectives(animal);
+        setupAdjButtons();
+      }
+
+      setupAdjButtons();
+    }
+
+    // ============ GAME 5: CLASIFICADOR ============
+    function loadClasificadorGame() {
+      const container = document.getElementById('game-container');
+      
+      const items = [
+        { value: "A", type: "letter" },
+        { value: "3", type: "number" },
+        { value: "B", type: "letter" },
+        { value: "7", type: "number" },
+        { value: "C", type: "letter" },
+        { value: "1", type: "number" },
+        { value: "D", type: "letter" },
+        { value: "5", type: "number" },
+        { value: "E", type: "letter" },
+        { value: "9", type: "number" }
+      ];
+
+      let shuffledItems = [...items].sort(() => Math.random() - 0.5);
+      let sorted = 0;
+
+      container.innerHTML = createGameTemplate(
+        '📦 Clasificador',
+        'Distinguir letras de números y otros signos.',
+        `
+          <div class="text-center mb-6">
+            <p class="text-lg text-purple-700">¡Arrastra cada símbolo a su caja correcta!</p>
+          </div>
+          
+          <div id="items-container" class="flex flex-wrap justify-center gap-3 mb-8 min-h-24">
+            ${shuffledItems.map((item, i) => `
+              <div class="item-to-sort draggable bg-gradient-to-br from-yellow-300 to-orange-400 w-16 h-16 rounded-xl flex items-center justify-center text-3xl font-bold text-white shadow-lg cursor-grab hover:scale-110 transition-transform" draggable="true" data-type="${item.type}" data-index="${i}">
+                ${item.value}
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="grid grid-cols-2 gap-8">
+            <div class="drop-box letter-box bg-gradient-to-br from-blue-200 to-blue-300 rounded-2xl p-6 min-h-48 border-4 border-dashed border-blue-500" data-accepts="letter">
+              <h3 class="text-center text-2xl font-bold text-blue-800 mb-4">📝 LETRAS</h3>
+              <div class="sorted-items flex flex-wrap gap-2 justify-center"></div>
+            </div>
+            
+            <div class="drop-box number-box bg-gradient-to-br from-green-200 to-green-300 rounded-2xl p-6 min-h-48 border-4 border-dashed border-green-500" data-accepts="number">
+              <h3 class="text-center text-2xl font-bold text-green-800 mb-4">🔢 NÚMEROS</h3>
+              <div class="sorted-items flex flex-wrap gap-2 justify-center"></div>
+            </div>
+          </div>
+          
+          <div id="clasificador-result" class="mt-6 text-center hidden">
+            <p class="text-2xl text-green-600 font-bold">🎉 ¡Perfecto! ¡Clasificaste todo correctamente!</p>
+          </div>
+        `
+      );
+
+      // Setup drag and drop
+      const draggables = document.querySelectorAll('.item-to-sort');
+      const dropBoxes = document.querySelectorAll('.drop-box');
+
+      draggables.forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', JSON.stringify({
+            type: item.dataset.type,
+            index: item.dataset.index,
+            value: item.textContent.trim()
+          }));
+          item.classList.add('opacity-50');
+        });
+
+        item.addEventListener('dragend', () => {
+          item.classList.remove('opacity-50');
+        });
+      });
+
+      dropBoxes.forEach(box => {
+        box.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          box.classList.add('drag-over');
+        });
+
+        box.addEventListener('dragleave', () => {
+          box.classList.remove('drag-over');
+        });
+
+        box.addEventListener('drop', (e) => {
+          e.preventDefault();
+          box.classList.remove('drag-over');
+          
+          const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+          const accepts = box.dataset.accepts;
+          
+          if (data.type === accepts) {
+            // Correct!
+            const sortedContainer = box.querySelector('.sorted-items');
+            const newItem = document.createElement('div');
+            newItem.className = `${accepts === 'letter' ? 'bg-blue-500' : 'bg-green-500'} w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-bold text-white shadow bounce-in`;
+            newItem.textContent = data.value;
+            sortedContainer.appendChild(newItem);
+            
+            // Remove from original container
+            const originalItem = document.querySelector(`.item-to-sort[data-index="${data.index}"]`);
+            if (originalItem) originalItem.remove();
+            
+            sorted++;
+            document.getElementById('game-score').textContent = sorted * 10;
+            
+            if (sorted === 10) {
+              document.getElementById('clasificador-result').classList.remove('hidden');
+              completeGame(100);
+            }
+          } else {
+            // Wrong box - shake animation
+            box.classList.add('wrong-answer');
+            setTimeout(() => box.classList.remove('wrong-answer'), 500);
+          }
+        });
+      });
+    }
+
+    // ============ GAME 6: CHEF JUNIOR ============
+    function loadChefJuniorGame() {
+      const container = document.getElementById('game-container');
+      
+      const recipe = {
+        name: "Sándwich Delicioso",
+        emoji: "🥪",
+        steps: [
+          { instruction: "Pon el pan en el plato", ingredient: "🍞", target: "plato" },
+          { instruction: "Agrega la lechuga", ingredient: "🥬", target: "plato" },
+          { instruction: "Pon el tomate", ingredient: "🍅", target: "plato" },
+          { instruction: "Agrega el queso", ingredient: "🧀", target: "plato" },
+          { instruction: "Cierra con otro pan", ingredient: "🍞", target: "plato" }
+        ]
+      };
+
+      let currentStep = 0;
+
+      container.innerHTML = createGameTemplate(
+        '👨‍🍳 Chef Junior',
+        'Seguir instrucciones para preparar alimentos paso a paso.',
+        `
+          <div class="text-center mb-4">
+            <h3 class="text-2xl font-bold text-orange-600">${recipe.emoji} ${recipe.name}</h3>
+          </div>
+          
+          <div class="bg-amber-100 rounded-xl p-4 mb-6">
+            <p class="text-center text-lg">
+              <span class="font-bold">Paso ${currentStep + 1}:</span>
+              <span id="current-instruction">${recipe.steps[0].instruction}</span>
+            </p>
+          </div>
+          
+          <!-- Ingredients -->
+          <div id="ingredients" class="flex justify-center gap-4 mb-8">
+            ${recipe.steps.map((step, i) => `
+              <div class="ingredient draggable ${i === 0 ? 'ring-4 ring-yellow-400' : 'opacity-50'} bg-white rounded-xl p-4 text-5xl shadow-lg cursor-grab hover:scale-110 transition-all" draggable="${i === 0}" data-step="${i}">
+                ${step.ingredient}
+              </div>
+            `).join('')}
+          </div>
+          
+          <!-- Plate -->
+          <div class="flex justify-center">
+            <div id="plate" class="drop-zone bg-gradient-to-br from-gray-200 to-gray-300 w-64 h-64 rounded-full border-8 border-gray-400 flex flex-col items-center justify-center relative shadow-xl">
+              <div id="plate-items" class="flex flex-col-reverse items-center gap-1"></div>
+              <p class="absolute bottom-4 text-gray-500 font-semibold">🍽️ Plato</p>
+            </div>
+          </div>
+          
+          <div id="chef-result" class="mt-6 text-center hidden">
+            <p class="text-2xl text-green-600 font-bold">🎉 ¡Delicioso! ¡Preparaste el sándwich!</p>
+          </div>
+        `
+      );
+
+      const plate = document.getElementById('plate');
+      const plateItems = document.getElementById('plate-items');
+
+      document.querySelectorAll('.ingredient').forEach(ing => {
+        ing.addEventListener('dragstart', (e) => {
+          if (parseInt(ing.dataset.step) === currentStep) {
+            e.dataTransfer.setData('text/plain', ing.dataset.step);
+            ing.classList.add('opacity-50');
+          } else {
+            e.preventDefault();
+          }
+        });
+
+        ing.addEventListener('dragend', () => {
+          ing.classList.remove('opacity-50');
+        });
+      });
+
+      plate.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        plate.classList.add('drag-over');
+      });
+
+      plate.addEventListener('dragleave', () => {
+        plate.classList.remove('drag-over');
+      });
+
+      plate.addEventListener('drop', (e) => {
+        e.preventDefault();
+        plate.classList.remove('drag-over');
+        
+        const step = parseInt(e.dataTransfer.getData('text/plain'));
+        
+        if (step === currentStep) {
+          // Add to plate
+          const item = document.createElement('div');
+          item.className = 'text-4xl bounce-in';
+          item.textContent = recipe.steps[step].ingredient;
+          plateItems.appendChild(item);
+          
+          // Update ingredient visibility
+          const currentIng = document.querySelector(`.ingredient[data-step="${step}"]`);
+          currentIng.classList.add('hidden');
+          
+          currentStep++;
+          document.getElementById('game-score').textContent = currentStep * 20;
+          
+          if (currentStep < recipe.steps.length) {
+            document.getElementById('current-instruction').textContent = recipe.steps[currentStep].instruction;
+            
+            const nextIng = document.querySelector(`.ingredient[data-step="${currentStep}"]`);
+            nextIng.classList.remove('opacity-50');
+            nextIng.classList.add('ring-4', 'ring-yellow-400');
+            nextIng.draggable = true;
+          } else {
+            document.getElementById('chef-result').classList.remove('hidden');
+            completeGame(100);
+          }
+        }
+      });
+    }
+
+    // ============ GAME 7: EXPLORADOR DE LETREROS ============
+    function loadExploradorLetrerosGame() {
+      const container = document.getElementById('game-container');
+      
+      const signs = [
+        { emoji: "🚏", name: "Parada de autobús", isSign: true },
+        { emoji: "🌳", name: "Árbol", isSign: false },
+        { emoji: "⛔", name: "Alto", isSign: true },
+        { emoji: "🚗", name: "Carro", isSign: false },
+        { emoji: "🏪", name: "Tienda", isSign: true },
+        { emoji: "🐕", name: "Perro", isSign: false },
+        { emoji: "🚸", name: "Cruce escolar", isSign: true },
+        { emoji: "☁️", name: "Nube", isSign: false },
+        { emoji: "🏥", name: "Hospital", isSign: true },
+        { emoji: "🌺", name: "Flor", isSign: false }
+      ];
+
+      let found = 0;
+      const totalSigns = signs.filter(s => s.isSign).length;
+
+      container.innerHTML = createGameTemplate(
+        '🚏 Explorador de Letreros',
+        'Identificar características de letreros en tu entorno.',
+        `
+          <div class="text-center mb-4">
+            <p class="text-lg text-purple-700">¡Haz clic solo en los LETREROS y AVISOS que veas!</p>
+            <p class="text-sm text-purple-500">Encontrados: <span id="found-count">0</span>/${totalSigns}</p>
+          </div>
+          
+          <div class="bg-gradient-to-b from-sky-300 to-sky-100 rounded-xl p-6 min-h-96 relative">
+            <!-- Street scene background -->
+            <div class="absolute bottom-0 left-0 right-0 h-20 bg-gray-400 rounded-b-xl"></div>
+            <div class="absolute bottom-20 left-0 right-0 h-4 bg-yellow-400"></div>
+            
+            <!-- Items grid -->
+            <div class="grid grid-cols-5 gap-4 relative z-10">
+              ${signs.sort(() => Math.random() - 0.5).map((sign, i) => `
+                <div class="street-item cursor-pointer hover:scale-110 transition-all text-center" data-sign="${sign.isSign}" data-index="${i}">
+                  <div class="text-5xl mb-1">${sign.emoji}</div>
+                  <p class="text-xs text-gray-700 bg-white/80 rounded px-1">${sign.name}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div id="explorador-result" class="mt-4 text-center hidden">
+            <p class="text-2xl text-green-600 font-bold">🎉 ¡Encontraste todos los letreros!</p>
+          </div>
+        `
+      );
+
+      document.querySelectorAll('.street-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const isSign = item.dataset.sign === 'true';
+          
+          if (isSign && !item.classList.contains('found')) {
+            item.classList.add('found');
+            item.querySelector('div').classList.add('ring-4', 'ring-green-500', 'rounded-full', 'bg-green-200');
+            found++;
+            document.getElementById('found-count').textContent = found;
+            document.getElementById('game-score').textContent = found * 20;
+            
+            if (found === totalSigns) {
+              document.getElementById('explorador-result').classList.remove('hidden');
+              completeGame(100);
+            }
+          } else if (!isSign) {
+            item.classList.add('wrong-answer');
+            setTimeout(() => item.classList.remove('wrong-answer'), 500);
+          }
+        });
+      });
+    }
+
+    // ============ GAME 8: PINTOR DE EMOJIS ============
+    function loadPintorEmojisGame() {
+      const container = document.getElementById('game-container');
+      
+      const emotions = [
+        { name: "Feliz", emoji: "😊", color: "#fbbf24" },
+        { name: "Triste", emoji: "😢", color: "#60a5fa" },
+        { name: "Enojado", emoji: "😠", color: "#f87171" },
+        { name: "Sorprendido", emoji: "😲", color: "#a78bfa" },
+        { name: "Asustado", emoji: "😨", color: "#34d399" }
+      ];
+
+      let currentEmotion = 0;
+      let score = 0;
+
+      container.innerHTML = createGameTemplate(
+        '🎨 Pintor de Emojis',
+        'Experimentar con colores para expresar emociones.',
+        `
+          <div id="pintor-game">
+            <div class="text-center mb-4">
+              <p class="text-lg text-purple-700">Pinta la cara con el color de la emoción:</p>
+              <p id="emotion-name" class="text-3xl font-bold text-pink-600 mt-2">${emotions[0].name}</p>
+            </div>
+            
+            <!-- Face to paint -->
+            <div class="flex justify-center mb-6">
+              <div id="emoji-face" class="w-40 h-40 bg-gray-200 rounded-full flex items-center justify-center text-8xl border-4 border-gray-300 transition-all duration-300">
+                😶
+              </div>
+            </div>
+            
+            <!-- Color palette -->
+            <div class="flex justify-center gap-4 mb-6">
+              ${emotions.map(e => `
+                <button class="color-btn w-14 h-14 rounded-full shadow-lg hover:scale-110 transition-transform border-4 border-white" style="background-color: ${e.color}" data-color="${e.color}" data-emotion="${e.name}">
+                </button>
+              `).join('')}
+            </div>
+            
+            <div class="text-center">
+              <p class="text-purple-600">Emoción <span id="emotion-counter">1</span> de ${emotions.length}</p>
+            </div>
+          </div>
+          
+          <div id="pintor-complete" class="hidden text-center">
+            <div class="text-6xl mb-4">🎨</div>
+            <p class="text-2xl text-green-600 font-bold">¡Eres un gran artista!</p>
+          </div>
+        `
+      );
+
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const selectedEmotion = btn.dataset.emotion;
+          const selectedColor = btn.dataset.color;
+          const face = document.getElementById('emoji-face');
+          
+          face.style.backgroundColor = selectedColor;
+          
+          if (selectedEmotion === emotions[currentEmotion].name) {
+            face.textContent = emotions[currentEmotion].emoji;
+            score += 20;
+            document.getElementById('game-score').textContent = score;
+            
+            setTimeout(() => {
+              currentEmotion++;
+              
+              if (currentEmotion < emotions.length) {
+                document.getElementById('emotion-name').textContent = emotions[currentEmotion].name;
+                document.getElementById('emotion-counter').textContent = currentEmotion + 1;
+                face.style.backgroundColor = '#e5e7eb';
+                face.textContent = '😶';
+              } else {
+                document.getElementById('pintor-game').classList.add('hidden');
+                document.getElementById('pintor-complete').classList.remove('hidden');
+                completeGame(100);
+              }
+            }, 1000);
+          }
+        });
+      });
+    }
+
+    // ============ GAME 9: CUERPO-PUZZLE ============
+    function loadCuerpoPuzzleGame() {
+      const container = document.getElementById('game-container');
+      
+      const bodyParts = [
+        { name: "Cabeza", emoji: "🗣️", position: 1 },
+        { name: "Brazos", emoji: "💪", position: 2 },
+        { name: "Cuerpo", emoji: "👕", position: 3 },
+        { name: "Piernas", emoji: "🦵", position: 4 },
+        { name: "Pies", emoji: "🦶", position: 5 }
+      ];
+
+      let placed = 0;
+
+      container.innerHTML = createGameTemplate(
+        '🧩 Cuerpo-Puzzle',
+        'Comparar y representar las partes externas del cuerpo.',
+        `
+          <div class="grid grid-cols-2 gap-8">
+            <!-- Body parts to drag -->
+            <div>
+              <h3 class="text-xl font-bold text-purple-700 mb-4 text-center">Partes del Cuerpo</h3>
+              <div id="body-parts" class="space-y-3">
+                ${bodyParts.sort(() => Math.random() - 0.5).map(part => `
+                  <div class="body-part draggable bg-gradient-to-r from-pink-400 to-rose-400 p-3 rounded-xl flex items-center gap-3 cursor-grab hover:scale-105 transition-all shadow-lg" draggable="true" data-position="${part.position}" data-name="${part.name}">
+                    <span class="text-3xl">${part.emoji}</span>
+                    <span class="text-white font-bold">${part.name}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            
+            <!-- Body outline -->
+            <div>
+              <h3 class="text-xl font-bold text-purple-700 mb-4 text-center">Arma el Cuerpo</h3>
+              <div class="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl p-4 flex flex-col items-center gap-2">
+                ${[1,2,3,4,5].map(pos => `
+                  <div class="drop-slot drop-zone w-40 h-14 border-2 border-dashed border-blue-400 rounded-xl flex items-center justify-center text-blue-400 font-semibold" data-position="${pos}">
+                    ${pos === 1 ? 'Cabeza' : pos === 2 ? 'Brazos' : pos === 3 ? 'Cuerpo' : pos === 4 ? 'Piernas' : 'Pies'}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+          
+          <div id="cuerpo-result" class="mt-6 text-center hidden">
+            <p class="text-2xl text-green-600 font-bold">🎉 ¡Armaste el cuerpo completo!</p>
+          </div>
+        `
+      );
+
+      // Setup drag and drop
+      document.querySelectorAll('.body-part').forEach(part => {
+        part.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', JSON.stringify({
+            position: part.dataset.position,
+            name: part.dataset.name,
+            html: part.innerHTML
+          }));
+          part.classList.add('opacity-50');
+        });
+
+        part.addEventListener('dragend', () => {
+          part.classList.remove('opacity-50');
+        });
+      });
+
+      document.querySelectorAll('.drop-slot').forEach(slot => {
+        slot.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          slot.classList.add('drag-over');
+        });
+
+        slot.addEventListener('dragleave', () => {
+          slot.classList.remove('drag-over');
+        });
+
+        slot.addEventListener('drop', (e) => {
+          e.preventDefault();
+          slot.classList.remove('drag-over');
+          
+          const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+          
+          if (data.position === slot.dataset.position && !slot.classList.contains('filled')) {
+            slot.innerHTML = data.html;
+            slot.classList.add('filled', 'bg-green-200', 'border-green-500');
+            slot.classList.remove('border-dashed');
+            
+            // Remove original
+            const original = document.querySelector(`.body-part[data-position="${data.position}"]`);
+            if (original) original.remove();
+            
+            placed++;
+            document.getElementById('game-score').textContent = placed * 20;
+            
+            if (placed === 5) {
+              document.getElementById('cuerpo-result').classList.remove('hidden');
+              completeGame(100);
+            }
+          } else {
+            slot.classList.add('wrong-answer');
+            setTimeout(() => slot.classList.remove('wrong-answer'), 500);
+          }
+        });
+      });
+    }
+
+    // ============ GAME 10: PLATO DEL BIEN ============
+    function loadPlatoDelBienGame() {
+      const container = document.getElementById('game-container');
+      
+      const foods = [
+        { emoji: "🍎", name: "Manzana", healthy: true },
+        { emoji: "🍕", name: "Pizza", healthy: false },
+        { emoji: "🥦", name: "Brócoli", healthy: true },
+        { emoji: "🍩", name: "Dona", healthy: false },
+        { emoji: "🥕", name: "Zanahoria", healthy: true },
+        { emoji: "🍟", name: "Papas fritas", healthy: false },
+        { emoji: "🍌", name: "Plátano", healthy: true },
+        { emoji: "🍫", name: "Chocolate", healthy: false },
+        { emoji: "🥒", name: "Pepino", healthy: true },
+        { emoji: "🧁", name: "Pastelito", healthy: false }
+      ];
+
+      let score = 0;
+      const totalHealthy = foods.filter(f => f.healthy).length;
+      let healthyAdded = 0;
+
+      container.innerHTML = createGameTemplate(
+        '🥗 Plato del Bien',
+        'Identificar alimentos saludables como frutas y verduras.',
+        `
+          <div class="text-center mb-4">
+            <p class="text-lg text-purple-700">¡Arrastra solo las frutas y verduras al plato!</p>
+          </div>
+          
+          <!-- Foods -->
+          <div id="foods-container" class="flex flex-wrap justify-center gap-3 mb-6">
+            ${foods.sort(() => Math.random() - 0.5).map((food, i) => `
+              <div class="food-item draggable bg-white rounded-xl p-3 shadow-lg cursor-grab hover:scale-110 transition-transform text-center" draggable="true" data-healthy="${food.healthy}" data-index="${i}">
+                <div class="text-4xl">${food.emoji}</div>
+                <p class="text-xs text-gray-600 mt-1">${food.name}</p>
+              </div>
+            `).join('')}
+          </div>
+          
+          <!-- Plate -->
+          <div class="flex justify-center">
+            <div id="healthy-plate" class="drop-zone bg-gradient-to-br from-green-200 to-emerald-300 w-72 h-48 rounded-3xl border-4 border-green-500 flex flex-wrap items-center justify-center gap-2 p-4 relative">
+              <p class="absolute top-2 text-green-700 font-bold">🥗 Plato Saludable</p>
+              <div id="plate-foods" class="flex flex-wrap gap-2 justify-center mt-4"></div>
+            </div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <p class="text-purple-600">Alimentos saludables: <span id="healthy-count">0</span>/${totalHealthy}</p>
+          </div>
+          
+          <div id="plato-result" class="mt-4 text-center hidden">
+            <p class="text-2xl text-green-600 font-bold">🎉 ¡Excelente! ¡Elegiste alimentos muy saludables!</p>
+          </div>
+        `
+      );
+
+      document.querySelectorAll('.food-item').forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', JSON.stringify({
+            healthy: item.dataset.healthy,
+            index: item.dataset.index,
+            emoji: item.querySelector('.text-4xl').textContent
+          }));
+          item.classList.add('opacity-50');
+        });
+
+        item.addEventListener('dragend', () => {
+          item.classList.remove('opacity-50');
+        });
+      });
+
+      const plate = document.getElementById('healthy-plate');
+
+      plate.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        plate.classList.add('drag-over');
+      });
+
+      plate.addEventListener('dragleave', () => {
+        plate.classList.remove('drag-over');
+      });
+
+      plate.addEventListener('drop', (e) => {
+        e.preventDefault();
+        plate.classList.remove('drag-over');
+        
+        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+        
+        if (data.healthy === 'true') {
+          const foodDiv = document.createElement('div');
+          foodDiv.className = 'text-3xl bounce-in';
+          foodDiv.textContent = data.emoji;
+          document.getElementById('plate-foods').appendChild(foodDiv);
+          
+          const original = document.querySelector(`.food-item[data-index="${data.index}"]`);
+          if (original) original.remove();
+          
+          healthyAdded++;
+          score += 20;
+          document.getElementById('game-score').textContent = score;
+          document.getElementById('healthy-count').textContent = healthyAdded;
+          
+          if (healthyAdded === totalHealthy) {
+            document.getElementById('plato-result').classList.remove('hidden');
+            completeGame(100);
+          }
+        } else {
+          plate.classList.add('wrong-answer');
+          setTimeout(() => plate.classList.remove('wrong-answer'), 500);
+        }
+      });
+    }
+
+    // ============ GAME 11: EXPLORADOR DE JARDÍN ============
+    function loadExploradorJardinGame() {
+      const container = document.getElementById('game-container');
+      
+      const items = [
+        { emoji: "🌸", name: "Flor", alive: true },
+        { emoji: "🪨", name: "Piedra", alive: false },
+        { emoji: "🐛", name: "Oruga", alive: true },
+        { emoji: "🏠", name: "Casa", alive: false },
+        { emoji: "🌳", name: "Árbol", alive: true },
+        { emoji: "⚽", name: "Pelota", alive: false },
+        { emoji: "🐝", name: "Abeja", alive: true },
+        { emoji: "🪣", name: "Cubeta", alive: false },
+        { emoji: "🦋", name: "Mariposa", alive: true },
+        { emoji: "🚲", name: "Bicicleta", alive: false },
+        { emoji: "🐦", name: "Pájaro", alive: true },
+        { emoji: "🪑", name: "Silla", alive: false }
+      ];
+
+      let found = 0;
+      const totalAlive = items.filter(i => i.alive).length;
+
+      container.innerHTML = createGameTemplate(
+        '🌿 Explorador de Jardín',
+        'Distinguir plantas, animales y elementos de tu localidad.',
+        `
+          <div class="text-center mb-4">
+            <p class="text-lg text-purple-700">¡Haz clic solo en los SERES VIVOS!</p>
+            <p class="text-sm text-purple-500">Encontrados: <span id="alive-count">0</span>/${totalAlive}</p>
+          </div>
+          
+          <div class="bg-gradient-to-b from-sky-200 via-green-100 to-green-300 rounded-xl p-6 min-h-80">
+            <div class="grid grid-cols-4 md:grid-cols-6 gap-4">
+              ${items.sort(() => Math.random() - 0.5).map((item, i) => `
+                <div class="garden-item cursor-pointer hover:scale-110 transition-all text-center p-2 rounded-xl" data-alive="${item.alive}" data-index="${i}">
+                  <div class="text-5xl">${item.emoji}</div>
+                  <p class="text-xs text-gray-700 mt-1">${item.name}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div id="jardin-result" class="mt-4 text-center hidden">
+            <p class="text-2xl text-green-600 font-bold">🎉 ¡Encontraste todos los seres vivos!</p>
+          </div>
+        `
+      );
+
+      document.querySelectorAll('.garden-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const isAlive = item.dataset.alive === 'true';
+          
+          if (isAlive && !item.classList.contains('found')) {
+            item.classList.add('found', 'bg-green-200', 'ring-4', 'ring-green-500');
+            found++;
+            document.getElementById('alive-count').textContent = found;
+            document.getElementById('game-score').textContent = Math.round((found / totalAlive) * 100);
+            
+            if (found === totalAlive) {
+              document.getElementById('jardin-result').classList.remove('hidden');
+              completeGame(100);
+            }
+          } else if (!isAlive) {
+            item.classList.add('wrong-answer', 'bg-red-200');
+            setTimeout(() => {
+              item.classList.remove('wrong-answer', 'bg-red-200');
+            }, 500);
+          }
+        });
+      });
+    }
+
+    // ============ GAME 12: HÉROE AMBIENTAL ============
+    function loadHeroeAmbientalGame() {
+      const container = document.getElementById('game-container');
+      
+      const actions = [
+        { text: "Apagar la luz al salir", positive: true, emoji: "💡" },
+        { text: "Tirar basura al suelo", positive: false, emoji: "🗑️" },
+        { text: "Cerrar el grifo", positive: true, emoji: "🚿" },
+        { text: "Dejar el agua corriendo", positive: false, emoji: "💧" },
+        { text: "Reciclar papel", positive: true, emoji: "♻️" },
+        { text: "Romper plantas", positive: false, emoji: "🌱" },
+        { text: "Plantar un árbol", positive: true, emoji: "🌳" },
+        { text: "Desperdiciar comida", positive: false, emoji: "🍞" }
+      ];
+
+      let currentAction = 0;
+      let score = 0;
+
+      container.innerHTML = createGameTemplate(
+        '🦸 Héroe Ambiental',
+        'Clasificar acciones positivas o negativas para la naturaleza.',
+        `
+          <div id="heroe-game">
+            <div class="text-center mb-6">
+              <p class="text-lg text-purple-700">¿Esta acción es buena o mala para el planeta?</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-green-100 to-blue-100 rounded-xl p-8 mb-6 text-center">
+              <div id="action-emoji" class="text-7xl mb-4">${actions[0].emoji}</div>
+              <p id="action-text" class="text-2xl font-bold text-gray-700">${actions[0].text}</p>
+            </div>
+            
+            <div class="flex justify-center gap-6">
+              <button id="btn-good" class="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-4 px-8 rounded-xl text-xl shadow-lg transition-all hover:scale-105">
+                ✅ ¡Bueno!
+              </button>
+              <button id="btn-bad" class="bg-gradient-to-r from-red-400 to-rose-500 hover:from-red-500 hover:to-rose-600 text-white font-bold py-4 px-8 rounded-xl text-xl shadow-lg transition-all hover:scale-105">
+                ❌ ¡Malo!
+              </button>
+            </div>
+            
+            <div class="text-center mt-4">
+              <p class="text-purple-600">Acción <span id="action-counter">1</span> de ${actions.length}</p>
+            </div>
+          </div>
+          
+          <div id="heroe-complete" class="hidden text-center">
+            <div class="text-6xl mb-4">🦸‍♀️</div>
+            <p class="text-2xl text-green-600 font-bold">¡Eres un verdadero Héroe Ambiental!</p>
+          </div>
+        `
+      );
+
+      function checkAnswer(isGood) {
+        const correct = actions[currentAction].positive === isGood;
+        
+        if (correct) {
+          score += 12.5;
+          document.getElementById('game-score').textContent = Math.round(score);
+          
+          currentAction++;
+          
+          if (currentAction < actions.length) {
+            document.getElementById('action-emoji').textContent = actions[currentAction].emoji;
+            document.getElementById('action-text').textContent = actions[currentAction].text;
+            document.getElementById('action-counter').textContent = currentAction + 1;
+          } else {
+            document.getElementById('heroe-game').classList.add('hidden');
+            document.getElementById('heroe-complete').classList.remove('hidden');
+            completeGame(100);
+          }
+        } else {
+          const container = document.querySelector('.bg-gradient-to-br');
+          container.classList.add('wrong-answer');
+          setTimeout(() => container.classList.remove('wrong-answer'), 500);
+        }
+      }
+
+      document.getElementById('btn-good').addEventListener('click', () => checkAnswer(true));
+      document.getElementById('btn-bad').addEventListener('click', () => checkAnswer(false));
+    }
+
+    // ============ GAME 13: CAJA DE TESOROS ============
+    function loadCajaTesorosGame() {
+      const container = document.getElementById('game-container');
+      
+      const textures = [
+        { emoji: "🧸", name: "Osito", texture: "suave", order: 1 },
+        { emoji: "📄", name: "Papel", texture: "liso", order: 2 },
+        { emoji: "🪵", name: "Madera", texture: "duro", order: 3 },
+        { emoji: "🪨", name: "Piedra", texture: "áspero", order: 4 }
+      ];
+
+      let placed = 0;
+
+      container.innerHTML = createGameTemplate(
+        '💎 Caja de Tesoros',
+        'Clasificar objetos por color, tamaño y textura.',
+        `
+          <div class="text-center mb-4">
+            <p class="text-lg text-purple-700">Ordena los objetos del más SUAVE al más ÁSPERO</p>
+          </div>
+          
+          <!-- Objects to sort -->
+          <div id="texture-items" class="flex justify-center gap-4 mb-8">
+            ${textures.sort(() => Math.random() - 0.5).map((item, i) => `
+              <div class="texture-item draggable bg-gradient-to-br from-amber-200 to-orange-300 rounded-xl p-4 text-center cursor-grab hover:scale-110 transition-all shadow-lg" draggable="true" data-order="${item.order}" data-index="${i}">
+                <div class="text-5xl mb-2">${item.emoji}</div>
+                <p class="font-bold text-amber-800">${item.name}</p>
+                <p class="text-sm text-amber-600">${item.texture}</p>
+              </div>
+            `).join('')}
+          </div>
+          
+          <!-- Sorting slots -->
+          <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-4">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-lg font-bold text-purple-700">🧸 Suave</span>
+              <span class="text-lg font-bold text-purple-700">Áspero 🪨</span>
+            </div>
+            <div id="sort-slots" class="flex justify-between gap-2">
+              ${[1,2,3,4].map(i => `
+                <div class="sort-slot drop-zone flex-1 h-28 bg-white/50 border-2 border-dashed border-purple-300 rounded-xl flex items-center justify-center" data-order="${i}">
+                  <span class="text-purple-300 text-4xl">${i}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div id="tesoros-result" class="mt-4 text-center hidden">
+            <p class="text-2xl text-green-600 font-bold">🎉 ¡Ordenaste todos los tesoros!</p>
+          </div>
+        `
+      );
+
+      document.querySelectorAll('.texture-item').forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', JSON.stringify({
+            order: item.dataset.order,
+            index: item.dataset.index,
+            html: item.innerHTML
+          }));
+          item.classList.add('opacity-50');
+        });
+
+        item.addEventListener('dragend', () => {
+          item.classList.remove('opacity-50');
+        });
+      });
+
+      document.querySelectorAll('.sort-slot').forEach(slot => {
+        slot.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          slot.classList.add('drag-over');
+        });
+
+        slot.addEventListener('dragleave', () => {
+          slot.classList.remove('drag-over');
+        });
+
+        slot.addEventListener('drop', (e) => {
+          e.preventDefault();
+          slot.classList.remove('drag-over');
+          
+          const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+          
+          if (data.order === slot.dataset.order && !slot.classList.contains('filled')) {
+            slot.innerHTML = data.html;
+            slot.classList.add('filled', 'bg-green-100', 'border-green-400');
+            slot.classList.remove('border-dashed');
+            
+            const original = document.querySelector(`.texture-item[data-index="${data.index}"]`);
+            if (original) original.remove();
+            
+            placed++;
+            document.getElementById('game-score').textContent = placed * 25;
+            
+            if (placed === 4) {
+              document.getElementById('tesoros-result').classList.remove('hidden');
+              completeGame(100);
+            }
+          } else {
+            slot.classList.add('wrong-answer');
+            setTimeout(() => slot.classList.remove('wrong-answer'), 500);
+          }
+        });
+      });
+    }
+
+    // ============ GAME 14: CARRERA DE HORMIGAS ============
+    function loadCarreraHormigasGame() {
+      const container = document.getElementById('game-container');
+      
+      container.innerHTML = createGameTemplate(
+        '🐜 Carrera de Hormigas',
+        'Observar trayectorias (recta, curva) de animales.',
+        `
+          <div class="text-center mb-4">
+            <p class="text-lg text-purple-700">Guía a la hormiga: ¿Camino RECTO o CURVO?</p>
+          </div>
+          
+          <div id="ant-game-area" class="bg-gradient-to-br from-amber-100 to-yellow-200 rounded-xl p-4 min-h-80 relative overflow-hidden">
+            <!-- Start point -->
+            <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+              <div id="ant" class="text-4xl transition-all duration-1000">🐜</div>
+            </div>
+            
+            <!-- Food goal -->
+            <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
+              <div class="text-4xl">🍪</div>
+            </div>
+            
+            <!-- Path visualization -->
+            <svg id="path-svg" class="absolute inset-0 w-full h-full pointer-events-none">
+              <path id="straight-path" d="M 60 150 L 340 150" stroke="#22c55e" stroke-width="4" fill="none" stroke-dasharray="10,5" class="hidden"/>
+              <path id="curved-path" d="M 60 150 Q 200 50 340 150" stroke="#3b82f6" stroke-width="4" fill="none" stroke-dasharray="10,5" class="hidden"/>
+            </svg>
+          </div>
+          
+          <div class="flex justify-center gap-6 mt-6">
+            <button id="btn-straight" class="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-4 px-8 rounded-xl text-xl shadow-lg transition-all hover:scale-105">
+              ➡️ Recto
+            </button>
+            <button id="btn-curved" class="bg-gradient-to-r from-blue-400 to-cyan-500 hover:from-blue-500 hover:to-cyan-600 text-white font-bold py-4 px-8 rounded-xl text-xl shadow-lg transition-all hover:scale-105">
+              〰️ Curvo
+            </button>
+          </div>
+          
+          <div id="path-result" class="mt-4 text-center">
+            <p id="path-message" class="text-lg text-purple-600"></p>
+          </div>
+          
+          <div class="text-center mt-2">
+            <p class="text-purple-500">Rondas completadas: <span id="rounds">0</span>/3</p>
+          </div>
+        `
+      );
+
+      const paths = ['recto', 'curvo', 'recto'];
+      let currentRound = 0;
+      let score = 0;
+
+      function animateAnt(path) {
+        const ant = document.getElementById('ant');
+        
+        if (path === 'recto') {
+          document.getElementById('straight-path').classList.remove('hidden');
+          ant.style.transform = 'translateX(280px)';
+        } else {
+          document.getElementById('curved-path').classList.remove('hidden');
+          ant.style.transform = 'translateX(280px) translateY(-50px)';
+          setTimeout(() => {
+            ant.style.transform = 'translateX(280px)';
+          }, 500);
+        }
+      }
+
+      function checkPath(selected) {
+        const correct = paths[currentRound];
+        
+        if (selected === correct) {
+          animateAnt(selected);
+          score += 33;
+          document.getElementById('game-score').textContent = Math.min(score, 100);
+          document.getElementById('path-message').textContent = '¡Correcto! La hormiga siguió un camino ' + correct;
+          document.getElementById('path-message').classList.add('text-green-600');
+          
+          currentRound++;
+          document.getElementById('rounds').textContent = currentRound;
+          
+          if (currentRound >= 3) {
+            setTimeout(() => {
+              completeGame(100);
+            }, 1500);
+          } else {
+            setTimeout(() => {
+              resetRound();
+            }, 2000);
+          }
+        } else {
+          document.getElementById('path-message').textContent = 'Intenta de nuevo...';
+          document.getElementById('path-message').classList.add('text-red-600');
+        }
+      }
+
+      function resetRound() {
+        const ant = document.getElementById('ant');
+        ant.style.transform = 'translateX(0)';
+        document.getElementById('straight-path').classList.add('hidden');
+        document.getElementById('curved-path').classList.add('hidden');
+        document.getElementById('path-message').textContent = '';
+        document.getElementById('path-message').classList.remove('text-green-600', 'text-red-600');
+      }
+
+      document.getElementById('btn-straight').addEventListener('click', () => checkPath('recto'));
+      document.getElementById('btn-curved').addEventListener('click', () => checkPath('curvo'));
+    }
+
+    // ============ GAME 15: OÍDO ATENTO ============
+    function loadOidoAtentoGame() {
+      const container = document.getElementById('game-container');
+      
+      const sounds = [
+        { name: "Tambor", emoji: "🥁", action: "golpear" },
+        { name: "Flauta", emoji: "🎵", action: "soplar" },
+        { name: "Guitarra", emoji: "🎸", action: "rasgar" },
+        { name: "Piano", emoji: "🎹", action: "presionar" },
+        { name: "Maracas", emoji: "🎶", action: "agitar" }
+      ];
+
+      let currentSound = 0;
+      let score = 0;
+
+      container.innerHTML = createGameTemplate(
+        '👂 Oído Atento',
+        'Identificar la fuente sonora de instrumentos.',
+        `
+          <div id="oido-game">
+            <div class="text-center mb-4">
+              <p class="text-lg text-purple-700">¿Qué instrumento hace este sonido?</p>
+            </div>
+            
+            <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-8 mb-6 text-center">
+              <div id="sound-wave" class="text-6xl mb-4 animate-pulse">🔊</div>
+              <p id="sound-action" class="text-xl font-bold text-purple-700">
+                Se toca al: <span class="text-pink-600">${sounds[0].action}</span>
+              </p>
+            </div>
+            
+            <div id="instruments" class="grid grid-cols-5 gap-4">
+              ${sounds.map((s, i) => `
+                <button class="instrument-btn bg-gradient-to-br from-amber-200 to-orange-300 hover:from-amber-300 hover:to-orange-400 rounded-xl p-4 text-center transition-all hover:scale-105 shadow-lg" data-index="${i}">
+                  <div class="text-4xl mb-2">${s.emoji}</div>
+                  <p class="font-semibold text-amber-800">${s.name}</p>
+                </button>
+              `).join('')}
+            </div>
+            
+            <div class="text-center mt-4">
+              <p class="text-purple-600">Sonido <span id="sound-counter">1</span> de ${sounds.length}</p>
+            </div>
+          </div>
+          
+          <div id="oido-complete" class="hidden text-center">
+            <div class="text-6xl mb-4">🎼</div>
+            <p class="text-2xl text-green-600 font-bold">¡Tienes un oído musical increíble!</p>
+          </div>
+        `
+      );
+
+      document.querySelectorAll('.instrument-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const selected = parseInt(btn.dataset.index);
+          
+          if (selected === currentSound) {
+            btn.classList.add('ring-4', 'ring-green-500', 'bg-green-200');
+            score += 20;
+            document.getElementById('game-score').textContent = score;
+            
+            setTimeout(() => {
+              currentSound++;
+              
+              if (currentSound < sounds.length) {
+                document.getElementById('sound-action').innerHTML = 
+                  `Se toca al: <span class="text-pink-600">${sounds[currentSound].action}</span>`;
+                document.getElementById('sound-counter').textContent = currentSound + 1;
+                
+                document.querySelectorAll('.instrument-btn').forEach(b => {
+                  b.classList.remove('ring-4', 'ring-green-500', 'bg-green-200');
+                });
+              } else {
+                document.getElementById('oido-game').classList.add('hidden');
+                document.getElementById('oido-complete').classList.remove('hidden');
+                completeGame(100);
+              }
+            }, 1000);
+          } else {
+            btn.classList.add('wrong-answer');
+            setTimeout(() => btn.classList.remove('wrong-answer'), 500);
+          }
+        });
+      });
+    }
+
+    // ============ GAME 16: RELOJ DE SOL ============
+    function loadRelojSolGame() {
+      const container = document.getElementById('game-container');
+      
+      const activities = [
+        { activity: "Desayunar", emoji: "🍳", time: "day" },
+        { activity: "Dormir", emoji: "😴", time: "night" },
+        { activity: "Ir a la escuela", emoji: "🏫", time: "day" },
+        { activity: "Ver las estrellas", emoji: "⭐", time: "night" },
+        { activity: "Jugar en el parque", emoji: "🛝", time: "day" },
+        { activity: "Soñar", emoji: "💭", time: "night" }
+      ];
+
+      let sorted = 0;
+
+      container.innerHTML = createGameTemplate(
+        '🌅 Reloj de Sol',
+        'Reconocer actividades según el día o la noche.',
+        `
+          <div class="text-center mb-4">
+            <p class="text-lg text-purple-700">¡Arrastra cada actividad al momento del día correcto!</p>
+          </div>
+          
+          <!-- Activities to sort -->
+          <div id="activities-container" class="flex flex-wrap justify-center gap-3 mb-6">
+            ${activities.sort(() => Math.random() - 0.5).map((act, i) => `
+              <div class="activity-item draggable bg-white rounded-xl p-3 shadow-lg cursor-grab hover:scale-105 transition-all text-center" draggable="true" data-time="${act.time}" data-index="${i}">
+                <div class="text-3xl">${act.emoji}</div>
+                <p class="text-sm font-semibold text-gray-700">${act.activity}</p>
+              </div>
+            `).join('')}
+          </div>
+          
+          <!-- Day and Night zones -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="day-zone drop-zone bg-gradient-to-b from-sky-300 to-amber-200 rounded-xl p-4 min-h-48 border-4 border-amber-400" data-accepts="day">
+              <div class="text-center mb-2">
+                <span class="text-5xl">☀️</span>
+                <h3 class="text-xl font-bold text-amber-800">DÍA</h3>
+              </div>
+              <div class="day-items flex flex-wrap gap-2 justify-center"></div>
+            </div>
+            
+            <div class="night-zone drop-zone bg-gradient-to-b from-indigo-900 to-purple-800 rounded-xl p-4 min-h-48 border-4 border-indigo-400" data-accepts="night">
+              <div class="text-center mb-2">
+                <span class="text-5xl">🌙</span>
+                <h3 class="text-xl font-bold text-indigo-200">NOCHE</h3>
+              </div>
+              <div class="night-items flex flex-wrap gap-2 justify-center"></div>
+            </div>
+          </div>
+          
+          <div id="reloj-result" class="mt-4 text-center hidden">
+            <p class="text-2xl text-green-600 font-bold">🎉 ¡Organizaste todas las actividades!</p>
+          </div>
+        `
+      );
+
+      document.querySelectorAll('.activity-item').forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', JSON.stringify({
+            time: item.dataset.time,
+            index: item.dataset.index,
+            html: item.innerHTML
+          }));
+          item.classList.add('opacity-50');
+        });
+
+        item.addEventListener('dragend', () => {
+          item.classList.remove('opacity-50');
+        });
+      });
+
+      document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          zone.classList.add('drag-over');
+        });
+
+        zone.addEventListener('dragleave', () => {
+          zone.classList.remove('drag-over');
+        });
+
+        zone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          zone.classList.remove('drag-over');
+          
+          const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+          const accepts = zone.dataset.accepts;
+          
+          if (data.time === accepts) {
+            const itemsContainer = zone.querySelector(accepts === 'day' ? '.day-items' : '.night-items');
+            const newItem = document.createElement('div');
+            newItem.className = 'bg-white/90 rounded-lg p-2 text-center bounce-in';
+            newItem.innerHTML = data.html;
+            itemsContainer.appendChild(newItem);
+            
+            const original = document.querySelector(`.activity-item[data-index="${data.index}"]`);
+            if (original) original.remove();
+            
+            sorted++;
+            document.getElementById('game-score').textContent = Math.round((sorted / 6) * 100);
+            
+            if (sorted === 6) {
+              document.getElementById('reloj-result').classList.remove('hidden');
+              completeGame(100);
+            }
+          } else {
+            zone.classList.add('wrong-answer');
+            setTimeout(() => zone.classList.remove('wrong-answer'), 500);
+          }
+        });
+      });
+    }
+
+    // ============ GAME 17: UNE LOS PUNTOS ============
+    function loadUnePuntosGame() {
+      const container = document.getElementById('game-container');
+      
+      // Star shape points
+      const points = [
+        { num: 1, x: 50, y: 10 },
+        { num: 2, x: 62, y: 35 },
+        { num: 3, x: 90, y: 35 },
+        { num: 4, x: 68, y: 55 },
+        { num: 5, x: 78, y: 85 },
+        { num: 6, x: 50, y: 68 },
+        { num: 7, x: 22, y: 85 },
+        { num: 8, x: 32, y: 55 },
+        { num: 9, x: 10, y: 35 },
+        { num: 10, x: 38, y: 35 }
+      ];
+
+      let currentNum = 1;
+      let lines = [];
+
+      container.innerHTML = createGameTemplate(
+        '✏️ Une los Puntos',
+        'Contar y representar colecciones del 1 al 10.',
+        `
+          <div class="text-center mb-4">
+            <p class="text-lg text-purple-700">¡Haz clic en los números del 1 al 10 en orden!</p>
+            <p class="text-2xl font-bold text-pink-600 mt-2">Siguiente: <span id="next-num">1</span></p>
+          </div>
+          
+          <div class="flex justify-center">
+            <div id="dots-canvas" class="relative w-80 h-80 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl">
+              <svg id="lines-svg" class="absolute inset-0 w-full h-full pointer-events-none">
+              </svg>
+              ${points.map(p => `
+                <button class="dot-point absolute w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 text-white font-bold flex items-center justify-center shadow-lg hover:scale-110 transition-all" style="left: ${p.x}%; top: ${p.y}%; transform: translate(-50%, -50%);" data-num="${p.num}">
+                  ${p.num}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div id="puntos-result" class="mt-6 text-center hidden">
+            <div class="text-6xl mb-2">⭐</div>
+            <p class="text-2xl text-green-600 font-bold">¡Formaste una estrella!</p>
+          </div>
+        `
+      );
+
+      function drawLine(from, to) {
+        const svg = document.getElementById('lines-svg');
+        const canvas = document.getElementById('dots-canvas');
+        const rect = canvas.getBoundingClientRect();
+        
+        const fromPoint = points.find(p => p.num === from);
+        const toPoint = points.find(p => p.num === to);
+        
+        const x1 = (fromPoint.x / 100) * rect.width;
+        const y1 = (fromPoint.y / 100) * rect.height;
+        const x2 = (toPoint.x / 100) * rect.width;
+        const y2 = (toPoint.y / 100) * rect.height;
+        
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('stroke', '#f59e0b');
+        line.setAttribute('stroke-width', '4');
+        line.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(line);
+      }
+
+      document.querySelectorAll('.dot-point').forEach(dot => {
+        dot.addEventListener('click', () => {
+          const num = parseInt(dot.dataset.num);
+          
+          if (num === currentNum) {
+            dot.classList.remove('from-yellow-400', 'to-orange-500');
+            dot.classList.add('from-green-400', 'to-emerald-500', 'ring-4', 'ring-green-300');
+            
+            if (currentNum > 1) {
+              drawLine(currentNum - 1, currentNum);
+            }
+            
+            currentNum++;
+            document.getElementById('game-score').textContent = (currentNum - 1) * 10;
+            
+            if (currentNum <= 10) {
+              document.getElementById('next-num').textContent = currentNum;
+            } else {
+              // Complete the star
+              drawLine(10, 1);
+              document.getElementById('next-num').textContent = '¡Listo!';
+              document.getElementById('puntos-result').classList.remove('hidden');
+              completeGame(100);
+            }
+          } else {
+            dot.classList.add('wrong-answer');
+            setTimeout(() => dot.classList.remove('wrong-answer'), 500);
+          }
+        });
+      });
+    }
+
+    // ============ GAME 18: TIENDITA DE FRUTAS ============
+    function loadTienditaFrutasGame() {
+      const container = document.getElementById('game-container');
+      
+      const orders = [
+        { fruit: "🍎", name: "manzanas", need: 3, have: 1 },
+        { fruit: "🍌", name: "plátanos", need: 5, have: 2 },
+        { fruit: "🍊", name: "naranjas", need: 4, have: 1 },
+        { fruit: "🍇", name: "uvas", need: 6, have: 3 }
+      ];
+
+      let currentOrder = 0;
+      let basketCount = orders[0].have;
+      let score = 0;
+
+      container.innerHTML = createGameTemplate(
+        '🍎 Tiendita de Frutas',
+        'Resolver situaciones de suma y resta con elementos.',
+        `
+          <div id="tiendita-game">
+            <div class="bg-amber-100 rounded-xl p-4 mb-4 text-center">
+              <p class="text-lg text-amber-800">
+                El cliente quiere <span id="need-count" class="text-2xl font-bold text-pink-600">${orders[0].need}</span> 
+                <span id="fruit-name">${orders[0].name}</span> <span id="fruit-emoji" class="text-2xl">${orders[0].fruit}</span>
+              </p>
+            </div>
+            
+            <!-- Basket -->
+            <div class="flex justify-center mb-4">
+              <div class="bg-gradient-to-br from-amber-200 to-orange-300 rounded-2xl p-6 min-w-64">
+                <h3 class="text-center font-bold text-amber-800 mb-2">🧺 Canasta</h3>
+                <div id="basket" class="flex flex-wrap justify-center gap-2 min-h-16">
+                  ${Array(orders[0].have).fill(orders[0].fruit).map(f => `<span class="text-4xl">${f}</span>`).join('')}
+                </div>
+                <p class="text-center mt-2 text-amber-800">
+                  Tienes: <span id="basket-count" class="font-bold text-2xl">${orders[0].have}</span>
+                </p>
+              </div>
+            </div>
+            
+            <!-- Add button -->
+            <div class="flex justify-center gap-4 mb-4">
+              <button id="add-fruit" class="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-4 px-8 rounded-xl text-xl shadow-lg transition-all hover:scale-105">
+                ➕ Agregar <span id="add-emoji">${orders[0].fruit}</span>
+              </button>
+            </div>
+            
+            <div class="text-center">
+              <p class="text-purple-600">
+                ¿Cuántas más necesitas? 
+                <span id="math-problem" class="font-bold text-pink-600">${orders[0].need} - ${orders[0].have} = ?</span>
+              </p>
+            </div>
+            
+            <div class="text-center mt-2">
+              <p class="text-purple-500">Pedido <span id="order-num">1</span> de ${orders.length}</p>
+            </div>
+          </div>
+          
+          <div id="tiendita-complete" class="hidden text-center">
+            <div class="text-6xl mb-4">🛒</div>
+            <p class="text-2xl text-green-600 font-bold">¡Eres un excelente vendedor!</p>
+          </div>
+        `
+      );
+
+      document.getElementById('add-fruit').addEventListener('click', () => {
+        if (basketCount < orders[currentOrder].need) {
+          basketCount++;
+          
+          const basket = document.getElementById('basket');
+          const newFruit = document.createElement('span');
+          newFruit.className = 'text-4xl bounce-in';
+          newFruit.textContent = orders[currentOrder].fruit;
+          basket.appendChild(newFruit);
+          
+          document.getElementById('basket-count').textContent = basketCount;
+          document.getElementById('math-problem').textContent = 
+            `${orders[currentOrder].need} - ${basketCount} = ${orders[currentOrder].need - basketCount}`;
+          
+          if (basketCount === orders[currentOrder].need) {
+            score += 25;
+            document.getElementById('game-score').textContent = score;
+            
+            setTimeout(() => {
+              currentOrder++;
+              
+              if (currentOrder < orders.length) {
+                // Next order
+                basketCount = orders[currentOrder].have;
+                
+                document.getElementById('need-count').textContent = orders[currentOrder].need;
+                document.getElementById('fruit-name').textContent = orders[currentOrder].name;
+                document.getElementById('fruit-emoji').textContent = orders[currentOrder].fruit;
+                document.getElementById('add-emoji').textContent = orders[currentOrder].fruit;
+                document.getElementById('order-num').textContent = currentOrder + 1;
+                document.getElementById('basket-count').textContent = basketCount;
+                document.getElementById('math-problem').textContent = 
+                  `${orders[currentOrder].need} - ${basketCount} = ?`;
+                
+                document.getElementById('basket').innerHTML = 
+                  Array(basketCount).fill(orders[currentOrder].fruit).map(f => `<span class="text-4xl">${f}</span>`).join('');
+              } else {
+                document.getElementById('tiendita-game').classList.add('hidden');
+                document.getElementById('tiendita-complete').classList.remove('hidden');
+                completeGame(100);
+              }
+            }, 1000);
+          }
+        }
+      });
+    }
+
+    // Initialize when DOM is ready
+    initializeApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d72a2435202afbf',t:'MTc3MjY0NTY4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
