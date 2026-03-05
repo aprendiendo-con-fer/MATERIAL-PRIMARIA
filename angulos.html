@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍕 Ángulos con Pizza - Juego Educativo</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Baloo+2:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Fredoka', 'Baloo 2', sans-serif; }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,200,0,0.5); }
+      50% { box-shadow: 0 0 40px rgba(255,200,0,0.8); }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes confetti {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(400px) rotate(720deg); opacity: 0; }
+    }
+    
+    @keyframes star-burst {
+      0% { transform: scale(0) rotate(0deg); opacity: 0; }
+      50% { transform: scale(1.5) rotate(180deg); opacity: 1; }
+      100% { transform: scale(1) rotate(360deg); opacity: 1; }
+    }
+    
+    .bounce-in { animation: bounce-in 0.5s ease-out forwards; }
+    .pulse-glow { animation: pulse-glow 1.5s ease-in-out infinite; }
+    .shake { animation: shake 0.5s ease-in-out; }
+    .float { animation: float 2s ease-in-out infinite; }
+    .spin-slow { animation: spin-slow 8s linear infinite; }
+    .star-burst { animation: star-burst 0.6s ease-out forwards; }
+    
+    .pizza-slice {
+      clip-path: polygon(50% 50%, 0% 0%, 100% 0%);
+    }
+    
+    .btn-game {
+      transition: all 0.2s ease;
+      transform-origin: center;
+    }
+    
+    .btn-game:hover {
+      transform: scale(1.05);
+    }
+    
+    .btn-game:active {
+      transform: scale(0.95);
+    }
+    
+    .progress-bar {
+      transition: width 0.1s linear;
+    }
+    
+    .card-flip {
+      perspective: 1000px;
+    }
+    
+    .card-flip-inner {
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    
+    .card-flip:hover .card-flip-inner {
+      transform: rotateY(180deg);
+    }
+    
+    .card-front, .card-back {
+      backface-visibility: hidden;
+    }
+    
+    .card-back {
+      transform: rotateY(180deg);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #e8f4fc 0%, #f0f8ff 50%, #e8f4fc 100%);">
+  <div id="app" class="w-full min-h-full">
+   <!-- PANTALLA DE INICIO -->
+   <div id="screen-home" class="min-h-full flex flex-col items-center justify-center p-6">
+    <div class="text-center max-w-2xl">
+     <!-- Logo Pizza Animado -->
+     <div class="relative w-40 h-40 mx-auto mb-6">
+      <div class="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full spin-slow opacity-20"></div>
+      <div class="absolute inset-2 bg-gradient-to-br from-yellow-300 to-orange-400 rounded-full flex items-center justify-center shadow-xl">
+       <span class="text-7xl float">🍕</span>
+      </div>
+     </div>
+     <h1 id="main-title" class="text-4xl md:text-5xl font-bold mb-4" style="color: #ff6b35; text-shadow: 3px 3px 0 #ffd93d;">¡Aprende Ángulos con Pizza!</h1>
+     <p class="text-xl text-gray-600 mb-8">🎯 Aprende los tipos de ángulos de forma divertida</p>
+     <div class="flex flex-col gap-4 items-center">
+      <button onclick="showScreen('fichas')" class="btn-game bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white font-bold py-4 px-8 rounded-2xl text-xl shadow-lg flex items-center gap-3"> <span class="text-2xl">📚</span> Fichas de Aprendizaje </button> <button onclick="showScreen('practica')" class="btn-game bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-2xl text-xl shadow-lg flex items-center gap-3"> <span class="text-2xl">🎮</span> Practica Identificando </button> <button onclick="startQuiz()" class="btn-game bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-2xl text-xl shadow-lg flex items-center gap-3 pulse-glow"> <span class="text-2xl">🏆</span> Quiz Final </button>
+     </div>
+     <div class="mt-10 p-4 bg-white/60 rounded-2xl shadow-md">
+      <p id="teacher-credit" class="text-gray-500 text-sm">📝 Material creado por <span class="font-semibold text-purple-600">Maestra María Fernanda Flores Valenzuela</span></p>
+     </div>
+    </div>
+   </div><!-- PANTALLA DE FICHAS -->
+   <div id="screen-fichas" class="hidden min-h-full p-6">
+    <div class="max-w-6xl mx-auto">
+     <button onclick="showScreen('home')" class="btn-game bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-xl mb-6 flex items-center gap-2"> <span>←</span> Volver al Inicio </button>
+     <h2 class="text-3xl font-bold text-center mb-2" style="color: #ff6b35;">📚 Fichas de Ángulos</h2>
+     <p class="text-center text-gray-600 mb-8">¡Pasa el mouse sobre cada ficha para ver más información!</p>
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fichas-container">
+      <!-- Las fichas se generan con JavaScript -->
+     </div>
+    </div>
+   </div><!-- PANTALLA DE PRÁCTICA -->
+   <div id="screen-practica" class="hidden min-h-full p-6">
+    <div class="max-w-4xl mx-auto">
+     <button onclick="showScreen('home')" class="btn-game bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-xl mb-6 flex items-center gap-2"> <span>←</span> Volver al Inicio </button>
+     <h2 class="text-3xl font-bold text-center mb-8" style="color: #ff6b35;">🎮 Practica Identificando Ángulos</h2>
+     <div id="practica-container" class="bg-white rounded-3xl shadow-xl p-8">
+      <!-- Contenido de práctica -->
+     </div>
+    </div>
+   </div><!-- PANTALLA DE QUIZ -->
+   <div id="screen-quiz" class="hidden min-h-full p-6">
+    <div class="max-w-4xl mx-auto">
+     <!-- Barra superior del quiz -->
+     <div class="bg-white rounded-2xl shadow-lg p-4 mb-6">
+      <div class="flex justify-between items-center flex-wrap gap-4">
+       <!-- Vidas -->
+       <div class="flex items-center gap-2">
+        <span class="text-lg font-bold text-gray-700">Vidas:</span>
+        <div id="lives-container" class="flex gap-1">
+         <span class="text-3xl">❤️</span> <span class="text-3xl">❤️</span> <span class="text-3xl">❤️</span>
+        </div>
+       </div><!-- Estrellas -->
+       <div class="flex items-center gap-2">
+        <span class="text-3xl">⭐</span> <span id="stars-count" class="text-2xl font-bold text-yellow-500">0</span>
+       </div><!-- Pregunta actual -->
+       <div class="flex items-center gap-2">
+        <span class="text-lg font-bold text-gray-700">Pregunta:</span> <span id="question-number" class="text-xl font-bold text-purple-600">1/10</span>
+       </div>
+      </div><!-- Barra de tiempo -->
+      <div class="mt-4">
+       <div class="flex justify-between text-sm text-gray-600 mb-1">
+        <span>⏱️ Tiempo</span> <span id="time-display">15s</span>
+       </div>
+       <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+        <div id="time-bar" class="h-full bg-gradient-to-r from-green-400 to-green-500 progress-bar" style="width: 100%"></div>
+       </div>
+      </div>
+     </div><!-- Pregunta del quiz -->
+     <div id="quiz-question-container" class="bg-white rounded-3xl shadow-xl p-8">
+      <!-- Contenido de la pregunta -->
+     </div>
+    </div>
+   </div><!-- PANTALLA DE RESULTADOS -->
+   <div id="screen-results" class="hidden min-h-full flex flex-col items-center justify-center p-6">
+    <div id="results-container" class="text-center max-w-lg bg-white rounded-3xl shadow-xl p-8">
+     <!-- Resultados -->
+    </div>
+   </div><!-- CONFETTI CONTAINER -->
+   <div id="confetti-container" class="fixed inset-0 pointer-events-none overflow-hidden z-50"></div>
+  </div>
+  <script>
+    // ==================== CONFIGURACIÓN ====================
+    const defaultConfig = {
+      teacher_name: "Maestra María Fernanda Flores Valenzuela",
+      game_title: "¡Aprende Ángulos con Pizza!"
+    };
+    
+    let config = { ...defaultConfig };
+    
+    // ==================== DATOS DE ÁNGULOS ====================
+    const angulos = [
+      {
+        nombre: "Ángulo Agudo",
+        grados: "Menor a 90°",
+        descripcion: "Como una rebanada pequeña de pizza. ¡Es puntiagudo!",
+        ejemplo: 45,
+        emoji: "🍕",
+        color: "from-yellow-400 to-orange-400",
+        pizza: "Una rebanada delgadita"
+      },
+      {
+        nombre: "Ángulo Recto",
+        grados: "Exactamente 90°",
+        descripcion: "Como la esquina de una caja de pizza. ¡Perfecto!",
+        ejemplo: 90,
+        emoji: "📦",
+        color: "from-blue-400 to-blue-500",
+        pizza: "La esquina perfecta"
+      },
+      {
+        nombre: "Ángulo Obtuso",
+        grados: "Mayor a 90° y menor a 180°",
+        descripcion: "Como una rebanada grande de pizza. ¡Más abierto!",
+        ejemplo: 135,
+        emoji: "🍕",
+        color: "from-green-400 to-teal-400",
+        pizza: "Una rebanada grandota"
+      },
+      {
+        nombre: "Ángulo Llano",
+        grados: "Exactamente 180°",
+        descripcion: "Como media pizza cortada. ¡Una línea recta!",
+        ejemplo: 180,
+        emoji: "➡️",
+        color: "from-purple-400 to-pink-400",
+        pizza: "Media pizza exacta"
+      },
+      {
+        nombre: "Ángulo Cóncavo",
+        grados: "Mayor a 180° y menor a 360°",
+        descripcion: "¡Más de media pizza! Como comerte casi toda.",
+        ejemplo: 270,
+        emoji: "🌙",
+        color: "from-red-400 to-orange-400",
+        pizza: "Casi toda la pizza"
+      },
+      {
+        nombre: "Ángulo Completo",
+        grados: "Exactamente 360°",
+        descripcion: "¡La pizza completa! Una vuelta entera.",
+        ejemplo: 360,
+        emoji: "⭕",
+        color: "from-pink-400 to-red-400",
+        pizza: "La pizza enterita"
+      }
+    ];
+    
+    // ==================== ESTADO DEL JUEGO ====================
+    let gameState = {
+      lives: 3,
+      stars: 0,
+      currentQuestion: 0,
+      totalQuestions: 10,
+      timeLeft: 15,
+      maxTime: 15,
+      timerInterval: null,
+      quizQuestions: [],
+      practicaIndex: 0,
+      answered: false
+    };
+    
+    // ==================== FUNCIONES DE PANTALLA ====================
+    function showScreen(screenId) {
+      document.querySelectorAll('[id^="screen-"]').forEach(screen => {
+        screen.classList.add('hidden');
+      });
+      document.getElementById(`screen-${screenId}`).classList.remove('hidden');
+      
+      if (screenId === 'fichas') {
+        renderFichas();
+      } else if (screenId === 'practica') {
+        initPractica();
+      }
+    }
+    
+    // ==================== FICHAS DE APRENDIZAJE ====================
+    function renderFichas() {
+      const container = document.getElementById('fichas-container');
+      container.innerHTML = angulos.map((angulo, index) => `
+        <div class="card-flip h-80">
+          <div class="card-flip-inner relative w-full h-full">
+            <!-- Frente de la ficha -->
+            <div class="card-front absolute w-full h-full bg-gradient-to-br ${angulo.color} rounded-3xl shadow-xl p-6 flex flex-col items-center justify-center">
+              <div class="text-6xl mb-4">${angulo.emoji}</div>
+              <h3 class="text-2xl font-bold text-white mb-2">${angulo.nombre}</h3>
+              <div class="w-32 h-32 bg-white/90 rounded-full flex items-center justify-center">
+                ${createAngleSVG(angulo.ejemplo, 60)}
+              </div>
+              <p class="text-white/80 mt-2 text-sm">¡Pasa el mouse!</p>
+            </div>
+            <!-- Reverso de la ficha -->
+            <div class="card-back absolute w-full h-full bg-white rounded-3xl shadow-xl p-6 flex flex-col items-center justify-center text-center">
+              <h3 class="text-xl font-bold mb-2" style="color: #ff6b35;">${angulo.nombre}</h3>
+              <div class="bg-yellow-100 rounded-xl px-4 py-2 mb-3">
+                <span class="font-bold text-yellow-700">${angulo.grados}</span>
+              </div>
+              <p class="text-gray-600 mb-3">${angulo.descripcion}</p>
+              <div class="bg-orange-100 rounded-xl px-4 py-2">
+                <span class="text-orange-600">🍕 ${angulo.pizza}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // ==================== CREAR SVG DE ÁNGULO ====================
+    function createAngleSVG(degrees, size = 80) {
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const radius = size * 0.4;
+      const arcRadius = radius * 0.4;
+      
+      const endAngle = -degrees * (Math.PI / 180);
+      const x1 = centerX + radius;
+      const y1 = centerY;
+      const x2 = centerX + radius * Math.cos(endAngle);
+      const y2 = centerY + radius * Math.sin(endAngle);
+      
+      const arcX = centerX + arcRadius * Math.cos(endAngle / 2);
+      const arcY = centerY + arcRadius * Math.sin(endAngle / 2);
+      
+      const largeArc = degrees > 180 ? 1 : 0;
+      
+      // Color del arco según el tipo de ángulo
+      let arcColor = '#ff6b35';
+      if (degrees < 90) arcColor = '#f59e0b';
+      else if (degrees === 90) arcColor = '#3b82f6';
+      else if (degrees < 180) arcColor = '#10b981';
+      else if (degrees === 180) arcColor = '#8b5cf6';
+      else if (degrees < 360) arcColor = '#ef4444';
+      else arcColor = '#ec4899';
+      
+      return `
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+          <!-- Línea horizontal -->
+          <line x1="${centerX}" y1="${centerY}" x2="${x1}" y2="${y1}" 
+                stroke="#333" stroke-width="3" stroke-linecap="round"/>
+          <!-- Línea del ángulo -->
+          <line x1="${centerX}" y1="${centerY}" x2="${x2}" y2="${y2}" 
+                stroke="#333" stroke-width="3" stroke-linecap="round"/>
+          <!-- Arco del ángulo -->
+          <path d="M ${centerX + arcRadius} ${centerY} A ${arcRadius} ${arcRadius} 0 ${largeArc} 0 ${centerX + arcRadius * Math.cos(endAngle)} ${centerY + arcRadius * Math.sin(endAngle)}"
+                fill="none" stroke="${arcColor}" stroke-width="2"/>
+          <!-- Punto central -->
+          <circle cx="${centerX}" cy="${centerY}" r="4" fill="${arcColor}"/>
+          <!-- Grados -->
+          <text x="${size/2}" y="${size - 5}" text-anchor="middle" font-size="10" font-weight="bold" fill="#333">${degrees}°</text>
+        </svg>
+      `;
+    }
+    
+    // ==================== PRÁCTICA ====================
+    function initPractica() {
+      gameState.practicaIndex = 0;
+      renderPracticaQuestion();
+    }
+    
+    function renderPracticaQuestion() {
+      const container = document.getElementById('practica-container');
+      const shuffled = [...angulos].sort(() => Math.random() - 0.5);
+      const angulo = shuffled[gameState.practicaIndex % shuffled.length];
+      
+      // Generar un ángulo aleatorio del tipo correcto
+      let randomDegree;
+      if (angulo.nombre === "Ángulo Agudo") {
+        randomDegree = Math.floor(Math.random() * 80) + 5;
+      } else if (angulo.nombre === "Ángulo Recto") {
+        randomDegree = 90;
+      } else if (angulo.nombre === "Ángulo Obtuso") {
+        randomDegree = Math.floor(Math.random() * 80) + 95;
+      } else if (angulo.nombre === "Ángulo Llano") {
+        randomDegree = 180;
+      } else if (angulo.nombre === "Ángulo Cóncavo") {
+        randomDegree = Math.floor(Math.random() * 170) + 185;
+      } else {
+        randomDegree = 360;
+      }
+      
+      const options = shuffleArray([...angulos]).slice(0, 4);
+      if (!options.find(o => o.nombre === angulo.nombre)) {
+        options[0] = angulo;
+      }
+      const shuffledOptions = shuffleArray(options);
+      
+      container.innerHTML = `
+        <div class="text-center">
+          <h3 class="text-2xl font-bold mb-6" style="color: #ff6b35;">¿Qué tipo de ángulo es este?</h3>
+          
+          <div class="flex justify-center mb-8">
+            <div class="bg-gradient-to-br from-orange-100 to-yellow-100 rounded-3xl p-8 shadow-lg">
+              <div class="text-6xl mb-4">🍕</div>
+              ${createAngleSVG(randomDegree, 150)}
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 max-w-xl mx-auto">
+            ${shuffledOptions.map(opt => `
+              <button onclick="checkPracticaAnswer('${opt.nombre}', '${angulo.nombre}', this)"
+                      class="btn-game bg-gradient-to-r ${opt.color} text-white font-bold py-4 px-6 rounded-2xl text-lg shadow-lg">
+                ${opt.nombre}
+              </button>
+            `).join('')}
+          </div>
+          
+          <div id="practica-feedback" class="mt-6 text-xl font-bold"></div>
+          
+          <button id="next-practica-btn" onclick="nextPractica()" 
+                  class="hidden btn-game bg-gradient-to-r from-blue-400 to-blue-500 text-white font-bold py-3 px-8 rounded-2xl text-lg shadow-lg mt-4">
+            Siguiente →
+          </button>
+        </div>
+      `;
+    }
+    
+    function checkPracticaAnswer(selected, correct, btn) {
+      const feedback = document.getElementById('practica-feedback');
+      const optionButtons = document.querySelectorAll('#practica-container .btn-game');
+      
+      // Deshabilitar solo los botones de opciones, no el botón de siguiente
+      optionButtons.forEach(b => {
+        if (b.id !== 'next-practica-btn') {
+          b.disabled = true;
+        }
+      });
+      
+      if (selected === correct) {
+        btn.classList.add('ring-4', 'ring-green-300');
+        feedback.innerHTML = '<span class="text-green-500">🎉 ¡Correcto! ¡Muy bien!</span>';
+        createMiniConfetti();
+      } else {
+        btn.classList.add('ring-4', 'ring-red-300');
+        feedback.innerHTML = `<span class="text-red-500">❌ Era: ${correct}</span>`;
+        btn.classList.add('shake');
+      }
+      
+      document.getElementById('next-practica-btn').classList.remove('hidden');
+    }
+    
+    function nextPractica() {
+      gameState.practicaIndex++;
+      renderPracticaQuestion();
+    }
+    
+    // ==================== QUIZ ====================
+    function startQuiz() {
+      // Reiniciar estado
+      gameState.lives = 3;
+      gameState.stars = 0;
+      gameState.currentQuestion = 0;
+      gameState.totalQuestions = 10;
+      gameState.answered = false;
+      
+      // Generar preguntas
+      gameState.quizQuestions = generateQuizQuestions(10);
+      
+      showScreen('quiz');
+      updateQuizUI();
+      renderQuizQuestion();
+    }
+    
+    function generateQuizQuestions(count) {
+      const questions = [];
+      
+      for (let i = 0; i < count; i++) {
+        const angulo = angulos[i % angulos.length];
+        
+        // Generar un ángulo aleatorio del tipo correcto
+        let randomDegree;
+        if (angulo.nombre === "Ángulo Agudo") {
+          randomDegree = Math.floor(Math.random() * 80) + 5;
+        } else if (angulo.nombre === "Ángulo Recto") {
+          randomDegree = 90;
+        } else if (angulo.nombre === "Ángulo Obtuso") {
+          randomDegree = Math.floor(Math.random() * 80) + 95;
+        } else if (angulo.nombre === "Ángulo Llano") {
+          randomDegree = 180;
+        } else if (angulo.nombre === "Ángulo Cóncavo") {
+          randomDegree = Math.floor(Math.random() * 170) + 185;
+        } else {
+          randomDegree = 360;
+        }
+        
+        questions.push({
+          angulo: angulo,
+          degree: randomDegree,
+          options: generateOptions(angulo)
+        });
+      }
+      
+      return shuffleArray(questions);
+    }
+    
+    function generateOptions(correctAngulo) {
+      const options = [correctAngulo];
+      const others = angulos.filter(a => a.nombre !== correctAngulo.nombre);
+      const shuffled = shuffleArray(others);
+      
+      for (let i = 0; i < 3 && i < shuffled.length; i++) {
+        options.push(shuffled[i]);
+      }
+      
+      return shuffleArray(options);
+    }
+    
+    function updateQuizUI() {
+      // Actualizar vidas
+      const livesContainer = document.getElementById('lives-container');
+      livesContainer.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const heart = document.createElement('span');
+        heart.className = 'text-3xl';
+        heart.textContent = i < gameState.lives ? '❤️' : '🖤';
+        livesContainer.appendChild(heart);
+      }
+      
+      // Actualizar estrellas
+      document.getElementById('stars-count').textContent = gameState.stars;
+      
+      // Actualizar número de pregunta
+      document.getElementById('question-number').textContent = 
+        `${gameState.currentQuestion + 1}/${gameState.totalQuestions}`;
+    }
+    
+    function renderQuizQuestion() {
+      const question = gameState.quizQuestions[gameState.currentQuestion];
+      const container = document.getElementById('quiz-question-container');
+      gameState.answered = false;
+      
+      container.innerHTML = `
+        <div class="text-center bounce-in">
+          <h3 class="text-2xl font-bold mb-6" style="color: #ff6b35;">
+            🍕 ¿Qué tipo de ángulo ves?
+          </h3>
+          
+          <div class="flex justify-center mb-8">
+            <div class="bg-gradient-to-br from-orange-100 to-yellow-100 rounded-3xl p-8 shadow-lg relative">
+              <div class="absolute -top-4 -right-4 text-4xl float">🍕</div>
+              ${createAngleSVG(question.degree, 180)}
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 max-w-xl mx-auto" id="quiz-options">
+            ${question.options.map(opt => `
+              <button onclick="checkQuizAnswer('${opt.nombre}', this)"
+                      class="btn-game bg-gradient-to-r ${opt.color} text-white font-bold py-4 px-6 rounded-2xl text-lg shadow-lg">
+                ${opt.emoji} ${opt.nombre}
+              </button>
+            `).join('')}
+          </div>
+          
+          <div id="quiz-feedback" class="mt-6 text-xl font-bold"></div>
+        </div>
+      `;
+      
+      startTimer();
+    }
+    
+    function startTimer() {
+      gameState.timeLeft = gameState.maxTime;
+      clearInterval(gameState.timerInterval);
+      
+      updateTimerDisplay();
+      
+      gameState.timerInterval = setInterval(() => {
+        gameState.timeLeft -= 0.1;
+        updateTimerDisplay();
+        
+        if (gameState.timeLeft <= 0) {
+          clearInterval(gameState.timerInterval);
+          if (!gameState.answered) {
+            timeOut();
+          }
+        }
+      }, 100);
+    }
+    
+    function updateTimerDisplay() {
+      const timeBar = document.getElementById('time-bar');
+      const timeDisplay = document.getElementById('time-display');
+      
+      const percentage = (gameState.timeLeft / gameState.maxTime) * 100;
+      timeBar.style.width = `${percentage}%`;
+      timeDisplay.textContent = `${Math.ceil(gameState.timeLeft)}s`;
+      
+      // Cambiar color según tiempo
+      if (percentage > 50) {
+        timeBar.className = 'h-full bg-gradient-to-r from-green-400 to-green-500 progress-bar';
+      } else if (percentage > 25) {
+        timeBar.className = 'h-full bg-gradient-to-r from-yellow-400 to-orange-400 progress-bar';
+      } else {
+        timeBar.className = 'h-full bg-gradient-to-r from-red-400 to-red-500 progress-bar';
+      }
+    }
+    
+    function checkQuizAnswer(selected, btn) {
+      if (gameState.answered) return;
+      gameState.answered = true;
+      
+      clearInterval(gameState.timerInterval);
+      
+      const question = gameState.quizQuestions[gameState.currentQuestion];
+      const correct = question.angulo.nombre;
+      const feedback = document.getElementById('quiz-feedback');
+      const buttons = document.querySelectorAll('#quiz-options button');
+      
+      buttons.forEach(b => b.disabled = true);
+      
+      if (selected === correct) {
+        // Calcular estrellas según tiempo
+        let earnedStars;
+        if (gameState.timeLeft > gameState.maxTime * 0.75) {
+          earnedStars = 100;
+        } else if (gameState.timeLeft > gameState.maxTime * 0.5) {
+          earnedStars = 75;
+        } else if (gameState.timeLeft > gameState.maxTime * 0.25) {
+          earnedStars = 50;
+        } else {
+          earnedStars = 25;
+        }
+        
+        gameState.stars += earnedStars;
+        btn.classList.add('ring-4', 'ring-green-300');
+        feedback.innerHTML = `<span class="text-green-500">🎉 ¡Correcto! +${earnedStars} ⭐</span>`;
+        createMiniConfetti();
+      } else {
+        gameState.lives--;
+        btn.classList.add('ring-4', 'ring-red-300');
+        btn.classList.add('shake');
+        feedback.innerHTML = `<span class="text-red-500">❌ Era: ${correct}</span>`;
+      }
+      
+      updateQuizUI();
+      
+      setTimeout(() => {
+        if (gameState.lives <= 0) {
+          endQuiz(false);
+        } else if (gameState.currentQuestion >= gameState.totalQuestions - 1) {
+          endQuiz(true);
+        } else {
+          gameState.currentQuestion++;
+          updateQuizUI();
+          renderQuizQuestion();
+        }
+      }, 2000);
+    }
+    
+    function timeOut() {
+      if (gameState.answered) return;
+      gameState.answered = true;
+      
+      gameState.lives--;
+      
+      const question = gameState.quizQuestions[gameState.currentQuestion];
+      const feedback = document.getElementById('quiz-feedback');
+      const buttons = document.querySelectorAll('#quiz-options button');
+      
+      buttons.forEach(b => b.disabled = true);
+      
+      feedback.innerHTML = `<span class="text-red-500">⏰ ¡Tiempo! Era: ${question.angulo.nombre}</span>`;
+      
+      updateQuizUI();
+      
+      setTimeout(() => {
+        if (gameState.lives <= 0) {
+          endQuiz(false);
+        } else if (gameState.currentQuestion >= gameState.totalQuestions - 1) {
+          endQuiz(true);
+        } else {
+          gameState.currentQuestion++;
+          updateQuizUI();
+          renderQuizQuestion();
+        }
+      }, 2000);
+    }
+    
+    function endQuiz(completed) {
+      clearInterval(gameState.timerInterval);
+      showScreen('results');
+      
+      const container = document.getElementById('results-container');
+      const percentage = Math.round((gameState.stars / (gameState.totalQuestions * 100)) * 100);
+      
+      let message, emoji, color;
+      if (percentage >= 80) {
+        message = "¡EXCELENTE! ¡Eres un experto en ángulos!";
+        emoji = "🏆";
+        color = "from-yellow-400 to-orange-400";
+        createConfetti();
+      } else if (percentage >= 60) {
+        message = "¡Muy bien! ¡Sigue practicando!";
+        emoji = "🌟";
+        color = "from-green-400 to-teal-400";
+      } else if (percentage >= 40) {
+        message = "¡Buen intento! Puedes mejorar";
+        emoji = "💪";
+        color = "from-blue-400 to-blue-500";
+      } else {
+        message = "¡No te rindas! Vuelve a intentarlo";
+        emoji = "📚";
+        color = "from-purple-400 to-pink-400";
+      }
+      
+      container.innerHTML = `
+        <div class="bounce-in">
+          <div class="text-8xl mb-6">${emoji}</div>
+          <h2 class="text-3xl font-bold mb-4" style="color: #ff6b35;">
+            ${completed ? '¡Quiz Completado!' : '¡Fin del Juego!'}
+          </h2>
+          <p class="text-xl text-gray-600 mb-6">${message}</p>
+          
+          <div class="bg-gradient-to-r ${color} rounded-2xl p-6 mb-6 text-white">
+            <div class="text-5xl font-bold mb-2">${gameState.stars} ⭐</div>
+            <div class="text-lg">Estrellas conseguidas</div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-100 rounded-xl p-4">
+              <div class="text-2xl font-bold text-gray-700">${gameState.currentQuestion + 1}</div>
+              <div class="text-sm text-gray-500">Preguntas</div>
+            </div>
+            <div class="bg-gray-100 rounded-xl p-4">
+              <div class="text-2xl font-bold text-red-500">${3 - gameState.lives}</div>
+              <div class="text-sm text-gray-500">Errores</div>
+            </div>
+          </div>
+          
+          <div class="flex flex-col gap-3">
+            <button onclick="startQuiz()" 
+                    class="btn-game bg-gradient-to-r from-green-400 to-green-500 text-white font-bold py-3 px-6 rounded-2xl text-lg shadow-lg">
+              🔄 Jugar de Nuevo
+            </button>
+            <button onclick="showScreen('home')" 
+                    class="btn-game bg-gradient-to-r from-gray-400 to-gray-500 text-white font-bold py-3 px-6 rounded-2xl text-lg shadow-lg">
+              🏠 Volver al Inicio
+            </button>
+          </div>
+        </div>
+      `;
+    }
+    
+    // ==================== UTILIDADES ====================
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
+    
+    function createConfetti() {
+      const container = document.getElementById('confetti-container');
+      const colors = ['#ff6b35', '#ffd93d', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899'];
+      
+      for (let i = 0; i < 100; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.style.cssText = `
+            position: absolute;
+            width: ${Math.random() * 15 + 8}px;
+            height: ${Math.random() * 15 + 8}px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            left: ${Math.random() * 100}%;
+            top: -20px;
+            border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+            animation: confetti ${Math.random() * 2 + 2}s ease-out forwards;
+          `;
+          container.appendChild(confetti);
+          
+          setTimeout(() => confetti.remove(), 4000);
+        }, i * 30);
+      }
+    }
+    
+    function createMiniConfetti() {
+      const container = document.getElementById('confetti-container');
+      const colors = ['#ffd93d', '#ff6b35', '#10b981'];
+      
+      for (let i = 0; i < 20; i++) {
+        const star = document.createElement('div');
+        star.innerHTML = '⭐';
+        star.style.cssText = `
+          position: absolute;
+          font-size: ${Math.random() * 20 + 15}px;
+          left: ${40 + Math.random() * 20}%;
+          top: ${30 + Math.random() * 20}%;
+          animation: confetti ${Math.random() * 1 + 1}s ease-out forwards;
+          opacity: 0;
+        `;
+        star.classList.add('star-burst');
+        container.appendChild(star);
+        
+        setTimeout(() => star.remove(), 2000);
+      }
+    }
+    
+    // ==================== ELEMENT SDK ====================
+    function onConfigChange(cfg) {
+      config = { ...defaultConfig, ...cfg };
+      
+      const titleEl = document.getElementById('main-title');
+      if (titleEl) {
+        titleEl.textContent = config.game_title || defaultConfig.game_title;
+      }
+      
+      const creditEl = document.getElementById('teacher-credit');
+      if (creditEl) {
+        creditEl.innerHTML = `📝 Material creado por <span class="font-semibold text-purple-600">${config.teacher_name || defaultConfig.teacher_name}</span>`;
+      }
+    }
+    
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+    
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ["teacher_name", cfg.teacher_name || defaultConfig.teacher_name],
+        ["game_title", cfg.game_title || defaultConfig.game_title]
+      ]);
+    }
+    
+    // Inicializar SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+    
+    // Aplicar configuración inicial
+    onConfigChange(config);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d7a138b74582ec3',t:'MTc3MjcyMzcyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
