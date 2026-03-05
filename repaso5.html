@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juegos Educativos - 5° Primaria</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+        * { font-family: 'Nunito', sans-serif; }
+        
+        .subject-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .game-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .game-btn:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+        
+        .back-btn:hover {
+            transform: translateX(-5px);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,255,255,0.5); }
+        }
+        
+        .glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .game-container {
+            min-height: 400px;
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: scale(1.02);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .correct {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            color: white !important;
+        }
+
+        .incorrect {
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            color: white !important;
+        }
+    </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="min-h-full overflow-auto" style="background: linear-gradient(180deg, #e8f4fc 0%, #f0f9ff 50%, #ffffff 100%);"><!-- Pantalla Principal - Menú de Materias -->
+   <div id="main-menu" class="min-h-full p-4 md:p-8"><!-- Header -->
+    <header class="text-center mb-8">
+     <div class="inline-block mb-4 floating">
+      <div class="text-6xl">
+       📚
+      </div>
+     </div>
+     <h1 id="main-title" class="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">Juegos Educativos</h1>
+     <p id="subtitle" class="text-xl md:text-2xl text-gray-600 font-semibold">Quinto Grado de Primaria</p>
+     <p class="text-sm text-gray-500 mt-2">SEP - Planes y Programas de Estudio</p>
+    </header><!-- Grid de Materias -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"><!-- Español -->
+     <div class="subject-card bg-gradient-to-br from-red-400 to-red-600 rounded-3xl p-6 text-white shadow-xl glow" onclick="showSubject('espanol')">
+      <div class="flex items-center gap-4 mb-4">
+       <div class="text-5xl">
+        📖
+       </div>
+       <div>
+        <h2 class="text-2xl font-bold">Español</h2>
+        <p class="text-red-100 text-sm">Lengua Materna</p>
+       </div>
+      </div>
+      <div class="space-y-2 text-sm text-red-100">
+       <p>✨ Comprensión lectora</p>
+       <p>✨ Ortografía y gramática</p>
+       <p>✨ Textos literarios</p>
+       <p>✨ Escritura creativa</p>
+      </div>
+      <div class="mt-4 bg-white/20 rounded-full py-2 px-4 text-center font-bold">
+       ¡Jugar ahora! →
+      </div>
+     </div><!-- Matemáticas -->
+     <div class="subject-card bg-gradient-to-br from-blue-400 to-blue-600 rounded-3xl p-6 text-white shadow-xl glow" onclick="showSubject('matematicas')">
+      <div class="flex items-center gap-4 mb-4">
+       <div class="text-5xl">
+        🔢
+       </div>
+       <div>
+        <h2 class="text-2xl font-bold">Matemáticas</h2>
+        <p class="text-blue-100 text-sm">Pensamiento Matemático</p>
+       </div>
+      </div>
+      <div class="space-y-2 text-sm text-blue-100">
+       <p>✨ Fracciones y decimales</p>
+       <p>✨ Operaciones básicas</p>
+       <p>✨ Geometría y medición</p>
+       <p>✨ Problemas razonados</p>
+      </div>
+      <div class="mt-4 bg-white/20 rounded-full py-2 px-4 text-center font-bold">
+       ¡Jugar ahora! →
+      </div>
+     </div><!-- Ciencias Naturales -->
+     <div class="subject-card bg-gradient-to-br from-green-400 to-green-600 rounded-3xl p-6 text-white shadow-xl glow" onclick="showSubject('ciencias')">
+      <div class="flex items-center gap-4 mb-4">
+       <div class="text-5xl">
+        🔬
+       </div>
+       <div>
+        <h2 class="text-2xl font-bold">Ciencias Naturales</h2>
+        <p class="text-green-100 text-sm">Exploración del Mundo</p>
+       </div>
+      </div>
+      <div class="space-y-2 text-sm text-green-100">
+       <p>✨ Cuerpo humano y salud</p>
+       <p>✨ Ecosistemas y biodiversidad</p>
+       <p>✨ Materia y energía</p>
+       <p>✨ Cuidado del ambiente</p>
+      </div>
+      <div class="mt-4 bg-white/20 rounded-full py-2 px-4 text-center font-bold">
+       ¡Jugar ahora! →
+      </div>
+     </div><!-- Geografía -->
+     <div class="subject-card bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl p-6 text-white shadow-xl glow" onclick="showSubject('geografia')">
+      <div class="flex items-center gap-4 mb-4">
+       <div class="text-5xl">
+        🌎
+       </div>
+       <div>
+        <h2 class="text-2xl font-bold">Geografía</h2>
+        <p class="text-amber-100 text-sm">Conocimiento del Mundo</p>
+       </div>
+      </div>
+      <div class="space-y-2 text-sm text-amber-100">
+       <p>✨ Regiones de México</p>
+       <p>✨ Mapas y coordenadas</p>
+       <p>✨ Población y cultura</p>
+       <p>✨ Recursos naturales</p>
+      </div>
+      <div class="mt-4 bg-white/20 rounded-full py-2 px-4 text-center font-bold">
+       ¡Jugar ahora! →
+      </div>
+     </div>
+    </div><!-- Footer -->
+    <footer class="text-center py-6 border-t border-gray-200">
+     <p id="footer-text" class="text-gray-600 font-semibold">📝 Material creado por Maestra María Fernanda Flores Valenzuela</p>
+     <p class="text-xs text-gray-400 mt-2">Basado en los Planes y Programas de Estudio de la SEP</p>
+    </footer>
+   </div><!-- Pantalla de Materia - Español -->
+   <div id="espanol-menu" class="min-h-full p-4 md:p-8 hidden"><button class="back-btn flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 font-semibold transition-all" onclick="goBack()"> <span class="text-2xl">←</span> Volver al menú </button>
+    <div class="text-center mb-8">
+     <div class="text-6xl mb-4">
+      📖
+     </div>
+     <h2 class="text-3xl font-bold text-red-600">Español - Lengua Materna</h2>
+     <p class="text-gray-600">Selecciona un juego para comenzar</p>
+    </div>
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4"><button class="game-btn bg-gradient-to-r from-red-400 to-red-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('espanol', 0)">
+      <div class="flex items-center gap-3"><span class="text-3xl">📝</span>
+       <div>
+        <h3 class="font-bold text-lg">Ortografía Divertida</h3>
+        <p class="text-red-100 text-sm">Uso de B, V, S, C, Z, LL, Y</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-red-500 to-red-600 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('espanol', 1)">
+      <div class="flex items-center gap-3"><span class="text-3xl">📚</span>
+       <div>
+        <h3 class="font-bold text-lg">Comprensión Lectora</h3>
+        <p class="text-red-100 text-sm">Lee y responde correctamente</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-red-600 to-pink-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('espanol', 2)">
+      <div class="flex items-center gap-3"><span class="text-3xl">🔤</span>
+       <div>
+        <h3 class="font-bold text-lg">Gramática en Acción</h3>
+        <p class="text-red-100 text-sm">Sustantivos, verbos, adjetivos</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('espanol', 3)">
+      <div class="flex items-center gap-3"><span class="text-3xl">✍️</span>
+       <div>
+        <h3 class="font-bold text-lg">Acentuación</h3>
+        <p class="text-red-100 text-sm">Agudas, graves y esdrújulas</p>
+       </div>
+      </div></button>
+    </div>
+    <footer class="text-center py-6 mt-8 border-t border-gray-200">
+     <p class="text-gray-600 font-semibold">📝 Material creado por Maestra María Fernanda Flores Valenzuela</p>
+    </footer>
+   </div><!-- Pantalla de Materia - Matemáticas -->
+   <div id="matematicas-menu" class="min-h-full p-4 md:p-8 hidden"><button class="back-btn flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 font-semibold transition-all" onclick="goBack()"> <span class="text-2xl">←</span> Volver al menú </button>
+    <div class="text-center mb-8">
+     <div class="text-6xl mb-4">
+      🔢
+     </div>
+     <h2 class="text-3xl font-bold text-blue-600">Matemáticas</h2>
+     <p class="text-gray-600">Selecciona un juego para comenzar</p>
+    </div>
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4"><button class="game-btn bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('matematicas', 0)">
+      <div class="flex items-center gap-3"><span class="text-3xl">➗</span>
+       <div>
+        <h3 class="font-bold text-lg">Fracciones Mágicas</h3>
+        <p class="text-blue-100 text-sm">Suma, resta y equivalencias</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('matematicas', 1)">
+      <div class="flex items-center gap-3"><span class="text-3xl">🔢</span>
+       <div>
+        <h3 class="font-bold text-lg">Decimales Divertidos</h3>
+        <p class="text-blue-100 text-sm">Operaciones con decimales</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-blue-600 to-indigo-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('matematicas', 2)">
+      <div class="flex items-center gap-3"><span class="text-3xl">📐</span>
+       <div>
+        <h3 class="font-bold text-lg">Geometría Genial</h3>
+        <p class="text-blue-100 text-sm">Áreas, perímetros y figuras</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('matematicas', 3)">
+      <div class="flex items-center gap-3"><span class="text-3xl">🧮</span>
+       <div>
+        <h3 class="font-bold text-lg">Problemas Razonados</h3>
+        <p class="text-indigo-100 text-sm">Piensa y resuelve</p>
+       </div>
+      </div></button>
+    </div>
+    <footer class="text-center py-6 mt-8 border-t border-gray-200">
+     <p class="text-gray-600 font-semibold">📝 Material creado por Maestra María Fernanda Flores Valenzuela</p>
+    </footer>
+   </div><!-- Pantalla de Materia - Ciencias Naturales -->
+   <div id="ciencias-menu" class="min-h-full p-4 md:p-8 hidden"><button class="back-btn flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 font-semibold transition-all" onclick="goBack()"> <span class="text-2xl">←</span> Volver al menú </button>
+    <div class="text-center mb-8">
+     <div class="text-6xl mb-4">
+      🔬
+     </div>
+     <h2 class="text-3xl font-bold text-green-600">Ciencias Naturales</h2>
+     <p class="text-gray-600">Selecciona un juego para comenzar</p>
+    </div>
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4"><button class="game-btn bg-gradient-to-r from-green-400 to-green-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('ciencias', 0)">
+      <div class="flex items-center gap-3"><span class="text-3xl">🫀</span>
+       <div>
+        <h3 class="font-bold text-lg">Cuerpo Humano</h3>
+        <p class="text-green-100 text-sm">Sistemas y órganos</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('ciencias', 1)">
+      <div class="flex items-center gap-3"><span class="text-3xl">🌿</span>
+       <div>
+        <h3 class="font-bold text-lg">Ecosistemas</h3>
+        <p class="text-green-100 text-sm">Biodiversidad y cadenas</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-green-600 to-teal-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('ciencias', 2)">
+      <div class="flex items-center gap-3"><span class="text-3xl">⚡</span>
+       <div>
+        <h3 class="font-bold text-lg">Materia y Energía</h3>
+        <p class="text-green-100 text-sm">Estados y transformaciones</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('ciencias', 3)">
+      <div class="flex items-center gap-3"><span class="text-3xl">🌍</span>
+       <div>
+        <h3 class="font-bold text-lg">Cuidado Ambiental</h3>
+        <p class="text-teal-100 text-sm">Recursos y sustentabilidad</p>
+       </div>
+      </div></button>
+    </div>
+    <footer class="text-center py-6 mt-8 border-t border-gray-200">
+     <p class="text-gray-600 font-semibold">📝 Material creado por Maestra María Fernanda Flores Valenzuela</p>
+    </footer>
+   </div><!-- Pantalla de Materia - Geografía -->
+   <div id="geografia-menu" class="min-h-full p-4 md:p-8 hidden"><button class="back-btn flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 font-semibold transition-all" onclick="goBack()"> <span class="text-2xl">←</span> Volver al menú </button>
+    <div class="text-center mb-8">
+     <div class="text-6xl mb-4">
+      🌎
+     </div>
+     <h2 class="text-3xl font-bold text-amber-600">Geografía</h2>
+     <p class="text-gray-600">Selecciona un juego para comenzar</p>
+    </div>
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4"><button class="game-btn bg-gradient-to-r from-amber-400 to-amber-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('geografia', 0)">
+      <div class="flex items-center gap-3"><span class="text-3xl">🗺️</span>
+       <div>
+        <h3 class="font-bold text-lg">Estados de México</h3>
+        <p class="text-amber-100 text-sm">Capitales y regiones</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('geografia', 1)">
+      <div class="flex items-center gap-3"><span class="text-3xl">🧭</span>
+       <div>
+        <h3 class="font-bold text-lg">Coordenadas y Mapas</h3>
+        <p class="text-amber-100 text-sm">Lectura de mapas</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('geografia', 2)">
+      <div class="flex items-center gap-3"><span class="text-3xl">👥</span>
+       <div>
+        <h3 class="font-bold text-lg">Población y Cultura</h3>
+        <p class="text-orange-100 text-sm">Diversidad de México</p>
+       </div>
+      </div></button> <button class="game-btn bg-gradient-to-r from-orange-600 to-red-500 text-white rounded-2xl p-5 text-left shadow-lg" onclick="startGame('geografia', 3)">
+      <div class="flex items-center gap-3"><span class="text-3xl">💎</span>
+       <div>
+        <h3 class="font-bold text-lg">Recursos Naturales</h3>
+        <p class="text-orange-100 text-sm">Riquezas de México</p>
+       </div>
+      </div></button>
+    </div>
+    <footer class="text-center py-6 mt-8 border-t border-gray-200">
+     <p class="text-gray-600 font-semibold">📝 Material creado por Maestra María Fernanda Flores Valenzuela</p>
+    </footer>
+   </div><!-- Pantalla de Juego -->
+   <div id="game-screen" class="min-h-full p-4 md:p-8 hidden"><button class="back-btn flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 font-semibold transition-all" onclick="backToSubject()"> <span class="text-2xl">←</span> Volver a la materia </button>
+    <div class="max-w-3xl mx-auto">
+     <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 game-container"><!-- Header del juego -->
+      <div class="flex justify-between items-center mb-6">
+       <div class="flex items-center gap-3"><span id="game-icon" class="text-4xl">📝</span>
+        <div>
+         <h2 id="game-title" class="text-xl font-bold text-gray-800">Nombre del Juego</h2>
+         <p id="game-subject" class="text-sm text-gray-500">Materia</p>
+        </div>
+       </div>
+       <div class="text-right">
+        <div class="text-2xl font-bold text-purple-600" id="score">
+         0 pts
+        </div>
+        <div class="text-sm text-gray-500">
+         Pregunta <span id="current-q">1</span>/<span id="total-q">5</span>
+        </div>
+       </div>
+      </div><!-- Barra de progreso -->
+      <div class="w-full bg-gray-200 rounded-full h-3 mb-6">
+       <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500" style="width: 20%"></div>
+      </div><!-- Contenido del juego -->
+      <div id="game-content"><!-- Pregunta -->
+       <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 mb-6">
+        <p id="question-text" class="text-lg md:text-xl font-semibold text-gray-800 text-center">Cargando pregunta...</p>
+       </div><!-- Opciones -->
+       <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"><!-- Las opciones se generan dinámicamente -->
+       </div><!-- Feedback -->
+       <div id="feedback" class="hidden mt-6 p-4 rounded-2xl text-center">
+        <p id="feedback-text" class="font-bold text-lg"></p>
+        <p id="feedback-explanation" class="text-sm mt-2"></p>
+       </div><!-- Botón siguiente --> <button id="next-btn" class="hidden w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 rounded-2xl hover:opacity-90 transition-all" onclick="nextQuestion()"> Siguiente Pregunta → </button>
+      </div><!-- Pantalla de resultados -->
+      <div id="results-screen" class="hidden text-center py-8">
+       <div class="text-6xl mb-4" id="results-emoji">
+        🎉
+       </div>
+       <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Juego Terminado!</h3>
+       <p class="text-gray-600 mb-4">Tu puntuación final:</p>
+       <div class="text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4" id="final-score">
+        0 pts
+       </div>
+       <p id="results-message" class="text-gray-600 mb-6">¡Buen trabajo!</p>
+       <div class="flex flex-col sm:flex-row gap-4 justify-center"><button class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 px-8 rounded-2xl hover:opacity-90 transition-all" onclick="restartGame()"> 🔄 Jugar de Nuevo </button> <button class="bg-gradient-to-r from-gray-500 to-gray-600 text-white font-bold py-3 px-8 rounded-2xl hover:opacity-90 transition-all" onclick="backToSubject()"> 📚 Otros Juegos </button>
+       </div>
+      </div>
+     </div>
+    </div>
+    <footer class="text-center py-6 mt-8">
+     <p class="text-gray-600 font-semibold">📝 Material creado por Maestra María Fernanda Flores Valenzuela</p>
+    </footer>
+   </div>
+  </div>
+  <script>
+        // Configuración por defecto
+        const defaultConfig = {
+            main_title: 'Juegos Educativos',
+            subtitle: 'Quinto Grado de Primaria',
+            footer_text: '📝 Material creado por Maestra María Fernanda Flores Valenzuela',
+            primary_color: '#3b82f6',
+            secondary_color: '#8b5cf6',
+            background_color: '#e8f4fc',
+            text_color: '#1f2937',
+            accent_color: '#ec4899'
+        };
+
+        // Base de datos de preguntas por materia y juego
+        const gamesData = {
+            espanol: [
+                // Ortografía
+                {
+                    title: 'Ortografía Divertida',
+                    icon: '📝',
+                    questions: [
+                        { q: '¿Cuál es la forma correcta?', options: ['Haber', 'Aber', 'Haver', 'Aver'], correct: 0, explanation: 'HABER se escribe con H y B. Es un verbo auxiliar.' },
+                        { q: 'Completa: El niño _____ muy rápido.', options: ['corrio', 'corrió', 'corió', 'corio'], correct: 1, explanation: 'CORRIÓ lleva tilde por ser palabra aguda terminada en vocal.' },
+                        { q: '¿Cuál palabra está bien escrita?', options: ['Desición', 'Decisión', 'Desisión', 'Decición'], correct: 1, explanation: 'DECISIÓN se escribe con C-S-I-Ó-N.' },
+                        { q: 'Selecciona la correcta:', options: ['Excelente', 'Exelente', 'Ecselente', 'Ecscelente'], correct: 0, explanation: 'EXCELENTE se escribe con X y C.' },
+                        { q: '¿Cómo se escribe?', options: ['Aller', 'Hayar', 'Hallar', 'Allar'], correct: 2, explanation: 'HALLAR se escribe con H y LL. Significa encontrar.' }
+                    ]
+                },
+                // Comprensión lectora
+                {
+                    title: 'Comprensión Lectora',
+                    icon: '📚',
+                    questions: [
+                        { q: 'En un cuento, ¿qué es el NUDO?', options: ['El inicio', 'El problema principal', 'El final', 'Los personajes'], correct: 1, explanation: 'El NUDO es la parte donde se desarrolla el conflicto o problema principal de la historia.' },
+                        { q: '¿Qué tipo de texto da instrucciones paso a paso?', options: ['Narrativo', 'Instructivo', 'Poético', 'Informativo'], correct: 1, explanation: 'Los textos INSTRUCTIVOS dan instrucciones ordenadas, como recetas o manuales.' },
+                        { q: '¿Cuál es la idea principal de un texto?', options: ['El título', 'El mensaje más importante', 'La primera oración', 'El autor'], correct: 1, explanation: 'La IDEA PRINCIPAL es el mensaje central que el autor quiere comunicar.' },
+                        { q: 'Las fábulas siempre tienen:', options: ['Dragones', 'Una moraleja', 'Príncipes', 'Magia'], correct: 1, explanation: 'Las FÁBULAS son historias cortas con animales que dejan una enseñanza o moraleja.' },
+                        { q: '¿Qué es una biografía?', options: ['Un cuento inventado', 'La historia de una persona real', 'Un poema', 'Una noticia'], correct: 1, explanation: 'Una BIOGRAFÍA cuenta la vida de una persona real, sus logros y experiencias.' }
+                    ]
+                },
+                // Gramática
+                {
+                    title: 'Gramática en Acción',
+                    icon: '🔤',
+                    questions: [
+                        { q: '¿Qué tipo de palabra es "rápidamente"?', options: ['Sustantivo', 'Adjetivo', 'Adverbio', 'Verbo'], correct: 2, explanation: 'RÁPIDAMENTE es un ADVERBIO porque modifica al verbo indicando cómo se realiza la acción.' },
+                        { q: 'En "El gato negro duerme", ¿cuál es el sustantivo?', options: ['El', 'gato', 'negro', 'duerme'], correct: 1, explanation: 'GATO es el SUSTANTIVO porque nombra a un ser vivo.' },
+                        { q: '¿Cuál es el sujeto en "María come manzanas"?', options: ['come', 'manzanas', 'María', 'come manzanas'], correct: 2, explanation: 'MARÍA es el SUJETO porque es quien realiza la acción de comer.' },
+                        { q: '"Hermoso" es un:', options: ['Verbo', 'Sustantivo', 'Adjetivo', 'Artículo'], correct: 2, explanation: 'HERMOSO es un ADJETIVO porque describe una cualidad.' },
+                        { q: '¿Qué tipo de oración es "¿Cómo te llamas?"', options: ['Exclamativa', 'Interrogativa', 'Imperativa', 'Enunciativa'], correct: 1, explanation: 'Es INTERROGATIVA porque hace una pregunta, identificada por los signos ¿?' }
+                    ]
+                },
+                // Acentuación
+                {
+                    title: 'Acentuación',
+                    icon: '✍️',
+                    questions: [
+                        { q: '¿Qué tipo de palabra es "canción"?', options: ['Aguda', 'Grave', 'Esdrújula', 'Sobresdrújula'], correct: 0, explanation: 'CANCIÓN es AGUDA porque la sílaba tónica es la última (ción) y termina en N.' },
+                        { q: '¿Cuál es una palabra esdrújula?', options: ['Árbol', 'Música', 'Cantar', 'Papel'], correct: 1, explanation: 'MÚSICA es ESDRÚJULA porque la sílaba tónica es la antepenúltima (MÚ-si-ca).' },
+                        { q: '"Lápiz" es una palabra:', options: ['Aguda', 'Grave', 'Esdrújula', 'Sobresdrújula'], correct: 1, explanation: 'LÁPIZ es GRAVE porque la sílaba tónica es la penúltima (LÁ-piz).' },
+                        { q: '¿Por qué "mamá" lleva tilde?', options: ['Es grave terminada en vocal', 'Es aguda terminada en vocal', 'Es esdrújula', 'Es sobresdrújula'], correct: 1, explanation: 'MAMÁ es AGUDA terminada en vocal, por eso lleva tilde.' },
+                        { q: '¿Cuál palabra está bien acentuada?', options: ['Aguila', 'Águila', 'Agúila', 'Aguilá'], correct: 1, explanation: 'ÁGUILA es esdrújula, y TODAS las esdrújulas llevan tilde.' }
+                    ]
+                }
+            ],
+            matematicas: [
+                // Fracciones
+                {
+                    title: 'Fracciones Mágicas',
+                    icon: '➗',
+                    questions: [
+                        { q: '¿Cuánto es 1/2 + 1/4?', options: ['2/6', '3/4', '1/6', '2/4'], correct: 1, explanation: '1/2 = 2/4, entonces 2/4 + 1/4 = 3/4' },
+                        { q: '¿Qué fracción es equivalente a 2/4?', options: ['1/2', '2/3', '3/4', '4/8'], correct: 0, explanation: '2/4 simplificado es 1/2 (dividimos numerador y denominador entre 2)' },
+                        { q: '¿Cuál fracción es mayor?', options: ['1/3', '1/4', '1/5', '1/6'], correct: 0, explanation: 'Entre fracciones con numerador 1, la mayor es la de menor denominador: 1/3' },
+                        { q: '¿Cuánto es 3/4 - 1/4?', options: ['2/4', '4/4', '2/8', '1/2'], correct: 0, explanation: '3/4 - 1/4 = 2/4 (restamos los numeradores y mantenemos el denominador)' },
+                        { q: 'Convierte 1/2 a decimal:', options: ['0.2', '0.5', '0.25', '0.75'], correct: 1, explanation: '1/2 = 1÷2 = 0.5' }
+                    ]
+                },
+                // Decimales
+                {
+                    title: 'Decimales Divertidos',
+                    icon: '🔢',
+                    questions: [
+                        { q: '¿Cuánto es 0.5 + 0.3?', options: ['0.8', '0.53', '0.35', '8'], correct: 0, explanation: '0.5 + 0.3 = 0.8 (sumamos los décimos)' },
+                        { q: '¿Qué número es mayor?', options: ['0.09', '0.9', '0.009', '0.090'], correct: 1, explanation: '0.9 = 9 décimos, que es mayor que 0.09 = 9 centésimos' },
+                        { q: '¿Cuánto es 1.5 × 2?', options: ['1.52', '3', '2.5', '3.5'], correct: 1, explanation: '1.5 × 2 = 3 (multiplicamos 1.5 por 2)' },
+                        { q: 'Ordena de menor a mayor: 0.3, 0.03, 0.33', options: ['0.3, 0.03, 0.33', '0.03, 0.3, 0.33', '0.33, 0.3, 0.03', '0.03, 0.33, 0.3'], correct: 1, explanation: '0.03 < 0.3 < 0.33 (comparamos posición por posición)' },
+                        { q: '¿Cuánto es 2.4 ÷ 2?', options: ['1.2', '4.8', '0.12', '12'], correct: 0, explanation: '2.4 ÷ 2 = 1.2 (dividimos 24 décimos entre 2)' }
+                    ]
+                },
+                // Geometría
+                {
+                    title: 'Geometría Genial',
+                    icon: '📐',
+                    questions: [
+                        { q: '¿Cuál es el área de un rectángulo de 4×3 cm?', options: ['7 cm²', '12 cm²', '14 cm²', '24 cm²'], correct: 1, explanation: 'Área = base × altura = 4 × 3 = 12 cm²' },
+                        { q: '¿Cuántos lados tiene un hexágono?', options: ['5', '6', '7', '8'], correct: 1, explanation: 'HEXA significa 6, por lo tanto un hexágono tiene 6 lados' },
+                        { q: '¿Cuál es el perímetro de un cuadrado de lado 5 cm?', options: ['10 cm', '15 cm', '20 cm', '25 cm'], correct: 2, explanation: 'Perímetro = 4 × lado = 4 × 5 = 20 cm' },
+                        { q: 'Un triángulo equilátero tiene:', options: ['Todos los lados diferentes', 'Todos los lados iguales', 'Solo 2 lados iguales', '4 lados'], correct: 1, explanation: 'EQUILÁTERO significa que los 3 lados miden igual' },
+                        { q: '¿Cuántos ángulos tiene un triángulo?', options: ['2', '3', '4', '5'], correct: 1, explanation: 'Todo triángulo tiene exactamente 3 ángulos (uno en cada vértice)' }
+                    ]
+                },
+                // Problemas razonados
+                {
+                    title: 'Problemas Razonados',
+                    icon: '🧮',
+                    questions: [
+                        { q: 'Si tengo 24 dulces y los reparto entre 6 niños, ¿cuántos le tocan a cada uno?', options: ['3', '4', '5', '6'], correct: 1, explanation: '24 ÷ 6 = 4 dulces para cada niño' },
+                        { q: 'Un libro cuesta $85 y tengo $100. ¿Cuánto me sobra?', options: ['$15', '$25', '$185', '$10'], correct: 0, explanation: '$100 - $85 = $15 de cambio' },
+                        { q: 'Si camino 500 metros de ida y 500 de vuelta, ¿cuánto caminé en total?', options: ['500 m', '1 km', '1500 m', '2 km'], correct: 1, explanation: '500 + 500 = 1000 metros = 1 kilómetro' },
+                        { q: 'Compré 3 cuadernos de $25 cada uno. ¿Cuánto pagué?', options: ['$28', '$50', '$75', '$100'], correct: 2, explanation: '3 × $25 = $75 en total' },
+                        { q: 'Si un tren sale a las 9:30 y el viaje dura 2 horas, ¿a qué hora llega?', options: ['10:30', '11:00', '11:30', '12:00'], correct: 2, explanation: '9:30 + 2 horas = 11:30' }
+                    ]
+                }
+            ],
+            ciencias: [
+                // Cuerpo humano
+                {
+                    title: 'Cuerpo Humano',
+                    icon: '🫀',
+                    questions: [
+                        { q: '¿Qué órgano bombea la sangre?', options: ['Pulmones', 'Corazón', 'Hígado', 'Riñones'], correct: 1, explanation: 'El CORAZÓN es el órgano que bombea sangre a todo el cuerpo a través del sistema circulatorio.' },
+                        { q: '¿Cuál es la función principal de los pulmones?', options: ['Digerir', 'Respirar', 'Filtrar sangre', 'Producir hormonas'], correct: 1, explanation: 'Los PULMONES permiten el intercambio de oxígeno y dióxido de carbono durante la respiración.' },
+                        { q: '¿Qué sistema está formado por huesos?', options: ['Digestivo', 'Respiratorio', 'Óseo', 'Nervioso'], correct: 2, explanation: 'El sistema ÓSEO o esquelético está formado por los 206 huesos del cuerpo humano.' },
+                        { q: '¿Dónde se procesan los alimentos?', options: ['Corazón', 'Cerebro', 'Estómago', 'Pulmones'], correct: 2, explanation: 'El ESTÓMAGO descompone los alimentos con jugos gástricos como parte de la digestión.' },
+                        { q: '¿Qué órgano controla todo el cuerpo?', options: ['Corazón', 'Cerebro', 'Hígado', 'Estómago'], correct: 1, explanation: 'El CEREBRO es el centro de control del sistema nervioso y coordina todas las funciones del cuerpo.' }
+                    ]
+                },
+                // Ecosistemas
+                {
+                    title: 'Ecosistemas',
+                    icon: '🌿',
+                    questions: [
+                        { q: '¿Qué son los productores en una cadena alimenticia?', options: ['Animales carnívoros', 'Plantas', 'Hongos', 'Bacterias'], correct: 1, explanation: 'Las PLANTAS son productores porque fabrican su propio alimento mediante la fotosíntesis.' },
+                        { q: '¿Qué es un ecosistema?', options: ['Solo animales', 'Solo plantas', 'Seres vivos y su ambiente', 'Solo el clima'], correct: 2, explanation: 'Un ECOSISTEMA incluye todos los seres vivos y los elementos no vivos de un lugar que interactúan entre sí.' },
+                        { q: '¿Qué animales son herbívoros?', options: ['Los que comen carne', 'Los que comen plantas', 'Los que comen de todo', 'Los que no comen'], correct: 1, explanation: 'Los HERBÍVOROS son animales que se alimentan exclusivamente de plantas.' },
+                        { q: '¿Cuál es un ejemplo de recurso renovable?', options: ['Petróleo', 'Carbón', 'Energía solar', 'Gas natural'], correct: 2, explanation: 'La energía SOLAR es renovable porque el sol no se agota al usarla.' },
+                        { q: '¿Qué es la biodiversidad?', options: ['Una enfermedad', 'Variedad de seres vivos', 'Tipo de planta', 'Un ecosistema'], correct: 1, explanation: 'La BIODIVERSIDAD es la variedad de especies de seres vivos en un lugar.' }
+                    ]
+                },
+                // Materia y energía
+                {
+                    title: 'Materia y Energía',
+                    icon: '⚡',
+                    questions: [
+                        { q: '¿Cuáles son los estados de la materia?', options: ['Frío, tibio, caliente', 'Sólido, líquido, gaseoso', 'Grande, mediano, pequeño', 'Duro, blando, suave'], correct: 1, explanation: 'Los tres estados principales de la materia son SÓLIDO, LÍQUIDO y GASEOSO.' },
+                        { q: '¿Qué pasa cuando el agua se congela?', options: ['Se evapora', 'Pasa de líquido a sólido', 'Pasa de sólido a líquido', 'Desaparece'], correct: 1, explanation: 'Al CONGELARSE, el agua pasa del estado líquido al estado sólido (hielo).' },
+                        { q: '¿Qué tipo de energía usa un foco?', options: ['Energía solar', 'Energía eléctrica', 'Energía eólica', 'Energía química'], correct: 1, explanation: 'Un foco transforma la energía ELÉCTRICA en luz y calor.' },
+                        { q: '¿Qué es la evaporación?', options: ['Líquido a sólido', 'Sólido a líquido', 'Líquido a gas', 'Gas a líquido'], correct: 2, explanation: 'La EVAPORACIÓN es el cambio de estado líquido a gaseoso.' },
+                        { q: '¿De dónde viene la energía eólica?', options: ['Del sol', 'Del viento', 'Del agua', 'Del fuego'], correct: 1, explanation: 'La energía EÓLICA proviene del viento y se usa para generar electricidad.' }
+                    ]
+                },
+                // Cuidado ambiental
+                {
+                    title: 'Cuidado Ambiental',
+                    icon: '🌍',
+                    questions: [
+                        { q: '¿Qué significa reciclar?', options: ['Tirar la basura', 'Reutilizar materiales', 'Quemar basura', 'Enterrar basura'], correct: 1, explanation: 'RECICLAR es transformar materiales usados para crear nuevos productos.' },
+                        { q: '¿Cuál contamina menos?', options: ['Auto de gasolina', 'Bicicleta', 'Motocicleta', 'Camión'], correct: 1, explanation: 'La BICICLETA no contamina porque no usa combustibles fósiles.' },
+                        { q: '¿Por qué es importante ahorrar agua?', options: ['Para pagar menos', 'Porque es un recurso limitado', 'No es importante', 'Porque está sucia'], correct: 1, explanation: 'El AGUA dulce es un recurso limitado y muchas personas no tienen acceso a agua limpia.' },
+                        { q: '¿Qué es la deforestación?', options: ['Plantar árboles', 'Cortar árboles', 'Regar plantas', 'Cuidar bosques'], correct: 1, explanation: 'La DEFORESTACIÓN es la tala excesiva de árboles, que afecta los ecosistemas.' },
+                        { q: '¿Qué podemos hacer para cuidar el ambiente?', options: ['Tirar basura en la calle', 'Reducir, reutilizar, reciclar', 'Dejar luces prendidas', 'Desperdiciar agua'], correct: 1, explanation: 'Las 3R (Reducir, Reutilizar, Reciclar) son acciones para cuidar el planeta.' }
+                    ]
+                }
+            ],
+            geografia: [
+                // Estados de México
+                {
+                    title: 'Estados de México',
+                    icon: '🗺️',
+                    questions: [
+                        { q: '¿Cuál es la capital de México?', options: ['Guadalajara', 'Monterrey', 'Ciudad de México', 'Puebla'], correct: 2, explanation: 'La CIUDAD DE MÉXICO (CDMX) es la capital del país y sede de los poderes federales.' },
+                        { q: '¿Cuántos estados tiene México?', options: ['30', '31', '32', '33'], correct: 2, explanation: 'México tiene 32 entidades: 31 estados y la Ciudad de México.' },
+                        { q: '¿Qué estado está en la península de Yucatán?', options: ['Sonora', 'Quintana Roo', 'Jalisco', 'Chihuahua'], correct: 1, explanation: 'QUINTANA ROO está en la península de Yucatán, junto con Yucatán y Campeche.' },
+                        { q: '¿Cuál es el estado más grande de México?', options: ['Sonora', 'Chihuahua', 'Coahuila', 'Durango'], correct: 1, explanation: 'CHIHUAHUA es el estado más grande de México con 247,455 km².' },
+                        { q: '¿Qué capital corresponde a Jalisco?', options: ['Mexicali', 'Guadalajara', 'Morelia', 'Toluca'], correct: 1, explanation: 'GUADALAJARA es la capital de Jalisco y la segunda ciudad más poblada del país.' }
+                    ]
+                },
+                // Coordenadas y mapas
+                {
+                    title: 'Coordenadas y Mapas',
+                    icon: '🧭',
+                    questions: [
+                        { q: '¿Qué línea imaginaria divide la Tierra en Norte y Sur?', options: ['Meridiano', 'Ecuador', 'Trópico', 'Polo'], correct: 1, explanation: 'El ECUADOR es la línea imaginaria que divide la Tierra en hemisferio norte y sur.' },
+                        { q: '¿Qué indica la rosa de los vientos?', options: ['El clima', 'Los puntos cardinales', 'La altura', 'La población'], correct: 1, explanation: 'La ROSA DE LOS VIENTOS muestra los puntos cardinales: Norte, Sur, Este y Oeste.' },
+                        { q: '¿Qué es un mapa topográfico?', options: ['Muestra países', 'Muestra relieve', 'Muestra clima', 'Muestra población'], correct: 1, explanation: 'Un mapa TOPOGRÁFICO muestra el relieve del terreno: montañas, valles, ríos.' },
+                        { q: '¿Qué mide la latitud?', options: ['Distancia al Ecuador', 'Distancia al meridiano', 'Altura del terreno', 'Temperatura'], correct: 0, explanation: 'La LATITUD mide la distancia en grados desde cualquier punto hasta el Ecuador.' },
+                        { q: '¿Qué símbolo representa montañas en los mapas?', options: ['Líneas azules', 'Triángulos o curvas café', 'Puntos rojos', 'Círculos verdes'], correct: 1, explanation: 'Las MONTAÑAS se representan con triángulos o curvas de nivel en color café.' }
+                    ]
+                },
+                // Población y cultura
+                {
+                    title: 'Población y Cultura',
+                    icon: '👥',
+                    questions: [
+                        { q: '¿Cuál es el idioma oficial de México?', options: ['Náhuatl', 'Español', 'Maya', 'Inglés'], correct: 1, explanation: 'El ESPAÑOL es el idioma oficial, aunque hay 68 lenguas indígenas reconocidas.' },
+                        { q: '¿Qué significa "densidad de población"?', options: ['Número total de personas', 'Personas por km²', 'Personas mayores', 'Personas en ciudades'], correct: 1, explanation: 'La DENSIDAD es el número de habitantes dividido entre la superficie del territorio.' },
+                        { q: '¿Cuál es una zona rural?', options: ['Una ciudad grande', 'Un pueblo o campo', 'Una fábrica', 'Un centro comercial'], correct: 1, explanation: 'Las zonas RURALES son áreas de campo con poca población, dedicadas a agricultura.' },
+                        { q: '¿Qué es la migración?', options: ['Nacer en un lugar', 'Moverse de un lugar a otro', 'Quedarse siempre', 'Trabajar en casa'], correct: 1, explanation: 'La MIGRACIÓN es el movimiento de personas de un lugar a otro para vivir.' },
+                        { q: '¿Qué culturas prehispánicas existieron en México?', options: ['Romanos y griegos', 'Mayas y aztecas', 'Egipcios y chinos', 'Vikingos y celtas'], correct: 1, explanation: 'Los MAYAS y AZTECAS son dos de las grandes civilizaciones que existieron en México.' }
+                    ]
+                },
+                // Recursos naturales
+                {
+                    title: 'Recursos Naturales',
+                    icon: '💎',
+                    questions: [
+                        { q: '¿Qué recurso natural es el petróleo?', options: ['Renovable', 'No renovable', 'Inagotable', 'Artificial'], correct: 1, explanation: 'El PETRÓLEO es NO RENOVABLE porque tarda millones de años en formarse.' },
+                        { q: '¿Qué estado es importante productor de plata?', options: ['Yucatán', 'Zacatecas', 'Quintana Roo', 'Tabasco'], correct: 1, explanation: 'ZACATECAS es uno de los principales productores de plata en el mundo.' },
+                        { q: '¿Dónde hay más selvas en México?', options: ['Norte', 'Centro', 'Sureste', 'Noroeste'], correct: 2, explanation: 'El SURESTE de México (Chiapas, Tabasco, Yucatán) tiene las principales selvas tropicales.' },
+                        { q: '¿Qué se cultiva principalmente en Sinaloa?', options: ['Café', 'Maíz y tomate', 'Cacao', 'Manzanas'], correct: 1, explanation: 'SINALOA es el principal productor agrícola de México, especialmente de maíz y tomate.' },
+                        { q: '¿Qué mar baña las costas de Veracruz?', options: ['Océano Pacífico', 'Golfo de México', 'Mar Caribe', 'Golfo de California'], correct: 1, explanation: 'El GOLFO DE MÉXICO baña las costas de Veracruz, Tabasco, Campeche y otros estados.' }
+                    ]
+                }
+            ]
+        };
+
+        // Variables del juego
+        let currentSubject = '';
+        let currentGameIndex = 0;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let questions = [];
+
+        // Funciones de navegación
+        function showSubject(subject) {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById(`${subject}-menu`).classList.remove('hidden');
+            currentSubject = subject;
+        }
+
+        function goBack() {
+            document.querySelectorAll('[id$="-menu"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('main-menu').classList.remove('hidden');
+        }
+
+        function backToSubject() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById(`${currentSubject}-menu`).classList.remove('hidden');
+        }
+
+        // Funciones del juego
+        function startGame(subject, gameIndex) {
+            currentSubject = subject;
+            currentGameIndex = gameIndex;
+            currentQuestionIndex = 0;
+            score = 0;
+
+            const game = gamesData[subject][gameIndex];
+            questions = [...game.questions].sort(() => Math.random() - 0.5);
+
+            document.getElementById('game-title').textContent = game.title;
+            document.getElementById('game-icon').textContent = game.icon;
+            
+            const subjectNames = {
+                espanol: 'Español',
+                matematicas: 'Matemáticas',
+                ciencias: 'Ciencias Naturales',
+                geografia: 'Geografía'
+            };
+            document.getElementById('game-subject').textContent = subjectNames[subject];
+
+            document.getElementById('total-q').textContent = questions.length;
+            document.getElementById('score').textContent = '0 pts';
+
+            document.querySelectorAll('[id$="-menu"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('game-content').classList.remove('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('current-q').textContent = currentQuestionIndex + 1;
+            document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+            document.getElementById('question-text').textContent = q.q;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const colors = [
+                'from-red-400 to-red-500',
+                'from-blue-400 to-blue-500',
+                'from-green-400 to-green-500',
+                'from-amber-400 to-amber-500'
+            ];
+
+            q.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn bg-gradient-to-r ${colors[index]} text-white font-semibold py-4 px-6 rounded-2xl shadow-lg text-left`;
+                btn.innerHTML = `<span class="text-xl mr-2">${['A', 'B', 'C', 'D'][index]}.</span> ${option}`;
+                btn.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+        }
+
+        function checkAnswer(selected) {
+            const q = questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === q.correct) {
+                    btn.classList.add('correct');
+                } else if (index === selected && selected !== q.correct) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            const feedback = document.getElementById('feedback');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+
+            if (selected === q.correct) {
+                score += 20;
+                document.getElementById('score').textContent = `${score} pts`;
+                feedback.className = 'mt-6 p-4 rounded-2xl text-center bg-green-100 border-2 border-green-500';
+                feedbackText.textContent = '¡Correcto! 🎉';
+                feedbackText.className = 'font-bold text-lg text-green-700';
+            } else {
+                feedback.className = 'mt-6 p-4 rounded-2xl text-center bg-red-100 border-2 border-red-500';
+                feedbackText.textContent = '¡Incorrecto! 😅';
+                feedbackText.className = 'font-bold text-lg text-red-700';
+            }
+
+            feedbackExplanation.textContent = q.explanation;
+            feedbackExplanation.className = 'text-sm mt-2 text-gray-700';
+            feedback.classList.remove('hidden');
+
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('next-btn').textContent = currentQuestionIndex < questions.length - 1 ? 'Siguiente Pregunta →' : 'Ver Resultados →';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('game-content').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            document.getElementById('final-score').textContent = `${score} pts`;
+
+            const percentage = (score / (questions.length * 20)) * 100;
+            let emoji, message;
+
+            if (percentage === 100) {
+                emoji = '🏆';
+                message = '¡Perfecto! ¡Eres un genio!';
+            } else if (percentage >= 80) {
+                emoji = '🌟';
+                message = '¡Excelente trabajo! ¡Casi perfecto!';
+            } else if (percentage >= 60) {
+                emoji = '😊';
+                message = '¡Muy bien! Sigue practicando.';
+            } else if (percentage >= 40) {
+                emoji = '💪';
+                message = '¡Buen intento! Puedes mejorar.';
+            } else {
+                emoji = '📚';
+                message = '¡No te rindas! Estudia y vuelve a intentar.';
+            }
+
+            document.getElementById('results-emoji').textContent = emoji;
+            document.getElementById('results-message').textContent = message;
+        }
+
+        function restartGame() {
+            startGame(currentSubject, currentGameIndex);
+        }
+
+        // Inicialización del SDK
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange: async (config) => {
+                    const titleEl = document.getElementById('main-title');
+                    const subtitleEl = document.getElementById('subtitle');
+                    const footerEl = document.getElementById('footer-text');
+
+                    if (titleEl) titleEl.textContent = config.main_title || defaultConfig.main_title;
+                    if (subtitleEl) subtitleEl.textContent = config.subtitle || defaultConfig.subtitle;
+                    if (footerEl) footerEl.textContent = config.footer_text || defaultConfig.footer_text;
+                },
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => window.elementSdk.setConfig({ background_color: value })
+                        },
+                        {
+                            get: () => config.primary_color || defaultConfig.primary_color,
+                            set: (value) => window.elementSdk.setConfig({ primary_color: value })
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => window.elementSdk.setConfig({ text_color: value })
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || 'Nunito',
+                        set: (value) => window.elementSdk.setConfig({ font_family: value })
+                    },
+                    fontSizeable: undefined
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ['main_title', config.main_title || defaultConfig.main_title],
+                    ['subtitle', config.subtitle || defaultConfig.subtitle],
+                    ['footer_text', config.footer_text || defaultConfig.footer_text]
+                ])
+            });
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d765557b1c769d2',t:'MTc3MjY4NDQ4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
