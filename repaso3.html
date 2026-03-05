@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprende Jugando - 3° Primaria</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;family=Fredoka+One&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    .title-font { font-family: 'Fredoka One', cursive; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.8); }
+    }
+    
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes confetti {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100px) rotate(720deg); opacity: 0; }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    @keyframes star-pop {
+      0% { transform: scale(0) rotate(-180deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .bounce-in { animation: bounce-in 0.5s ease-out forwards; }
+    .shake { animation: shake 0.5s ease-in-out; }
+    .star-pop { animation: star-pop 0.3s ease-out forwards; }
+    
+    .game-card {
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+    
+    .btn-game {
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-game:hover {
+      transform: scale(1.05);
+    }
+    .btn-game:active {
+      transform: scale(0.95);
+    }
+    
+    .progress-fill {
+      transition: width 0.5s ease-out;
+    }
+    
+    .category-badge {
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full overflow-auto" style="background: linear-gradient(180deg, #E8F4FC 0%, #F0F7FC 50%, #F5FAFF 100%);"><!-- Main Menu Screen -->
+  <div id="main-menu" class="min-h-full p-4 md:p-6"><!-- Header -->
+   <header class="text-center mb-6">
+    <div class="inline-block float-animation">
+     <h1 id="main-title" class="title-font text-3xl md:text-5xl text-indigo-600 mb-2 drop-shadow-lg">🎮 Aprende Jugando 🎮</h1>
+    </div>
+    <p id="subtitle" class="text-lg md:text-xl text-indigo-500 font-semibold">3° Grado de Primaria</p>
+    <p id="teacher-credit" class="text-sm text-indigo-400 mt-1">Creado por Maestra María Fernanda Flores Valenzuela</p><!-- Progress Overview -->
+    <div class="mt-4 bg-white/80 backdrop-blur rounded-2xl p-4 max-w-md mx-auto shadow-lg">
+     <div class="flex items-center justify-between mb-2"><span class="text-indigo-600 font-bold">Tu Progreso</span> <span id="progress-text" class="text-indigo-500 font-semibold">0/20 juegos</span>
+     </div>
+     <div class="h-4 bg-indigo-100 rounded-full overflow-hidden">
+      <div id="progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 progress-fill" style="width: 0%"></div>
+     </div>
+     <div class="flex justify-center gap-1 mt-2" id="stars-display"><!-- Stars will be added dynamically -->
+     </div>
+    </div>
+   </header><!-- Games Grid -->
+   <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 max-w-6xl mx-auto" id="games-grid"><!-- Games will be populated here -->
+   </div><!-- Footer -->
+   <footer class="text-center mt-8 text-indigo-400 text-sm">
+    <p>📚 Contenidos alineados con la SEP • México 🇲🇽</p>
+   </footer>
+  </div><!-- Game Screen (Hidden by default) -->
+  <div id="game-screen" class="min-h-full p-4 hidden">
+   <div class="max-w-2xl mx-auto"><!-- Game Header -->
+    <div class="flex items-center justify-between mb-4"><button onclick="backToMenu()" class="btn-game bg-white hover:bg-indigo-50 text-indigo-600 font-bold py-2 px-4 rounded-xl shadow-md flex items-center gap-2"> ← Volver </button>
+     <div class="bg-white rounded-xl px-4 py-2 shadow-md"><span class="text-indigo-600 font-bold">Puntos: </span> <span id="current-score" class="text-purple-600 font-bold">0</span>
+     </div>
+    </div><!-- Game Container -->
+    <div id="game-container" class="bg-white rounded-3xl shadow-xl p-6 min-h-96"><!-- Game content will be loaded here -->
+    </div>
+   </div>
+  </div><!-- Results Modal -->
+  <div id="results-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+   <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center bounce-in">
+    <div id="result-emoji" class="text-7xl mb-4">
+     🌟
+    </div>
+    <h2 id="result-title" class="title-font text-2xl text-indigo-600 mb-2">¡Excelente!</h2>
+    <p id="result-message" class="text-indigo-500 mb-4">Has completado el juego</p>
+    <div id="result-stars" class="flex justify-center gap-2 mb-4"><!-- Stars -->
+    </div>
+    <p class="text-purple-600 font-bold text-xl mb-4">Puntos: <span id="final-score">0</span></p><button onclick="backToMenu()" class="btn-game bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg"> Continuar </button>
+   </div>
+  </div>
+  <script>
+// Game Data
+const games = [
+  { id: 'math-sum', name: 'Sumas Mágicas', icon: '➕', category: 'Matemáticas', color: 'from-blue-400 to-blue-600', type: 'math', operation: 'sum' },
+  { id: 'math-sub', name: 'Restas Aventura', icon: '➖', category: 'Matemáticas', color: 'from-green-400 to-green-600', type: 'math', operation: 'sub' },
+  { id: 'math-mult', name: 'Multiplicación Ninja', icon: '✖️', category: 'Matemáticas', color: 'from-orange-400 to-orange-600', type: 'math', operation: 'mult' },
+  { id: 'math-div', name: 'División Espacial', icon: '➗', category: 'Matemáticas', color: 'from-purple-400 to-purple-600', type: 'math', operation: 'div' },
+  { id: 'spelling', name: 'Ortografía Divertida', icon: '📝', category: 'Español', color: 'from-pink-400 to-pink-600', type: 'spelling' },
+  { id: 'syllables', name: 'Separa Sílabas', icon: '🔤', category: 'Español', color: 'from-red-400 to-red-600', type: 'syllables' },
+  { id: 'synonyms', name: 'Sinónimos y Antónimos', icon: '🔄', category: 'Español', color: 'from-teal-400 to-teal-600', type: 'synonyms' },
+  { id: 'reading', name: 'Comprensión Lectora', icon: '📖', category: 'Español', color: 'from-amber-400 to-amber-600', type: 'reading' },
+  { id: 'animals', name: 'Reino Animal', icon: '🦁', category: 'Ciencias', color: 'from-emerald-400 to-emerald-600', type: 'animals' },
+  { id: 'plants', name: 'Mundo Vegetal', icon: '🌱', category: 'Ciencias', color: 'from-lime-400 to-lime-600', type: 'plants' },
+  { id: 'body', name: 'Cuerpo Humano', icon: '🫀', category: 'Ciencias', color: 'from-rose-400 to-rose-600', type: 'body' },
+  { id: 'states', name: 'Estados de México', icon: '🗺️', category: 'Geografía', color: 'from-cyan-400 to-cyan-600', type: 'states' },
+  { id: 'history', name: 'Historia de México', icon: '🏛️', category: 'Historia', color: 'from-yellow-400 to-yellow-600', type: 'history' },
+  { id: 'fractions', name: 'Fracciones Locas', icon: '🍕', category: 'Matemáticas', color: 'from-indigo-400 to-indigo-600', type: 'fractions' },
+  { id: 'geometry', name: 'Figuras Geométricas', icon: '🔷', category: 'Matemáticas', color: 'from-violet-400 to-violet-600', type: 'geometry' },
+  { id: 'time', name: 'El Reloj Loco', icon: '⏰', category: 'Matemáticas', color: 'from-sky-400 to-sky-600', type: 'time' },
+  { id: 'verbs', name: 'Verbos en Acción', icon: '🏃', category: 'Español', color: 'from-fuchsia-400 to-fuchsia-600', type: 'verbs' },
+  { id: 'water', name: 'Ciclo del Agua', icon: '💧', category: 'Ciencias', color: 'from-blue-300 to-blue-500', type: 'water' },
+  { id: 'money', name: 'Contando Dinero', icon: '💰', category: 'Matemáticas', color: 'from-green-500 to-emerald-600', type: 'money' },
+  { id: 'sequence', name: 'Secuencias Lógicas', icon: '🧩', category: 'Lógica', color: 'from-purple-500 to-pink-500', type: 'sequence' }
+];
+
+// Game Questions Data
+const gameQuestions = {
+  'math-sum': [
+    { q: '25 + 18 = ?', options: ['43', '42', '44', '41'], answer: '43' },
+    { q: '156 + 89 = ?', options: ['245', '244', '246', '243'], answer: '245' },
+    { q: '347 + 253 = ?', options: ['600', '590', '610', '580'], answer: '600' },
+    { q: '78 + 45 + 12 = ?', options: ['135', '134', '136', '133'], answer: '135' },
+    { q: '999 + 1 = ?', options: ['1000', '1001', '999', '100'], answer: '1000' }
+  ],
+  'math-sub': [
+    { q: '100 - 37 = ?', options: ['63', '62', '64', '73'], answer: '63' },
+    { q: '256 - 89 = ?', options: ['167', '166', '168', '177'], answer: '167' },
+    { q: '500 - 234 = ?', options: ['266', '276', '256', '264'], answer: '266' },
+    { q: '1000 - 456 = ?', options: ['544', '554', '534', '546'], answer: '544' },
+    { q: '85 - 29 = ?', options: ['56', '54', '66', '46'], answer: '56' }
+  ],
+  'math-mult': [
+    { q: '7 × 8 = ?', options: ['56', '54', '58', '48'], answer: '56' },
+    { q: '9 × 6 = ?', options: ['54', '56', '52', '64'], answer: '54' },
+    { q: '12 × 5 = ?', options: ['60', '55', '65', '50'], answer: '60' },
+    { q: '8 × 8 = ?', options: ['64', '56', '72', '68'], answer: '64' },
+    { q: '11 × 7 = ?', options: ['77', '78', '76', '87'], answer: '77' }
+  ],
+  'math-div': [
+    { q: '36 ÷ 6 = ?', options: ['6', '5', '7', '8'], answer: '6' },
+    { q: '72 ÷ 8 = ?', options: ['9', '8', '7', '10'], answer: '9' },
+    { q: '45 ÷ 9 = ?', options: ['5', '4', '6', '7'], answer: '5' },
+    { q: '100 ÷ 10 = ?', options: ['10', '11', '9', '100'], answer: '10' },
+    { q: '63 ÷ 7 = ?', options: ['9', '8', '7', '6'], answer: '9' }
+  ],
+  'spelling': [
+    { q: '¿Cuál está bien escrita?', options: ['Búho', 'Buho', 'Buo', 'Búo'], answer: 'Búho' },
+    { q: '¿Cuál está bien escrita?', options: ['Había', 'Habia', 'Avía', 'Avia'], answer: 'Había' },
+    { q: '¿Cuál está bien escrita?', options: ['Queso', 'Keso', 'Qeso', 'Cueso'], answer: 'Queso' },
+    { q: 'Se escribe con "V":', options: ['Vaca', 'Baca', 'Vaka', 'Baka'], answer: 'Vaca' },
+    { q: 'Se escribe con "B":', options: ['Burro', 'Vurro', 'Burro', 'Vurro'], answer: 'Burro' }
+  ],
+  'syllables': [
+    { q: '¿Cuántas sílabas tiene "mariposa"?', options: ['4', '3', '5', '2'], answer: '4' },
+    { q: '¿Cuántas sílabas tiene "elefante"?', options: ['4', '3', '5', '2'], answer: '4' },
+    { q: '¿Cuántas sílabas tiene "sol"?', options: ['1', '2', '3', '4'], answer: '1' },
+    { q: '¿Cuántas sílabas tiene "computadora"?', options: ['5', '4', '6', '3'], answer: '5' },
+    { q: '¿Cuántas sílabas tiene "árbol"?', options: ['2', '3', '1', '4'], answer: '2' }
+  ],
+  'synonyms': [
+    { q: 'Sinónimo de "feliz":', options: ['Contento', 'Triste', 'Enojado', 'Cansado'], answer: 'Contento' },
+    { q: 'Antónimo de "grande":', options: ['Pequeño', 'Enorme', 'Gigante', 'Alto'], answer: 'Pequeño' },
+    { q: 'Sinónimo de "bonito":', options: ['Hermoso', 'Feo', 'Malo', 'Sucio'], answer: 'Hermoso' },
+    { q: 'Antónimo de "rápido":', options: ['Lento', 'Veloz', 'Ágil', 'Ligero'], answer: 'Lento' },
+    { q: 'Sinónimo de "casa":', options: ['Hogar', 'Carro', 'Árbol', 'Libro'], answer: 'Hogar' }
+  ],
+  'reading': [
+    { q: 'El perro ladra. ¿Qué hace el perro?', options: ['Ladra', 'Maúlla', 'Canta', 'Vuela'], answer: 'Ladra' },
+    { q: 'María come una manzana roja. ¿De qué color es la manzana?', options: ['Roja', 'Verde', 'Azul', 'Amarilla'], answer: 'Roja' },
+    { q: 'El sol sale por la mañana. ¿Cuándo sale el sol?', options: ['Mañana', 'Noche', 'Tarde', 'Medianoche'], answer: 'Mañana' },
+    { q: 'Los pájaros vuelan en el cielo. ¿Dónde vuelan?', options: ['Cielo', 'Mar', 'Tierra', 'Casa'], answer: 'Cielo' },
+    { q: 'Pedro tiene tres hermanos. ¿Cuántos hermanos tiene?', options: ['Tres', 'Dos', 'Uno', 'Cuatro'], answer: 'Tres' }
+  ],
+  'animals': [
+    { q: '¿Qué animal es mamífero?', options: ['Delfín', 'Tiburón', 'Sardina', 'Pulpo'], answer: 'Delfín' },
+    { q: '¿Qué animal pone huevos?', options: ['Gallina', 'Vaca', 'Perro', 'Caballo'], answer: 'Gallina' },
+    { q: '¿Qué animal es reptil?', options: ['Cocodrilo', 'Rana', 'Águila', 'Conejo'], answer: 'Cocodrilo' },
+    { q: '¿Qué animal vive en el agua?', options: ['Pez', 'León', 'Jirafa', 'Elefante'], answer: 'Pez' },
+    { q: '¿Qué animal es insecto?', options: ['Abeja', 'Araña', 'Caracol', 'Lombriz'], answer: 'Abeja' }
+  ],
+  'plants': [
+    { q: '¿Qué parte absorbe agua?', options: ['Raíz', 'Hoja', 'Flor', 'Fruto'], answer: 'Raíz' },
+    { q: '¿Dónde ocurre la fotosíntesis?', options: ['Hojas', 'Raíz', 'Tallo', 'Semilla'], answer: 'Hojas' },
+    { q: '¿Qué necesitan las plantas para vivir?', options: ['Sol y agua', 'Solo tierra', 'Solo aire', 'Oscuridad'], answer: 'Sol y agua' },
+    { q: '¿De dónde nacen nuevas plantas?', options: ['Semillas', 'Hojas', 'Tallos', 'Flores'], answer: 'Semillas' },
+    { q: '¿Qué gas producen las plantas?', options: ['Oxígeno', 'Nitrógeno', 'Helio', 'Hidrógeno'], answer: 'Oxígeno' }
+  ],
+  'body': [
+    { q: '¿Qué órgano bombea la sangre?', options: ['Corazón', 'Pulmón', 'Estómago', 'Cerebro'], answer: 'Corazón' },
+    { q: '¿Con qué respiramos?', options: ['Pulmones', 'Riñones', 'Hígado', 'Intestinos'], answer: 'Pulmones' },
+    { q: '¿Cuántos huesos tiene el cuerpo (aprox)?', options: ['206', '100', '50', '300'], answer: '206' },
+    { q: '¿Qué órgano piensa?', options: ['Cerebro', 'Corazón', 'Estómago', 'Hígado'], answer: 'Cerebro' },
+    { q: '¿Dónde se digiere la comida?', options: ['Estómago', 'Pulmón', 'Corazón', 'Cerebro'], answer: 'Estómago' }
+  ],
+  'states': [
+    { q: '¿Cuál es la capital de México?', options: ['CDMX', 'Guadalajara', 'Monterrey', 'Puebla'], answer: 'CDMX' },
+    { q: '¿Qué estado está en el norte?', options: ['Chihuahua', 'Oaxaca', 'Chiapas', 'Yucatán'], answer: 'Chihuahua' },
+    { q: '¿Qué estado tiene playas en el Caribe?', options: ['Quintana Roo', 'Sonora', 'Durango', 'Zacatecas'], answer: 'Quintana Roo' },
+    { q: '¿En qué estado está Guadalajara?', options: ['Jalisco', 'Nuevo León', 'Veracruz', 'Tabasco'], answer: 'Jalisco' },
+    { q: '¿Cuántos estados tiene México?', options: ['32', '28', '30', '35'], answer: '32' }
+  ],
+  'history': [
+    { q: '¿Quién fue el "Padre de la Patria"?', options: ['Miguel Hidalgo', 'Benito Juárez', 'Porfirio Díaz', 'Zapata'], answer: 'Miguel Hidalgo' },
+    { q: '¿En qué año inició la Independencia?', options: ['1810', '1910', '1521', '1862'], answer: '1810' },
+    { q: '¿Quién conquistó México?', options: ['Hernán Cortés', 'Cristóbal Colón', 'Francisco Pizarro', 'Moctezuma'], answer: 'Hernán Cortés' },
+    { q: '¿Qué se celebra el 16 de septiembre?', options: ['Independencia', 'Revolución', 'Batalla Puebla', 'Constitución'], answer: 'Independencia' },
+    { q: '¿Qué civilización construyó Teotihuacán?', options: ['Prehispánica', 'Española', 'Francesa', 'Inglesa'], answer: 'Prehispánica' }
+  ],
+  'fractions': [
+    { q: '¿Cuánto es 1/2 de 10?', options: ['5', '2', '10', '1'], answer: '5' },
+    { q: '¿Qué fracción es mayor?', options: ['3/4', '1/4', '1/2', '1/8'], answer: '3/4' },
+    { q: '1/4 + 1/4 = ?', options: ['2/4', '1/4', '1/8', '4/4'], answer: '2/4' },
+    { q: '¿Cuánto es 1/4 de 20?', options: ['5', '4', '10', '2'], answer: '5' },
+    { q: '¿Qué fracción equivale a la mitad?', options: ['2/4', '1/4', '3/4', '1/8'], answer: '2/4' }
+  ],
+  'geometry': [
+    { q: '¿Cuántos lados tiene un triángulo?', options: ['3', '4', '5', '6'], answer: '3' },
+    { q: '¿Cuántos lados tiene un cuadrado?', options: ['4', '3', '5', '6'], answer: '4' },
+    { q: '¿Qué figura tiene todos los lados iguales?', options: ['Cuadrado', 'Rectángulo', 'Triángulo', 'Trapecio'], answer: 'Cuadrado' },
+    { q: '¿Cuántos vértices tiene un pentágono?', options: ['5', '4', '6', '3'], answer: '5' },
+    { q: '¿Qué figura es redonda?', options: ['Círculo', 'Cuadrado', 'Triángulo', 'Hexágono'], answer: 'Círculo' }
+  ],
+  'time': [
+    { q: '¿Cuántos minutos tiene una hora?', options: ['60', '30', '100', '24'], answer: '60' },
+    { q: '¿Cuántas horas tiene un día?', options: ['24', '12', '60', '100'], answer: '24' },
+    { q: 'Si son las 3:30, ¿qué hora será en 2 horas?', options: ['5:30', '4:30', '6:30', '3:30'], answer: '5:30' },
+    { q: '¿Cuántos días tiene una semana?', options: ['7', '5', '6', '10'], answer: '7' },
+    { q: '¿Cuántos meses tiene un año?', options: ['12', '10', '52', '365'], answer: '12' }
+  ],
+  'verbs': [
+    { q: '¿Cuál es un verbo?', options: ['Correr', 'Mesa', 'Azul', 'Grande'], answer: 'Correr' },
+    { q: '"Yo canto" está en tiempo:', options: ['Presente', 'Pasado', 'Futuro', 'Ninguno'], answer: 'Presente' },
+    { q: '"Él comió" está en tiempo:', options: ['Pasado', 'Presente', 'Futuro', 'Ninguno'], answer: 'Pasado' },
+    { q: '"Nosotros jugaremos" está en:', options: ['Futuro', 'Presente', 'Pasado', 'Ninguno'], answer: 'Futuro' },
+    { q: '¿Cuál NO es un verbo?', options: ['Libro', 'Saltar', 'Bailar', 'Escribir'], answer: 'Libro' }
+  ],
+  'water': [
+    { q: '¿Cómo se llama cuando el agua sube al cielo?', options: ['Evaporación', 'Lluvia', 'Condensación', 'Solidificación'], answer: 'Evaporación' },
+    { q: '¿Qué forma las nubes?', options: ['Condensación', 'Evaporación', 'Precipitación', 'Filtración'], answer: 'Condensación' },
+    { q: '¿Cómo se llama cuando cae agua del cielo?', options: ['Precipitación', 'Evaporación', 'Condensación', 'Escurrimiento'], answer: 'Precipitación' },
+    { q: '¿Qué porcentaje de la Tierra es agua?', options: ['70%', '30%', '50%', '90%'], answer: '70%' },
+    { q: '¿El hielo es agua en estado?', options: ['Sólido', 'Líquido', 'Gaseoso', 'Plasma'], answer: 'Sólido' }
+  ],
+  'money': [
+    { q: '¿Cuánto es $50 + $25?', options: ['$75', '$70', '$80', '$65'], answer: '$75' },
+    { q: '¿Cuántas monedas de $10 hacen $100?', options: ['10', '5', '20', '100'], answer: '10' },
+    { q: 'Si tienes $100 y gastas $35, ¿cuánto te queda?', options: ['$65', '$75', '$55', '$45'], answer: '$65' },
+    { q: '¿Cuántos pesos son 5 monedas de $5?', options: ['$25', '$20', '$15', '$30'], answer: '$25' },
+    { q: 'Un dulce cuesta $8. Si pagas con $20, ¿cuánto es el cambio?', options: ['$12', '$8', '$10', '$28'], answer: '$12' }
+  ],
+  'sequence': [
+    { q: '¿Qué sigue? 2, 4, 6, 8, ...', options: ['10', '9', '11', '12'], answer: '10' },
+    { q: '¿Qué sigue? 5, 10, 15, 20, ...', options: ['25', '22', '30', '21'], answer: '25' },
+    { q: '¿Qué sigue? 1, 3, 5, 7, ...', options: ['9', '8', '10', '6'], answer: '9' },
+    { q: '¿Qué sigue? 🔴🔵🔴🔵...', options: ['🔴', '🔵', '🟢', '🟡'], answer: '🔴' },
+    { q: '¿Qué sigue? 100, 90, 80, 70, ...', options: ['60', '50', '65', '75'], answer: '60' }
+  ]
+};
+
+// State
+let currentGame = null;
+let currentQuestionIndex = 0;
+let currentScore = 0;
+let gameScores = [];
+
+// Default Config
+const defaultConfig = {
+  main_title: '🎮 Aprende Jugando 🎮',
+  subtitle: '3° Grado de Primaria',
+  teacher_name: 'Maestra María Fernanda Flores Valenzuela',
+  background_color: '#E8F4FC',
+  primary_color: '#6366F1',
+  text_color: '#4338CA',
+  button_color: '#8B5CF6',
+  accent_color: '#EC4899'
+};
+
+// Data SDK Handler
+const dataHandler = {
+  onDataChanged(data) {
+    gameScores = data;
+    updateProgressDisplay();
+    renderGameCards();
+  }
+};
+
+// Initialize SDKs
+async function initApp() {
+  // Init Element SDK
+  if (window.elementSdk) {
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (config) => {
+        document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+        document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+        document.getElementById('teacher-credit').textContent = 'Creado por ' + (config.teacher_name || defaultConfig.teacher_name);
+      },
+      mapToCapabilities: (config) => ({
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+          },
+          {
+            get: () => config.primary_color || defaultConfig.primary_color,
+            set: (v) => { config.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+          },
+          {
+            get: () => config.button_color || defaultConfig.button_color,
+            set: (v) => { config.button_color = v; window.elementSdk.setConfig({ button_color: v }); }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (v) => { config.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ['main_title', config.main_title || defaultConfig.main_title],
+        ['subtitle', config.subtitle || defaultConfig.subtitle],
+        ['teacher_name', config.teacher_name || defaultConfig.teacher_name]
+      ])
+    });
+  }
+  
+  // Init Data SDK
+  if (window.dataSdk) {
+    const result = await window.dataSdk.init(dataHandler);
+    if (!result.isOk) {
+      console.error('Failed to initialize Data SDK');
+    }
+  }
+  
+  renderGameCards();
+}
+
+function renderGameCards() {
+  const grid = document.getElementById('games-grid');
+  grid.innerHTML = '';
+  
+  games.forEach((game, index) => {
+    const savedScore = gameScores.find(s => s.game_id === game.id);
+    const stars = savedScore ? savedScore.stars : 0;
+    const completed = stars > 0;
+    
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    card.innerHTML = `
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer h-full" onclick="startGame('${game.id}')">
+        <div class="bg-gradient-to-br ${game.color} p-4 text-center">
+          <span class="text-4xl block mb-1">${game.icon}</span>
+          <span class="category-badge bg-white/30 text-white font-semibold">${game.category}</span>
+        </div>
+        <div class="p-3 text-center">
+          <h3 class="font-bold text-indigo-700 text-sm mb-2 leading-tight">${game.name}</h3>
+          <div class="flex justify-center gap-1">
+            ${[1,2,3].map(i => `<span class="text-lg ${i <= stars ? '' : 'opacity-30'}">${i <= stars ? '⭐' : '☆'}</span>`).join('')}
+          </div>
+          ${completed ? '<span class="text-xs text-green-500 font-semibold">✓ Completado</span>' : '<span class="text-xs text-indigo-400">¡Jugar!</span>'}
+        </div>
+      </div>
+    `;
+    card.style.animationDelay = `${index * 50}ms`;
+    card.classList.add('bounce-in');
+    grid.appendChild(card);
+  });
+}
+
+function updateProgressDisplay() {
+  const completed = gameScores.filter(s => s.stars > 0).length;
+  const totalStars = gameScores.reduce((sum, s) => sum + (s.stars || 0), 0);
+  const maxStars = games.length * 3;
+  
+  document.getElementById('progress-text').textContent = `${completed}/20 juegos`;
+  document.getElementById('progress-bar').style.width = `${(completed / games.length) * 100}%`;
+  
+  const starsDisplay = document.getElementById('stars-display');
+  starsDisplay.innerHTML = `<span class="text-yellow-500 font-bold">⭐ ${totalStars}/${maxStars}</span>`;
+}
+
+function startGame(gameId) {
+  currentGame = games.find(g => g.id === gameId);
+  currentQuestionIndex = 0;
+  currentScore = 0;
+  
+  document.getElementById('main-menu').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  document.getElementById('current-score').textContent = '0';
+  
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const questions = gameQuestions[currentGame.id];
+  if (currentQuestionIndex >= questions.length) {
+    endGame();
+    return;
+  }
+  
+  const question = questions[currentQuestionIndex];
+  const container = document.getElementById('game-container');
+  
+  container.innerHTML = `
+    <div class="text-center">
+      <div class="mb-4">
+        <span class="text-5xl">${currentGame.icon}</span>
+      </div>
+      <h2 class="title-font text-2xl text-indigo-600 mb-2">${currentGame.name}</h2>
+      <div class="flex justify-center gap-2 mb-4">
+        ${Array(questions.length).fill().map((_, i) => `
+          <div class="w-3 h-3 rounded-full ${i < currentQuestionIndex ? 'bg-green-400' : i === currentQuestionIndex ? 'bg-indigo-500 pulse-glow' : 'bg-gray-200'}"></div>
+        `).join('')}
+      </div>
+      <div class="bg-gradient-to-r ${currentGame.color} text-white rounded-2xl p-6 mb-6 shadow-lg">
+        <p class="text-xl font-bold">${question.q}</p>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        ${question.options.map((opt, i) => `
+          <button onclick="checkAnswer('${opt.replace(/'/g, "\\'")}', '${question.answer.replace(/'/g, "\\'")}')" 
+                  class="btn-game bg-white hover:bg-indigo-50 text-indigo-700 font-bold py-4 px-6 rounded-xl shadow-md border-2 border-indigo-100 hover:border-indigo-300 text-lg">
+            ${opt}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function checkAnswer(selected, correct) {
+  const buttons = document.querySelectorAll('#game-container button');
+  buttons.forEach(btn => btn.disabled = true);
+  
+  const isCorrect = selected === correct;
+  
+  buttons.forEach(btn => {
+    if (btn.textContent.trim() === correct) {
+      btn.classList.add('bg-green-100', 'border-green-500', 'text-green-700');
+    } else if (btn.textContent.trim() === selected && !isCorrect) {
+      btn.classList.add('bg-red-100', 'border-red-500', 'text-red-700', 'shake');
+    }
+  });
+  
+  if (isCorrect) {
+    currentScore += 20;
+    document.getElementById('current-score').textContent = currentScore;
+    
+    // Show celebration
+    showFeedback('¡Correcto! 🎉', 'text-green-500');
+  } else {
+    showFeedback('¡Inténtalo de nuevo! 💪', 'text-orange-500');
+  }
+  
+  setTimeout(() => {
+    currentQuestionIndex++;
+    loadQuestion();
+  }, 1200);
+}
+
+function showFeedback(text, colorClass) {
+  const container = document.getElementById('game-container');
+  const feedback = document.createElement('div');
+  feedback.className = `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl font-bold ${colorClass} bounce-in z-50 bg-white/90 px-8 py-4 rounded-2xl shadow-xl`;
+  feedback.textContent = text;
+  container.appendChild(feedback);
+  
+  setTimeout(() => feedback.remove(), 1000);
+}
+
+async function endGame() {
+  const questions = gameQuestions[currentGame.id];
+  const maxScore = questions.length * 20;
+  const percentage = (currentScore / maxScore) * 100;
+  
+  let stars = 0;
+  if (percentage >= 40) stars = 1;
+  if (percentage >= 70) stars = 2;
+  if (percentage >= 90) stars = 3;
+  
+  // Save score
+  if (window.dataSdk && gameScores.length < 999) {
+    const existingScore = gameScores.find(s => s.game_id === currentGame.id);
+    
+    if (existingScore) {
+      if (stars > existingScore.stars || currentScore > existingScore.score) {
+        const result = await window.dataSdk.update({
+          ...existingScore,
+          score: Math.max(currentScore, existingScore.score),
+          stars: Math.max(stars, existingScore.stars),
+          completed_at: new Date().toISOString()
+        });
+        if (!result.isOk) console.error('Error updating score');
+      }
+    } else {
+      const result = await window.dataSdk.create({
+        game_id: currentGame.id,
+        game_name: currentGame.name,
+        score: currentScore,
+        stars: stars,
+        completed_at: new Date().toISOString()
+      });
+      if (!result.isOk) console.error('Error saving score');
+    }
+  }
+  
+  // Show results
+  showResults(stars, percentage);
+}
+
+function showResults(stars, percentage) {
+  const modal = document.getElementById('results-modal');
+  const emojis = ['😢', '😊', '🎉', '🏆'];
+  const titles = ['¡Sigue practicando!', '¡Bien hecho!', '¡Excelente!', '¡Increíble!'];
+  const messages = [
+    'La práctica hace al maestro',
+    'Vas por buen camino',
+    '¡Eres muy inteligente!',
+    '¡Eres un campeón!'
+  ];
+  
+  document.getElementById('result-emoji').textContent = emojis[stars];
+  document.getElementById('result-title').textContent = titles[stars];
+  document.getElementById('result-message').textContent = messages[stars];
+  document.getElementById('final-score').textContent = currentScore;
+  
+  document.getElementById('result-stars').innerHTML = [1,2,3].map(i => `
+    <span class="text-4xl ${i <= stars ? 'star-pop' : 'opacity-30'}" style="animation-delay: ${i * 150}ms">${i <= stars ? '⭐' : '☆'}</span>
+  `).join('');
+  
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+function backToMenu() {
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('main-menu').classList.remove('hidden');
+  document.getElementById('results-modal').classList.add('hidden');
+  document.getElementById('results-modal').classList.remove('flex');
+  currentGame = null;
+}
+
+// Initialize on load
+initApp();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d76702d110d6b38',t:'MTc3MjY4NTU4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
