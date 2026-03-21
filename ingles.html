@@ -1,129 +1,1080 @@
-<!DOCTYPE html>
-<html lang="es" class="h-full">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English Vocabulary Games</title>
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Adventure Kids</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; }
+    .fredoka { font-family: 'Fredoka', sans-serif; }
 
-<script src="https://cdn.tailwindcss.com"></script>
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-5deg); }
+      75% { transform: rotate(5deg); }
+    }
+    @keyframes confetti {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-120px) rotate(720deg); opacity: 0; }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,200,0,0.4); }
+      50% { box-shadow: 0 0 20px 8px rgba(255,200,0,0.2); }
+    }
+    @keyframes bounce-in {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.08); }
+      70% { transform: scale(0.95); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes star-spin {
+      from { transform: rotate(0deg) scale(0); opacity: 0; }
+      to { transform: rotate(360deg) scale(1); opacity: 1; }
+    }
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes pulse-scale {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes slide-down {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .anim-float { animation: float 3s ease-in-out infinite; }
+    .anim-pop { animation: popIn 0.4s ease-out forwards; }
+    .anim-slide { animation: slideUp 0.5s ease-out forwards; }
+    .anim-wiggle { animation: wiggle 0.5s ease-in-out; }
+    .anim-bounce { animation: bounce-in 0.6s ease-out forwards; }
+    .anim-star { animation: star-spin 0.8s ease-out forwards; }
+    .anim-confetti { animation: confetti 1s ease-out forwards; }
+    .anim-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .anim-pulse-scale { animation: pulse-scale 0.6s ease-in-out; }
+    .anim-slide-down { animation: slide-down 0.4s ease-out forwards; }
+    .rainbow-bg {
+      background: linear-gradient(270deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #9b59b6, #ff6b6b);
+      background-size: 600% 600%;
+      animation: rainbow 4s ease infinite;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    .cat-btn { transition: all 0.2s ease; }
+    .cat-btn:hover { transform: scale(1.06) translateY(-3px); }
+    .cat-btn:active { transform: scale(0.97); }
 
-<style>
-* { font-family: 'Nunito', sans-serif; }
-.title-font { font-family: 'Fredoka One', cursive; }
+    .option-btn { transition: all 0.15s ease; }
+    .option-btn:hover { transform: scale(1.04); }
+    .option-btn:active { transform: scale(0.96); }
 
-.btn-3d{
-  transition:all .2s ease;
-  box-shadow:0 6px 0 rgba(0,0,0,.2),0 8px 15px rgba(0,0,0,.1);
+    .card-item {
+      opacity: 0;
+      animation: popIn 0.4s ease-out forwards;
+    }
+
+    .progress-fill { transition: width 0.6s ease; }
+
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fredoka: ['Fredoka', 'sans-serif'],
+            nunito: ['Nunito', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto relative" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);">
+   <!-- Decorative bubbles -->
+   <div class="bubble" style="width:180px;height:180px;top:5%;left:-3%;background:#fff;"></div>
+   <div class="bubble" style="width:120px;height:120px;top:60%;right:-2%;background:#ffd93d;"></div>
+   <div class="bubble" style="width:90px;height:90px;bottom:10%;left:10%;background:#6bcb77;"></div>
+   <div class="bubble" style="width:60px;height:60px;top:20%;right:15%;background:#ff6b6b;"></div><!-- MAIN MENU -->
+   <div id="menu-screen" class="relative z-10 p-4 pb-12">
+    <header class="text-center pt-6 pb-4">
+     <h1 id="main-title" class="fredoka text-4xl md:text-5xl font-bold text-white drop-shadow-lg anim-float">🌟 English Adventure 🌟</h1>
+     <p id="main-subtitle" class="text-lg md:text-xl text-white/90 mt-2 font-semibold">¡Elige una categoría para empezar a aprender!</p>
+    </header>
+    <div id="categories-grid" class="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 mt-4"></div>
+   </div><!-- STAGE SCREEN -->
+   <div id="stage-screen" class="relative z-10 p-4 pb-12 hidden">
+    <div class="max-w-4xl mx-auto">
+     <!-- Top bar -->
+     <div class="flex items-center justify-between mb-4">
+      <button id="back-btn" class="flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full font-bold hover:bg-white/30 transition-all"> <i data-lucide="arrow-left" style="width:20px;height:20px;"></i> Volver </button>
+      <div id="stage-badge" class="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full font-bold fredoka"></div>
+     </div><!-- Progress bar -->
+     <div class="bg-white/20 rounded-full h-4 mb-4 overflow-hidden backdrop-blur-sm">
+      <div id="progress-bar" class="progress-fill h-full rounded-full rainbow-bg" style="width:0%"></div>
+     </div><!-- Category title -->
+     <h2 id="stage-title" class="fredoka text-3xl md:text-4xl font-bold text-white text-center mb-2 drop-shadow-md"></h2>
+     <p id="stage-desc" class="text-white/90 text-center mb-6 text-lg font-semibold"></p><!-- Content area -->
+     <div id="stage-content" class="min-h-[300px]"></div><!-- Navigation -->
+     <div id="stage-nav" class="flex justify-center gap-4 mt-8"></div>
+    </div>
+   </div><!-- COMPLETION SCREEN -->
+   <div id="complete-screen" class="relative z-10 p-4 hidden flex items-center justify-center" style="min-height:100%;">
+    <div class="text-center">
+     <div id="confetti-container" class="relative"></div>
+     <div class="anim-bounce">
+      <div class="text-8xl mb-4">
+       🏆
+      </div>
+      <h2 class="fredoka text-4xl md:text-5xl font-bold text-white drop-shadow-lg mb-4">¡Felicidades!</h2>
+      <p id="complete-msg" class="text-xl text-white/90 mb-2 font-semibold"></p>
+      <p id="complete-score" class="text-2xl text-yellow-300 font-bold fredoka mb-8"></p>
+     </div>
+     <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <button id="replay-btn" class="bg-white text-purple-700 px-8 py-3 rounded-full font-bold text-lg hover:bg-yellow-300 transition-all fredoka cat-btn"> 🔄 Repetir </button> <button id="home-btn" class="bg-yellow-400 text-purple-900 px-8 py-3 rounded-full font-bold text-lg hover:bg-yellow-300 transition-all fredoka cat-btn"> 🏠 Menú Principal </button>
+     </div>
+    </div>
+   </div><!-- Feedback overlay -->
+   <div id="feedback-overlay" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none hidden">
+    <div id="feedback-box" class="px-8 py-6 rounded-3xl text-center anim-bounce shadow-2xl">
+     <div id="feedback-emoji" class="text-6xl mb-2"></div>
+     <p id="feedback-text" class="fredoka text-2xl font-bold"></p>
+    </div>
+   </div>
+  </div>
+  <script>
+// ========== DATA ==========
+const CATEGORIES = {
+  numbers: {
+    emoji: "🔢", label: "Numbers", color: "#ff6b6b", colorDark: "#c0392b",
+    words: [
+      { en: "one", es: "uno", icon: "1️⃣" },
+      { en: "two", es: "dos", icon: "2️⃣" },
+      { en: "three", es: "tres", icon: "3️⃣" },
+      { en: "four", es: "cuatro", icon: "4️⃣" },
+      { en: "five", es: "cinco", icon: "5️⃣" },
+      { en: "six", es: "seis", icon: "6️⃣" },
+      { en: "seven", es: "siete", icon: "7️⃣" },
+      { en: "eight", es: "ocho", icon: "8️⃣" },
+      { en: "nine", es: "nueve", icon: "9️⃣" },
+      { en: "ten", es: "diez", icon: "🔟" }
+    ],
+    sentences: [
+      { en: "I have one apple.", es: "Tengo una manzana.", word: "one" },
+      { en: "There are two cats.", es: "Hay dos gatos.", word: "two" },
+      { en: "I see three birds.", es: "Veo tres pájaros.", word: "three" },
+      { en: "She has four books.", es: "Ella tiene cuatro libros.", word: "four" },
+      { en: "We have five fingers.", es: "Tenemos cinco dedos.", word: "five" },
+      { en: "He ate six cookies.", es: "Él comió seis galletas.", word: "six" },
+      { en: "There are seven days.", es: "Hay siete días.", word: "seven" },
+      { en: "I count eight stars.", es: "Cuento ocho estrellas.", word: "eight" },
+      { en: "She has nine crayons.", es: "Ella tiene nueve crayones.", word: "nine" },
+      { en: "I can count to ten.", es: "Puedo contar hasta diez.", word: "ten" }
+    ]
+  },
+  days: {
+    emoji: "📅", label: "Days", color: "#ffa502", colorDark: "#e67e22",
+    words: [
+      { en: "Monday", es: "lunes", icon: "📆" },
+      { en: "Tuesday", es: "martes", icon: "📆" },
+      { en: "Wednesday", es: "miércoles", icon: "📆" },
+      { en: "Thursday", es: "jueves", icon: "📆" },
+      { en: "Friday", es: "viernes", icon: "🎉" },
+      { en: "Saturday", es: "sábado", icon: "🌞" },
+      { en: "Sunday", es: "domingo", icon: "⛪" },
+      { en: "today", es: "hoy", icon: "📌" },
+      { en: "tomorrow", es: "mañana", icon: "➡️" },
+      { en: "yesterday", es: "ayer", icon: "⬅️" }
+    ],
+    sentences: [
+      { en: "Today is Monday.", es: "Hoy es lunes.", word: "Monday" },
+      { en: "I go to school on Tuesday.", es: "Voy a la escuela el martes.", word: "Tuesday" },
+      { en: "Wednesday is my favorite day.", es: "El miércoles es mi día favorito.", word: "Wednesday" },
+      { en: "We have art on Thursday.", es: "Tenemos arte el jueves.", word: "Thursday" },
+      { en: "Friday is fun!", es: "¡El viernes es divertido!", word: "Friday" },
+      { en: "I play on Saturday.", es: "Juego el sábado.", word: "Saturday" },
+      { en: "Sunday is for rest.", es: "El domingo es para descansar.", word: "Sunday" },
+      { en: "What day is today?", es: "¿Qué día es hoy?", word: "today" },
+      { en: "See you tomorrow!", es: "¡Nos vemos mañana!", word: "tomorrow" },
+      { en: "Yesterday was great.", es: "Ayer fue genial.", word: "yesterday" }
+    ]
+  },
+  fruits: {
+    emoji: "🍎", label: "Fruits", color: "#ff4757", colorDark: "#c0392b",
+    words: [
+      { en: "apple", es: "manzana", icon: "🍎" },
+      { en: "banana", es: "plátano", icon: "🍌" },
+      { en: "orange", es: "naranja", icon: "🍊" },
+      { en: "grape", es: "uva", icon: "🍇" },
+      { en: "strawberry", es: "fresa", icon: "🍓" },
+      { en: "watermelon", es: "sandía", icon: "🍉" },
+      { en: "pear", es: "pera", icon: "🍐" },
+      { en: "peach", es: "durazno", icon: "🍑" },
+      { en: "cherry", es: "cereza", icon: "🍒" },
+      { en: "lemon", es: "limón", icon: "🍋" }
+    ],
+    sentences: [
+      { en: "I eat an apple.", es: "Yo como una manzana.", word: "apple" },
+      { en: "The banana is yellow.", es: "El plátano es amarillo.", word: "banana" },
+      { en: "I like orange juice.", es: "Me gusta el jugo de naranja.", word: "orange" },
+      { en: "Grapes are sweet.", es: "Las uvas son dulces.", word: "grape" },
+      { en: "Strawberry is red.", es: "La fresa es roja.", word: "strawberry" },
+      { en: "Watermelon is big.", es: "La sandía es grande.", word: "watermelon" },
+      { en: "The pear is green.", es: "La pera es verde.", word: "pear" },
+      { en: "I love peach pie.", es: "Amo el pastel de durazno.", word: "peach" },
+      { en: "Cherries are small.", es: "Las cerezas son pequeñas.", word: "cherry" },
+      { en: "Lemon is sour.", es: "El limón es ácido.", word: "lemon" }
+    ]
+  },
+  vegetables: {
+    emoji: "🥕", label: "Vegetables", color: "#2ed573", colorDark: "#27ae60",
+    words: [
+      { en: "carrot", es: "zanahoria", icon: "🥕" },
+      { en: "tomato", es: "tomate", icon: "🍅" },
+      { en: "potato", es: "papa", icon: "🥔" },
+      { en: "onion", es: "cebolla", icon: "🧅" },
+      { en: "corn", es: "maíz", icon: "🌽" },
+      { en: "broccoli", es: "brócoli", icon: "🥦" },
+      { en: "lettuce", es: "lechuga", icon: "🥬" },
+      { en: "pepper", es: "pimiento", icon: "🫑" },
+      { en: "cucumber", es: "pepino", icon: "🥒" },
+      { en: "mushroom", es: "hongo", icon: "🍄" }
+    ],
+    sentences: [
+      { en: "The carrot is orange.", es: "La zanahoria es naranja.", word: "carrot" },
+      { en: "Tomato is in the salad.", es: "El tomate está en la ensalada.", word: "tomato" },
+      { en: "I like potato soup.", es: "Me gusta la sopa de papa.", word: "potato" },
+      { en: "The onion makes me cry.", es: "La cebolla me hace llorar.", word: "onion" },
+      { en: "Corn is yellow.", es: "El maíz es amarillo.", word: "corn" },
+      { en: "Broccoli is healthy.", es: "El brócoli es saludable.", word: "broccoli" },
+      { en: "Lettuce is green.", es: "La lechuga es verde.", word: "lettuce" },
+      { en: "The pepper is red.", es: "El pimiento es rojo.", word: "pepper" },
+      { en: "Cucumber is fresh.", es: "El pepino es fresco.", word: "cucumber" },
+      { en: "I see a mushroom.", es: "Veo un hongo.", word: "mushroom" }
+    ]
+  },
+  colors: {
+    emoji: "🎨", label: "Colors", color: "#5352ed", colorDark: "#3742fa",
+    words: [
+      { en: "red", es: "rojo", icon: "🔴" },
+      { en: "blue", es: "azul", icon: "🔵" },
+      { en: "green", es: "verde", icon: "🟢" },
+      { en: "yellow", es: "amarillo", icon: "🟡" },
+      { en: "orange", es: "naranja", icon: "🟠" },
+      { en: "purple", es: "morado", icon: "🟣" },
+      { en: "pink", es: "rosa", icon: "💗" },
+      { en: "black", es: "negro", icon: "⚫" },
+      { en: "white", es: "blanco", icon: "⚪" },
+      { en: "brown", es: "café", icon: "🟤" }
+    ],
+    sentences: [
+      { en: "The apple is red.", es: "La manzana es roja.", word: "red" },
+      { en: "The sky is blue.", es: "El cielo es azul.", word: "blue" },
+      { en: "Grass is green.", es: "El pasto es verde.", word: "green" },
+      { en: "The sun is yellow.", es: "El sol es amarillo.", word: "yellow" },
+      { en: "The orange is orange.", es: "La naranja es naranja.", word: "orange" },
+      { en: "Grapes are purple.", es: "Las uvas son moradas.", word: "purple" },
+      { en: "The flower is pink.", es: "La flor es rosa.", word: "pink" },
+      { en: "The cat is black.", es: "El gato es negro.", word: "black" },
+      { en: "Snow is white.", es: "La nieve es blanca.", word: "white" },
+      { en: "The dog is brown.", es: "El perro es café.", word: "brown" }
+    ]
+  },
+  animals: {
+    emoji: "🐾", label: "Animals", color: "#ff9ff3", colorDark: "#e84393",
+    words: [
+      { en: "dog", es: "perro", icon: "🐕" },
+      { en: "cat", es: "gato", icon: "🐈" },
+      { en: "bird", es: "pájaro", icon: "🐦" },
+      { en: "fish", es: "pez", icon: "🐟" },
+      { en: "horse", es: "caballo", icon: "🐴" },
+      { en: "rabbit", es: "conejo", icon: "🐰" },
+      { en: "elephant", es: "elefante", icon: "🐘" },
+      { en: "lion", es: "león", icon: "🦁" },
+      { en: "monkey", es: "mono", icon: "🐵" },
+      { en: "butterfly", es: "mariposa", icon: "🦋" }
+    ],
+    sentences: [
+      { en: "The dog is happy.", es: "El perro está feliz.", word: "dog" },
+      { en: "My cat is soft.", es: "Mi gato es suave.", word: "cat" },
+      { en: "The bird can fly.", es: "El pájaro puede volar.", word: "bird" },
+      { en: "The fish swims fast.", es: "El pez nada rápido.", word: "fish" },
+      { en: "The horse runs fast.", es: "El caballo corre rápido.", word: "horse" },
+      { en: "The rabbit jumps high.", es: "El conejo salta alto.", word: "rabbit" },
+      { en: "The elephant is big.", es: "El elefante es grande.", word: "elephant" },
+      { en: "The lion is strong.", es: "El león es fuerte.", word: "lion" },
+      { en: "The monkey eats bananas.", es: "El mono come plátanos.", word: "monkey" },
+      { en: "The butterfly is pretty.", es: "La mariposa es bonita.", word: "butterfly" }
+    ]
+  },
+  shapes: {
+    emoji: "🔷", label: "Shapes", color: "#54a0ff", colorDark: "#2e86de",
+    words: [
+      { en: "circle", es: "círculo", icon: "⭕" },
+      { en: "square", es: "cuadrado", icon: "🟧" },
+      { en: "triangle", es: "triángulo", icon: "🔺" },
+      { en: "star", es: "estrella", icon: "⭐" },
+      { en: "heart", es: "corazón", icon: "❤️" },
+      { en: "diamond", es: "diamante", icon: "💎" },
+      { en: "rectangle", es: "rectángulo", icon: "🟦" },
+      { en: "oval", es: "óvalo", icon: "🥚" },
+      { en: "arrow", es: "flecha", icon: "➡️" },
+      { en: "cross", es: "cruz", icon: "✖️" }
+    ],
+    sentences: [
+      { en: "The ball is a circle.", es: "La pelota es un círculo.", word: "circle" },
+      { en: "The box is a square.", es: "La caja es un cuadrado.", word: "square" },
+      { en: "I draw a triangle.", es: "Dibujo un triángulo.", word: "triangle" },
+      { en: "I see a star.", es: "Veo una estrella.", word: "star" },
+      { en: "I love the heart shape.", es: "Me encanta la forma de corazón.", word: "heart" },
+      { en: "The diamond shines.", es: "El diamante brilla.", word: "diamond" },
+      { en: "The door is a rectangle.", es: "La puerta es un rectángulo.", word: "rectangle" },
+      { en: "The egg is an oval.", es: "El huevo es un óvalo.", word: "oval" },
+      { en: "Follow the arrow.", es: "Sigue la flecha.", word: "arrow" },
+      { en: "Draw a cross.", es: "Dibuja una cruz.", word: "cross" }
+    ]
+  },
+  family: {
+    emoji: "👨‍👩‍👧‍👦", label: "Family", color: "#ff6348", colorDark: "#e55039",
+    words: [
+      { en: "mother", es: "madre", icon: "👩" },
+      { en: "father", es: "padre", icon: "👨" },
+      { en: "sister", es: "hermana", icon: "👧" },
+      { en: "brother", es: "hermano", icon: "👦" },
+      { en: "baby", es: "bebé", icon: "👶" },
+      { en: "grandmother", es: "abuela", icon: "👵" },
+      { en: "grandfather", es: "abuelo", icon: "👴" },
+      { en: "family", es: "familia", icon: "👨‍👩‍👧‍👦" },
+      { en: "uncle", es: "tío", icon: "🧔" },
+      { en: "aunt", es: "tía", icon: "👩‍🦱" }
+    ],
+    sentences: [
+      { en: "My mother is kind.", es: "Mi madre es amable.", word: "mother" },
+      { en: "My father is tall.", es: "Mi padre es alto.", word: "father" },
+      { en: "My sister plays with me.", es: "Mi hermana juega conmigo.", word: "sister" },
+      { en: "My brother is funny.", es: "Mi hermano es gracioso.", word: "brother" },
+      { en: "The baby is small.", es: "El bebé es pequeño.", word: "baby" },
+      { en: "Grandmother tells stories.", es: "La abuela cuenta historias.", word: "grandmother" },
+      { en: "Grandfather is wise.", es: "El abuelo es sabio.", word: "grandfather" },
+      { en: "I love my family.", es: "Amo a mi familia.", word: "family" },
+      { en: "My uncle is fun.", es: "Mi tío es divertido.", word: "uncle" },
+      { en: "My aunt bakes cakes.", es: "Mi tía hornea pasteles.", word: "aunt" }
+    ]
+  },
+  school: {
+    emoji: "🏫", label: "School", color: "#1e90ff", colorDark: "#1565c0",
+    words: [
+      { en: "book", es: "libro", icon: "📖" },
+      { en: "pencil", es: "lápiz", icon: "✏️" },
+      { en: "teacher", es: "maestro(a)", icon: "👩‍🏫" },
+      { en: "desk", es: "escritorio", icon: "🪑" },
+      { en: "school", es: "escuela", icon: "🏫" },
+      { en: "eraser", es: "borrador", icon: "🧽" },
+      { en: "ruler", es: "regla", icon: "📏" },
+      { en: "notebook", es: "cuaderno", icon: "📓" },
+      { en: "crayon", es: "crayón", icon: "🖍️" },
+      { en: "backpack", es: "mochila", icon: "🎒" }
+    ],
+    sentences: [
+      { en: "I read a book.", es: "Leo un libro.", word: "book" },
+      { en: "The pencil is sharp.", es: "El lápiz está afilado.", word: "pencil" },
+      { en: "The teacher helps us.", es: "El maestro nos ayuda.", word: "teacher" },
+      { en: "I sit at my desk.", es: "Me siento en mi escritorio.", word: "desk" },
+      { en: "I go to school.", es: "Voy a la escuela.", word: "school" },
+      { en: "I need an eraser.", es: "Necesito un borrador.", word: "eraser" },
+      { en: "The ruler is long.", es: "La regla es larga.", word: "ruler" },
+      { en: "My notebook is blue.", es: "Mi cuaderno es azul.", word: "notebook" },
+      { en: "I color with a crayon.", es: "Coloreo con un crayón.", word: "crayon" },
+      { en: "My backpack is heavy.", es: "Mi mochila es pesada.", word: "backpack" }
+    ]
+  },
+  body: {
+    emoji: "🧍", label: "Body", color: "#eccc68", colorDark: "#f1c40f",
+    words: [
+      { en: "head", es: "cabeza", icon: "🗣️" },
+      { en: "hand", es: "mano", icon: "🖐️" },
+      { en: "foot", es: "pie", icon: "🦶" },
+      { en: "eye", es: "ojo", icon: "👁️" },
+      { en: "ear", es: "oreja", icon: "👂" },
+      { en: "nose", es: "nariz", icon: "👃" },
+      { en: "mouth", es: "boca", icon: "👄" },
+      { en: "arm", es: "brazo", icon: "💪" },
+      { en: "leg", es: "pierna", icon: "🦵" },
+      { en: "finger", es: "dedo", icon: "👆" }
+    ],
+    sentences: [
+      { en: "I touch my head.", es: "Toco mi cabeza.", word: "head" },
+      { en: "I wave my hand.", es: "Agito mi mano.", word: "hand" },
+      { en: "My foot is small.", es: "Mi pie es pequeño.", word: "foot" },
+      { en: "I see with my eye.", es: "Veo con mi ojo.", word: "eye" },
+      { en: "I hear with my ear.", es: "Escucho con mi oreja.", word: "ear" },
+      { en: "I smell with my nose.", es: "Huelo con mi nariz.", word: "nose" },
+      { en: "I eat with my mouth.", es: "Como con mi boca.", word: "mouth" },
+      { en: "My arm is strong.", es: "Mi brazo es fuerte.", word: "arm" },
+      { en: "I run with my leg.", es: "Corro con mi pierna.", word: "leg" },
+      { en: "I point with my finger.", es: "Señalo con mi dedo.", word: "finger" }
+    ]
+  },
+  clothes: {
+    emoji: "👕", label: "Clothes", color: "#a29bfe", colorDark: "#6c5ce7",
+    words: [
+      { en: "shirt", es: "camisa", icon: "👕" },
+      { en: "pants", es: "pantalones", icon: "👖" },
+      { en: "shoes", es: "zapatos", icon: "👟" },
+      { en: "hat", es: "sombrero", icon: "🎩" },
+      { en: "dress", es: "vestido", icon: "👗" },
+      { en: "socks", es: "calcetines", icon: "🧦" },
+      { en: "jacket", es: "chaqueta", icon: "🧥" },
+      { en: "gloves", es: "guantes", icon: "🧤" },
+      { en: "scarf", es: "bufanda", icon: "🧣" },
+      { en: "boots", es: "botas", icon: "👢" }
+    ],
+    sentences: [
+      { en: "My shirt is blue.", es: "Mi camisa es azul.", word: "shirt" },
+      { en: "I wear pants to school.", es: "Uso pantalones en la escuela.", word: "pants" },
+      { en: "My shoes are new.", es: "Mis zapatos son nuevos.", word: "shoes" },
+      { en: "The hat is big.", es: "El sombrero es grande.", word: "hat" },
+      { en: "Her dress is pretty.", es: "Su vestido es bonito.", word: "dress" },
+      { en: "My socks are warm.", es: "Mis calcetines son cálidos.", word: "socks" },
+      { en: "I need a jacket.", es: "Necesito una chaqueta.", word: "jacket" },
+      { en: "The gloves are soft.", es: "Los guantes son suaves.", word: "gloves" },
+      { en: "My scarf is red.", es: "Mi bufanda es roja.", word: "scarf" },
+      { en: "I wear boots in rain.", es: "Uso botas en la lluvia.", word: "boots" }
+    ]
+  },
+  food: {
+    emoji: "🍔", label: "Food", color: "#ffc048", colorDark: "#e67e22",
+    words: [
+      { en: "bread", es: "pan", icon: "🍞" },
+      { en: "milk", es: "leche", icon: "🥛" },
+      { en: "egg", es: "huevo", icon: "🥚" },
+      { en: "rice", es: "arroz", icon: "🍚" },
+      { en: "cheese", es: "queso", icon: "🧀" },
+      { en: "chicken", es: "pollo", icon: "🍗" },
+      { en: "pizza", es: "pizza", icon: "🍕" },
+      { en: "cake", es: "pastel", icon: "🎂" },
+      { en: "soup", es: "sopa", icon: "🍲" },
+      { en: "sandwich", es: "sándwich", icon: "🥪" }
+    ],
+    sentences: [
+      { en: "I eat bread for breakfast.", es: "Como pan para el desayuno.", word: "bread" },
+      { en: "I drink milk every day.", es: "Bebo leche todos los días.", word: "milk" },
+      { en: "The egg is cooked.", es: "El huevo está cocido.", word: "egg" },
+      { en: "I like rice with beans.", es: "Me gusta el arroz con frijoles.", word: "rice" },
+      { en: "Cheese is delicious.", es: "El queso es delicioso.", word: "cheese" },
+      { en: "I eat chicken for dinner.", es: "Como pollo para cenar.", word: "chicken" },
+      { en: "Pizza is my favorite.", es: "La pizza es mi favorita.", word: "pizza" },
+      { en: "The cake is sweet.", es: "El pastel es dulce.", word: "cake" },
+      { en: "The soup is hot.", es: "La sopa está caliente.", word: "soup" },
+      { en: "I made a sandwich.", es: "Hice un sándwich.", word: "sandwich" }
+    ]
+  },
+  weather: {
+    emoji: "🌤️", label: "Weather", color: "#48dbfb", colorDark: "#0abde3",
+    words: [
+      { en: "sunny", es: "soleado", icon: "☀️" },
+      { en: "rainy", es: "lluvioso", icon: "🌧️" },
+      { en: "cloudy", es: "nublado", icon: "☁️" },
+      { en: "windy", es: "ventoso", icon: "💨" },
+      { en: "snowy", es: "nevado", icon: "❄️" },
+      { en: "hot", es: "caliente", icon: "🔥" },
+      { en: "cold", es: "frío", icon: "🥶" },
+      { en: "rainbow", es: "arcoíris", icon: "🌈" },
+      { en: "storm", es: "tormenta", icon: "⛈️" },
+      { en: "fog", es: "niebla", icon: "🌫️" }
+    ],
+    sentences: [
+      { en: "It is sunny today.", es: "Hoy está soleado.", word: "sunny" },
+      { en: "It is rainy outside.", es: "Está lluvioso afuera.", word: "rainy" },
+      { en: "The sky is cloudy.", es: "El cielo está nublado.", word: "cloudy" },
+      { en: "It is very windy.", es: "Está muy ventoso.", word: "windy" },
+      { en: "It is snowy in winter.", es: "Es nevado en invierno.", word: "snowy" },
+      { en: "The weather is hot.", es: "El clima está caliente.", word: "hot" },
+      { en: "I feel cold today.", es: "Siento frío hoy.", word: "cold" },
+      { en: "I see a rainbow!", es: "¡Veo un arcoíris!", word: "rainbow" },
+      { en: "There is a big storm.", es: "Hay una gran tormenta.", word: "storm" },
+      { en: "The fog is thick.", es: "La niebla es espesa.", word: "fog" }
+    ]
+  },
+  transport: {
+    emoji: "🚗", label: "Transport", color: "#ff9f43", colorDark: "#e67e22",
+    words: [
+      { en: "car", es: "carro", icon: "🚗" },
+      { en: "bus", es: "autobús", icon: "🚌" },
+      { en: "bicycle", es: "bicicleta", icon: "🚲" },
+      { en: "airplane", es: "avión", icon: "✈️" },
+      { en: "train", es: "tren", icon: "🚂" },
+      { en: "boat", es: "barco", icon: "⛵" },
+      { en: "helicopter", es: "helicóptero", icon: "🚁" },
+      { en: "motorcycle", es: "motocicleta", icon: "🏍️" },
+      { en: "truck", es: "camión", icon: "🚚" },
+      { en: "rocket", es: "cohete", icon: "🚀" }
+    ],
+    sentences: [
+      { en: "The car is fast.", es: "El carro es rápido.", word: "car" },
+      { en: "I ride the bus to school.", es: "Viajo en autobús a la escuela.", word: "bus" },
+      { en: "I ride my bicycle.", es: "Monto mi bicicleta.", word: "bicycle" },
+      { en: "The airplane flies high.", es: "El avión vuela alto.", word: "airplane" },
+      { en: "The train is long.", es: "El tren es largo.", word: "train" },
+      { en: "The boat sails on water.", es: "El barco navega en el agua.", word: "boat" },
+      { en: "The helicopter is loud.", es: "El helicóptero es ruidoso.", word: "helicopter" },
+      { en: "The motorcycle is cool.", es: "La motocicleta es genial.", word: "motorcycle" },
+      { en: "The truck carries food.", es: "El camión lleva comida.", word: "truck" },
+      { en: "The rocket goes to space.", es: "El cohete va al espacio.", word: "rocket" }
+    ]
+  },
+  jobs: {
+    emoji: "👷", label: "Jobs", color: "#00d2d3", colorDark: "#01a3a4",
+    words: [
+      { en: "doctor", es: "doctor(a)", icon: "👩‍⚕️" },
+      { en: "teacher", es: "maestro(a)", icon: "👩‍🏫" },
+      { en: "firefighter", es: "bombero(a)", icon: "👨‍🚒" },
+      { en: "police", es: "policía", icon: "👮" },
+      { en: "chef", es: "chef", icon: "👨‍🍳" },
+      { en: "farmer", es: "granjero(a)", icon: "👨‍🌾" },
+      { en: "pilot", es: "piloto", icon: "👨‍✈️" },
+      { en: "artist", es: "artista", icon: "👩‍🎨" },
+      { en: "dentist", es: "dentista", icon: "🦷" },
+      { en: "astronaut", es: "astronauta", icon: "👨‍🚀" }
+    ],
+    sentences: [
+      { en: "The doctor helps sick people.", es: "El doctor ayuda a personas enfermas.", word: "doctor" },
+      { en: "The teacher reads to us.", es: "La maestra nos lee.", word: "teacher" },
+      { en: "The firefighter is brave.", es: "El bombero es valiente.", word: "firefighter" },
+      { en: "The police keeps us safe.", es: "La policía nos mantiene seguros.", word: "police" },
+      { en: "The chef cooks food.", es: "El chef cocina comida.", word: "chef" },
+      { en: "The farmer grows plants.", es: "El granjero cultiva plantas.", word: "farmer" },
+      { en: "The pilot flies planes.", es: "El piloto vuela aviones.", word: "pilot" },
+      { en: "The artist paints pictures.", es: "El artista pinta cuadros.", word: "artist" },
+      { en: "The dentist checks teeth.", es: "El dentista revisa dientes.", word: "dentist" },
+      { en: "The astronaut goes to space.", es: "El astronauta va al espacio.", word: "astronaut" }
+    ]
+  }
+};
+
+// ========== STATE ==========
+let currentCategory = null;
+let currentStage = 0; // 0=menu, 1=learn, 2=sentences, 3=fill
+let currentCardIndex = 0;
+let score = 0;
+let totalQuestions = 0;
+let quizQuestions = [];
+let quizIndex = 0;
+
+const positiveMessages = [
+  { emoji: "🌟", text: "¡Muy bien!" },
+  { emoji: "🎉", text: "¡Excelente trabajo!" },
+  { emoji: "👏", text: "¡Fantástico!" },
+  { emoji: "🏆", text: "¡Eres genial!" },
+  { emoji: "✨", text: "¡Increíble!" },
+  { emoji: "🚀", text: "¡Vas volando!" }
+];
+const encourageMessages = [
+  { emoji: "💪", text: "¡Inténtalo de nuevo!" },
+  { emoji: "🤔", text: "¡Casi! Piensa otra vez." },
+  { emoji: "🌈", text: "¡Tú puedes! Intenta otra vez." },
+  { emoji: "❤️", text: "¡No te rindas!" }
+];
+
+// ========== ELEMENT SDK ==========
+const defaultConfig = {
+  game_title: "English Adventure",
+  welcome_message: "¡Elige una categoría para empezar a aprender!",
+  background_color: "#667eea",
+  card_color: "#ffffff",
+  text_color: "#1e1b4b",
+  accent_color: "#ffd93d",
+  button_color: "#7c3aed",
+  font_family: "Fredoka",
+  font_size: 16
+};
+
+function applyConfig(config) {
+  const title = config.game_title || defaultConfig.game_title;
+  const subtitle = config.welcome_message || defaultConfig.welcome_message;
+  const bg = config.background_color || defaultConfig.background_color;
+  const cardC = config.card_color || defaultConfig.card_color;
+  const textC = config.text_color || defaultConfig.text_color;
+  const accent = config.accent_color || defaultConfig.accent_color;
+  const btnC = config.button_color || defaultConfig.button_color;
+  const font = config.font_family || defaultConfig.font_family;
+  const fontSize = config.font_size || defaultConfig.font_size;
+
+  const el = (id) => document.getElementById(id);
+  if (el('main-title')) el('main-title').textContent = `🌟 ${title} 🌟`;
+  if (el('main-subtitle')) el('main-subtitle').textContent = subtitle;
+
+  document.getElementById('app').style.background = `linear-gradient(135deg, ${bg} 0%, #764ba2 50%, #f093fb 100%)`;
+
+  document.querySelectorAll('.vocab-card').forEach(c => {
+    c.style.backgroundColor = cardC;
+    c.style.color = textC;
+  });
+
+  document.querySelectorAll('.fredoka, h1, h2').forEach(e => {
+    e.style.fontFamily = `${font}, Fredoka, sans-serif`;
+  });
+
+  const baseSize = fontSize;
+  document.querySelectorAll('h1').forEach(e => e.style.fontSize = `${baseSize * 2.5}px`);
+  document.querySelectorAll('h2').forEach(e => e.style.fontSize = `${baseSize * 2}px`);
+  document.querySelectorAll('p, span').forEach(e => {
+    if (!e.closest('#feedback-box') && !e.classList.contains('text-5xl') && !e.classList.contains('text-6xl')) {
+      // Only apply to non-special elements
+    }
+  });
 }
-.btn-3d:hover{ transform:translateY(-3px); }
-.btn-3d:active{
-  transform:translateY(4px);
-  box-shadow:0 2px 0 rgba(0,0,0,.2);
+
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange: async (config) => { applyConfig(config); },
+  mapToCapabilities: (config) => ({
+    recolorables: [
+      { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+      { get: () => config.card_color || defaultConfig.card_color, set: (v) => { config.card_color = v; window.elementSdk.setConfig({ card_color: v }); } },
+      { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+      { get: () => config.accent_color || defaultConfig.accent_color, set: (v) => { config.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); } },
+      { get: () => config.button_color || defaultConfig.button_color, set: (v) => { config.button_color = v; window.elementSdk.setConfig({ button_color: v }); } }
+    ],
+    borderables: [],
+    fontEditable: {
+      get: () => config.font_family || defaultConfig.font_family,
+      set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+    },
+    fontSizeable: {
+      get: () => config.font_size || defaultConfig.font_size,
+      set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+    }
+  }),
+  mapToEditPanelValues: (config) => new Map([
+    ["game_title", config.game_title || defaultConfig.game_title],
+    ["welcome_message", config.welcome_message || defaultConfig.welcome_message]
+  ])
+});
+
+// ========== RENDER FUNCTIONS ==========
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
-.balloon-title{
-  font-size:3rem;
-  font-weight:900;
-  color:white;
-  text-shadow:-3px -3px 0 #1a1a1a,
-               3px -3px 0 #1a1a1a,
-              -3px 3px 0 #1a1a1a,
-               3px 3px 0 #1a1a1a;
+function showScreen(name) {
+  document.getElementById('menu-screen').classList.toggle('hidden', name !== 'menu');
+  document.getElementById('stage-screen').classList.toggle('hidden', name !== 'stage');
+  document.getElementById('complete-screen').classList.toggle('hidden', name !== 'complete');
 }
 
-.category-card{
-  transition:all .3s ease;
+function renderCategories() {
+  const grid = document.getElementById('categories-grid');
+  grid.innerHTML = '';
+  const keys = Object.keys(CATEGORIES);
+  keys.forEach((key, i) => {
+    const cat = CATEGORIES[key];
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn rounded-2xl p-4 md:p-5 text-center shadow-lg anim-pop cursor-pointer border-4 border-white/30';
+    btn.style.animationDelay = `${i * 0.05}s`;
+    btn.style.background = `linear-gradient(135deg, ${cat.color}, ${cat.colorDark})`;
+    btn.innerHTML = `
+      <div class="text-4xl md:text-5xl mb-2">${cat.emoji}</div>
+      <div class="fredoka text-white font-bold text-sm md:text-base drop-shadow">${cat.label}</div>
+    `;
+    btn.onclick = () => startCategory(key);
+    grid.appendChild(btn);
+  });
 }
-.category-card:hover{
-  transform:scale(1.05) rotate(-1deg);
+
+function startCategory(key) {
+  currentCategory = key;
+  currentStage = 1;
+  currentCardIndex = 0;
+  score = 0;
+  totalQuestions = 0;
+  showScreen('stage');
+  renderStage();
 }
-</style>
-</head>
 
-<body class="h-full bg-gradient-to-b from-sky-100 via-sky-50 to-white">
+function renderStage() {
+  const cat = CATEGORIES[currentCategory];
+  const stageNames = ['', '📚 Etapa 1: Aprende', '📝 Etapa 2: Oraciones', '✏️ Etapa 3: Completa'];
+  const stageDescs = ['', '¡Conoce el vocabulario!', '¡Lee oraciones en inglés!', '¡Completa la oración correcta!'];
 
-<div class="min-h-screen p-6">
-<div class="max-w-6xl mx-auto text-center">
+  document.getElementById('stage-badge').textContent = stageNames[currentStage];
+  document.getElementById('stage-title').innerHTML = `${cat.emoji} ${cat.label}`;
+  document.getElementById('stage-desc').textContent = stageDescs[currentStage];
 
-<h1 class="balloon-title mb-4">🎮 English Vocabulary Games 🎮</h1>
-<p class="text-lg text-gray-600 mb-10 font-semibold">
-Selecciona una categoría para jugar
-</p>
+  const progress = ((currentStage - 1) / 3) * 100;
+  document.getElementById('progress-bar').style.width = `${progress}%`;
 
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+  const content = document.getElementById('stage-content');
+  content.innerHTML = '';
 
-<button onclick="startGame('numbers')" class="category-card btn-3d bg-gradient-to-br from-red-400 to-red-600 text-white p-6 rounded-2xl">
-🔢 Números
-</button>
+  if (currentStage === 1) renderLearnStage(content, cat);
+  else if (currentStage === 2) renderSentenceStage(content, cat);
+  else if (currentStage === 3) renderFillStage(content, cat);
 
-<button onclick="startGame('days')" class="category-card btn-3d bg-gradient-to-br from-orange-400 to-orange-600 text-white p-6 rounded-2xl">
-📅 Días
-</button>
-
-<button onclick="startGame('fruits')" class="category-card btn-3d bg-gradient-to-br from-green-400 to-green-600 text-white p-6 rounded-2xl">
-🍎 Frutas
-</button>
-
-<button onclick="startGame('vegetables')" class="category-card btn-3d bg-gradient-to-br from-emerald-400 to-emerald-600 text-white p-6 rounded-2xl">
-🥬 Verduras
-</button>
-
-<button onclick="startGame('colors')" class="category-card btn-3d bg-gradient-to-br from-pink-400 to-pink-600 text-white p-6 rounded-2xl">
-🎨 Colores
-</button>
-
-<button onclick="startGame('animals')" class="category-card btn-3d bg-gradient-to-br from-amber-400 to-amber-600 text-white p-6 rounded-2xl">
-🐾 Animales
-</button>
-
-<button onclick="startGame('shapes')" class="category-card btn-3d bg-gradient-to-br from-cyan-400 to-cyan-600 text-white p-6 rounded-2xl">
-🔷 Figuras
-</button>
-
-<button onclick="startGame('family')" class="category-card btn-3d bg-gradient-to-br from-rose-400 to-rose-600 text-white p-6 rounded-2xl">
-👨‍👩‍👧‍👦 Familia
-</button>
-
-<button onclick="startGame('school')" class="category-card btn-3d bg-gradient-to-br from-indigo-400 to-indigo-600 text-white p-6 rounded-2xl">
-🏫 Escuela
-</button>
-
-<button onclick="startGame('body')" class="category-card btn-3d bg-gradient-to-br from-purple-400 to-purple-600 text-white p-6 rounded-2xl">
-🧍 Cuerpo
-</button>
-
-<button onclick="startGame('clothes')" class="category-card btn-3d bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 text-white p-6 rounded-2xl">
-👕 Ropa
-</button>
-
-<button onclick="startGame('food')" class="category-card btn-3d bg-gradient-to-br from-yellow-400 to-yellow-600 text-white p-6 rounded-2xl">
-🍔 Comida
-</button>
-
-<button onclick="startGame('weather')" class="category-card btn-3d bg-gradient-to-br from-sky-400 to-sky-600 text-white p-6 rounded-2xl">
-🌦 Clima
-</button>
-
-<button onclick="startGame('transport')" class="category-card btn-3d bg-gradient-to-br from-gray-400 to-gray-600 text-white p-6 rounded-2xl">
-🚗 Transporte
-</button>
-
-<button onclick="startGame('jobs')" class="category-card btn-3d bg-gradient-to-br from-teal-400 to-teal-600 text-white p-6 rounded-2xl">
-👩‍⚕️ Profesiones
-</button>
-
-</div>
-
-</div>
-</div>
-
-<script>
-function startGame(category){
-  alert("Iniciando juego de: " + category);
+  renderNav();
+  lucide.createIcons();
 }
+
+function renderLearnStage(container, cat) {
+  const grid = document.createElement('div');
+  grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4';
+
+  cat.words.forEach((word, i) => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card card-item bg-white rounded-2xl p-4 text-center shadow-lg cursor-pointer hover:shadow-xl transition-all border-2 relative group';
+    card.style.animationDelay = `${i * 0.06}s`;
+    card.style.borderColor = cat.color + '40';
+    
+    const soundBtn = document.createElement('button');
+    soundBtn.className = 'absolute top-2 right-2 bg-blue-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity';
+    soundBtn.innerHTML = '<i data-lucide="volume-2" style="width:16px;height:16px;"></i>';
+    soundBtn.onclick = (e) => {
+      e.stopPropagation();
+      speak(word.en);
+      soundBtn.classList.add('anim-pulse-scale');
+      setTimeout(() => soundBtn.classList.remove('anim-pulse-scale'), 600);
+    };
+    
+    card.innerHTML = `
+      <div class="text-4xl md:text-5xl mb-2 anim-float" style="animation-delay:${i * 0.2}s">${word.icon}</div>
+      <div class="fredoka text-lg md:text-xl font-bold" style="color:${cat.colorDark}">${word.en}</div>
+      <div class="text-sm text-gray-500 mt-1">${word.es}</div>
+    `;
+    card.appendChild(soundBtn);
+    card.onclick = () => {
+      card.classList.add('anim-wiggle');
+      speak(word.en);
+      setTimeout(() => card.classList.remove('anim-wiggle'), 500);
+    };
+    grid.appendChild(card);
+  });
+  container.appendChild(grid);
+}
+
+function renderSentenceStage(container, cat) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'space-y-3';
+
+  // Show 5 sentences at a time for better UX
+  const startIdx = currentCardIndex;
+  const endIdx = Math.min(startIdx + 5, cat.sentences.length);
+  const showing = cat.sentences.slice(startIdx, endIdx);
+
+  // Counter
+  const counter = document.createElement('div');
+  counter.className = 'text-center text-white/80 font-semibold mb-4';
+  counter.textContent = `Oraciones ${startIdx + 1}-${endIdx} de ${cat.sentences.length}`;
+  wrapper.appendChild(counter);
+
+  showing.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'card-item bg-white/95 backdrop-blur-sm rounded-2xl p-4 md:p-5 shadow-lg border-l-4';
+    card.style.animationDelay = `${i * 0.1}s`;
+    card.style.borderLeftColor = cat.color;
+    card.innerHTML = `
+      <div class="flex items-start gap-3">
+        <div class="text-2xl mt-1">${cat.words[startIdx + i]?.icon || '📖'}</div>
+        <div class="flex-1">
+          <p class="fredoka text-lg md:text-xl font-bold" style="color:${cat.colorDark}">${highlightWord(s.en, s.word)}</p>
+          <p class="text-gray-500 mt-1 text-sm md:text-base">🇪🇸 ${s.es}</p>
+        </div>
+      </div>
+    `;
+    wrapper.appendChild(card);
+  });
+
+  container.appendChild(wrapper);
+}
+
+function highlightWord(sentence, word) {
+  return sentence.replace(new RegExp(`(${word})`, 'gi'), '<span style="color:#7c3aed;text-decoration:underline;text-decoration-style:wavy;">$1</span>');
+}
+
+function renderFillStage(container, cat) {
+  if (quizQuestions.length === 0) {
+    quizQuestions = shuffle(cat.sentences.map(s => ({...s})));
+    quizIndex = 0;
+    totalQuestions = quizQuestions.length;
+  }
+
+  if (quizIndex >= quizQuestions.length) {
+    showCompletion();
+    return;
+  }
+
+  const q = quizQuestions[quizIndex];
+  const blankSentence = q.en.replace(new RegExp(q.word, 'gi'), '________');
+
+  // Generate options: correct + 3 random wrong
+  const allWords = cat.words.map(w => w.en);
+  let options = [q.word];
+  const others = allWords.filter(w => w.toLowerCase() !== q.word.toLowerCase());
+  const shuffledOthers = shuffle(others);
+  options.push(...shuffledOthers.slice(0, 3));
+  options = shuffle(options);
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'max-w-2xl mx-auto';
+
+  // Question counter
+  const counter = document.createElement('div');
+  counter.className = 'text-center text-white/80 font-semibold mb-4 text-lg';
+  counter.textContent = `Pregunta ${quizIndex + 1} de ${totalQuestions}`;
+  wrapper.appendChild(counter);
+
+  // Score
+  const scoreDiv = document.createElement('div');
+  scoreDiv.className = 'text-center mb-4';
+  scoreDiv.innerHTML = `<span class="bg-yellow-400 text-purple-900 px-4 py-1 rounded-full font-bold fredoka text-lg">⭐ ${score} / ${quizIndex}</span>`;
+  wrapper.appendChild(scoreDiv);
+
+  // Question card
+  const card = document.createElement('div');
+  card.className = 'anim-slide bg-white/95 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-xl text-center mb-6';
+  card.innerHTML = `
+    <div class="text-5xl mb-4">${cat.emoji}</div>
+    <p class="fredoka text-xl md:text-2xl font-bold text-gray-800 mb-2">${blankSentence}</p>
+    <p class="text-gray-500 text-sm">🇪🇸 ${q.es}</p>
+  `;
+  wrapper.appendChild(card);
+
+  // Options
+  const optGrid = document.createElement('div');
+  optGrid.className = 'grid grid-cols-2 gap-3';
+  options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn card-item bg-white rounded-2xl p-4 md:p-5 text-center shadow-lg font-bold fredoka text-lg md:text-xl cursor-pointer border-3 border-transparent hover:border-purple-400 transition-all';
+    btn.style.animationDelay = `${i * 0.1}s`;
+    btn.style.color = cat.colorDark;
+    btn.textContent = opt;
+    btn.onclick = () => handleAnswer(opt, q.word, optGrid, btn);
+    optGrid.appendChild(btn);
+  });
+  wrapper.appendChild(optGrid);
+  container.appendChild(wrapper);
+}
+
+function handleAnswer(selected, correct, optGrid, clickedBtn) {
+  const isCorrect = selected.toLowerCase() === correct.toLowerCase();
+  const buttons = optGrid.querySelectorAll('button');
+
+  buttons.forEach(b => {
+    b.onclick = null;
+    b.style.cursor = 'default';
+    b.classList.remove('hover:border-purple-400');
+    if (b.textContent.toLowerCase() === correct.toLowerCase()) {
+      b.style.backgroundColor = '#d4edda';
+      b.style.borderColor = '#28a745';
+      b.style.color = '#155724';
+    } else if (b === clickedBtn && !isCorrect) {
+      b.style.backgroundColor = '#f8d7da';
+      b.style.borderColor = '#dc3545';
+      b.style.color = '#721c24';
+      b.classList.add('anim-wiggle');
+    }
+  });
+
+  if (isCorrect) {
+    score++;
+    showFeedback(true);
+  } else {
+    showFeedback(false);
+  }
+
+  setTimeout(() => {
+    quizIndex++;
+    const content = document.getElementById('stage-content');
+    content.innerHTML = '';
+    renderFillStage(content, CATEGORIES[currentCategory]);
+    renderNav();
+  }, 1500);
+}
+
+function showFeedback(correct) {
+  const overlay = document.getElementById('feedback-overlay');
+  const box = document.getElementById('feedback-box');
+  const emoji = document.getElementById('feedback-emoji');
+  const text = document.getElementById('feedback-text');
+
+  const msg = correct
+    ? positiveMessages[Math.floor(Math.random() * positiveMessages.length)]
+    : encourageMessages[Math.floor(Math.random() * encourageMessages.length)];
+
+  box.style.backgroundColor = correct ? '#d4edda' : '#fff3cd';
+  box.style.color = correct ? '#155724' : '#856404';
+  emoji.textContent = msg.emoji;
+  text.textContent = msg.text;
+
+  overlay.classList.remove('hidden');
+  box.classList.remove('anim-bounce');
+  void box.offsetWidth;
+  box.classList.add('anim-bounce');
+
+  setTimeout(() => overlay.classList.add('hidden'), 1200);
+}
+
+function renderNav() {
+  const nav = document.getElementById('stage-nav');
+  nav.innerHTML = '';
+
+  if (currentStage === 1) {
+    const btn = document.createElement('button');
+    btn.className = 'bg-yellow-400 text-purple-900 px-8 py-3 rounded-full font-bold text-lg fredoka cat-btn anim-glow shadow-lg';
+    btn.innerHTML = 'Siguiente: Oraciones ➡️';
+    btn.onclick = () => { currentStage = 2; currentCardIndex = 0; renderStage(); };
+    nav.appendChild(btn);
+  } else if (currentStage === 2) {
+    const cat = CATEGORIES[currentCategory];
+    const endIdx = currentCardIndex + 5;
+
+    if (endIdx < cat.sentences.length) {
+      const btn = document.createElement('button');
+      btn.className = 'bg-white/30 text-white px-6 py-3 rounded-full font-bold text-lg fredoka cat-btn';
+      btn.innerHTML = 'Más oraciones ➡️';
+      btn.onclick = () => { currentCardIndex = endIdx; renderStage(); };
+      nav.appendChild(btn);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'bg-yellow-400 text-purple-900 px-8 py-3 rounded-full font-bold text-lg fredoka cat-btn anim-glow shadow-lg';
+    nextBtn.innerHTML = 'Siguiente: ¡A completar! ✏️';
+    nextBtn.onclick = () => { currentStage = 3; quizQuestions = []; renderStage(); };
+    nav.appendChild(nextBtn);
+  }
+  // Stage 3 nav is handled by quiz completion
+}
+
+function showCompletion() {
+  showScreen('complete');
+  const pct = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+  const cat = CATEGORIES[currentCategory];
+
+  document.getElementById('complete-msg').textContent = `¡Completaste ${cat.label}! ${cat.emoji}`;
+  document.getElementById('complete-score').textContent = `Puntuación: ${score}/${totalQuestions} (${pct}%)`;
+
+  document.getElementById('progress-bar').style.width = '100%';
+
+  // Confetti effect
+  const confettiContainer = document.getElementById('confetti-container');
+  confettiContainer.innerHTML = '';
+  const emojis = ['🌟', '⭐', '🎉', '🏆', '💎', '🎊', '✨'];
+  for (let i = 0; i < 12; i++) {
+    const span = document.createElement('span');
+    span.className = 'anim-confetti absolute text-3xl';
+    span.style.left = `${Math.random() * 200 - 100}px`;
+    span.style.animationDelay = `${Math.random() * 0.5}s`;
+    span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    confettiContainer.appendChild(span);
+  }
+}
+
+// ========== EVENT LISTENERS ==========
+document.getElementById('back-btn').onclick = () => {
+  if (currentStage === 1) {
+    showScreen('menu');
+    currentCategory = null;
+  } else {
+    currentStage--;
+    currentCardIndex = 0;
+    quizQuestions = [];
+    renderStage();
+  }
+};
+
+document.getElementById('replay-btn').onclick = () => {
+  startCategory(currentCategory);
+};
+
+document.getElementById('home-btn').onclick = () => {
+  showScreen('menu');
+  currentCategory = null;
+  currentStage = 0;
+};
+
+// ========== INIT ==========
+function speak(text) {
+  if ('speechSynthesis' in window) {
+    try {
+      // Resume audio context if needed (for browser autoplay policies)
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
+      
+      // Create utterance with optimized settings for Chrome
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      utterance.pitch = 1.1;
+      utterance.volume = 1;
+      
+      // Get available voices and prefer English
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(v => v.lang.startsWith('en-US')) || voices.find(v => v.lang.startsWith('en'));
+      if (englishVoice) {
+        utterance.voice = englishVoice;
+      }
+      
+      // Error handling
+      utterance.onerror = (event) => {
+        console.error('Speech error:', event.error);
+      };
+      
+      // Speak immediately
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.error('Speech synthesis error:', e);
+    }
+  }
+}
+
+// Load voices when available
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = () => {
+    // Voices loaded
+  };
+}
+
+renderCategories();
+lucide.createIcons();
 </script>
-
-</body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9df98ffb940a7bbf',t:'MTc3NDA2MDUxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
