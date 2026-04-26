@@ -25,7 +25,8 @@
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full bg-white text-gray-800 overflow-auto">
-  <div id="app" class="w-full h-full flex flex-col"><!-- Header -->
+  <div id="app" class="w-full h-full flex flex-col">
+   <!-- Header -->
    <header class="bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between shrink-0">
     <h1 id="main-title" class="text-xl font-900 tracking-tight">🎓 English Vocabulary Game</h1><button id="btn-home" onclick="goHome()" class="hidden pill bg-gray-100 text-gray-600 px-3 py-1.5 rounded-full text-sm font-700 flex items-center gap-1"> <i data-lucide="home" style="width:16px;height:16px"></i> Inicio </button>
    </header><!-- Main Content -->
@@ -37,131 +38,221 @@ const CATEGORIES = [
     words:[
       {en:'Monday',es:'Lunes',em:'📆'},{en:'Tuesday',es:'Martes',em:'📆'},{en:'Wednesday',es:'Miércoles',em:'📆'},
       {en:'Thursday',es:'Jueves',em:'📆'},{en:'Friday',es:'Viernes',em:'🎉'},{en:'Saturday',es:'Sábado',em:'🌟'},
-      {en:'Sunday',es:'Domingo',em:'☀️'}
+      {en:'Sunday',es:'Domingo',em:'☀️'},{en:'Today',es:'Hoy',em:'📅'},{en:'Tomorrow',es:'Mañana',em:'🌅'},
+      {en:'Yesterday',es:'Ayer',em:'📜'},{en:'Week',es:'Semana',em:'📊'},{en:'Morning',es:'Mañana',em:'🌄'},
+      {en:'Afternoon',es:'Tarde',em:'🌞'},{en:'Evening',es:'Noche',em:'🌙'},{en:'Night',es:'Noche',em:'🌃'},
+      {en:'Dawn',es:'Amanecer',em:'🌅'},{en:'Dusk',es:'Atardecer',em:'🌆'},{en:'Midnight',es:'Medianoche',em:'⏰'},
+      {en:'Noon',es:'Mediodía',em:'☀️'},{en:'Season',es:'Estación',em:'🍂'},{en:'Month',es:'Mes',em:'📆'}
     ],
     sentences:[
       {text:'I go to school on ___.', answer:'Monday', opts:['Monday','Sunday','Friday']},
       {text:'The weekend starts on ___.', answer:'Saturday', opts:['Tuesday','Saturday','Wednesday']},
       {text:'___ is the last day of the week.', answer:'Sunday', opts:['Sunday','Thursday','Monday']},
       {text:'I have English class every ___.', answer:'Wednesday', opts:['Wednesday','Saturday','Sunday']},
-      {text:'___ comes after Monday.', answer:'Tuesday', opts:['Friday','Tuesday','Thursday']}
+      {text:'___ comes after Monday.', answer:'Tuesday', opts:['Friday','Tuesday','Thursday']},
+      {text:'___ is when I wake up.', answer:'Morning', opts:['Evening','Morning','Night']},
+      {text:'The sun sets in the ___.', answer:'Evening', opts:['Morning','Afternoon','Evening']},
+      {text:'I sleep at ___.', answer:'Night', opts:['Afternoon','Night','Dawn']},
+      {text:'There are 12 ___ in a year.', answer:'Month', opts:['Week','Season','Month']},
+      {text:'See you ___!', answer:'Tomorrow', opts:['Yesterday','Tomorrow','Today']}
     ]},
   { id:'food', name:'Alimentos', emoji:'🍎', color:'#FF9F43',
     words:[
       {en:'Apple',es:'Manzana',em:'🍎'},{en:'Bread',es:'Pan',em:'🍞'},{en:'Milk',es:'Leche',em:'🥛'},
       {en:'Egg',es:'Huevo',em:'🥚'},{en:'Rice',es:'Arroz',em:'🍚'},{en:'Chicken',es:'Pollo',em:'🍗'},
-      {en:'Water',es:'Agua',em:'💧'}
+      {en:'Water',es:'Agua',em:'💧'},{en:'Fish',es:'Pescado',em:'🐟'},{en:'Cheese',es:'Queso',em:'🧀'},
+      {en:'Butter',es:'Mantequilla',em:'🧈'},{en:'Salt',es:'Sal',em:'🧂'},{en:'Sugar',es:'Azúcar',em:'🍬'},
+      {en:'Pepper',es:'Pimienta',em:'🌶️'},{en:'Oil',es:'Aceite',em:'🫒'},{en:'Meat',es:'Carne',em:'🥩'},
+      {en:'Vegetable',es:'Verdura',em:'🥦'},{en:'Fruit',es:'Fruta',em:'🍓'},{en:'Juice',es:'Jugo',em:'🧃'},
+      {en:'Coffee',es:'Café',em:'☕'},{en:'Tea',es:'Té',em:'🫖'},{en:'Honey',es:'Miel',em:'🍯'}
     ],
     sentences:[
       {text:'I drink ___ every morning.', answer:'Milk', opts:['Milk','Bread','Egg']},
       {text:'She eats an ___ for lunch.', answer:'Apple', opts:['Apple','Water','Rice']},
       {text:'We need ___ to make a sandwich.', answer:'Bread', opts:['Egg','Bread','Chicken']},
       {text:'I always drink ___ when I am thirsty.', answer:'Water', opts:['Water','Milk','Apple']},
-      {text:'___ and beans is a popular dish.', answer:'Rice', opts:['Bread','Rice','Egg']}
+      {text:'___ and beans is a popular dish.', answer:'Rice', opts:['Bread','Rice','Egg']},
+      {text:'This ___ is very delicious.', answer:'Cheese', opts:['Chicken','Cheese','Fish']},
+      {text:'I put ___ on my toast.', answer:'Butter', opts:['Oil','Butter','Honey']},
+      {text:'Add a little ___ to your soup.', answer:'Salt', opts:['Salt','Pepper','Sugar']},
+      {text:'My grandmother drinks hot ___ in the afternoon.', answer:'Tea', opts:['Coffee','Tea','Juice']},
+      {text:'___ is sweet and good for dessert.', answer:'Honey', opts:['Salt','Honey','Pepper']}
     ]},
   { id:'clothing', name:'Ropa', emoji:'👕', color:'#54A0FF',
     words:[
       {en:'Shirt',es:'Camisa',em:'👔'},{en:'Pants',es:'Pantalones',em:'👖'},{en:'Shoes',es:'Zapatos',em:'👟'},
       {en:'Hat',es:'Sombrero',em:'🎩'},{en:'Dress',es:'Vestido',em:'👗'},{en:'Jacket',es:'Chaqueta',em:'🧥'},
-      {en:'Socks',es:'Calcetines',em:'🧦'}
+      {en:'Socks',es:'Calcetines',em:'🧦'},{en:'Coat',es:'Abrigo',em:'🧥'},{en:'Tie',es:'Corbata',em:'👞'},
+      {en:'Sweater',es:'Suéter',em:'🧶'},{en:'Skirt',es:'Falda',em:'👚'},{en:'Scarf',es:'Bufanda',em:'🧣'},
+      {en:'Gloves',es:'Guantes',em:'🧤'},{en:'Shorts',es:'Pantalones cortos',em:'🩳'},{en:'Boots',es:'Botas',em:'👢'},
+      {en:'Belt',es:'Cinturón',em:'⌚'},{en:'Cap',es:'Gorra',em:'🧢'},{en:'Underwear',es:'Ropa interior',em:'👕'},
+      {en:'Pajamas',es:'Pijama',em:'🛏️'},{en:'Uniform',es:'Uniforme',em:'👔'},{en:'Sandals',es:'Sandalias',em:'👡'}
     ],
     sentences:[
       {text:'I wear a ___ when it is cold.', answer:'Jacket', opts:['Jacket','Dress','Hat']},
       {text:'Put on your ___ before your shoes.', answer:'Socks', opts:['Hat','Socks','Shirt']},
       {text:'She bought a new ___ for the party.', answer:'Dress', opts:['Pants','Dress','Shoes']},
       {text:'He wears a ___ to protect from the sun.', answer:'Hat', opts:['Hat','Jacket','Socks']},
-      {text:'These ___ are very comfortable for running.', answer:'Shoes', opts:['Shoes','Pants','Shirt']}
+      {text:'These ___ are very comfortable for running.', answer:'Shoes', opts:['Shoes','Pants','Shirt']},
+      {text:'I wear a ___ with my formal outfit.', answer:'Tie', opts:['Tie','Shorts','Sandals']},
+      {text:'My ___ keeps me warm in winter.', answer:'Sweater', opts:['Sweater','Shorts','Shirt']},
+      {text:'I wear ___ to bed.', answer:'Pajamas', opts:['Dress','Pajamas','Uniform']},
+      {text:'This ___ goes around my waist.', answer:'Belt', opts:['Belt','Scarf','Cap']},
+      {text:'In summer I wear ___ on my feet.', answer:'Sandals', opts:['Boots','Sandals','Gloves']}
     ]},
   { id:'body', name:'Partes del Cuerpo', emoji:'🦶', color:'#5F27CD',
     words:[
       {en:'Head',es:'Cabeza',em:'🗣️'},{en:'Hand',es:'Mano',em:'✋'},{en:'Eye',es:'Ojo',em:'👁️'},
       {en:'Mouth',es:'Boca',em:'👄'},{en:'Nose',es:'Nariz',em:'👃'},{en:'Ear',es:'Oreja',em:'👂'},
-      {en:'Foot',es:'Pie',em:'🦶'}
+      {en:'Foot',es:'Pie',em:'🦶'},{en:'Arm',es:'Brazo',em:'💪'},{en:'Leg',es:'Pierna',em:'🦵'},
+      {en:'Heart',es:'Corazón',em:'❤️'},{en:'Stomach',es:'Estómago',em:'🤰'},{en:'Brain',es:'Cerebro',em:'🧠'},
+      {en:'Tooth',es:'Diente',em:'😁'},{en:'Tongue',es:'Lengua',em:'👅'},{en:'Skin',es:'Piel',em:'💪'},
+      {en:'Bone',es:'Hueso',em:'🦴'},{en:'Blood',es:'Sangre',em:'🔴'},{en:'Finger',es:'Dedo',em:'👆'},
+      {en:'Knee',es:'Rodilla',em:'🦵'},{en:'Shoulder',es:'Hombro',em:'🎒'},{en:'Back',es:'Espalda',em:'🔙'}
     ],
     sentences:[
       {text:'I see with my ___.', answer:'Eye', opts:['Ear','Eye','Mouth']},
       {text:'I write with my ___.', answer:'Hand', opts:['Foot','Head','Hand']},
       {text:'I smell with my ___.', answer:'Nose', opts:['Nose','Ear','Mouth']},
       {text:'I hear music with my ___.', answer:'Ear', opts:['Eye','Ear','Hand']},
-      {text:'I walk with my ___.', answer:'Foot', opts:['Hand','Head','Foot']}
+      {text:'I walk with my ___.', answer:'Foot', opts:['Hand','Head','Foot']},
+      {text:'My ___ is strong.', answer:'Heart', opts:['Stomach','Heart','Brain']},
+      {text:'I think with my ___.', answer:'Brain', opts:['Brain','Tooth','Tongue']},
+      {text:'I chew food with my ___.', answer:'Tooth', opts:['Tongue','Tooth','Mouth']},
+      {text:'My ___ supports my body.', answer:'Bone', opts:['Bone','Blood','Skin']},
+      {text:'I have five ___ on each hand.', answer:'Finger', opts:['Finger','Knee','Shoulder']}
     ]},
   { id:'colors', name:'Colores', emoji:'🎨', color:'#EE5A24',
     words:[
       {en:'Red',es:'Rojo',em:'🔴'},{en:'Blue',es:'Azul',em:'🔵'},{en:'Green',es:'Verde',em:'🟢'},
       {en:'Yellow',es:'Amarillo',em:'🟡'},{en:'Black',es:'Negro',em:'⚫'},{en:'White',es:'Blanco',em:'⚪'},
-      {en:'Orange',es:'Naranja',em:'🟠'}
+      {en:'Orange',es:'Naranja',em:'🟠'},{en:'Purple',es:'Púrpura',em:'🟣'},{en:'Pink',es:'Rosa',em:'🩷'},
+      {en:'Brown',es:'Marrón',em:'🟤'},{en:'Gray',es:'Gris',em:'🔘'},{en:'Gold',es:'Oro',em:'💛'},
+      {en:'Silver',es:'Plata',em:'🤍'},{en:'Turquoise',es:'Turquesa',em:'🫧'},{en:'Navy',es:'Azul marino',em:'⬛'},
+      {en:'Crimson',es:'Carmesí',em:'💋'},{en:'Violet',es:'Violeta',em:'☂️'},{en:'Coral',es:'Coral',em:'🪸'},
+      {en:'Lime',es:'Lima',em:'💚'},{en:'Maroon',es:'Marrón oscuro',em:'❤️'},{en:'Cyan',es:'Cian',em:'💙'}
     ],
     sentences:[
       {text:'The sky is ___.', answer:'Blue', opts:['Red','Blue','Green']},
       {text:'Bananas are ___.', answer:'Yellow', opts:['Yellow','Black','White']},
       {text:'Grass is ___.', answer:'Green', opts:['Orange','Red','Green']},
       {text:'Snow is ___.', answer:'White', opts:['White','Blue','Black']},
-      {text:'Tomatoes are ___.', answer:'Red', opts:['Red','Green','Yellow']}
+      {text:'Tomatoes are ___.', answer:'Red', opts:['Red','Green','Yellow']},
+      {text:'The night sky is ___.', answer:'Black', opts:['Blue','Black','Purple']},
+      {text:'My shirt is ___.', answer:'Purple', opts:['Purple','Gold','Pink']},
+      {text:'Carrots are ___.', answer:'Orange', opts:['Orange','Brown','Yellow']},
+      {text:'The ocean is ___.', answer:'Blue', opts:['Green','Blue','Gray']},
+      {text:'My favorite color is ___.', answer:'Pink', opts:['Pink','Silver','Brown']}
     ]},
   { id:'animals', name:'Animales', emoji:'🐶', color:'#10AC84',
     words:[
       {en:'Dog',es:'Perro',em:'🐶'},{en:'Cat',es:'Gato',em:'🐱'},{en:'Bird',es:'Pájaro',em:'🐦'},
       {en:'Fish',es:'Pez',em:'🐟'},{en:'Horse',es:'Caballo',em:'🐴'},{en:'Rabbit',es:'Conejo',em:'🐰'},
-      {en:'Bear',es:'Oso',em:'🐻'}
+      {en:'Bear',es:'Oso',em:'🐻'},{en:'Lion',es:'León',em:'🦁'},{en:'Elephant',es:'Elefante',em:'🐘'},
+      {en:'Monkey',es:'Mono',em:'🐵'},{en:'Tiger',es:'Tigre',em:'🐯'},{en:'Zebra',es:'Cebra',em:'🦓'},
+      {en:'Giraffe',es:'Jirafa',em:'🦒'},{en:'Penguin',es:'Pingüino',em:'🐧'},{en:'Dolphin',es:'Delfín',em:'🐬'},
+      {en:'Whale',es:'Ballena',em:'🐋'},{en:'Snake',es:'Serpiente',em:'🐍'},{en:'Frog',es:'Rana',em:'🐸'},
+      {en:'Butterfly',es:'Mariposa',em:'🦋'},{en:'Bee',es:'Abeja',em:'🐝'},{en:'Ant',es:'Hormiga',em:'🐜'}
     ],
     sentences:[
       {text:'The ___ lives in water.', answer:'Fish', opts:['Dog','Fish','Bird']},
       {text:'A ___ can fly in the sky.', answer:'Bird', opts:['Cat','Horse','Bird']},
       {text:'My ___ likes to play fetch.', answer:'Dog', opts:['Fish','Dog','Rabbit']},
       {text:'The ___ sleeps in winter.', answer:'Bear', opts:['Bear','Cat','Bird']},
-      {text:'She rides a ___ on the farm.', answer:'Horse', opts:['Rabbit','Fish','Horse']}
+      {text:'She rides a ___ on the farm.', answer:'Horse', opts:['Rabbit','Fish','Horse']},
+      {text:'The ___ is the king of the jungle.', answer:'Lion', opts:['Lion','Tiger','Monkey']},
+      {text:'The ___ has a long trunk.', answer:'Elephant', opts:['Giraffe','Elephant','Zebra']},
+      {text:'The ___ is black and white.', answer:'Penguin', opts:['Whale','Penguin','Dolphin']},
+      {text:'The ___ is the longest animal in the ocean.', answer:'Whale', opts:['Dolphin','Whale','Fish']},
+      {text:'I see a beautiful ___ on the flower.', answer:'Butterfly', opts:['Bee','Butterfly','Ant']}
     ]},
   { id:'numbers', name:'Números', emoji:'🔢', color:'#6C5CE7',
     words:[
       {en:'One',es:'Uno',em:'1️⃣'},{en:'Two',es:'Dos',em:'2️⃣'},{en:'Three',es:'Tres',em:'3️⃣'},
       {en:'Five',es:'Cinco',em:'5️⃣'},{en:'Seven',es:'Siete',em:'7️⃣'},{en:'Ten',es:'Diez',em:'🔟'},
-      {en:'Zero',es:'Cero',em:'0️⃣'}
+      {en:'Zero',es:'Cero',em:'0️⃣'},{en:'Four',es:'Cuatro',em:'4️⃣'},{en:'Six',es:'Seis',em:'6️⃣'},
+      {en:'Eight',es:'Ocho',em:'8️⃣'},{en:'Nine',es:'Nueve',em:'9️⃣'},{en:'Eleven',es:'Once',em:'1️⃣1️⃣'},
+      {en:'Twelve',es:'Doce',em:'1️⃣2️⃣'},{en:'Twenty',es:'Veinte',em:'2️⃣0️⃣'},{en:'Hundred',es:'Cien',em:'💯'},
+      {en:'Thousand',es:'Mil',em:'💸'},{en:'Million',es:'Millón',em:'💰'},{en:'First',es:'Primero',em:'🥇'},
+      {en:'Second',es:'Segundo',em:'🥈'},{en:'Third',es:'Tercero',em:'🥉'},{en:'Half',es:'Mitad',em:'➗'}
     ],
     sentences:[
       {text:'I have ___ hands.', answer:'Two', opts:['Three','One','Two']},
       {text:'A triangle has ___ sides.', answer:'Three', opts:['Five','Three','Seven']},
       {text:'There are ___ fingers on one hand.', answer:'Five', opts:['Ten','Two','Five']},
       {text:'A week has ___ days.', answer:'Seven', opts:['Seven','Five','Ten']},
-      {text:'___ plus zero equals zero.', answer:'Zero', opts:['One','Zero','Ten']}
+      {text:'___ plus zero equals zero.', answer:'Zero', opts:['One','Zero','Ten']},
+      {text:'There are ___ sides on a square.', answer:'Four', opts:['Six','Four','Eight']},
+      {text:'A year has ___ months.', answer:'Twelve', opts:['Eleven','Ten','Twelve']},
+      {text:'I won ___ prize in the race!', answer:'First', opts:['Second','First','Third']},
+      {text:'There are ___ eggs in a dozen.', answer:'Twelve', opts:['Ten','Eleven','Twelve']},
+      {text:'100 is called a ___.', answer:'Hundred', opts:['Hundred','Thousand','Million']}
     ]},
   { id:'family', name:'Familia', emoji:'👨‍👩‍👧‍👦', color:'#E056A0',
     words:[
       {en:'Mother',es:'Madre',em:'👩'},{en:'Father',es:'Padre',em:'👨'},{en:'Sister',es:'Hermana',em:'👧'},
       {en:'Brother',es:'Hermano',em:'👦'},{en:'Baby',es:'Bebé',em:'👶'},{en:'Grandmother',es:'Abuela',em:'👵'},
-      {en:'Grandfather',es:'Abuelo',em:'👴'}
+      {en:'Grandfather',es:'Abuelo',em:'👴'},{en:'Aunt',es:'Tía',em:'👩‍🦰'},{en:'Uncle',es:'Tío',em:'👨‍🦱'},
+      {en:'Cousin',es:'Primo/a',em:'👧'},{en:'Niece',es:'Sobrina',em:'👧'},{en:'Nephew',es:'Sobrino',em:'👦'},
+      {en:'Wife',es:'Esposa',em:'💍'},{en:'Husband',es:'Esposo',em:'💒'},{en:'Son',es:'Hijo',em:'👦'},
+      {en:'Daughter',es:'Hija',em:'👧'},{en:'Parent',es:'Padre/Madre',em:'👨‍👩'},{en:'Child',es:'Hijo/a',em:'👶'},
+      {en:'Twin',es:'Gemelo',em:'👯'},{en:'Sibling',es:'Hermano/a',em:'🤝'},{en:'Family',es:'Familia',em:'👨‍👩‍👧‍👦'}
     ],
     sentences:[
       {text:'My ___ cooks dinner every night.', answer:'Mother', opts:['Brother','Mother','Baby']},
       {text:'My ___ teaches me to ride a bike.', answer:'Father', opts:['Father','Sister','Grandmother']},
       {text:'The ___ is sleeping in the crib.', answer:'Baby', opts:['Grandfather','Baby','Brother']},
       {text:'My ___ tells me stories from the past.', answer:'Grandmother', opts:['Sister','Grandmother','Father']},
-      {text:'My ___ and I play video games together.', answer:'Brother', opts:['Mother','Baby','Brother']}
+      {text:'My ___ and I play video games together.', answer:'Brother', opts:['Mother','Baby','Brother']},
+      {text:'I love my ___ so much.', answer:'Family', opts:['Uncle','Family','Cousin']},
+      {text:'My ___ is my father\'s sister.', answer:'Aunt', opts:['Aunt','Uncle','Niece']},
+      {text:'My ___ is my mother\'s brother.', answer:'Uncle', opts:['Uncle','Cousin','Nephew']},
+      {text:'I have a ___ and a sister.', answer:'Brother', opts:['Brother','Nephew','Daughter']},
+      {text:'My ___ is my parent\'s parent.', answer:'Grandfather', opts:['Grandfather','Niece','Cousin']}
     ]},
   { id:'house', name:'La Casa', emoji:'🏠', color:'#01A3A4',
     words:[
       {en:'Kitchen',es:'Cocina',em:'🍳'},{en:'Bedroom',es:'Habitación',em:'🛏️'},{en:'Bathroom',es:'Baño',em:'🚿'},
       {en:'Door',es:'Puerta',em:'🚪'},{en:'Window',es:'Ventana',em:'🪟'},{en:'Table',es:'Mesa',em:'🪑'},
-      {en:'Garden',es:'Jardín',em:'🌻'}
+      {en:'Garden',es:'Jardín',em:'🌻'},{en:'Sofa',es:'Sofá',em:'🛋️'},{en:'Bed',es:'Cama',em:'🛏️'},
+      {en:'Chair',es:'Silla',em:'🪑'},{en:'Desk',es:'Escritorio',em:'🖥️'},{en:'Lamp',es:'Lámpara',em:'💡'},
+      {en:'Wall',es:'Pared',em:'🧱'},{en:'Floor',es:'Piso',em:'⬛'},{en:'Ceiling',es:'Techo',em:'☁️'},
+      {en:'Roof',es:'Techo',em:'🏠'},{en:'Stairs',es:'Escaleras',em:'🪜'},{en:'Mirror',es:'Espejo',em:'🪞'},
+      {en:'Shower',es:'Ducha',em:'🚿'},{en:'Sink',es:'Fregadero',em:'🚰'},{en:'Refrigerator',es:'Refrigerador',em:'🧊'}
     ],
     sentences:[
       {text:'I cook food in the ___.', answer:'Kitchen', opts:['Bedroom','Kitchen','Garden']},
       {text:'I sleep in my ___.', answer:'Bedroom', opts:['Bathroom','Kitchen','Bedroom']},
       {text:'Open the ___ to enter the house.', answer:'Door', opts:['Window','Door','Table']},
       {text:'The flowers grow in the ___.', answer:'Garden', opts:['Garden','Kitchen','Bathroom']},
-      {text:'I take a shower in the ___.', answer:'Bathroom', opts:['Bedroom','Bathroom','Garden']}
+      {text:'I take a shower in the ___.', answer:'Bathroom', opts:['Bedroom','Bathroom','Garden']},
+      {text:'I sit on the ___ to watch TV.', answer:'Sofa', opts:['Desk','Sofa','Bed']},
+      {text:'I work at my ___.', answer:'Desk', opts:['Chair','Desk','Table']},
+      {text:'The ___ lights up the room.', answer:'Lamp', opts:['Lamp','Wall','Window']},
+      {text:'I look at myself in the ___.', answer:'Mirror', opts:['Sink','Mirror','Shower']},
+      {text:'I keep food cold in the ___.', answer:'Refrigerator', opts:['Sink','Stove','Refrigerator']}
     ]},
   { id:'weather', name:'El Clima', emoji:'⛅', color:'#FDA7DF',
     words:[
       {en:'Sunny',es:'Soleado',em:'☀️'},{en:'Rainy',es:'Lluvioso',em:'🌧️'},{en:'Cold',es:'Frío',em:'🥶'},
       {en:'Hot',es:'Caliente',em:'🥵'},{en:'Wind',es:'Viento',em:'💨'},{en:'Snow',es:'Nieve',em:'❄️'},
-      {en:'Cloud',es:'Nube',em:'☁️'}
+      {en:'Cloud',es:'Nube',em:'☁️'},{en:'Storm',es:'Tormenta',em:'⛈️'},{en:'Thunder',es:'Trueno',em:'⚡'},
+      {en:'Lightning',es:'Relámpago',em:'⚡'},{en:'Rainbow',es:'Arco iris',em:'🌈'},{en:'Fog',es:'Niebla',em:'🌫️'},
+      {en:'Temperature',es:'Temperatura',em:'🌡️'},{en:'Humidity',es:'Humedad',em:'💧'},{en:'Climate',es:'Clima',em:'🌍'},
+      {en:'Season',es:'Estación',em:'🍂'},{en:'Spring',es:'Primavera',em:'🌸'},{en:'Summer',es:'Verano',em:'☀️'},
+      {en:'Autumn',es:'Otoño',em:'🍂'},{en:'Winter',es:'Invierno',em:'❄️'},{en:'Breeze',es:'Brisa',em:'💨'}
     ],
     sentences:[
       {text:'It is ___ today, I need sunglasses.', answer:'Sunny', opts:['Rainy','Sunny','Cold']},
       {text:'Take an umbrella, it is ___.', answer:'Rainy', opts:['Hot','Rainy','Sunny']},
       {text:'In winter it is very ___.', answer:'Cold', opts:['Hot','Sunny','Cold']},
       {text:'The ___ is blowing the trees.', answer:'Wind', opts:['Snow','Cloud','Wind']},
-      {text:'Children play with ___ in December.', answer:'Snow', opts:['Snow','Wind','Cloud']}
+      {text:'Children play with ___ in December.', answer:'Snow', opts:['Snow','Wind','Cloud']},
+      {text:'There is a beautiful ___ after the rain.', answer:'Rainbow', opts:['Rainbow','Storm','Fog']},
+      {text:'___ comes after spring.', answer:'Summer', opts:['Winter','Summer','Autumn']},
+      {text:'___ is when the leaves fall.', answer:'Autumn', opts:['Spring','Autumn','Winter']},
+      {text:'I see ___ before the sun rises.', answer:'Fog', opts:['Lightning','Fog','Thunder']},
+      {text:'The weather is very ___ today.', answer:'Hot', opts:['Cold','Hot','Windy']}
     ]}
 ];
 
@@ -170,6 +261,8 @@ let phase = 'home'; // home, learn, quiz
 let qIdx = 0;
 let score = 0;
 let answered = false;
+let badges = JSON.parse(localStorage.getItem('englishGameBadges')) || {};
+let categoryStats = JSON.parse(localStorage.getItem('englishGameStats')) || {};
 
 const content = document.getElementById('content');
 const btnHome = document.getElementById('btn-home');
@@ -182,22 +275,46 @@ function goHome() {
 }
 
 function renderHome() {
-  let html = `<div class="max-w-3xl mx-auto anim-pop">
-    <div class="text-center mb-6">
-      <p class="text-4xl mb-2">🎓</p>
-      <h2 class="text-2xl font-900 text-gray-800">¡Aprende Inglés Jugando!</h2>
-      <p class="text-gray-500 mt-1">Elige una categoría para comenzar</p>
+  let html = `<div class="max-w-4xl mx-auto anim-pop">
+    <div class="text-center mb-8">
+      <p class="text-5xl mb-2">🎓</p>
+      <h2 class="text-3xl font-900 text-gray-800 mb-2">¡Aprende Inglés Jugando!</h2>
+      <p class="text-gray-500 mb-4">Elige una categoría para comenzar</p>
+      <div id="total-badges" class="flex flex-wrap justify-center gap-2 mb-4"></div>
     </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">`;
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="categories"></div>
+  </div>`;
+  content.innerHTML = html;
+  
+  // Render total badges
+  let totalBadgeHtml = '';
+  const allBadges = [];
+  Object.values(badges).forEach(b => allBadges.push(...b));
+  const uniqueBadges = [...new Set(allBadges)];
+  if (uniqueBadges.length > 0) {
+    totalBadgeHtml = `<div class="text-sm font-700 px-3 py-2 rounded-full bg-yellow-50 border border-yellow-200">
+      🎖️ ${uniqueBadges.length} Insignias Desbloqueadas
+    </div>`;
+  }
+  document.getElementById('total-badges').innerHTML = totalBadgeHtml;
+  
+  // Render category buttons with badges
+  let catHtml = '';
   CATEGORIES.forEach(c => {
-    html += `<button onclick="selectCat('${c.id}')" class="pill rounded-2xl p-4 flex flex-col items-center gap-2 border-2 border-gray-100 bg-white cursor-pointer" style="transition:all .2s">
+    const hasBadges = badges[c.id] && badges[c.id].length > 0;
+    const badgeEmojis = hasBadges ? badges[c.id].slice(0, 2).map(b => {
+      const icons = { 'perfect': '⭐', 'master': '🏆', 'beginner': '🌿', 'dedicated': '💪', 'collector': '🎖️', 'speedster': '⚡' };
+      return icons[b] || '🎖️';
+    }).join('') : '';
+    
+    catHtml += `<button onclick="selectCat('${c.id}')" class="pill rounded-2xl p-4 flex flex-col items-center gap-2 border-2 border-gray-100 bg-white cursor-pointer relative" style="transition:all .2s">
       <span class="text-3xl">${c.emoji}</span>
       <span class="text-xs font-700 text-gray-700 text-center leading-tight">${c.name}</span>
       <span class="text-[10px] font-600 px-2 py-0.5 rounded-full text-white" style="background:${c.color}">${c.words.length} palabras</span>
+      ${hasBadges ? `<span class="absolute top-1 right-1 text-lg">${badgeEmojis}</span>` : ''}
     </button>`;
   });
-  html += `</div></div>`;
-  content.innerHTML = html;
+  document.getElementById('categories').innerHTML = catHtml;
 }
 
 function selectCat(id) {
@@ -301,13 +418,31 @@ function renderResults() {
   const pct = Math.round((score / total) * 100);
   const msg = pct === 100 ? '🏆 ¡Perfecto!' : pct >= 60 ? '👏 ¡Muy bien!' : '💪 ¡Sigue practicando!';
   let stars = pct === 100 ? '⭐⭐⭐' : pct >= 60 ? '⭐⭐' : '⭐';
+  
+  const newBadges = checkAndAwardBadges(currentCat.id, score, total);
+  
+  let badgesHtml = '';
+  if (newBadges.length > 0) {
+    badgesHtml = `<div class="mt-6 p-4 bg-yellow-50 rounded-2xl border-2 border-yellow-200">
+      <p class="text-center font-800 text-yellow-800 mb-3">🎉 ¡NUEVAS INSIGNIAS DESBLOQUEADAS!</p>
+      <div class="flex flex-wrap justify-center gap-3">`;
+    newBadges.forEach(b => {
+      badgesHtml += `<div class="flex flex-col items-center gap-1 p-2 bg-white rounded-xl">
+        <span class="text-2xl">${b.emoji}</span>
+        <span class="text-xs font-700 text-center">${b.name}</span>
+      </div>`;
+    });
+    badgesHtml += `</div></div>`;
+  }
+  
   let html = `<div class="max-w-sm mx-auto text-center anim-pop">
     <div class="text-6xl mb-3 confetti">${pct === 100 ? '🎉' : '📊'}</div>
     <h2 class="text-2xl font-900 mb-1">${msg}</h2>
     <p class="text-3xl mb-2">${stars}</p>
     <div class="text-5xl font-900 mb-1" style="color:${currentCat.color}">${score}/${total}</div>
     <p class="text-gray-400 mb-6">${pct}% correcto</p>
-    <div class="flex flex-col gap-3">
+    ${badgesHtml}
+    <div class="flex flex-col gap-3 mt-6">
       <button onclick="startQuiz()" class="pill text-white font-800 px-6 py-3 rounded-full" style="background:${currentCat.color}">🔄 Intentar de Nuevo</button>
       <button onclick="selectCat('${currentCat.id}')" class="pill font-700 px-6 py-3 rounded-full border-2" style="border-color:${currentCat.color};color:${currentCat.color}">📖 Repasar Vocabulario</button>
       <button onclick="goHome()" class="pill font-700 px-6 py-3 rounded-full bg-gray-100 text-gray-600">🏠 Elegir otra categoría</button>
@@ -322,6 +457,57 @@ function shuffle(arr) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+function saveBadges() {
+  localStorage.setItem('englishGameBadges', JSON.stringify(badges));
+}
+
+function saveStats() {
+  localStorage.setItem('englishGameStats', JSON.stringify(categoryStats));
+}
+
+function getBadgeColor(badgeType) {
+  const colors = {
+    'beginner': '#FFD700', 'master': '#FF69B4', 'perfect': '#FF1493',
+    'speedster': '#00BFFF', 'dedicated': '#FF6347', 'collector': '#32CD32'
+  };
+  return colors[badgeType] || '#999';
+}
+
+function checkAndAwardBadges(catId, score, total) {
+  if (!badges[catId]) badges[catId] = [];
+  
+  const pct = (score / total) * 100;
+  const newBadges = [];
+  
+  if (pct === 100 && !badges[catId].includes('perfect')) {
+    badges[catId].push('perfect');
+    newBadges.push({ name: 'PERFECTO 🌟', emoji: '⭐', type: 'perfect' });
+  } else if (pct >= 80 && !badges[catId].includes('master')) {
+    badges[catId].push('master');
+    newBadges.push({ name: 'MAESTRO 🎓', emoji: '🏆', type: 'master' });
+  } else if (pct >= 60 && !badges[catId].includes('beginner')) {
+    badges[catId].push('beginner');
+    newBadges.push({ name: 'INICIADO 🌱', emoji: '🌿', type: 'beginner' });
+  }
+  
+  if (!categoryStats[catId]) categoryStats[catId] = 0;
+  categoryStats[catId]++;
+  
+  if (categoryStats[catId] >= 5 && !badges[catId].includes('dedicated')) {
+    badges[catId].push('dedicated');
+    newBadges.push({ name: 'DEDICADO 💪', emoji: '💪', type: 'dedicated' });
+  }
+  
+  if (badges[catId].length >= 6 && !badges[catId].includes('collector')) {
+    badges[catId].push('collector');
+    newBadges.push({ name: 'COLECCIONISTA 🎖️', emoji: '🎖️', type: 'collector' });
+  }
+  
+  saveBadges();
+  saveStats();
+  return newBadges;
 }
 
 // Element SDK
@@ -369,5 +555,5 @@ if (window.elementSdk) {
 renderHome();
 lucide.createIcons();
 </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f2274cfa7fd8a80',t:'MTc3NzE3MzY3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f228184367a2ed8',t:'MTc3NzE3NDE5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
