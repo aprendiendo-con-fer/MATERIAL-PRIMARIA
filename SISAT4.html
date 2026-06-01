@@ -1,0 +1,139 @@
+<!doctype html>
+<html class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Fredoka', sans-serif; }
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+      50% { box-shadow: 0 0 0 12px rgba(239,68,68,0); }
+    }
+    .timer-warning { animation: pulse-border 1s infinite; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ <script src="/_sdk/telemetry_sdk.js"></script></head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full bg-slate-900 text-white overflow-auto flex flex-col items-center justify-center p-6"><!-- Start Screen -->
+   <div id="start-screen" class="text-center space-y-6">
+    <h1 id="title" class="text-4xl font-bold text-amber-400">Quiz de Matemáticas</h1>
+    <p class="text-slate-300 text-lg">10 operaciones · 45 segundos cada una</p><button onclick="startQuiz()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-xl px-8 py-4 rounded-xl transition"> Comenzar </button>
+   </div><!-- Quiz Screen -->
+   <div id="quiz-screen" class="hidden w-full max-w-md space-y-6 text-center">
+    <div class="flex justify-between items-center"><span id="question-num" class="text-slate-400 font-semibold">Reactivo 1/10</span>
+     <div id="timer-box" class="bg-slate-800 px-4 py-2 rounded-lg"><span id="timer" class="text-2xl font-bold text-amber-400">45</span><span class="text-slate-400 text-sm">s</span>
+     </div>
+    </div>
+    <div class="bg-slate-800 rounded-2xl p-10">
+     <p id="operation" class="text-4xl font-bold text-white"></p>
+    </div>
+    <div class="flex gap-4 justify-center"><button onclick="answer(1)" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-4 rounded-xl text-lg transition">✓ Bien (1pt)</button> <button onclick="answer(0.5)" class="flex-1 bg-orange-500 hover:bg-orange-400 text-white font-bold py-4 rounded-xl text-lg transition">👁 Vio (0.5)</button> <button onclick="answer(0)" class="flex-1 bg-red-500 hover:bg-red-400 text-white font-bold py-4 rounded-xl text-lg transition">✗ Mal (0)</button>
+    </div>
+   </div><!-- Results Screen -->
+   <div id="results-screen" class="hidden w-full max-w-lg space-y-6">
+    <h2 class="text-3xl font-bold text-amber-400 text-center">Resultados</h2>
+    <div id="results-list" class="space-y-3"></div>
+    <div id="total-score" class="text-center text-2xl font-bold text-amber-400"></div><button onclick="restart()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-4 rounded-xl text-lg transition">Reiniciar</button>
+   </div>
+  </div>
+  <script>
+const operations = [
+  "2500 + 200", "100 - 79", "30 × 7", "9 ÷ 3", "30 ÷ 6",
+  "3.5 + 0.5", "2.0 - 0.3", "3.4 + 2.0", "360 ÷ 10", "389 para 500"
+];
+let current = 0, scores = [], timer, timeLeft;
+
+function startQuiz() {
+  current = 0; scores = [];
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('results-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  showQuestion();
+}
+
+function showQuestion() {
+  document.getElementById('question-num').textContent = `Reactivo ${current+1}/10`;
+  document.getElementById('operation').textContent = operations[current];
+  timeLeft = 45;
+  updateTimer();
+  timer = setInterval(() => {
+    timeLeft--;
+    updateTimer();
+    if (timeLeft <= 0) { clearInterval(timer); answer(0); }
+  }, 1000);
+}
+
+function updateTimer() {
+  const el = document.getElementById('timer');
+  const box = document.getElementById('timer-box');
+  el.textContent = timeLeft;
+  if (timeLeft <= 10) { box.classList.add('timer-warning'); el.classList.add('text-red-400'); el.classList.remove('text-amber-400'); }
+  else { box.classList.remove('timer-warning'); el.classList.remove('text-red-400'); el.classList.add('text-amber-400'); }
+}
+
+function answer(pts) {
+  clearInterval(timer);
+  scores.push(pts);
+  current++;
+  if (current < 10) showQuestion();
+  else showResults();
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('results-screen').classList.remove('hidden');
+  const list = document.getElementById('results-list');
+  list.innerHTML = '';
+  let total = 0;
+  scores.forEach((s, i) => {
+    total += s;
+    const color = s === 1 ? 'bg-emerald-500/20 border-emerald-500' : s === 0.5 ? 'bg-orange-500/20 border-orange-500' : 'bg-red-500/20 border-red-500';
+    const label = s === 1 ? '✓ 1pt' : s === 0.5 ? '👁 0.5pt' : '✗ 0pt';
+    list.innerHTML += `<div class="flex justify-between items-center p-3 rounded-lg border ${color}"><span class="text-slate-200 font-semibold">${i+1}. ${operations[i]}</span><span class="font-bold">${label}</span></div>`;
+  });
+  document.getElementById('total-score').textContent = `Total: ${total} / 10 puntos`;
+}
+
+function restart() {
+  document.getElementById('results-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+
+// Element SDK
+const defaultConfig = { quiz_title: "Quiz de Matemáticas", background_color: "#0f172a", accent_color: "#f59e0b", text_color: "#ffffff", surface_color: "#1e293b", success_color: "#10b981", font_family: "Fredoka", font_size: 16 };
+
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange: async (config) => {
+    const bg = config.background_color || defaultConfig.background_color;
+    const accent = config.accent_color || defaultConfig.accent_color;
+    const text = config.text_color || defaultConfig.text_color;
+    const font = config.font_family || defaultConfig.font_family;
+    document.getElementById('app').style.backgroundColor = bg;
+    document.getElementById('app').style.color = text;
+    document.getElementById('title').textContent = config.quiz_title || defaultConfig.quiz_title;
+    document.getElementById('title').style.color = accent;
+    document.getElementById('title').style.fontFamily = `${font}, sans-serif`;
+  },
+  mapToCapabilities: (config) => ({
+    recolorables: [
+      { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); }},
+      { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }},
+      { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); }},
+      { get: () => config.accent_color || defaultConfig.accent_color, set: (v) => { config.accent_color = v; window.elementSdk.setConfig({ accent_color: v }); }},
+      { get: () => config.success_color || defaultConfig.success_color, set: (v) => { config.success_color = v; window.elementSdk.setConfig({ success_color: v }); }}
+    ],
+    borderables: [],
+    fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }},
+    fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }}
+  }),
+  mapToEditPanelValues: (config) => new Map([["quiz_title", config.quiz_title || defaultConfig.quiz_title]])
+});
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a04fbaf6cffb90ae',t:'MTc4MDMzMjc2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
